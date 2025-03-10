@@ -10,10 +10,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const loginWithDiscord = () => {
-  window.location.href = "http://localhost:5000/api/auth/discord";
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
