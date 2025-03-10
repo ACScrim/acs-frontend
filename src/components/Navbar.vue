@@ -9,13 +9,36 @@
         ACS
       </router-link>
       <div>
-        <router-link to="/" class="text-white text-lg hover:text-neonPink">
-          Home
+        <span v-if="user" class="text-white text-lg">{{ user.username }}</span>
+        <router-link
+          v-else
+          to="/login"
+          class="text-white text-lg hover:text-neonPink"
+        >
+          Login
         </router-link>
       </div>
     </div>
   </nav>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+const user = ref(null);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/auth/me", {
+      withCredentials: true,
+    });
+    user.value = response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+  }
+});
+</script>
 
 <style scoped>
 .hover\:text-neonPink:hover {
