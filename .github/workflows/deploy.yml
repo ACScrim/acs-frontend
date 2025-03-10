@@ -1,3 +1,4 @@
+# filepath: d:\Dev\ACS\acs-frontend\.github\workflows\deploy.yml
 name: Deploy Frontend
 
 on:
@@ -16,4 +17,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: /var/www/deploy-frontend.sh
+          script: |
+            if [ -f /var/www/deploy-frontend.sh ]; then
+              chmod +x /var/www/deploy-frontend.sh
+              /var/www/deploy-frontend.sh
+            else
+              echo "File /var/www/deploy-frontend.sh not found"
+              exit 1
+            fi
