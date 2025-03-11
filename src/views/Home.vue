@@ -1,34 +1,31 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Home.vue -->
 <template>
-  <div class="flex flex-col items-center justify-center p-4">
-    <img
-      src="../assets/logo.png"
-      class="logo transition-transform duration-300 transform"
-      alt="Logo"
-    />
-    <h1 class="neon-text mt-4">Bienvenue sur ACS</h1>
-    <button
-      v-if="!user"
-      @click="loginWithDiscord"
-      class="button-login mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
-    >
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="flex flex-col items-center justify-center w-full max-w-4xl">
+      <h1 class="neon-text mt-4">Bienvenue sur</h1>
       <img
-        src="../assets/discord-Logo.png"
-        alt="Discord Logo"
-        class="h-7 w-12 mr-2"
+        src="../assets/logo.png"
+        class="logo transition-transform duration-300 transform"
+        alt="Logo"
       />
-      Connexion via Discord
-    </button>
-    <div v-else class="mt-4 text-white">Bienvenue, {{ user.username }}!</div>
-    <div class="mt-8 w-full max-w-4xl">
-      <iframe
-        class="w-full h-64 sm:h-80 md:h-96 lg:h-[450px]"
-        src="https://www.youtube.com/embed/7ubXewQv_Vk"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      <button
+        v-if="!user"
+        @click="loginWithDiscord"
+        class="button-login mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
+      >
+        <img
+          src="../assets/discord-logo.png"
+          alt="Discord Logo"
+          class="h-7 w-12 mr-2"
+        />
+        Connexion via Discord
+      </button>
+      <div
+        v-else
+        class="mt-4 px-4 py-2 bg-pink-500 button-login text-white rounded flex items-center"
+      >
+        Bienvenue, {{ user.username }}!
+      </div>
     </div>
   </div>
 </template>
@@ -57,9 +54,9 @@ onMounted(() => {
 .logo {
   height: 11em; /* Réduire la taille du logo */
   margin-top: 1em; /* Réduire l'espace au-dessus du logo */
-  padding: 0.5em; /* Ajuster le padding */
   will-change: filter;
   transition: filter 300ms;
+  box-shadow: 0px 2px 12px black;
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em violet);
@@ -77,18 +74,6 @@ onMounted(() => {
 .neon-text:hover {
   text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
     0 0 50px #ff00ff, 0 0 60px #ff00ff;
-}
-
-h1 {
-  margin-top: 0.5em; /* Réduire l'espace au-dessus du titre */
-}
-
-.router-link {
-  margin-top: 1em; /* Ajuster l'espace au-dessus du bouton de connexion */
-}
-
-.iframe-container {
-  margin-top: 2em; /* Ajuster l'espace au-dessus de la vidéo */
 }
 
 .button-login {
