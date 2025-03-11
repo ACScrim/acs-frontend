@@ -79,13 +79,6 @@
             />
           </svg>
         </span>
-        <router-link
-          v-else
-          to="/login"
-          class="text-white text-base hover:text-neonPink"
-        >
-          Login
-        </router-link>
         <div
           v-if="menuOpen"
           class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
