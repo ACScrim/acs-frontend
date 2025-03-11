@@ -8,18 +8,20 @@
       class="logo transition-transform duration-300 transform hover:scale-110"
       alt="Logo"
     />
-    <h1 class="text-4xl text-pink-500 mt-4">Bienvenue sur ACS</h1>
-    <router-link
-      to="/login"
-      class="mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center"
+    <h1 class="neon-text mt-4">Bienvenue sur ACS</h1>
+    <button
+      v-if="!user"
+      @click="loginWithDiscord"
+      class="mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
     >
       <img
-        src="../assets/discord-Logo.png"
+        src="../assets/discord-logo.png"
         alt="Discord Logo"
-        class="h-6 w-10 mr-3"
+        class="h-7 w-12 mr-2"
       />
       Connexion via Discord
-    </router-link>
+    </button>
+    <div v-else class="mt-4 text-white">Bienvenue, {{ user.username }}!</div>
     <div class="mt-8 w-full max-w-4xl">
       <iframe
         class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px]"
@@ -33,16 +35,52 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { onMounted, computed } from "vue";
+import { useUserStore } from "../stores/userStore";
+
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
+
+const loginWithDiscord = () => {
+  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
+  window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&scope=identify+email`;
+};
+
+onMounted(() => {
+  userStore.fetchUser();
+});
+</script>
+
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+
 .logo {
-  height: 10em; /* Réduire la taille du logo */
+  height: 11em; /* Réduire la taille du logo */
   margin-top: 1em; /* Réduire l'espace au-dessus du logo */
   padding: 0.5em; /* Ajuster le padding */
   will-change: filter;
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em violet);
+}
+
+.neon-text {
+  font-size: 40px;
+  font-family: "Bungee", cursive;
+  color: white;
+  text-shadow: 0 0 10px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff, 0 0 80px #ff00ff;
+  transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+.neon-text:hover {
+  transform: scale(1.1);
+  text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
+    0 0 50px #ff00ff, 0 0 60px #ff00ff;
 }
 
 h1 {

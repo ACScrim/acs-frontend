@@ -1,3 +1,4 @@
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
   <nav class="bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 p-4">
     <div class="container mx-auto flex justify-between items-center">
@@ -7,8 +8,14 @@
       >
         ACS
       </router-link>
-      <div>
-        <span v-if="user" class="text-white text-lg">{{ user.username }}</span>
+      <div class="relative">
+        <span
+          v-if="user"
+          @click="toggleMenu"
+          class="text-white text-lg cursor-pointer"
+        >
+          {{ user.username }}
+        </span>
         <router-link
           v-else
           to="/login"
@@ -16,35 +23,64 @@
         >
           Login
         </router-link>
+        <div
+          v-if="menuOpen"
+          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
+        >
+          <button @click="logout" class="menu-button">Déconnexion</button>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+<script setup lang="ts">
+import { ref, onMounted, computed } from "vue";
+import { useUserStore } from "../stores/userStore";
+import { useRouter } from "vue-router";
 
-const user = ref(null);
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
+const menuOpen = ref(false);
+const router = useRouter();
 
-onMounted(async () => {
-  try {
-    // Utilisation de la variable d'environnement pour l'URL
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/auth/me`,
-      {
-        withCredentials: true,
-      }
-    );
-    user.value = response.data;
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-  }
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
+
+const logout = async () => {
+  await userStore.logout();
+  console.log("Logged out");
+  router.push("/login");
+};
+
+onMounted(() => {
+  userStore.fetchUser();
 });
 </script>
 
 <style scoped>
 .hover\:text-neonPink:hover {
   color: #ff00ff;
+}
+
+.menu-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  background-color: #fff;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-button:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
 }
 </style>
