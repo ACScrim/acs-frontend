@@ -1,6 +1,16 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
-  <nav class="bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 p-4">
+  <nav
+    class="p-4"
+    style="
+      background: linear-gradient(
+        #0d0221 0%,
+        #45125e 40%,
+        #a22561 80%,
+        #ff3864 100%
+      );
+    "
+  >
     <div class="container mx-auto flex justify-between items-center">
       <router-link
         to="/"

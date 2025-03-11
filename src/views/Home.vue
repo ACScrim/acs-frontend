@@ -1,8 +1,6 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Home.vue -->
 <template>
-  <div
-    class="flex flex-col items-center justify-center bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 p-4"
-  >
+  <div class="flex flex-col items-center justify-center p-4">
     <img
       src="../assets/logo.png"
       class="logo transition-transform duration-300 transform hover:scale-110"
@@ -15,7 +13,7 @@
       class="mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
     >
       <img
-        src="../assets/discord-logo.png"
+        src="../assets/discord-Logo.png"
         alt="Discord Logo"
         class="h-7 w-12 mr-2"
       />
@@ -24,7 +22,7 @@
     <div v-else class="mt-4 text-white">Bienvenue, {{ user.username }}!</div>
     <div class="mt-8 w-full max-w-4xl">
       <iframe
-        class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px]"
+        class="w-full h-64 sm:h-80 md:h-96 lg:h-[450px]"
         src="https://www.youtube.com/embed/7ubXewQv_Vk"
         title="YouTube video player"
         frameborder="0"
@@ -56,8 +54,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
-
 .logo {
   height: 11em; /* Réduire la taille du logo */
   margin-top: 1em; /* Réduire l'espace au-dessus du logo */
@@ -71,7 +67,7 @@ onMounted(() => {
 
 .neon-text {
   font-size: 40px;
-  font-family: "Bungee", cursive;
+  font-family: "Streamster", cursive;
   color: white;
   text-shadow: 0 0 10px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff, 0 0 80px #ff00ff;
