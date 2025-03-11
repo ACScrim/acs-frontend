@@ -11,12 +11,54 @@
     "
   >
     <div class="container mx-auto flex justify-between items-center">
-      <router-link
-        to="/"
-        class="text-white text-2xl font-bold hover:text-neonPink"
-      >
-        ACS
-      </router-link>
+      <div class="flex items-center">
+        <span
+          v-if="isAdmin"
+          @click="toggleAdminMenu"
+          class="text-white text-lg cursor-pointer mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-violet-500"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </span>
+        <router-link
+          to="/"
+          class="text-white text-xl font-bold hover:text-neonPink"
+        >
+          ACS
+        </router-link>
+      </div>
+      <div class="flex-grow flex justify-center space-x-20">
+        <router-link
+          to="/classement"
+          class="text-white text-base font-bold hover:text-neonPink"
+        >
+          Classement
+        </router-link>
+        <router-link
+          to="/inscription-tournoi"
+          class="text-white text-base font-bold hover:text-neonPink"
+        >
+          Inscription
+        </router-link>
+        <router-link
+          to="/tournois-a-venir"
+          class="text-white text-base font-bold hover:text-neonPink"
+        >
+          Tournois
+        </router-link>
+      </div>
       <div class="relative">
         <span
           v-if="user"
@@ -37,7 +79,13 @@
             />
           </svg>
         </span>
-
+        <router-link
+          v-else
+          to="/login"
+          class="text-white text-base hover:text-neonPink"
+        >
+          Login
+        </router-link>
         <div
           v-if="menuOpen"
           class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
@@ -45,6 +93,26 @@
           <button @click="logout" class="menu-button">Déconnexion</button>
         </div>
       </div>
+    </div>
+    <div
+      v-if="adminMenuOpen"
+      class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
+    >
+      <router-link
+        to="/creation-jeu"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        >Création d'un jeu</router-link
+      >
+      <router-link
+        to="/creation-tournoi"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        >Création d'un tournoi</router-link
+      >
+      <router-link
+        to="/ajout-joueurs"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        >Ajout de joueurs</router-link
+      >
     </div>
   </nav>
 </template>
@@ -56,16 +124,23 @@ import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
+const isAdmin = computed(() => user.value && user.value.role === "admin");
 const menuOpen = ref(false);
+const adminMenuOpen = ref(false);
 const router = useRouter();
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
+const toggleAdminMenu = () => {
+  adminMenuOpen.value = !adminMenuOpen.value;
+};
+
 const logout = async () => {
   await userStore.logout();
   menuOpen.value = false;
+  adminMenuOpen.value = false;
   console.log("Logged out");
   router.push("/");
 };
