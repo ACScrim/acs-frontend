@@ -15,8 +15,11 @@
 
 <script setup lang="ts">
 const loginWithDiscord = () => {
-  window.location.href =
-    "https://discord.com/oauth2/authorize?client_id=1348782782934945974&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2Fauth%2Fdiscord%2Fcallback&scope=identify+email";
+  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
+  window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&scope=identify+email`;
 };
 </script>
 
