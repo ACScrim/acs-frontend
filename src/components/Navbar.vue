@@ -1,4 +1,3 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
   <nav class="bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 p-4">
     <div class="container mx-auto flex justify-between items-center">
@@ -30,9 +29,13 @@ const user = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:5000/api/auth/me", {
-      withCredentials: true,
-    });
+    // Utilisation de la variable d'environnement pour l'URL
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/auth/me`,
+      {
+        withCredentials: true,
+      }
+    );
     user.value = response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);
