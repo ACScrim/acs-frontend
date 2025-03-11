@@ -14,7 +14,7 @@
       class="mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center"
     >
       <img
-        src="../assets/discord-logo.png"
+        src="../assets/discord-Logo.png"
         alt="Discord Logo"
         class="h-6 w-10 mr-3"
       />
