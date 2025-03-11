@@ -4,12 +4,23 @@ import Navbar from "./components/Navbar.vue";
 </script>
 
 <template>
-  <div
-    class="min-h-screen flex flex-col bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500"
-  >
-    <Navbar />
-    <router-view></router-view>
+  <div class="relative min-h-screen flex flex-col">
+    <video
+      autoplay
+      muted
+      loop
+      class="absolute inset-0 w-full h-full object-cover opacity-90 z-10"
+    >
+      <source src="@/assets/background-video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="relative z-10">
+      <Navbar />
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Styles supplémentaires si nécessaire */
+</style>
