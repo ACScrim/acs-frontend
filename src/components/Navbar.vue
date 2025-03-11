@@ -64,10 +64,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.hover\:text-neonPink:hover {
-  color: #ff00ff;
-}
-
 .menu-button {
   display: flex;
   justify-content: center;
