@@ -3,14 +3,14 @@
   <div class="flex flex-col items-center justify-center p-4">
     <img
       src="../assets/logo.png"
-      class="logo transition-transform duration-300 transform hover:scale-110"
+      class="logo transition-transform duration-300 transform"
       alt="Logo"
     />
     <h1 class="neon-text mt-4">Bienvenue sur ACS</h1>
     <button
       v-if="!user"
       @click="loginWithDiscord"
-      class="mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
+      class="button-login mt-4 px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
     >
       <img
         src="../assets/discord-Logo.png"
@@ -73,8 +73,8 @@ onMounted(() => {
     0 0 40px #ff00ff, 0 0 80px #ff00ff;
   transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
 }
+
 .neon-text:hover {
-  transform: scale(1.1);
   text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
     0 0 50px #ff00ff, 0 0 60px #ff00ff;
 }
@@ -89,5 +89,10 @@ h1 {
 
 .iframe-container {
   margin-top: 2em; /* Ajuster l'espace au-dessus de la vidéo */
+}
+
+.button-login {
+  border: 0.5px solid rgb(246, 246, 246);
+  box-shadow: -2px 2px 8px black;
 }
 </style>

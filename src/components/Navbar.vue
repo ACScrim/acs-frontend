@@ -1,14 +1,13 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
   <nav
-    class="p-4"
+    class="p-4 bg-pink-500"
     style="
-      background: linear-gradient(
-        #0d0221 0%,
-        #45125e 40%,
-        #a22561 80%,
-        #ff3864 100%
-      );
+      border: 0.5px solid white;
+      border-left-style: none;
+      border-right-style: none;
+      border-top-style: none;
+      box-shadow: -2px 2px 8px black;
     "
   >
     <div class="container mx-auto flex justify-between items-center">
@@ -26,13 +25,7 @@
         >
           {{ user.username }}
         </span>
-        <router-link
-          v-else
-          to="/login"
-          class="text-white text-lg hover:text-neonPink"
-        >
-          Login
-        </router-link>
+
         <div
           v-if="menuOpen"
           class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
@@ -60,8 +53,9 @@ const toggleMenu = () => {
 
 const logout = async () => {
   await userStore.logout();
+  menuOpen.value = false;
   console.log("Logged out");
-  router.push("/login");
+  router.push("/");
 };
 
 onMounted(() => {
