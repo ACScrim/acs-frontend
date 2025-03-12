@@ -1,15 +1,5 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
-  <nav
-    class="p-4 bg-pink-500 fixed top-0 w-full z-10"
-    style="
-      border: 0.5px solid white;
-      border-left-style: none;
-      border-right-style: none;
-      border-top-style: none;
-      box-shadow: -2px 2px 8px black;
-    "
-  >
+  <nav class="p-4 bg-pink-500 fixed top-0 w-full z-10 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center">
         <span
@@ -39,7 +29,7 @@
           ACS
         </router-link>
       </div>
-      <div class="flex-grow flex justify-center space-x-20">
+      <div class="hidden md:flex flex-grow justify-center space-x-20">
         <router-link
           to="/classement"
           class="text-white text-base font-bold hover:text-neonPink"
@@ -86,6 +76,47 @@
           <button @click="logout" class="menu-button">Déconnexion</button>
         </div>
       </div>
+      <div class="md:hidden">
+        <button @click="toggleMobileMenu" class="text-white focus:outline-none">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div
+      v-if="mobileMenuOpen"
+      class="md:hidden mt-2 bg-white rounded-md shadow-lg z-20"
+    >
+      <router-link
+        to="/classement"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Classement
+      </router-link>
+      <router-link
+        to="/inscription-tournoi"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Inscription
+      </router-link>
+      <router-link
+        to="/tournois-a-venir"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Tournois
+      </router-link>
     </div>
     <div
       v-if="adminMenuOpen"
@@ -94,24 +125,27 @@
       <router-link
         to="/creation-jeu"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-        >Création d'un jeu</router-link
       >
-      <router-link
-        to="/creation-tournoi"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-        >Création d'un tournoi</router-link
-      >
+        Création d'un jeu
+      </router-link>
       <router-link
         to="/ajout-joueurs"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-        >Ajout de joueurs</router-link
       >
+        Ajout de joueurs
+      </router-link>
+      <router-link
+        to="/creation-tournoi"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Création d'un tournoi
+      </router-link>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import { useUserStore } from "../stores/userStore";
 import { useRouter } from "vue-router";
 
@@ -120,6 +154,7 @@ const user = computed(() => userStore.user);
 const isAdmin = computed(() => user.value && user.value.role === "admin");
 const menuOpen = ref(false);
 const adminMenuOpen = ref(false);
+const mobileMenuOpen = ref(false);
 const router = useRouter();
 
 const toggleMenu = () => {
@@ -130,16 +165,35 @@ const toggleAdminMenu = () => {
   adminMenuOpen.value = !adminMenuOpen.value;
 };
 
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
 const logout = async () => {
   await userStore.logout();
   menuOpen.value = false;
   adminMenuOpen.value = false;
+  mobileMenuOpen.value = false;
   console.log("Logged out");
   router.push("/");
 };
 
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (!target.closest(".relative")) {
+    menuOpen.value = false;
+    adminMenuOpen.value = false;
+    mobileMenuOpen.value = false;
+  }
+};
+
 onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
   userStore.fetchUser();
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
