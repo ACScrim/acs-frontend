@@ -152,11 +152,11 @@ import { ref, onMounted, computed } from "vue";
 import tournamentService from "../services/tournamentService";
 import gameService from "../services/gameService";
 import playerService from "../services/playerService";
-import type { GetTournament } from "../services/tournamentService";
+import type { Tournament } from "../services/tournamentService";
 import type { Game } from "../services/gameService";
 import type { Player } from "../services/playerService";
 
-const tournaments = ref<GetTournament[]>([]);
+const tournaments = ref<Tournament[]>([]);
 const selectedTournament = ref<string>("");
 const name = ref<string>("");
 const game = ref<string>(""); // Stocke uniquement l'ID du jeu
