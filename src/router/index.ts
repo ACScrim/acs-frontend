@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import CreateGame from "../views/CreateGame.vue";
 import AjoutJoueurs from "../views/AjoutJoueurs.vue";
+import GestionAdministrations from "../views/GestionAdministrations.vue";
 import CreationTournoi from "../views/CreationTournoi.vue";
 
 const routes = [
@@ -15,6 +16,11 @@ const routes = [
     path: "/ajout-joueurs",
     name: "AjoutJoueurs",
     component: AjoutJoueurs,
+  },
+  {
+    path: "/gestion-administrations",
+    name: "GestionAdministrations",
+    component: GestionAdministrations,
   },
   {
     path: "/creation-tournoi",
