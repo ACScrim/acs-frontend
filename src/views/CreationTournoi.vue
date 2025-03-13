@@ -7,40 +7,40 @@
         @click="activeTab = 'creation'"
         class="tab"
       >
-        Création d'un Tournoi
+        Gestion des tournois
       </button>
       <button
         :class="{ 'active-tab': activeTab === 'teams' }"
         @click="activeTab = 'teams'"
         class="tab"
       >
-        Création des Équipes
+        Gestion des Équipes
       </button>
       <button
         :class="{ 'active-tab': activeTab === 'end' }"
         @click="activeTab = 'end'"
         class="tab"
       >
-        Fin du Tournoi
+        Terminer un tournoi
       </button>
     </div>
     <div v-if="activeTab === 'creation'">
       <CreationTournoiForm />
     </div>
-    <div v-if="activeTab === 'teams'">
+    <!-- <div v-if="activeTab === 'teams'">
       <CreationTeams />
     </div>
     <div v-if="activeTab === 'end'">
       <EndTournoi />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import CreationTournoiForm from "../components/CreationTournoiForm.vue";
-import CreationTeams from "../components/CreationTeams.vue";
-import EndTournoi from "../components/EndTournoi.vue";
+// import CreationTeams from "../components/CreationTeams.vue";
+// import EndTournoi from "../components/EndTournoi.vue";
 
 const activeTab = ref("creation");
 </script>

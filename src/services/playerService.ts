@@ -17,6 +17,13 @@ const getPlayers = async (): Promise<Player[]> => {
   return response.data;
 };
 
+const getPlayerById = async (id: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/${id}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 const searchPlayers = async (search: string): Promise<Player[]> => {
   const response = await axios.get(`${API_URL}/search`, {
     params: { search },
@@ -34,4 +41,5 @@ export default {
   getPlayers,
   searchPlayers,
   deletePlayer,
+  getPlayerById,
 };
