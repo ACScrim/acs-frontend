@@ -192,10 +192,20 @@ const showConfirmationDialog = ref<boolean>(false);
 const games = ref<Game[]>([]);
 
 const fetchTournaments = async () => {
-  const allTournaments = await tournamentService.getTournaments();
-  tournaments.value = allTournaments.filter(
-    (tournament) => !tournament.finished
-  );
+  try {
+    const allTournaments = await tournamentService.getTournaments();
+    tournaments.value = allTournaments.filter(
+      (tournament) => !tournament.finished
+    );
+    if (tournaments.value.length === 0) {
+      showMessage(
+        "error",
+        "Aucun tournoi n'est disponible pour le moment. Veuillez en créer un."
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération des tournois:", error);
+  }
 };
 
 const formatDate = (isoString: string) => {
@@ -340,7 +350,7 @@ const showMessage = (type: "success" | "error", message: string) => {
   setTimeout(() => {
     success.value = null;
     error.value = null;
-  }, 3000);
+  }, 5000);
 };
 
 const hidePlayerList = () => {

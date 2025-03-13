@@ -25,6 +25,7 @@ const getPlayerById = async (id: string): Promise<Player> => {
 };
 
 const searchPlayers = async (search: string): Promise<Player[]> => {
+  console.log("search", search);
   const response = await axios.get(`${API_URL}/search`, {
     params: { search },
     withCredentials: true,

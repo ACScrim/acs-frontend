@@ -148,8 +148,11 @@ const fetchGames = async () => {
 // Récupérer les tournois pour un jeu sélectionné
 const fetchTournamentsByGame = async () => {
   if (selectedGame.value) {
-    tournaments.value = await tournamentService.getTournamentsByGame(
+    const allTournaments = await tournamentService.getTournamentsByGame(
       selectedGame.value
+    );
+    tournaments.value = allTournaments.filter(
+      (tournament) => !tournament.finished
     );
   }
 };
@@ -165,7 +168,6 @@ const fetchTournamentDetails = async () => {
       teams.value = selectedTournamentDetails.value.teams;
     }
   }
-  console.log(teams);
 };
 
 // Générer les équipes
@@ -181,7 +183,7 @@ const generateTeams = async () => {
 
 // Gérer la fin d'un drag and drop
 const onDragEnd = () => {
-  console.log("Joueur déplacé");
+  // Ne rien faire pour l'instant
 };
 
 // Enregistrer les équipes en base de données

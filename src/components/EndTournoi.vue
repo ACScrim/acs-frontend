@@ -86,12 +86,12 @@
               type="number"
               v-model.number="team.score"
               class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
-              :disabled="winningTeamId"
+              :disabled="!!winningTeamId"
             />
             <button
               @click="updateScore(team._id, team.score)"
               class="ml-2 px-4 py-2 text-white bg-blue-500 rounded shadow neon-button hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              :disabled="winningTeamId"
+              :disabled="!!winningTeamId"
             >
               Mettre à jour
             </button>
@@ -99,7 +99,7 @@
           <button
             @click="confirmFinishTournament(team._id)"
             class="mt-4 px-6 py-3 text-lg font-bold text-white bg-green-500 rounded shadow neon-button hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            :disabled="winningTeamId"
+            :disabled="!!winningTeamId"
           >
             Déclarer Vainqueur
           </button>
@@ -178,9 +178,9 @@ const fetchTournamentDetails = async () => {
     );
     // Si des équipes existent déjà, les afficher
     if (selectedTournamentDetails.value.teams) {
-      teams.value = selectedTournamentDetails.value.teams;
+      teams.value = selectedTournamentDetails.value.teams || [];
       winningTeamId.value =
-        selectedTournamentDetails.value.winningTeam?._id || null;
+        selectedTournamentDetails.value.winningTeam?._id ?? null;
     }
   }
 };

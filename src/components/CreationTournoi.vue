@@ -131,7 +131,7 @@ import playerService from "../services/playerService";
 import type { Player } from "../services/playerService";
 
 const name = ref<string>("");
-const game = ref<string>("");
+const game = ref<Game | null>(null);
 const date = ref<string>("");
 const discordChannelName = ref<string>("");
 const playerSearch = ref<string>("");
@@ -197,12 +197,10 @@ const createTournament = async () => {
   try {
     const tournament = {
       name: name.value,
-      game: game.value,
+      game: game.value as Game,
       date: date.value,
       discordChannelName: discordChannelName.value,
-      players: selectedPlayers.value
-        .map((p) => p._id)
-        .filter((id): id is string => !!id),
+      players: selectedPlayers.value,
       finished: false,
     };
     await tournamentService.createTournament(tournament);
@@ -219,7 +217,7 @@ const createTournament = async () => {
 
 const resetForm = () => {
   name.value = "";
-  game.value = "";
+  game.value = null;
   date.value = "";
   discordChannelName.value = "";
   selectedPlayers.value = [];
