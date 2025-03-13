@@ -4,7 +4,7 @@
     <div class="flex flex-col items-center justify-center w-full max-w-4xl">
       <h1 class="neon-text mt-4">Bienvenue sur</h1>
       <img
-        src="../assets/logo.png"
+        src="../assets/logo.svg"
         class="logo transition-transform duration-300 transform"
         alt="Logo"
       />

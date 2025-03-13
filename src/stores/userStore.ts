@@ -12,6 +12,9 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     user: null as User | null,
   }),
+  getters: {
+    isSuperAdmin: (state) => state.user?.role === "superadmin",
+  },
   actions: {
     async fetchUser() {
       try {
@@ -22,7 +25,6 @@ export const useUserStore = defineStore("user", {
           }
         );
         this.user = response.data;
-        console.log("User fetched:", this.user);
       } catch (error) {
         console.error("Error fetching user profile:", error);
         this.user = null; // Assurez-vous de réinitialiser l'utilisateur en cas d'erreur
