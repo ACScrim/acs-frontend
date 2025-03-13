@@ -140,6 +140,13 @@
       >
         Création d'un tournoi
       </router-link>
+      <router-link
+        v-if="isSuperAdmin"
+        to="/gestion-administrations"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Gestion des administrations
+      </router-link>
     </div>
   </nav>
 </template>
@@ -151,7 +158,14 @@ import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
-const isAdmin = computed(() => user.value && user.value.role === "admin");
+const isAdmin = computed(
+  () =>
+    user.value &&
+    (user.value.role === "admin" || user.value.role === "superadmin")
+);
+const isSuperAdmin = computed(
+  () => user.value && user.value.role === "superadmin"
+);
 const menuOpen = ref(false);
 const adminMenuOpen = ref(false);
 const mobileMenuOpen = ref(false);
