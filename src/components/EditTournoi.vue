@@ -125,12 +125,22 @@
           </span>
         </div>
       </div>
-      <button
-        type="submit"
-        class="px-6 py-3 text-lg font-bold text-white bg-pink-500 rounded shadow neon-button hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        Modifier le Tournoi
-      </button>
+      <div class="flex justify-between">
+        <button
+          type="submit"
+          class="px-6 py-3 text-lg font-bold text-white bg-pink-500 rounded shadow neon-button hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+        >
+          Modifier le Tournoi
+        </button>
+        <button
+          v-if="selectedTournament"
+          type="button"
+          @click="confirmDeleteTournament"
+          class="ml-4 px-6 py-3 text-lg font-bold text-white bg-red-500 rounded shadow neon-button hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+          Supprimer le Tournoi
+        </button>
+      </div>
     </form>
     <div
       v-if="error"
@@ -144,6 +154,14 @@
     >
       {{ success }}
     </div>
+    <!-- Confirmation Dialog -->
+    <ConfirmationDialog
+      v-if="showConfirmationDialog"
+      :title="'Confirmer la suppression du tournoi'"
+      :message="'Êtes-vous sûr de vouloir supprimer ce tournoi ? Cette action est irréversible.'"
+      @confirm="deleteTournament"
+      @cancel="showConfirmationDialog = false"
+    />
   </div>
 </template>
 
@@ -169,6 +187,7 @@ const allPlayers = ref<Player[]>([]);
 const showPlayerList = ref<boolean>(false);
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
+const showConfirmationDialog = ref<boolean>(false);
 
 const games = ref<Game[]>([]);
 
@@ -189,7 +208,7 @@ const loadTournamentDetails = async () => {
       selectedTournament.value
     );
     name.value = tournament.name;
-    game.value = tournament.game._id;
+    game.value = (tournament.game as any)._id;
     date.value = formatDate(tournament.date); // Si `tournament.date` est en format ISO
     discordChannelName.value = tournament.discordChannelName;
 
@@ -256,14 +275,16 @@ const removePlayer = (player: Player) => {
 
 const editTournament = async () => {
   try {
-    const tournament = {
+    const tournament: Tournament = {
+      _id: selectedTournament.value,
       name: name.value,
-      game: game.value,
+      game: games.value.find((g) => g._id === game.value) as Game,
       date: date.value,
       discordChannelName: discordChannelName.value,
-      players: selectedPlayers.value
-        .map((p) => p._id)
-        .filter((id): id is string => !!id),
+      players: selectedPlayers.value.map((p) => ({
+        _id: p._id,
+        username: p.username,
+      })),
       finished: false,
     };
     await tournamentService.updateTournament(
@@ -277,6 +298,34 @@ const editTournament = async () => {
       "error",
       (err as any).response?.data?.message || "Erreur inconnue."
     );
+  }
+};
+
+const confirmDeleteTournament = () => {
+  showConfirmationDialog.value = true;
+};
+
+const deleteTournament = async () => {
+  try {
+    if (selectedTournament.value) {
+      await tournamentService.deleteTournament(selectedTournament.value);
+      showMessage("success", "Tournoi supprimé avec succès !");
+      fetchTournaments();
+      selectedTournament.value = "";
+      name.value = "";
+      game.value = "";
+      date.value = "";
+      discordChannelName.value = "";
+      selectedPlayers.value = [];
+    }
+  } catch (err) {
+    console.error("Erreur lors de la suppression du tournoi:", err);
+    showMessage(
+      "error",
+      (err as any).response?.data?.message || "Erreur inconnue."
+    );
+  } finally {
+    showConfirmationDialog.value = false;
   }
 };
 

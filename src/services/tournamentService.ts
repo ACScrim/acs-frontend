@@ -12,11 +12,14 @@ export interface Tournament {
   players: Player[];
   finished: boolean;
   teams?: Team[]; // Add the teams property
+  winningTeam?: Team;
 }
 
 export interface Team {
+  _id: string;
   name: string;
   players: Player[];
+  score: number;
 }
 
 const createTournament = async (
@@ -73,6 +76,41 @@ const generateTeams = async (
   return response.data;
 };
 
+const updateTeamScore = async (
+  tournamentId: string,
+  teamId: string,
+  score: number
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/teams/${teamId}/score`,
+    { score },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
+const finishTournament = async (
+  tournamentId: string,
+  winningTeamId: string
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/finish`,
+    { winningTeamId },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
+const deleteTournament = async (tournamentId: string): Promise<void> => {
+  await axios.delete(`${API_URL}/${tournamentId}`, {
+    withCredentials: true,
+  });
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -80,4 +118,7 @@ export default {
   updateTournament,
   getTournaments,
   generateTeams,
+  updateTeamScore,
+  finishTournament,
+  deleteTournament,
 };

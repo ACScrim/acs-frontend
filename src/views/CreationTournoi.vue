@@ -30,9 +30,9 @@
     <div v-if="activeTab === 'teams'">
       <GestionEquipe />
     </div>
-    <!-- <div v-if="activeTab === 'end'">
+    <div v-if="activeTab === 'end'">
       <EndTournoi />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -40,7 +40,7 @@
 import { ref } from "vue";
 import CreationTournoiForm from "../components/CreationTournoiForm.vue";
 import GestionEquipe from "../components/GestionEquipe.vue";
-// import EndTournoi from "../components/EndTournoi.vue";
+import EndTournoi from "../components/EndTournoi.vue";
 
 const activeTab = ref("creation");
 </script>
