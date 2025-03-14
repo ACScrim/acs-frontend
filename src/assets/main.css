@@ -3,6 +3,9 @@
 body {
   font-family: "Press Start 2P", cursive;
 }
+.text-neonPink {
+  color: #4c0b4c;
+}
 .hover\:text-neonPink:hover {
   color: #4c0b4c;
 }

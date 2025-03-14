@@ -111,6 +111,21 @@ const deleteTournament = async (tournamentId: string): Promise<void> => {
   });
 };
 
+// Nouvelle méthode pour inscrire un joueur à un tournoi
+const registerPlayer = async (
+  tournamentId: string,
+  userId: string
+): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/register`,
+    { userId },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -121,4 +136,5 @@ export default {
   updateTeamScore,
   finishTournament,
   deleteTournament,
+  registerPlayer,
 };
