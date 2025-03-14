@@ -218,8 +218,6 @@ const loadTournamentDetails = async () => {
       username: player.username,
       userId: player.userId,
     }));
-
-    console.log(tournament);
   }
 };
 

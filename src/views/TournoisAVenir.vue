@@ -198,7 +198,6 @@ const fetchTournaments = async () => {
       tournament.winningTeam.players = playerDetails;
     }
   });
-  console.log(tournaments.value);
 };
 
 const filteredTournaments = computed(() => {
@@ -217,7 +216,6 @@ const toggleParticipants = (tournamentId: string) => {
 
 const openRegistrationPopup = (tournament: Tournament) => {
   selectedTournament.value = tournament;
-  console.log(selectedTournament.value);
   showPopup.value = true;
 };
 
@@ -246,7 +244,9 @@ const confirmRegistration = async () => {
 };
 
 const isUserRegistered = (tournament: Tournament) => {
-  return tournament.players.some((player) => player.userId === user.value._id);
+  return user.value
+    ? tournament.players.some((player) => player.userId === user.value?._id)
+    : false;
 };
 
 // Fonction utilitaire pour formater la date
