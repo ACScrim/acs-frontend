@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-8">
+  <div class="container mx-auto p-8 pt-20">
     <h1 class="text-4xl text-white mb-8 neon-text">
       Gestion des administrations
     </h1>
