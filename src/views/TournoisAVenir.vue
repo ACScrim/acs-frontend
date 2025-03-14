@@ -1,4 +1,6 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
 <template>
   <div class="container mx-auto p-8 pt-20">
     <h1 class="text-4xl text-white mb-8 neon-text">Tournois à venir</h1>
@@ -29,6 +31,8 @@
         <span class="ml-2 text-white">Afficher les tournois passés</span>
       </label>
     </div>
+    <Toast v-if="error" type="error" :message="error" />
+    <Toast v-if="success" type="success" :message="success" />
     <div v-if="!user" class="mb-4 p-4 bg-red-500 text-white rounded">
       Veuillez vous connecter pour pouvoir vous inscrire.
     </div>
@@ -61,15 +65,31 @@
         </button>
         <div v-if="tournament._id && showParticipants[tournament._id]">
           <h3 class="text-xl text-white mt-4">Participants</h3>
-          <ul>
-            <li
-              v-for="player in tournament.players"
-              :key="player._id"
-              class="text-white"
-            >
-              {{ player.username }}
-            </li>
-          </ul>
+          <div v-if="tournament.teams && tournament.teams.length > 0">
+            <div v-for="team in tournament.teams" :key="team._id" class="mb-4">
+              <h4 class="text-lg text-white">{{ team.name }}</h4>
+              <ul>
+                <li
+                  v-for="player in team.players"
+                  :key="player._id"
+                  class="text-white"
+                >
+                  {{ player.username }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div v-else>
+            <ul>
+              <li
+                v-for="player in tournament.players"
+                :key="player._id"
+                class="text-white"
+              >
+                {{ player.username }}
+              </li>
+            </ul>
+          </div>
         </div>
         <div v-if="tournament.finished">
           <h3 class="text-xl text-white mt-4">Résultats</h3>
@@ -160,12 +180,14 @@
   </div>
 </template>
 
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
 import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
+import Toast from "@/shared/Toast.vue";
 import type { Game } from "../services/gameService";
 import type { Tournament } from "../services/tournamentService";
 import type { Player } from "../services/playerService";
@@ -180,6 +202,9 @@ const selectedTournament = ref<Tournament | null>(null);
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
+
+const success = ref<string | null>(null);
+const error = ref<string | null>(null);
 
 const fetchGames = async () => {
   games.value = await gameService.getGames();
@@ -198,6 +223,7 @@ const fetchTournaments = async () => {
       tournament.winningTeam.players = playerDetails;
     }
   });
+  console.log(tournaments.value);
 };
 
 const filteredTournaments = computed(() => {
@@ -216,6 +242,7 @@ const toggleParticipants = (tournamentId: string) => {
 
 const openRegistrationPopup = (tournament: Tournament) => {
   selectedTournament.value = tournament;
+  console.log(selectedTournament.value);
   showPopup.value = true;
 };
 
@@ -233,12 +260,12 @@ const confirmRegistration = async () => {
           user.value._id
         );
       }
-      alert("Inscription réussie !");
+      showMessage("success", "Inscription réussie !");
       fetchTournaments();
       closePopup();
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error);
-      alert("Erreur lors de l'inscription.");
+      showMessage("error", "Erreur lors de l'inscription.");
     }
   }
 };
@@ -256,6 +283,20 @@ const formatDate = (dateString: string) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
+};
+
+const showMessage = (type: "success" | "error", message: string) => {
+  if (type === "success") {
+    success.value = message;
+    error.value = null;
+  } else {
+    error.value = message;
+    success.value = null;
+  }
+  setTimeout(() => {
+    success.value = null;
+    error.value = null;
+  }, 3000);
 };
 
 onMounted(() => {

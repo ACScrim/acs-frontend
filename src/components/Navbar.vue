@@ -120,7 +120,7 @@
     </div>
     <div
       v-if="adminMenuOpen"
-      class="absolute left-0 mt-2 w-82 bg-white rounded-md shadow-lg z-20 admin-menu"
+      class="absolute left-0 mt-2 w-90 bg-white rounded-md shadow-lg z-20 admin-menu"
     >
       <router-link
         to="/creation-jeu"
@@ -152,7 +152,7 @@
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
         :class="{ 'bg-gray-200': isActive('/synchronisation-joueurs') }"
       >
-        Synchronisation des joueurs
+        Synchro utilisateurs
       </router-link>
       <router-link
         v-if="isSuperAdmin"
