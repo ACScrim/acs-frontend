@@ -25,7 +25,6 @@ const getPlayerById = async (id: string): Promise<Player> => {
 };
 
 const searchPlayers = async (search: string): Promise<Player[]> => {
-  console.log("search", search);
   const response = await axios.get(`${API_URL}/search`, {
     params: { search },
     withCredentials: true,
@@ -37,10 +36,35 @@ const deletePlayer = async (id: string): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
 };
 
+const synchronizePlayers = async (): Promise<void> => {
+  try {
+    await axios.post(`${API_URL}/synchronize`, {}, { withCredentials: true });
+  } catch (error) {
+    console.error("Error synchronizing players:", error);
+  }
+};
+
+const updatePlayerUsername = async (
+  playerId: string,
+  username: string
+): Promise<void> => {
+  try {
+    await axios.post(
+      `${API_URL}/update-username`,
+      { playerId, username },
+      { withCredentials: true }
+    );
+  } catch (error) {
+    console.error("Error updating player username:", error);
+  }
+};
+
 export default {
   addPlayer,
   getPlayers,
   searchPlayers,
   deletePlayer,
   getPlayerById,
+  synchronizePlayers,
+  updatePlayerUsername,
 };

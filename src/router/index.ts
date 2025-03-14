@@ -4,6 +4,7 @@ import CreateGame from "../views/CreateGame.vue";
 import AjoutJoueurs from "../views/AjoutJoueurs.vue";
 import GestionAdministrations from "../views/GestionAdministrations.vue";
 import CreationTournoi from "../views/CreationTournoi.vue";
+import SynchronizePlayers from "../views/SynchronizePlayers.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -26,6 +27,11 @@ const routes = [
     path: "/creation-tournoi",
     name: "CreationTournoi",
     component: CreationTournoi,
+  },
+  {
+    path: "/synchronisation-joueurs",
+    name: "SynchronizePlayers",
+    component: SynchronizePlayers,
   },
 ];
 

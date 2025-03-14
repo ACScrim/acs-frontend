@@ -151,6 +151,13 @@
         Gestion tournois
       </router-link>
       <router-link
+        to="/synchronisation-joueurs"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+      >
+        Synchronisation des joueurs
+      </router-link>
+      <router-link
         v-if="isSuperAdmin"
         to="/gestion-administrations"
         @click="closeAllMenus"
