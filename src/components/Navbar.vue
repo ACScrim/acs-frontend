@@ -48,6 +48,12 @@
         >
           Tournois
         </router-link>
+        <router-link
+          to="/infos"
+          class="text-white text-base font-bold hover:text-neonPink"
+        >
+          Infos
+        </router-link>
       </div>
       <div class="relative user-menu">
         <span
@@ -121,6 +127,13 @@
             class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
           >
             Tournois
+          </router-link>
+          <router-link
+            to="/infos"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+          >
+            Infos
           </router-link>
         </div>
       </div>

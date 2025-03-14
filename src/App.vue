@@ -9,7 +9,7 @@ import Navbar from "./components/Navbar.vue";
       autoplay
       muted
       loop
-      class="absolute inset-0 w-full h-full object-cover opacity-90 z-10"
+      class="absolute inset-0 w-full h-full object-cover opacity-100 z-10"
     >
       <source src="@/assets/background-video.mp4" type="video/mp4" />
       Your browser does not support the video tag.
