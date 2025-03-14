@@ -116,6 +116,8 @@
       >
         Valider
       </button>
+      <Toast v-if="error" type="error" :message="error" />
+      <Toast v-if="success" type="success" :message="success" />
     </div>
   </div>
 </template>
@@ -127,11 +129,14 @@ import type { Game } from "../services/gameService";
 import type { Tournament, Team } from "../services/tournamentService";
 import type { Player } from "../services/playerService";
 import { VueDraggableNext } from "vue-draggable-next"; // Importer vue-draggable-next
+import Toast from "@/shared/Toast.vue";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
 const selectedGame = ref("");
 const selectedTournament = ref("");
+const error = ref<string | null>(null);
+const success = ref<string | null>(null);
 
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
@@ -199,10 +204,23 @@ const saveTeams = async () => {
         selectedTournament.value,
         updatedTournament
       );
-      alert("Équipes enregistrées avec succès !");
+      showMessage("success", "Equipes enregistrées avec succès !");
     }
-    alert("Équipes enregistrées avec succès !");
   }
+};
+
+const showMessage = (type: "success" | "error", message: string) => {
+  if (type === "success") {
+    success.value = message;
+    error.value = null;
+  } else {
+    error.value = message;
+    success.value = null;
+  }
+  setTimeout(() => {
+    success.value = null;
+    error.value = null;
+  }, 5000);
 };
 
 // Charger les jeux au montage du composant
@@ -211,61 +229,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.bg-neon-gradient {
-  background: linear-gradient(
-    135deg,
-    #0d0221 0%,
-    #45125e 40%,
-    #a22561 80%,
-    #ff3864 100%
-  );
-}
-
-.neon-text {
-  font-family: "Streamster", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-}
-
-.neon-input {
-  background: #1a1a1a;
-  box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
-  transition: box-shadow 0.3s ease;
-}
-
-.neon-input:focus {
-  outline: none;
-  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-}
-
-.neon-button {
-  font-size: 1rem;
-  background: #ff00ff;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.neon-button:hover {
-  background: #e600e6;
-  box-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-}
-
-.toast {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 0 10px, 0 0 20px;
-}
-
-.error-toast {
-  background: #ff3864;
-  color: white;
-  box-shadow: 0 0 10px #ff3864, 0 0 20px #ff3864;
-}
-
-.success-toast {
-  background: #28a745;
-  color: white;
-  box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
-}
-</style>
+<style scoped></style>

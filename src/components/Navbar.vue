@@ -5,7 +5,7 @@
         <span
           v-if="isAdmin"
           @click="toggleAdminMenu"
-          class="text-white text-lg cursor-pointer mr-4"
+          class="text-white text-lg cursor-pointer mr-4 admin-menu"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@
           Tournois
         </router-link>
       </div>
-      <div class="relative">
+      <div class="relative user-menu">
         <span
           v-if="user"
           @click="toggleMenu"
@@ -76,7 +76,7 @@
           <button @click="logout" class="menu-button">Déconnexion</button>
         </div>
       </div>
-      <div class="md:hidden">
+      <div class="md:hidden mobile-menu">
         <button @click="toggleMobileMenu" class="text-white focus:outline-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,66 +93,77 @@
             />
           </svg>
         </button>
+        <div
+          v-if="mobileMenuOpen"
+          class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-20 transition-all duration-300 transform origin-top"
+          :class="{
+            'scale-y-100': mobileMenuOpen,
+            'scale-y-0': !mobileMenuOpen,
+          }"
+        >
+          <router-link
+            to="/classement"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+          >
+            Classement
+          </router-link>
+          <router-link
+            to="/inscription-tournoi"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+          >
+            Inscription
+          </router-link>
+          <router-link
+            to="/tournois-a-venir"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+          >
+            Tournois
+          </router-link>
+        </div>
       </div>
     </div>
     <div
-      v-if="mobileMenuOpen"
-      class="md:hidden mt-2 bg-white rounded-md shadow-lg z-20"
-    >
-      <router-link
-        to="/classement"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-      >
-        Classement
-      </router-link>
-      <router-link
-        to="/inscription-tournoi"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-      >
-        Inscription
-      </router-link>
-      <router-link
-        to="/tournois-a-venir"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-      >
-        Tournois
-      </router-link>
-    </div>
-    <div
       v-if="adminMenuOpen"
-      class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
+      class="absolute left-0 mt-2 w-82 bg-white rounded-md shadow-lg z-20 admin-menu"
     >
       <router-link
         to="/creation-jeu"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
       >
         Création d'un jeu
       </router-link>
       <router-link
         to="/ajout-joueurs"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
       >
         Ajout de joueurs
       </router-link>
       <router-link
         to="/creation-tournoi"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
       >
-        Création d'un tournoi
+        Gestion tournois
       </router-link>
       <router-link
         v-if="isSuperAdmin"
         to="/gestion-administrations"
-        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
       >
-        Gestion des administrations
+        Gestion des admins
       </router-link>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
 import { useRouter } from "vue-router";
 
@@ -173,30 +184,46 @@ const router = useRouter();
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
+  adminMenuOpen.value = false;
+  mobileMenuOpen.value = false;
 };
 
 const toggleAdminMenu = () => {
   adminMenuOpen.value = !adminMenuOpen.value;
+  menuOpen.value = false;
+  mobileMenuOpen.value = false;
 };
 
 const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value;
+  menuOpen.value = false;
+  adminMenuOpen.value = false;
 };
 
 const logout = async () => {
   await userStore.logout();
+  closeAllMenus();
+  router.push("/");
+};
+
+const closeAllMenus = () => {
   menuOpen.value = false;
   adminMenuOpen.value = false;
   mobileMenuOpen.value = false;
-  console.log("Logged out");
-  router.push("/");
 };
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
-  if (!target.closest(".relative")) {
+
+  if (!target.closest(".user-menu")) {
     menuOpen.value = false;
+  }
+
+  if (!target.closest(".admin-menu")) {
     adminMenuOpen.value = false;
+  }
+
+  if (!target.closest(".mobile-menu")) {
     mobileMenuOpen.value = false;
   }
 };

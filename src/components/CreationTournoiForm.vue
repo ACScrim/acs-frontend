@@ -1,16 +1,26 @@
-// filepath: d:\Dev\ACS\acs-frontend\src\components\CreationTournoiForm.vue
 <template>
   <div class="">
-    <div class="tabs">
+    <div class="flex justify-center gap-4 mb-4">
+      <!-- Utilisez gap-4 pour un espacement de 1rem -->
       <button
         @click="activeTab = 'create'"
-        :class="{ active: activeTab === 'create' }"
+        :class="[
+          'px-4 py-2 text-white bg-pink-500 rounded shadow transition-colors duration-300',
+          activeTab === 'create'
+            ? 'bg-pink-600'
+            : 'hover:bg-pink-400 cursor-pointer',
+        ]"
       >
         Créer un Tournoi
       </button>
       <button
         @click="activeTab = 'edit'"
-        :class="{ active: activeTab === 'edit' }"
+        :class="[
+          'px-4 py-2 text-white bg-pink-500 rounded shadow transition-colors duration-300',
+          activeTab === 'edit'
+            ? 'bg-pink-600'
+            : 'hover:bg-pink-400 cursor-pointer',
+        ]"
       >
         Modifier un Tournoi
       </button>
@@ -31,27 +41,4 @@ const activeTabComponent = computed(() => {
 });
 </script>
 
-<style scoped>
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.tabs button {
-  background: #ff00ff;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.tabs button.active {
-  background: #e600e6;
-}
-
-.tabs button:not(.active):hover {
-  background: #ff33ff;
-}
-</style>
+<style scoped></style>

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-col items-center justify-center min-h-screen p-8 bg-neon-gradient"
-  >
+  <div class="flex flex-col items-center justify-center p-8 bg-neon-gradient">
     <h1 class="text-4xl text-white mb-8 neon-text">
       Modification d'un Tournoi
     </h1>
@@ -142,18 +140,8 @@
         </button>
       </div>
     </form>
-    <div
-      v-if="error"
-      class="mt-4 p-4 bg-red-500 text-white rounded shadow error-toast"
-    >
-      {{ error }}
-    </div>
-    <div
-      v-if="success"
-      class="mt-4 p-4 bg-green-500 text-white rounded shadow success-toast"
-    >
-      {{ success }}
-    </div>
+    <Toast v-if="error" type="error" :message="error" />
+    <Toast v-if="success" type="success" :message="success" />
     <!-- Confirmation Dialog -->
     <ConfirmationDialog
       v-if="showConfirmationDialog"
@@ -167,6 +155,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
+import Toast from "@/shared/Toast.vue";
 import tournamentService from "../services/tournamentService";
 import gameService from "../services/gameService";
 import playerService from "../services/playerService";
@@ -366,61 +356,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.bg-neon-gradient {
-  background: linear-gradient(
-    135deg,
-    #0d0221 0%,
-    #45125e 40%,
-    #a22561 80%,
-    #ff3864 100%
-  );
-}
-
-.neon-text {
-  font-family: "Streamster", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-}
-
-.neon-input {
-  background: #1a1a1a;
-  box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
-  transition: box-shadow 0.3s ease;
-}
-
-.neon-input:focus {
-  outline: none;
-  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-}
-
-.neon-button {
-  font-size: 1rem;
-  background: #ff00ff;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.neon-button:hover {
-  background: #e600e6;
-  box-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-}
-
-.toast {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 0 10px, 0 0 20px;
-}
-
-.error-toast {
-  background: #ff3864;
-  color: white;
-  box-shadow: 0 0 10px #ff3864, 0 0 20px #ff3864;
-}
-
-.success-toast {
-  background: #28a745;
-  color: white;
-  box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
-}
-</style>
+<style scoped></style>
