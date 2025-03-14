@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 interface User {
+  _id: string;
   username: string;
   email: string;
   role: string;

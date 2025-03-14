@@ -90,10 +90,12 @@ import Toast from "@/shared/Toast.vue";
 interface Player {
   _id?: string;
   username: string;
+  userId: "";
 }
 
 const player = ref<Player>({
   username: "",
+  userId: "",
 });
 
 const error = ref<string | null>(null);

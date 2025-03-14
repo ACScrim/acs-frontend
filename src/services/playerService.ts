@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL + "/players";
 export interface Player {
   _id?: string;
   username: string;
+  userId: string;
 }
 
 const addPlayer = async (player: Player): Promise<Player> => {
