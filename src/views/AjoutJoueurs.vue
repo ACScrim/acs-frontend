@@ -27,18 +27,8 @@
         </button>
       </div>
     </form>
-    <div
-      v-if="error"
-      class="mt-4 p-4 bg-red-500 text-white rounded shadow error-toast"
-    >
-      {{ error }}
-    </div>
-    <div
-      v-if="success"
-      class="mt-4 p-4 bg-green-500 text-white rounded shadow success-toast"
-    >
-      {{ success }}
-    </div>
+    <Toast v-if="error" type="error" :message="error" />
+    <Toast v-if="success" type="success" :message="success" />
     <button
       @click="togglePlayers"
       class="mt-8 px-6 py-3 text-lg font-bold text-white bg-gradient-to-r from-pink-500 to-purple-500 rounded shadow hover:from-pink-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-pink-400 cursor-pointer"
@@ -95,6 +85,7 @@
 import { ref } from "vue";
 import playerService from "../services/playerService";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
+import Toast from "@/shared/Toast.vue";
 
 interface Player {
   _id?: string;
