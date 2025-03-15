@@ -1,6 +1,4 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
 <template>
   <div class="container mx-auto p-8 pt-20">
     <h1 class="text-4xl text-white mb-8 neon-text">Tournois à venir</h1>
@@ -309,12 +307,6 @@ onMounted(() => {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.neon-text {
-  font-family: "Streamster", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
 }
 
 .neon-input {
