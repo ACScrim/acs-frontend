@@ -3,14 +3,17 @@
   <div class="container mx-auto p-8 pt-20">
     <h1 class="text-4xl text-white mb-8 neon-text">Liste des membres</h1>
     <table class="min-w-full bg-white">
-      <thead>
-        <tr>
-          <th class="py-2 px-4 border-b">Nom d'utilisateur</th>
-        </tr>
-      </thead>
       <tbody>
         <tr v-for="user in users" :key="user._id">
           <td class="py-2 px-4 border-b">{{ user.username }}</td>
+          <td>
+            <img
+              v-if="user.avatarUrl"
+              :src="user.avatarUrl"
+              alt="Avatar"
+              class="w-20 h-20 rounded-full mx-auto"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -29,6 +32,7 @@ interface User {
   username: string;
   email: string;
   role: string;
+  avatarUrl: string;
 }
 
 const users = ref<User[]>([]);
@@ -38,6 +42,7 @@ const success = ref<string | null>(null);
 const fetchUsers = async () => {
   try {
     users.value = await userService.fetchAllUsers();
+    console.log("Utilisateurs récupérés:", users.value);
   } catch (err) {
     console.error("Erreur lors de la récupération des utilisateurs:", err);
     error.value = "Erreur lors de la récupération des utilisateurs.";
