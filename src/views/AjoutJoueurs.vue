@@ -86,12 +86,7 @@ import { ref } from "vue";
 import playerService from "../services/playerService";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
-
-interface Player {
-  _id?: string;
-  username: string;
-  userId: "";
-}
+import type { Player } from "../services/playerService";
 
 const player = ref<Player>({
   username: "",
@@ -124,7 +119,7 @@ const addPlayer = async () => {
   try {
     await playerService.addPlayer(player.value);
     showMessage("success", "Joueur ajouté avec succès !");
-    player.value = { username: "" };
+    player.value = { username: "", userId: "" };
     fetchPlayers();
   } catch (err) {
     console.error("Erreur lors de l'ajout du joueur:", err);

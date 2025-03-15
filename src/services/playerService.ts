@@ -6,6 +6,7 @@ export interface Player {
   _id?: string;
   username: string;
   userId: string;
+  discordId?: string;
 }
 
 export interface PlayerRanking {
