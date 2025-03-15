@@ -107,7 +107,7 @@
         <div v-if="!tournament.finished && user">
           <button
             v-if="!isUserRegistered(tournament)"
-            @click="openRegistrationPopup(tournament)"
+            @click="openRegistrationPopup(tournament, 'register')"
             class="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded flex items-center"
           >
             <span class="mr-2">S'inscrire</span>
@@ -124,11 +124,12 @@
               />
             </svg>
           </button>
-          <div
+          <button
             v-else
+            @click="openRegistrationPopup(tournament, 'unregister')"
             class="absolute top-4 right-4 bg-gray-500 text-white px-4 py-2 rounded flex items-center"
           >
-            <span class="mr-2">{{ user.username }} déjà inscrit</span>
+            <span class="mr-2">Se désinscrire</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -141,7 +142,7 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -153,15 +154,19 @@
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-white p-8 rounded shadow-lg">
-        <h2 class="text-2xl mb-4">Confirmation d'inscription</h2>
+        <h2 class="text-2xl mb-4">Confirmation</h2>
         <p class="mb-4">
-          Voulez-vous vous inscrire au tournoi
+          Voulez-vous
+          <strong>{{
+            actionType === "register" ? "vous inscrire" : "vous désinscrire"
+          }}</strong>
+          au tournoi
           <strong>{{ selectedTournament?.name }}</strong> en tant que
           <strong>{{ user?.username }}</strong> ?
         </p>
         <div class="flex justify-end">
           <button
-            @click="confirmRegistration"
+            @click="confirmAction"
             class="bg-green-500 text-white px-4 py-2 rounded mr-2"
           >
             Confirmer
@@ -178,7 +183,6 @@
   </div>
 </template>
 
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\TournoisAVenir.vue -->
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import gameService from "../services/gameService";
@@ -197,6 +201,7 @@ const showFinished = ref<boolean>(false);
 const showParticipants = ref<{ [key: string]: boolean }>({});
 const showPopup = ref<boolean>(false);
 const selectedTournament = ref<Tournament | null>(null);
+const actionType = ref<string>("register");
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
@@ -238,9 +243,9 @@ const toggleParticipants = (tournamentId: string) => {
   showParticipants.value[tournamentId] = !showParticipants.value[tournamentId];
 };
 
-const openRegistrationPopup = (tournament: Tournament) => {
+const openRegistrationPopup = (tournament: Tournament, type: string) => {
   selectedTournament.value = tournament;
-  console.log(selectedTournament.value);
+  actionType.value = type;
   showPopup.value = true;
 };
 
@@ -249,21 +254,29 @@ const closePopup = () => {
   selectedTournament.value = null;
 };
 
-const confirmRegistration = async () => {
+const confirmAction = async () => {
   if (selectedTournament.value && user.value) {
     try {
-      if (selectedTournament.value && selectedTournament.value._id) {
+      if (actionType.value === "register" && selectedTournament.value._id) {
         await tournamentService.registerPlayer(
           selectedTournament.value._id,
           user.value._id
         );
+        showMessage("success", "Inscription réussie !");
+      } else {
+        if (selectedTournament.value._id) {
+          await tournamentService.unregisterPlayer(
+            selectedTournament.value._id,
+            user.value._id
+          );
+        }
+        showMessage("success", "Désinscription réussie !");
       }
-      showMessage("success", "Inscription réussie !");
       fetchTournaments();
       closePopup();
     } catch (error) {
-      console.error("Erreur lors de l'inscription:", error);
-      showMessage("error", "Erreur lors de l'inscription.");
+      console.error("Erreur lors de l'action:", error);
+      showMessage("error", `Erreur lors de l'action.`);
     }
   }
 };
@@ -307,28 +320,5 @@ onMounted(() => {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.neon-input {
-  background: #1a1a1a;
-  box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
-  transition: box-shadow 0.3s ease;
-}
-
-.neon-input:focus {
-  outline: none;
-  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-}
-
-.form-checkbox {
-  border-radius: 0.25rem;
-  border: 2px solid #ff00ff;
-  background-color: #1a1a1a;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-checkbox:checked {
-  background-color: #ff00ff;
-  border-color: #ff00ff;
 }
 </style>

@@ -45,6 +45,13 @@
         >
           Tournois
         </router-link>
+        <router-link
+          to="/membres"
+          class="text-white text-base font-bold hover:text-neonPink"
+          :class="{ 'text-neonPink': isActive('/membres') }"
+        >
+          Membres
+        </router-link>
       </div>
       <div class="relative user-menu">
         <span
@@ -114,6 +121,14 @@
             :class="{ 'bg-gray-200': isActive('/tournois-a-venir') }"
           >
             Tournois
+          </router-link>
+          <router-link
+            to="/membres"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+            :class="{ 'bg-gray-200': isActive('/membres') }"
+          >
+            Membres
           </router-link>
         </div>
       </div>

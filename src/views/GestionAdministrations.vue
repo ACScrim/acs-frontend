@@ -25,24 +25,15 @@
         </tr>
       </tbody>
     </table>
-    <div
-      v-if="error"
-      class="mt-4 p-4 bg-red-500 text-white rounded shadow error-toast"
-    >
-      {{ error }}
-    </div>
-    <div
-      v-if="success"
-      class="mt-4 p-4 bg-green-500 text-white rounded shadow success-toast"
-    >
-      {{ success }}
-    </div>
+    <Toast v-if="error" type="error" :message="error" />
+    <Toast v-if="success" type="success" :message="success" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import userService from "../services/userService";
+import Toast from "@/shared/Toast.vue";
 
 interface User {
   _id?: string;

@@ -126,6 +126,20 @@ const registerPlayer = async (
   return response.data;
 };
 
+const unregisterPlayer = async (
+  tournamentId: string,
+  userId: string
+): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/unregister`,
+    { userId },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -137,4 +151,5 @@ export default {
   finishTournament,
   deleteTournament,
   registerPlayer,
+  unregisterPlayer,
 };
