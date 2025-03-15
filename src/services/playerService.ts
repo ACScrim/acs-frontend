@@ -5,6 +5,24 @@ const API_URL = import.meta.env.VITE_API_URL + "/players";
 export interface Player {
   _id?: string;
   username: string;
+  userId: string;
+}
+
+export interface PlayerRanking {
+  playerId: string;
+  username: string;
+  totalPoints: number;
+  totalTournaments: number;
+  totalVictories: number;
+}
+
+export interface TournamentWinner {
+  tournamentId: string;
+  tournamentName: string;
+  winningTeam: {
+    name: string;
+    players: Player[];
+  };
 }
 
 const addPlayer = async (player: Player): Promise<Player> => {
@@ -59,6 +77,24 @@ const updatePlayerUsername = async (
   }
 };
 
+// Nouvelle fonction pour récupérer le classement des joueurs
+const getPlayerRankings = async (): Promise<PlayerRanking[]> => {
+  const response = await axios.get(`${API_URL}/rankings`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+// Nouvelle fonction pour récupérer le classement des joueurs par jeu
+const getPlayerRankingsByGame = async (
+  gameId: string
+): Promise<PlayerRanking[]> => {
+  const response = await axios.get(`${API_URL}/rankings/game/${gameId}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 export default {
   addPlayer,
   getPlayers,
@@ -67,4 +103,6 @@ export default {
   getPlayerById,
   synchronizePlayers,
   updatePlayerUsername,
+  getPlayerRankings,
+  getPlayerRankingsByGame,
 };

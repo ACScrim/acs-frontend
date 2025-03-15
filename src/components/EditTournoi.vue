@@ -216,9 +216,8 @@ const loadTournamentDetails = async () => {
     selectedPlayers.value = tournament.players.map((player: any) => ({
       _id: player._id,
       username: player.username,
+      userId: player.userId,
     }));
-
-    console.log(tournament);
   }
 };
 
@@ -284,6 +283,7 @@ const editTournament = async () => {
       players: selectedPlayers.value.map((p) => ({
         _id: p._id,
         username: p.username,
+        userId: p.userId,
       })),
       finished: false,
     };

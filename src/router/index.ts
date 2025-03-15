@@ -5,6 +5,9 @@ import AjoutJoueurs from "../views/AjoutJoueurs.vue";
 import GestionAdministrations from "../views/GestionAdministrations.vue";
 import CreationTournoi from "../views/CreationTournoi.vue";
 import SynchronizePlayers from "../views/SynchronizePlayers.vue";
+import TournoisAVenir from "../views/TournoisAVenir.vue";
+import Classement from "../views/Classement.vue";
+import Membres from "../views/Membres.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -32,6 +35,21 @@ const routes = [
     path: "/synchronisation-joueurs",
     name: "SynchronizePlayers",
     component: SynchronizePlayers,
+  },
+  {
+    path: "/tournois-a-venir",
+    name: "TournoisAVenir",
+    component: TournoisAVenir, // Ajoutez la nouvelle route
+  },
+  {
+    path: "/classement",
+    name: "Classement",
+    component: Classement, // Ajoutez la nouvelle route
+  },
+  {
+    path: "/membres",
+    name: "Membres",
+    component: Membres, // Ajout de la nouvelle route
   },
 ];
 

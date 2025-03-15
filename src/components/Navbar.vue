@@ -1,3 +1,4 @@
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
   <nav class="p-4 bg-pink-500 fixed top-0 w-full z-10 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
@@ -33,20 +34,23 @@
         <router-link
           to="/classement"
           class="text-white text-base font-bold hover:text-neonPink"
+          :class="{ 'text-neonPink': isActive('/classement') }"
         >
           Classement
         </router-link>
         <router-link
-          to="/inscription-tournoi"
-          class="text-white text-base font-bold hover:text-neonPink"
-        >
-          Inscription
-        </router-link>
-        <router-link
           to="/tournois-a-venir"
           class="text-white text-base font-bold hover:text-neonPink"
+          :class="{ 'text-neonPink': isActive('/tournois-a-venir') }"
         >
           Tournois
+        </router-link>
+        <router-link
+          to="/membres"
+          class="text-white text-base font-bold hover:text-neonPink"
+          :class="{ 'text-neonPink': isActive('/membres') }"
+        >
+          Membres
         </router-link>
       </div>
       <div class="relative user-menu">
@@ -105,34 +109,39 @@
             to="/classement"
             @click="closeAllMenus"
             class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+            :class="{ 'bg-gray-200': isActive('/classement') }"
           >
             Classement
           </router-link>
-          <router-link
-            to="/inscription-tournoi"
-            @click="closeAllMenus"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-          >
-            Inscription
-          </router-link>
+
           <router-link
             to="/tournois-a-venir"
             @click="closeAllMenus"
             class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+            :class="{ 'bg-gray-200': isActive('/tournois-a-venir') }"
           >
             Tournois
+          </router-link>
+          <router-link
+            to="/membres"
+            @click="closeAllMenus"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+            :class="{ 'bg-gray-200': isActive('/membres') }"
+          >
+            Membres
           </router-link>
         </div>
       </div>
     </div>
     <div
       v-if="adminMenuOpen"
-      class="absolute left-0 mt-2 w-82 bg-white rounded-md shadow-lg z-20 admin-menu"
+      class="absolute left-0 mt-2 w-90 bg-white rounded-md shadow-lg z-20 admin-menu"
     >
       <router-link
         to="/creation-jeu"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/creation-jeu') }"
       >
         Création d'un jeu
       </router-link>
@@ -140,6 +149,7 @@
         to="/ajout-joueurs"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/ajout-joueurs') }"
       >
         Ajout de joueurs
       </router-link>
@@ -147,6 +157,7 @@
         to="/creation-tournoi"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/creation-tournoi') }"
       >
         Gestion tournois
       </router-link>
@@ -154,14 +165,16 @@
         to="/synchronisation-joueurs"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/synchronisation-joueurs') }"
       >
-        Synchronisation des joueurs
+        Synchro utilisateurs
       </router-link>
       <router-link
         v-if="isSuperAdmin"
         to="/gestion-administrations"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/gestion-administrations') }"
       >
         Gestion des admins
       </router-link>
@@ -172,7 +185,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
@@ -188,6 +201,7 @@ const menuOpen = ref(false);
 const adminMenuOpen = ref(false);
 const mobileMenuOpen = ref(false);
 const router = useRouter();
+const route = useRoute();
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
@@ -233,6 +247,10 @@ const handleClickOutside = (event: MouseEvent) => {
   if (!target.closest(".mobile-menu")) {
     mobileMenuOpen.value = false;
   }
+};
+
+const isActive = (path: string) => {
+  return route.path === path;
 };
 
 onMounted(() => {
