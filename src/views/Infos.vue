@@ -2,7 +2,7 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="p-15">
       <h1 class="text-4xl text-white mb-8 neon-text">À propos de ACS</h1>
-      <div class="text-white">
+      <div class="">
         <h2 class="text-2xl mb-4">Qui sommes-nous ?</h2>
         <p class="mb-4">
           ACS est une organisation dédiée à la promotion des compétitions de
@@ -50,7 +50,7 @@
   text-align: center;
   border: 1px solid white;
   border-radius: 20px;
-
+  background-color: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(20px) brightness(200%);
   display: flex;
   flex-direction: column;
