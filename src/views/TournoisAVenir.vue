@@ -154,10 +154,23 @@
           </button>
           <button
             v-else-if="isWithin24Hours(tournament.date)"
-            @click="checkIn(tournament._id)"
-            class="absolute top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded flex items-center"
+            @click="
+              tournament._id &&
+                checkIn(tournament._id, !isPlayerCheckedIn(tournament))
+            "
+            :class="{
+              'bg-green-500': checkedInPlayers[tournament._id],
+              'bg-yellow-500': !checkedInPlayers[tournament._id],
+            }"
+            class="absolute top-4 right-4 text-white px-4 py-2 rounded flex items-center"
           >
-            <span class="mr-2">Check-in</span>
+            <span class="mr-2">
+              {{
+                tournament._id && checkedInPlayers[tournament._id]
+                  ? "Check-in confirmé"
+                  : "Check-in"
+              }}
+            </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -171,6 +184,7 @@
               />
             </svg>
           </button>
+
           <button
             v-else
             @click="openRegistrationPopup(tournament, 'unregister')"
@@ -264,23 +278,20 @@ const fetchGames = async () => {
 };
 
 const fetchTournaments = async () => {
+  checkedInPlayers.value = {}; // Réinitialise les check-ins
   tournaments.value = await tournamentService.getTournaments();
-  // Ajouter la propriété showParticipants à chaque tournoi
-  tournaments.value.forEach(async (tournament) => {
-    if (tournament.winningTeam && tournament.winningTeam.players) {
-      const playerDetails = await Promise.all(
-        tournament.winningTeam.players.map(async (player) => {
-          if (typeof player === "string") {
-            const playerDetails = await playerService.getPlayerById(player);
-            return playerDetails;
-          } else {
-            return player;
-          }
-        })
-      );
-      tournament.winningTeam.players = playerDetails as Player[];
+
+  // Vérifie si l'utilisateur est check-in
+  if (user.value) {
+    const player = await playerService.getPlayerByIdUser(user.value._id);
+    if (player && player._id) {
+      tournaments.value.forEach((tournament) => {
+        checkedInPlayers.value[tournament._id] =
+          tournament.checkIns?.[player._id] || false;
+        console.log("tournoi", tournament.checkIns);
+      });
     }
-  });
+  }
 };
 
 const filteredTournaments = computed(() => {
@@ -353,15 +364,30 @@ const isUserRegistered = (tournament: Tournament) => {
 
 const isWithin24Hours = (date: string) => {
   const tournamentDate = new Date(date);
+  console.log("tournamentDate", tournamentDate);
   const now = new Date();
   const diff = tournamentDate.getTime() - now.getTime();
+  console.log("diff", diff);
+
   return diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 };
 
-const checkIn = async (tournamentId: string) => {
+const isPlayerCheckedIn = (tournament: Tournament) => {
+  return checkedInPlayers.value[tournament._id] || false;
+};
+
+const checkedInPlayers = ref<{ [key: string]: boolean }>({});
+
+const checkIn = async (tournamentId: string, checkedIn: boolean) => {
+  checkedInPlayers.value[tournamentId] = checkedIn;
+
   try {
     if (user.value) {
-      await tournamentService.checkInPlayer(tournamentId, user.value._id);
+      await tournamentService.checkInPlayer(
+        tournamentId,
+        user.value._id,
+        checkedIn
+      );
     }
     showMessage("success", "Check-in réussi !");
     fetchTournaments();

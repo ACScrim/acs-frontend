@@ -14,6 +14,7 @@ export interface Tournament {
   teams?: Team[];
   description?: string;
   winningTeam?: Team;
+  checkIns?: { [key: string]: boolean };
 }
 
 export interface Team {

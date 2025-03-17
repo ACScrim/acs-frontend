@@ -54,6 +54,13 @@ const searchPlayers = async (search: string): Promise<Player[]> => {
   });
   return response.data;
 };
+// Nouvelle fonction pour récupérer un joueur par userId
+const getPlayerByIdUser = async (userId: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/user/${userId}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
 
 const deletePlayer = async (id: string): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
@@ -110,4 +117,5 @@ export default {
   updatePlayerUsername,
   getPlayerRankings,
   getPlayerRankingsByGame,
+  getPlayerByIdUser,
 };

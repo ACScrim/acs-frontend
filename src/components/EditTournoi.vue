@@ -167,6 +167,7 @@
   </div>
 </template>
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\EditTournoi.vue -->
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\EditTournoi.vue -->
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
@@ -227,13 +228,13 @@ const loadTournamentDetails = async () => {
     date.value = formatDate(tournament.date); // Si `tournament.date` est en format ISO
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || ""; // Utiliser directement la description du tournoi
-    console.log("tournament", tournament);
+
     // Utiliser directement les données des joueurs renvoyées par l'API
     selectedPlayers.value = tournament.players.map((player: any) => ({
       _id: player._id,
       username: player.username,
       userId: player.userId,
-      checkedIn: player.checkedIn,
+      checkedIn: tournament.checkIns[player._id] || false,
     }));
     console.log("selectedPlayers", selectedPlayers.value);
   }

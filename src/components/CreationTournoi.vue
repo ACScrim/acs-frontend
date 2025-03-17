@@ -125,6 +125,7 @@
   </div>
 </template>
 
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\CreationTournoi.vue -->
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import tournamentService from "../services/tournamentService";
@@ -205,6 +206,12 @@ const createTournament = async () => {
     const offset = localDate.getTimezoneOffset();
     const adjustedDate = new Date(localDate.getTime() - offset * 60 * 1000);
     console.log(selectedPlayers.value);
+    const checkIns: { [key: string]: boolean } = {};
+    selectedPlayers.value.forEach((player) => {
+      if (player._id) {
+        checkIns[player._id] = false;
+      }
+    });
     const tournament = {
       name: name.value,
       game: game.value as Game,
@@ -213,6 +220,7 @@ const createTournament = async () => {
       description: description.value, // Ajout de la description
       players: selectedPlayers.value,
       finished: false,
+      checkIns, // Initialiser checkIns
     };
     await tournamentService.createTournament(tournament);
     showMessage("success", "Tournoi créé avec succès !");
