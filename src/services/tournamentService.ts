@@ -11,7 +11,7 @@ export interface Tournament {
   discordChannelName: string;
   players: Player[];
   finished: boolean;
-  teams?: Team[]; // Add the teams property
+  teams?: Team[];
   description?: string;
   winningTeam?: Team;
 }
@@ -141,6 +141,22 @@ const unregisterPlayer = async (
   return response.data;
 };
 
+// Nouvelle méthode pour le check-in d'un joueur
+const checkInPlayer = async (
+  tournamentId: string,
+  playerId: string,
+  checkedIn: boolean
+): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/check-in`,
+    { playerId, checkedIn },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -153,4 +169,5 @@ export default {
   deleteTournament,
   registerPlayer,
   unregisterPlayer,
+  checkInPlayer, // Ajout de la méthode checkInPlayer
 };

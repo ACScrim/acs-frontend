@@ -9,6 +9,10 @@ export interface Player {
   discordId?: string;
 }
 
+export interface PlayerCheckedIn extends Player {
+  checkedIn: boolean;
+}
+
 export interface PlayerRanking {
   playerId: string;
   username: string;

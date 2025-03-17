@@ -42,7 +42,7 @@
       >
         <h2 class="text-2xl text-white mb-2">{{ tournament.name }}</h2>
         <p class="text-white">
-          <strong>Date:</strong> {{ formatDate(tournament.date) }} 20:30
+          <strong>Date:</strong> {{ formatDate(tournament.date) }}
         </p>
         <p class="text-white">
           <strong>Jeu:</strong> {{ tournament.game.name }}
@@ -153,6 +153,25 @@
             </svg>
           </button>
           <button
+            v-else-if="isWithin24Hours(tournament.date)"
+            @click="checkIn(tournament._id)"
+            class="absolute top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded flex items-center"
+          >
+            <span class="mr-2">Check-in</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <button
             v-else
             @click="openRegistrationPopup(tournament, 'unregister')"
             class="absolute top-4 right-4 bg-gray-500 text-white px-4 py-2 rounded flex items-center"
@@ -221,6 +240,8 @@ import Toast from "@/shared/Toast.vue";
 import type { Game } from "../services/gameService";
 import type { Tournament } from "../services/tournamentService";
 import type { Player } from "../services/playerService";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
@@ -248,14 +269,18 @@ const fetchTournaments = async () => {
   tournaments.value.forEach(async (tournament) => {
     if (tournament.winningTeam && tournament.winningTeam.players) {
       const playerDetails = await Promise.all(
-        tournament.winningTeam.players.map((player: Player) =>
-          playerService.getPlayerById(player._id as string)
-        )
+        tournament.winningTeam.players.map(async (player) => {
+          if (typeof player === "string") {
+            const playerDetails = await playerService.getPlayerById(player);
+            return playerDetails;
+          } else {
+            return player;
+          }
+        })
       );
-      tournament.winningTeam.players = playerDetails;
+      tournament.winningTeam.players = playerDetails as Player[];
     }
   });
-  console.log(tournaments.value);
 };
 
 const filteredTournaments = computed(() => {
@@ -326,13 +351,29 @@ const isUserRegistered = (tournament: Tournament) => {
     : false;
 };
 
+const isWithin24Hours = (date: string) => {
+  const tournamentDate = new Date(date);
+  const now = new Date();
+  const diff = tournamentDate.getTime() - now.getTime();
+  return diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+};
+
+const checkIn = async (tournamentId: string) => {
+  try {
+    if (user.value) {
+      await tournamentService.checkInPlayer(tournamentId, user.value._id);
+    }
+    showMessage("success", "Check-in réussi !");
+    fetchTournaments();
+  } catch (error) {
+    console.error("Erreur lors du check-in:", error);
+    showMessage("error", "Erreur lors du check-in.");
+  }
+};
+
 // Fonction utilitaire pour formater la date
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
+  return format(new Date(dateString), "dd-MM-yyyy HH:mm", { locale: fr });
 };
 
 const showMessage = (type: "success" | "error", message: string) => {
