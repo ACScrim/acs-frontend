@@ -1,3 +1,4 @@
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\CreationTournoi.vue -->
 <template>
   <div class="flex flex-col items-center justify-center p-8 bg-neon-gradient">
     <h1 class="text-4xl text-white mb-8 neon-text">Création d'un Tournoi</h1>
@@ -55,6 +56,20 @@
           class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
           required
         />
+      </div>
+      <div class="mb-6 form-group">
+        <label
+          for="description"
+          class="block text-lg text-white mb-2 neon-label"
+        >
+          Description <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="description"
+          v-model="description"
+          class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
+          required
+        ></textarea>
       </div>
       <div class="mb-6 form-group">
         <label for="players" class="block text-lg text-white mb-2 neon-label">
@@ -123,6 +138,7 @@ const name = ref<string>("");
 const game = ref<Game | null>(null);
 const date = ref<string>("");
 const discordChannelName = ref<string>("");
+const description = ref<string>(""); // Ajout de la description
 const playerSearch = ref<string>("");
 const playerSearchResults = ref<Player[]>([]);
 const selectedPlayers = ref<Player[]>([]);
@@ -189,6 +205,7 @@ const createTournament = async () => {
       game: game.value as Game,
       date: date.value,
       discordChannelName: discordChannelName.value,
+      description: description.value, // Ajout de la description
       players: selectedPlayers.value,
       finished: false,
     };
@@ -209,6 +226,7 @@ const resetForm = () => {
   game.value = null;
   date.value = "";
   discordChannelName.value = "";
+  description.value = ""; // Réinitialiser la description
   selectedPlayers.value = [];
 };
 
@@ -239,4 +257,61 @@ fetchGames();
 fetchAllPlayers();
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg-neon-gradient {
+  background: linear-gradient(
+    135deg,
+    #0d0221 0%,
+    #45125e 40%,
+    #a22561 80%,
+    #ff3864 100%
+  );
+}
+
+.neon-text {
+  font-family: "Streamster", cursive;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+    0 0 40px #ff00ff;
+}
+
+.neon-input {
+  background: #1a1a1a;
+  box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+  transition: box-shadow 0.3s ease;
+}
+
+.neon-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+.neon-button {
+  font-size: 1rem;
+  background: #ff00ff;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.neon-button:hover {
+  background: #e600e6;
+  box-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+}
+
+.toast {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 10px, 0 0 20px;
+}
+
+.error-toast {
+  background: #ff3864;
+  color: white;
+  box-shadow: 0 0 10px #ff3864, 0 0 20px #ff3864;
+}
+
+.success-toast {
+  background: #28a745;
+  color: white;
+  box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
+}
+</style>

@@ -12,6 +12,7 @@ export interface Tournament {
   players: Player[];
   finished: boolean;
   teams?: Team[]; // Add the teams property
+  description?: string;
   winningTeam?: Team;
 }
 

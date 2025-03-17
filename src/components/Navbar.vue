@@ -46,6 +46,7 @@
           Tournois
         </router-link>
         <router-link
+          v-if="user"
           to="/membres"
           class="text-white text-base font-bold hover:text-neonPink"
           :class="{ 'text-neonPink': isActive('/membres') }"
@@ -53,7 +54,7 @@
           Membres
         </router-link>
       </div>
-      <div class="relative user-menu">
+      <div class="relative user-menu flex items-center">
         <span
           v-if="user"
           @click="toggleMenu"
@@ -73,6 +74,18 @@
             />
           </svg>
         </span>
+        <button
+          v-else
+          @click="loginWithDiscord"
+          class="button-login px-4 py-2 bg-pink-500 text-white rounded flex items-center cursor-pointer"
+        >
+          <img
+            src="../assets/discord-Logo.png"
+            alt="Discord Logo"
+            class="h-7 w-12 mr-2"
+          />
+          Connexion
+        </button>
         <div
           v-if="menuOpen"
           class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
@@ -123,6 +136,7 @@
             Tournois
           </router-link>
           <router-link
+            v-if="user"
             to="/membres"
             @click="closeAllMenus"
             class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
@@ -253,6 +267,14 @@ const isActive = (path: string) => {
   return route.path === path;
 };
 
+const loginWithDiscord = () => {
+  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
+  window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&scope=identify+email`;
+};
+
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
   userStore.fetchUser();
@@ -282,5 +304,10 @@ onBeforeUnmount(() => {
   background-color: #f0f0f0;
   box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff;
+}
+
+.button-login {
+  border: 0.5px solid rgb(246, 246, 246);
+  box-shadow: -2px 2px 8px black;
 }
 </style>

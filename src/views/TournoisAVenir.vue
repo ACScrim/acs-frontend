@@ -50,17 +50,38 @@
         <p class="text-white">
           <strong>Discord Channel:</strong> {{ tournament.discordChannelName }}
         </p>
-        <button
-          @click="tournament._id ? toggleParticipants(tournament._id) : null"
-          class="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          {{
-            tournament._id && showParticipants[tournament._id]
-              ? "Masquer"
-              : "Afficher"
-          }}
-          les participants
-        </button>
+        <div class="flex space-x-4 mt-2">
+          <button
+            @click="toggleParticipants(tournament._id ?? '')"
+            :class="{
+              'bg-blue-700': tournament._id && showParticipants[tournament._id],
+              'bg-blue-500':
+                tournament._id && !showParticipants[tournament._id],
+            }"
+            class="text-white px-4 py-2 rounded"
+          >
+            {{
+              tournament._id && showParticipants[tournament._id]
+                ? "Masquer les participants"
+                : "Afficher les participants"
+            }}
+          </button>
+          <button
+            @click="toggleDescription(tournament._id ?? '')"
+            :class="{
+              'bg-green-700': tournament._id && showDescription[tournament._id],
+              'bg-green-500':
+                tournament._id && !showDescription[tournament._id],
+            }"
+            class="text-white px-4 py-2 rounded"
+          >
+            {{
+              tournament._id && showDescription[tournament._id]
+                ? "Masquer la description"
+                : "Afficher la description"
+            }}
+          </button>
+        </div>
         <div v-if="tournament._id && showParticipants[tournament._id]">
           <h3 class="text-xl text-white mt-4">Participants</h3>
           <div v-if="tournament.teams && tournament.teams.length > 0">
@@ -88,6 +109,13 @@
               </li>
             </ul>
           </div>
+        </div>
+        <div v-if="tournament._id && showDescription[tournament._id]">
+          <h3 class="text-xl text-white mt-4">Description</h3>
+          <p v-if="tournament.description" class="text-white">
+            {{ tournament.description }}
+          </p>
+          <p v-else class="text-white">Pas de description</p>
         </div>
         <div v-if="tournament.finished">
           <h3 class="text-xl text-white mt-4">Résultats</h3>
@@ -199,6 +227,7 @@ const tournaments = ref<Tournament[]>([]);
 const selectedGame = ref<string>("");
 const showFinished = ref<boolean>(false);
 const showParticipants = ref<{ [key: string]: boolean }>({});
+const showDescription = ref<{ [key: string]: boolean }>({});
 const showPopup = ref<boolean>(false);
 const selectedTournament = ref<Tournament | null>(null);
 const actionType = ref<string>("register");
@@ -241,6 +270,16 @@ const filteredTournaments = computed(() => {
 
 const toggleParticipants = (tournamentId: string) => {
   showParticipants.value[tournamentId] = !showParticipants.value[tournamentId];
+  if (showParticipants.value[tournamentId]) {
+    showDescription.value[tournamentId] = false;
+  }
+};
+
+const toggleDescription = (tournamentId: string) => {
+  showDescription.value[tournamentId] = !showDescription.value[tournamentId];
+  if (showDescription.value[tournamentId]) {
+    showParticipants.value[tournamentId] = false;
+  }
 };
 
 const openRegistrationPopup = (tournament: Tournament, type: string) => {

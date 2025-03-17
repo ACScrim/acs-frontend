@@ -82,6 +82,20 @@
         />
       </div>
       <div class="mb-6 form-group">
+        <label
+          for="description"
+          class="block text-lg text-white mb-2 neon-label"
+        >
+          Description <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="description"
+          v-model="description"
+          class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-6 form-group">
         <label for="players" class="block text-lg text-white mb-2 neon-label">
           Ajouter des Joueurs
         </label>
@@ -178,6 +192,7 @@ const showPlayerList = ref<boolean>(false);
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const showConfirmationDialog = ref<boolean>(false);
+const description = ref<string>(""); // Ajout de la description
 
 const games = ref<Game[]>([]);
 
@@ -280,6 +295,7 @@ const editTournament = async () => {
       game: games.value.find((g) => g._id === game.value) as Game,
       date: date.value,
       discordChannelName: discordChannelName.value,
+      description: description.value, // Ajout de la description
       players: selectedPlayers.value.map((p) => ({
         _id: p._id,
         username: p.username,
@@ -315,6 +331,7 @@ const deleteTournament = async () => {
       name.value = "";
       game.value = "";
       date.value = "";
+      description.value = ""; // Réinitialiser la description
       discordChannelName.value = "";
       selectedPlayers.value = [];
     }
