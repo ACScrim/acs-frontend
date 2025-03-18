@@ -35,7 +35,7 @@
           Date <span class="text-red-500">*</span>
         </label>
         <input
-          type="date"
+          type="datetime-local"
           id="date"
           v-model="date"
           class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
@@ -125,13 +125,14 @@
   </div>
 </template>
 
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\CreationTournoi.vue -->
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import tournamentService from "../services/tournamentService";
 import gameService from "../services/gameService";
 import type { Game } from "../services/gameService";
 import playerService from "../services/playerService";
-import type { Player } from "../services/playerService";
+import type { Player, PlayerCheckedIn } from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 
 const name = ref<string>("");
@@ -141,7 +142,7 @@ const discordChannelName = ref<string>("");
 const description = ref<string>(""); // Ajout de la description
 const playerSearch = ref<string>("");
 const playerSearchResults = ref<Player[]>([]);
-const selectedPlayers = ref<Player[]>([]);
+const selectedPlayers = ref<PlayerCheckedIn[]>([]);
 const allPlayers = ref<Player[]>([]);
 const showPlayerList = ref<boolean>(false);
 
@@ -178,8 +179,9 @@ const filteredPlayers = computed(() => {
 });
 
 const addPlayer = (player: Player) => {
+  console.log(player);
   if (!selectedPlayers.value.some((p) => p._id === player._id)) {
-    selectedPlayers.value.push(player);
+    selectedPlayers.value.push({ ...player, checkedIn: false });
   }
   playerSearch.value = "";
   playerSearchResults.value = [];
@@ -192,7 +194,7 @@ const addPlayer = (player: Player) => {
   }
 };
 
-const removePlayer = (player: Player) => {
+const removePlayer = (player: PlayerCheckedIn) => {
   selectedPlayers.value = selectedPlayers.value.filter(
     (p) => p._id !== player._id
   );
@@ -200,15 +202,27 @@ const removePlayer = (player: Player) => {
 
 const createTournament = async () => {
   try {
+    const localDate = new Date(date.value); // Utilisez directement la date locale
+    console.log(selectedPlayers.value);
+
+    const checkIns: { [key: string]: boolean } = {};
+    selectedPlayers.value.forEach((player) => {
+      if (player._id) {
+        checkIns[player._id] = false;
+      }
+    });
+
     const tournament = {
       name: name.value,
       game: game.value as Game,
-      date: date.value,
+      date: localDate.toISOString(), // Enregistrez la date locale en ISO
       discordChannelName: discordChannelName.value,
-      description: description.value, // Ajout de la description
+      description: description.value,
       players: selectedPlayers.value,
       finished: false,
+      checkIns,
     };
+
     await tournamentService.createTournament(tournament);
     showMessage("success", "Tournoi créé avec succès !");
     resetForm();

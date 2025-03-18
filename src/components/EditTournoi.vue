@@ -56,10 +56,10 @@
       </div>
       <div class="mb-6 form-group">
         <label for="date" class="block text-lg text-white mb-2 neon-label">
-          Date <span class="text-red-500">*</span>
+          Date et heure <span class="text-red-500">*</span>
         </label>
         <input
-          type="date"
+          type="datetime-local"
           id="date"
           v-model="date"
           class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
@@ -166,7 +166,8 @@
     />
   </div>
 </template>
-
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\EditTournoi.vue -->
+<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\EditTournoi.vue -->
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
@@ -176,7 +177,7 @@ import gameService from "../services/gameService";
 import playerService from "../services/playerService";
 import type { Tournament } from "../services/tournamentService";
 import type { Game } from "../services/gameService";
-import type { Player } from "../services/playerService";
+import type { Player, PlayerCheckedIn } from "../services/playerService";
 
 const tournaments = ref<Tournament[]>([]);
 const selectedTournament = ref<string>("");
@@ -186,7 +187,7 @@ const date = ref<string>("");
 const discordChannelName = ref<string>("");
 const playerSearch = ref<string>("");
 const playerSearchResults = ref<Player[]>([]);
-const selectedPlayers = ref<Player[]>([]);
+const selectedPlayers = ref<PlayerCheckedIn[]>([]);
 const allPlayers = ref<Player[]>([]);
 const showPlayerList = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -214,7 +215,7 @@ const fetchTournaments = async () => {
 };
 
 const formatDate = (isoString: string) => {
-  return isoString.split("T")[0]; // Garde seulement la partie YYYY-MM-DD
+  return isoString.slice(0, 16); // Garde la partie YYYY-MM-DDTHH:mm
 };
 
 const loadTournamentDetails = async () => {
@@ -226,13 +227,16 @@ const loadTournamentDetails = async () => {
     game.value = (tournament.game as any)._id;
     date.value = formatDate(tournament.date); // Si `tournament.date` est en format ISO
     discordChannelName.value = tournament.discordChannelName;
+    description.value = tournament.description || ""; // Utiliser directement la description du tournoi
 
     // Utiliser directement les données des joueurs renvoyées par l'API
     selectedPlayers.value = tournament.players.map((player: any) => ({
       _id: player._id,
       username: player.username,
       userId: player.userId,
+      checkedIn: tournament.checkIns[player._id] || false,
     }));
+    console.log("selectedPlayers", selectedPlayers.value);
   }
 };
 
@@ -268,7 +272,7 @@ const filteredPlayers = computed(() => {
 
 const addPlayer = (player: Player) => {
   if (!selectedPlayers.value.some((p) => p._id === player._id)) {
-    selectedPlayers.value.push(player);
+    selectedPlayers.value.push({ ...player, checkedIn: false });
   }
   playerSearch.value = "";
   playerSearchResults.value = [];
@@ -281,7 +285,7 @@ const addPlayer = (player: Player) => {
   }
 };
 
-const removePlayer = (player: Player) => {
+const removePlayer = (player: PlayerCheckedIn) => {
   selectedPlayers.value = selectedPlayers.value.filter(
     (p) => p._id !== player._id
   );
@@ -293,14 +297,10 @@ const editTournament = async () => {
       _id: selectedTournament.value,
       name: name.value,
       game: games.value.find((g) => g._id === game.value) as Game,
-      date: date.value,
+      date: new Date(date.value).toISOString(), // Convertir en format ISO
       discordChannelName: discordChannelName.value,
       description: description.value, // Ajout de la description
-      players: selectedPlayers.value.map((p) => ({
-        _id: p._id,
-        username: p.username,
-        userId: p.userId,
-      })),
+      players: selectedPlayers.value,
       finished: false,
     };
     await tournamentService.updateTournament(

@@ -9,6 +9,10 @@ export interface Player {
   discordId?: string;
 }
 
+export interface PlayerCheckedIn extends Player {
+  checkedIn: boolean;
+}
+
 export interface PlayerRanking {
   playerId: string;
   username: string;
@@ -46,6 +50,13 @@ const getPlayerById = async (id: string): Promise<Player> => {
 const searchPlayers = async (search: string): Promise<Player[]> => {
   const response = await axios.get(`${API_URL}/search`, {
     params: { search },
+    withCredentials: true,
+  });
+  return response.data;
+};
+// Nouvelle fonction pour récupérer un joueur par userId
+const getPlayerByIdUser = async (userId: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/user/${userId}`, {
     withCredentials: true,
   });
   return response.data;
@@ -106,4 +117,5 @@ export default {
   updatePlayerUsername,
   getPlayerRankings,
   getPlayerRankingsByGame,
+  getPlayerByIdUser,
 };

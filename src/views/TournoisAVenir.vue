@@ -42,7 +42,7 @@
       >
         <h2 class="text-2xl text-white mb-2">{{ tournament.name }}</h2>
         <p class="text-white">
-          <strong>Date:</strong> {{ formatDate(tournament.date) }} 20:30
+          <strong>Date:</strong> {{ formatLocalDate(tournament.date) }}
         </p>
         <p class="text-white">
           <strong>Jeu:</strong> {{ tournament.game.name }}
@@ -153,6 +153,40 @@
             </svg>
           </button>
           <button
+            v-else-if="isWithin24Hours(tournament.date)"
+            @click="
+              tournament._id &&
+                checkIn(tournament._id, !checkedInPlayers[tournament._id])
+            "
+            :class="{
+              'bg-green-500':
+                tournament._id && checkedInPlayers[tournament._id],
+              'bg-yellow-500':
+                tournament._id && !checkedInPlayers[tournament._id],
+            }"
+            class="absolute top-4 right-4 text-white px-4 py-2 rounded flex items-center"
+          >
+            <span class="mr-2">
+              {{
+                tournament._id && checkedInPlayers[tournament._id]
+                  ? "Check-in confirmé"
+                  : "Check-in"
+              }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <button
             v-else
             @click="openRegistrationPopup(tournament, 'unregister')"
             class="absolute top-4 right-4 bg-gray-500 text-white px-4 py-2 rounded flex items-center"
@@ -220,7 +254,8 @@ import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
 import type { Game } from "../services/gameService";
 import type { Tournament } from "../services/tournamentService";
-import type { Player } from "../services/playerService";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
@@ -243,19 +278,24 @@ const fetchGames = async () => {
 };
 
 const fetchTournaments = async () => {
+  checkedInPlayers.value = {}; // Réinitialise les check-ins
   tournaments.value = await tournamentService.getTournaments();
-  // Ajouter la propriété showParticipants à chaque tournoi
-  tournaments.value.forEach(async (tournament) => {
-    if (tournament.winningTeam && tournament.winningTeam.players) {
-      const playerDetails = await Promise.all(
-        tournament.winningTeam.players.map((player: Player) =>
-          playerService.getPlayerById(player._id as string)
-        )
-      );
-      tournament.winningTeam.players = playerDetails;
+
+  // Vérifie si l'utilisateur est check-in
+  if (user.value) {
+    const player = await playerService.getPlayerByIdUser(user.value._id);
+    if (player && player._id) {
+      tournaments.value.forEach((tournament) => {
+        if (tournament._id) {
+          checkedInPlayers.value[tournament._id] =
+            (tournament.checkIns &&
+              player._id &&
+              tournament.checkIns[player._id]) ||
+            false;
+        }
+      });
     }
-  });
-  console.log(tournaments.value);
+  }
 };
 
 const filteredTournaments = computed(() => {
@@ -326,13 +366,51 @@ const isUserRegistered = (tournament: Tournament) => {
     : false;
 };
 
-// Fonction utilitaire pour formater la date
-const formatDate = (dateString: string) => {
+const isWithin24Hours = (dateString: string) => {
+  const tournamentDate = new Date(dateString); // Date du tournoi en heure locale
+  const now = new Date(); // Date actuelle en heure locale
+
+  const diff = tournamentDate.getTime() - now.getTime(); // Différence en millisecondes
+
+  console.log("Tournament Date (local):", tournamentDate);
+  console.log("Now (local):", now);
+  console.log("Difference (ms):", diff);
+  console.log("Is within 24 hours:", diff > 0 && diff <= 24 * 60 * 60 * 1000);
+
+  return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+};
+
+const formatLocalDate = (dateString: string) => {
   const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
+  return date.toLocaleString("fr-FR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const checkedInPlayers = ref<{ [key: string]: boolean }>({});
+
+const checkIn = async (tournamentId: string, checkedIn: boolean) => {
+  checkedInPlayers.value[tournamentId] = checkedIn;
+  console.log("checkIn", tournamentId, checkedIn);
+
+  try {
+    if (user.value) {
+      await tournamentService.checkInPlayer(
+        tournamentId,
+        user.value._id,
+        checkedIn
+      );
+    }
+    showMessage("success", "Check-in réussi !");
+    fetchTournaments(); // Recharge les tournois pour mettre à jour l'état
+  } catch (error) {
+    console.error("Erreur lors du check-in:", error);
+    showMessage("error", "Erreur lors du check-in.");
+  }
 };
 
 const showMessage = (type: "success" | "error", message: string) => {
