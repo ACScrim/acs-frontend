@@ -202,26 +202,27 @@ const removePlayer = (player: PlayerCheckedIn) => {
 
 const createTournament = async () => {
   try {
-    const localDate = new Date(date.value);
-    const offset = localDate.getTimezoneOffset();
-    const adjustedDate = new Date(localDate.getTime() - offset * 60 * 1000);
+    const localDate = new Date(date.value); // Utilisez directement la date locale
     console.log(selectedPlayers.value);
+
     const checkIns: { [key: string]: boolean } = {};
     selectedPlayers.value.forEach((player) => {
       if (player._id) {
         checkIns[player._id] = false;
       }
     });
+
     const tournament = {
       name: name.value,
       game: game.value as Game,
-      date: adjustedDate.toISOString(),
+      date: localDate.toISOString(), // Enregistrez la date locale en ISO
       discordChannelName: discordChannelName.value,
-      description: description.value, // Ajout de la description
+      description: description.value,
       players: selectedPlayers.value,
       finished: false,
-      checkIns, // Initialiser checkIns
+      checkIns,
     };
+
     await tournamentService.createTournament(tournament);
     showMessage("success", "Tournoi créé avec succès !");
     resetForm();

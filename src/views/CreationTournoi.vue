@@ -19,6 +19,13 @@
         Gestion des Équipes
       </button>
       <button
+        :class="{ 'active-tab': activeTab === 'checkin' }"
+        @click="activeTab = 'checkin'"
+        class="tab w-full md:w-auto mb-2 md:mb-0"
+      >
+        Voir les Check-in
+      </button>
+      <button
         :class="{ 'active-tab': activeTab === 'end' }"
         @click="activeTab = 'end'"
         class="tab w-full md:w-auto mb-2 md:mb-0"
@@ -32,6 +39,9 @@
     <div v-if="activeTab === 'teams'">
       <GestionEquipe />
     </div>
+    <div v-if="activeTab === 'checkin'">
+      <VoirCheckIn />
+    </div>
     <div v-if="activeTab === 'end'">
       <EndTournoi />
     </div>
@@ -43,6 +53,7 @@ import { ref } from "vue";
 import CreationTournoiForm from "../components/CreationTournoiForm.vue";
 import GestionEquipe from "../components/GestionEquipe.vue";
 import EndTournoi from "../components/EndTournoi.vue";
+import VoirCheckIn from "../components/VoirCheckIn.vue";
 
 const activeTab = ref("creation");
 </script>

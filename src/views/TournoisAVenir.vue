@@ -42,7 +42,7 @@
       >
         <h2 class="text-2xl text-white mb-2">{{ tournament.name }}</h2>
         <p class="text-white">
-          <strong>Date:</strong> {{ formatDate(tournament.date) }}
+          <strong>Date:</strong> {{ formatLocalDate(tournament.date) }}
         </p>
         <p class="text-white">
           <strong>Jeu:</strong> {{ tournament.game.name }}
@@ -156,7 +156,7 @@
             v-else-if="isWithin24Hours(tournament.date)"
             @click="
               tournament._id &&
-                checkIn(tournament._id, !isPlayerCheckedIn(tournament))
+                checkIn(tournament._id, !checkedInPlayers[tournament._id])
             "
             :class="{
               'bg-green-500': checkedInPlayers[tournament._id],
@@ -166,7 +166,7 @@
           >
             <span class="mr-2">
               {{
-                tournament._id && checkedInPlayers[tournament._id]
+                checkedInPlayers[tournament._id]
                   ? "Check-in confirmé"
                   : "Check-in"
               }}
@@ -184,7 +184,6 @@
               />
             </svg>
           </button>
-
           <button
             v-else
             @click="openRegistrationPopup(tournament, 'unregister')"
@@ -288,7 +287,6 @@ const fetchTournaments = async () => {
       tournaments.value.forEach((tournament) => {
         checkedInPlayers.value[tournament._id] =
           tournament.checkIns?.[player._id] || false;
-        console.log("tournoi", tournament.checkIns);
       });
     }
   }
@@ -362,24 +360,36 @@ const isUserRegistered = (tournament: Tournament) => {
     : false;
 };
 
-const isWithin24Hours = (date: string) => {
-  const tournamentDate = new Date(date);
-  console.log("tournamentDate", tournamentDate);
-  const now = new Date();
-  const diff = tournamentDate.getTime() - now.getTime();
-  console.log("diff", diff);
+const isWithin24Hours = (dateString: string) => {
+  const tournamentDate = new Date(dateString); // Date du tournoi en heure locale
+  const now = new Date(); // Date actuelle en heure locale
 
-  return diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+  const diff = tournamentDate.getTime() - now.getTime(); // Différence en millisecondes
+
+  console.log("Tournament Date (local):", tournamentDate);
+  console.log("Now (local):", now);
+  console.log("Difference (ms):", diff);
+  console.log("Is within 24 hours:", diff > 0 && diff <= 24 * 60 * 60 * 1000);
+
+  return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 };
 
-const isPlayerCheckedIn = (tournament: Tournament) => {
-  return checkedInPlayers.value[tournament._id] || false;
+const formatLocalDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleString("fr-FR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   checkedInPlayers.value[tournamentId] = checkedIn;
+  console.log("checkIn", tournamentId, checkedIn);
 
   try {
     if (user.value) {
@@ -390,7 +400,7 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
       );
     }
     showMessage("success", "Check-in réussi !");
-    fetchTournaments();
+    fetchTournaments(); // Recharge les tournois pour mettre à jour l'état
   } catch (error) {
     console.error("Erreur lors du check-in:", error);
     showMessage("error", "Erreur lors du check-in.");
