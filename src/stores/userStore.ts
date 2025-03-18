@@ -10,17 +10,6 @@ interface User {
   discordId: string;
 }
 
-interface Badge {
-  _id: string;
-  title: string;
-  imageUrl: string;
-}
-
-interface Tournament {
-  _id: string;
-  name: string;
-}
-
 export const useUserStore = defineStore("user", {
   state: () => ({
     user: null as User | null,

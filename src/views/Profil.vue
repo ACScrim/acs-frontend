@@ -25,8 +25,12 @@
       </p>
       <h2 class="text-2xl text-white mt-8 mb-4">Tournois</h2>
       <ul class="text-white">
-        <li v-for="tournament in player.tournaments" :key="tournament._id">
-          {{ tournament.name }}
+        <li
+          v-for="tournament in playerRanking?.tournamentsParticipated"
+          :key="tournament._id"
+        >
+          {{ tournament.name }} -
+          {{ new Date(tournament.date).toLocaleDateString() }}
         </li>
       </ul>
     </div>

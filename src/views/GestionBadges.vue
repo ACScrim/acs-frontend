@@ -106,7 +106,7 @@
             />
             {{ badge.title }}
             <button
-              @click="removeBadge(badge._id)"
+              @click="badge._id ? removeBadge(badge._id) : null"
               class="ml-2 px-2 py-1 bg-red-500 text-white rounded shadow hover:bg-red-600"
             >
               Supprimer
@@ -137,8 +137,10 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import badgeService, { Badge } from "../services/badgeService";
-import playerService, { Player } from "../services/playerService";
+import badgeService from "../services/badgeService";
+import type { Badge } from "../services/badgeService";
+import playerService from "../services/playerService";
+import type { Player } from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 
 const newBadge = ref<Badge>({ title: "", imageUrl: "" });
@@ -223,9 +225,13 @@ const fetchBadges = async () => {
 const fetchPlayerBadges = async (playerId: string) => {
   try {
     const player = await playerService.getPlayerById(playerId);
-    const badgePromises = player.badges.map((badgeId: string) =>
-      badgeService.getBadgeById(badgeId)
-    );
+    const badgePromises = player.badges
+      ? player.badges.map((badge: Badge) =>
+          badge._id
+            ? badgeService.getBadgeById(badge._id)
+            : Promise.reject("Badge ID is undefined")
+        )
+      : [];
     selectedPlayerBadges.value = await Promise.all(badgePromises);
     console.log("selectedPlayerBadges", selectedPlayerBadges.value);
   } catch (error) {

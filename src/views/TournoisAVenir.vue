@@ -254,8 +254,6 @@ import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
 import type { Game } from "../services/gameService";
 import type { Tournament } from "../services/tournamentService";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
