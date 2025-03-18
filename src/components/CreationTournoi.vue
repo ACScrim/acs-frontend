@@ -179,7 +179,6 @@ const filteredPlayers = computed(() => {
 });
 
 const addPlayer = (player: Player) => {
-  console.log(player);
   if (!selectedPlayers.value.some((p) => p._id === player._id)) {
     selectedPlayers.value.push({ ...player, checkedIn: false });
   }
@@ -203,8 +202,6 @@ const removePlayer = (player: PlayerCheckedIn) => {
 const createTournament = async () => {
   try {
     const localDate = new Date(date.value); // Utilisez directement la date locale
-    console.log(selectedPlayers.value);
-
     const checkIns: { [key: string]: boolean } = {};
     selectedPlayers.value.forEach((player) => {
       if (player._id) {

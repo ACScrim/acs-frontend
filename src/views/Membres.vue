@@ -61,7 +61,6 @@ const fetchUsers = async () => {
       }
     }
     users.value = fetchedUsers;
-    console.log("Utilisateurs récupérés:", users.value);
   } catch (err) {
     console.error("Erreur lors de la récupération des utilisateurs:", err);
     error.value = "Erreur lors de la récupération des utilisateurs.";

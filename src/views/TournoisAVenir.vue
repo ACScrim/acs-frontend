@@ -368,12 +368,7 @@ const isWithin24Hours = (dateString: string) => {
   const tournamentDate = new Date(dateString); // Date du tournoi en heure locale
   const now = new Date(); // Date actuelle en heure locale
 
-  const diff = tournamentDate.getTime() - now.getTime(); // Différence en millisecondes
-
-  console.log("Tournament Date (local):", tournamentDate);
-  console.log("Now (local):", now);
-  console.log("Difference (ms):", diff);
-  console.log("Is within 24 hours:", diff > 0 && diff <= 24 * 60 * 60 * 1000);
+  const diff = tournamentDate.getTime() - now.getTime(); // Différence en milliseconde
 
   return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 };
@@ -393,7 +388,6 @@ const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   checkedInPlayers.value[tournamentId] = checkedIn;
-  console.log("checkIn", tournamentId, checkedIn);
 
   try {
     if (user.value) {

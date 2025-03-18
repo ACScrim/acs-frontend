@@ -233,7 +233,6 @@ const fetchPlayerBadges = async (playerId: string) => {
         )
       : [];
     selectedPlayerBadges.value = await Promise.all(badgePromises);
-    console.log("selectedPlayerBadges", selectedPlayerBadges.value);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des badges du joueur:",

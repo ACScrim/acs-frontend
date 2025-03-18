@@ -238,7 +238,6 @@ const loadTournamentDetails = async () => {
         ? tournament.checkIns[player._id] || false
         : false,
     }));
-    console.log("selectedPlayers", selectedPlayers.value);
   }
 };
 
