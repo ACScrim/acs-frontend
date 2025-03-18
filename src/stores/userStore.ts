@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-
+import playerService from "../services/playerService";
+import type { Player } from "../services/playerService";
 interface User {
   _id: string;
   username: string;
@@ -9,9 +10,21 @@ interface User {
   discordId: string;
 }
 
+interface Badge {
+  _id: string;
+  title: string;
+  imageUrl: string;
+}
+
+interface Tournament {
+  _id: string;
+  name: string;
+}
+
 export const useUserStore = defineStore("user", {
   state: () => ({
     user: null as User | null,
+    player: null as Player | null,
   }),
   getters: {
     isSuperAdmin: (state) => state.user?.role === "superadmin",
@@ -26,9 +39,21 @@ export const useUserStore = defineStore("user", {
           }
         );
         this.user = response.data;
+        if (this.user) {
+          await this.fetchPlayer(this.user._id);
+        }
       } catch (error) {
         console.error("Error fetching user profile:", error);
         this.user = null; // Assurez-vous de réinitialiser l'utilisateur en cas d'erreur
+      }
+    },
+    async fetchPlayer(userId: string) {
+      try {
+        const player = await playerService.getPlayerByIdUser(userId);
+        this.player = player;
+      } catch (error) {
+        console.error("Error fetching player profile:", error);
+        this.player = null; // Assurez-vous de réinitialiser le joueur en cas d'erreur
       }
     },
     async logout() {
@@ -42,6 +67,7 @@ export const useUserStore = defineStore("user", {
           }
         );
         this.user = null;
+        this.player = null;
         console.log("Logged out successfully");
       } catch (error) {
         console.error("Error logging out:", error);

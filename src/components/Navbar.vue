@@ -90,6 +90,10 @@
           v-if="menuOpen"
           class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20"
         >
+          <router-link :to="{ name: 'Profil', params: { id: player?._id } }"
+            >Mon Profil</router-link
+          >
+
           <button @click="logout" class="menu-button">Déconnexion</button>
         </div>
       </div>
@@ -176,6 +180,14 @@
         Gestion tournois
       </router-link>
       <router-link
+        to="/gestion-badges"
+        @click="closeAllMenus"
+        class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        :class="{ 'bg-gray-200': isActive('/gestion-badges') }"
+      >
+        Gestion des badges
+      </router-link>
+      <router-link
         to="/synchronisation-joueurs"
         @click="closeAllMenus"
         class="block px-4 py-2 text-gray-800 hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
@@ -203,6 +215,8 @@ import { useRouter, useRoute } from "vue-router";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
+const player = computed(() => userStore.player);
+
 const isAdmin = computed(
   () =>
     user.value &&

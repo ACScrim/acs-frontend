@@ -5,7 +5,13 @@
     <table class="min-w-full bg-white">
       <tbody>
         <tr v-for="user in users" :key="user._id">
-          <td class="py-2 px-4 border-b">{{ user.username }}</td>
+          <td class="py-2 px-4 border-b">
+            <router-link
+              :to="{ name: 'Profil', params: { id: user.playerId } }"
+            >
+              {{ user.username }}
+            </router-link>
+          </td>
           <td>
             <img
               v-if="user.avatarUrl"
@@ -21,10 +27,10 @@
     <Toast v-if="success" type="success" :message="success" />
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import userService from "../services/userService";
+import playerService from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 
 interface User {
@@ -33,6 +39,7 @@ interface User {
   email: string;
   role: string;
   avatarUrl: string;
+  playerId?: string; // Ajout de playerId
 }
 
 const users = ref<User[]>([]);
@@ -41,7 +48,19 @@ const success = ref<string | null>(null);
 
 const fetchUsers = async () => {
   try {
-    users.value = await userService.fetchAllUsers();
+    const fetchedUsers = await userService.fetchAllUsers();
+    for (const user of fetchedUsers) {
+      try {
+        const player = await playerService.getPlayerByIdUser(user._id!);
+        user.playerId = player._id;
+      } catch (err) {
+        console.error(
+          `Erreur lors de la récupération du joueur pour l'utilisateur ${user._id}:`,
+          err
+        );
+      }
+    }
+    users.value = fetchedUsers;
     console.log("Utilisateurs récupérés:", users.value);
   } catch (err) {
     console.error("Erreur lors de la récupération des utilisateurs:", err);

@@ -107,6 +107,12 @@ const getPlayerRankingsByGame = async (
   return response.data;
 };
 
+const getPlayerProfile = async (userId: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/profile/${userId}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
 export default {
   addPlayer,
   getPlayers,
@@ -118,4 +124,5 @@ export default {
   getPlayerRankings,
   getPlayerRankingsByGame,
   getPlayerByIdUser,
+  getPlayerProfile,
 };

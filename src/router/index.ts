@@ -8,6 +8,8 @@ import SynchronizePlayers from "../views/SynchronizePlayers.vue";
 import TournoisAVenir from "../views/TournoisAVenir.vue";
 import Classement from "../views/Classement.vue";
 import Membres from "../views/Membres.vue";
+import GestionBadges from "../views/GestionBadges.vue";
+import Profil from "../views/Profil.vue"; // Import du composant Profil
 
 const routes = [
   { path: "/", component: Home },
@@ -39,17 +41,27 @@ const routes = [
   {
     path: "/tournois-a-venir",
     name: "TournoisAVenir",
-    component: TournoisAVenir, // Ajoutez la nouvelle route
+    component: TournoisAVenir,
   },
   {
     path: "/classement",
     name: "Classement",
-    component: Classement, // Ajoutez la nouvelle route
+    component: Classement,
   },
   {
     path: "/membres",
     name: "Membres",
-    component: Membres, // Ajout de la nouvelle route
+    component: Membres,
+  },
+  {
+    path: "/gestion-badges",
+    name: "GestionBadges",
+    component: GestionBadges,
+  },
+  {
+    path: "/profil/:id", // Ajout de la route pour le profil
+    name: "Profil",
+    component: Profil,
   },
 ];
 
