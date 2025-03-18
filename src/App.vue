@@ -4,12 +4,12 @@ import Navbar from "./components/Navbar.vue";
 </script>
 
 <template>
-  <div class="relative min-h-screen flex flex-col">
+  <div class="relative min-h-screen">
     <video
       autoplay
       muted
       loop
-      class="absolute inset-0 w-full h-full object-cover opacity-100 z-10"
+      class="fixed inset-0 w-full h-full object-cover opacity-100 z-10"
     >
       <source src="@/assets/background-video.mp4" type="video/mp4" />
       Your browser does not support the video tag.
@@ -22,5 +22,10 @@ import Navbar from "./components/Navbar.vue";
 </template>
 
 <style scoped>
-/* Styles supplémentaires si nécessaire */
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
 </style>
