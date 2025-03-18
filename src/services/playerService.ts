@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { Badge } from "./badgeService";
 
 const API_URL = import.meta.env.VITE_API_URL + "/players";
 
@@ -7,10 +8,17 @@ export interface Player {
   username: string;
   userId: string;
   discordId?: string;
+  badges?: Badge[];
 }
 
 export interface PlayerCheckedIn extends Player {
   checkedIn: boolean;
+}
+
+export interface Tournament {
+  _id?: string;
+  name: string;
+  date: string;
 }
 
 export interface PlayerRanking {
@@ -19,6 +27,7 @@ export interface PlayerRanking {
   totalPoints: number;
   totalTournaments: number;
   totalVictories: number;
+  tournamentsParticipated: Tournament[];
 }
 
 export interface TournamentWinner {
@@ -107,6 +116,12 @@ const getPlayerRankingsByGame = async (
   return response.data;
 };
 
+const getPlayerProfile = async (userId: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/profile/${userId}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
 export default {
   addPlayer,
   getPlayers,
@@ -118,4 +133,5 @@ export default {
   getPlayerRankings,
   getPlayerRankingsByGame,
   getPlayerByIdUser,
+  getPlayerProfile,
 };
