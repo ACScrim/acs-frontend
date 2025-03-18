@@ -159,14 +159,16 @@
                 checkIn(tournament._id, !checkedInPlayers[tournament._id])
             "
             :class="{
-              'bg-green-500': checkedInPlayers[tournament._id],
-              'bg-yellow-500': !checkedInPlayers[tournament._id],
+              'bg-green-500':
+                tournament._id && checkedInPlayers[tournament._id],
+              'bg-yellow-500':
+                tournament._id && !checkedInPlayers[tournament._id],
             }"
             class="absolute top-4 right-4 text-white px-4 py-2 rounded flex items-center"
           >
             <span class="mr-2">
               {{
-                checkedInPlayers[tournament._id]
+                tournament._id && checkedInPlayers[tournament._id]
                   ? "Check-in confirmé"
                   : "Check-in"
               }}
@@ -252,7 +254,6 @@ import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
 import type { Game } from "../services/gameService";
 import type { Tournament } from "../services/tournamentService";
-import type { Player } from "../services/playerService";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -285,8 +286,13 @@ const fetchTournaments = async () => {
     const player = await playerService.getPlayerByIdUser(user.value._id);
     if (player && player._id) {
       tournaments.value.forEach((tournament) => {
-        checkedInPlayers.value[tournament._id] =
-          tournament.checkIns?.[player._id] || false;
+        if (tournament._id) {
+          checkedInPlayers.value[tournament._id] =
+            (tournament.checkIns &&
+              player._id &&
+              tournament.checkIns[player._id]) ||
+            false;
+        }
       });
     }
   }
@@ -405,11 +411,6 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
     console.error("Erreur lors du check-in:", error);
     showMessage("error", "Erreur lors du check-in.");
   }
-};
-
-// Fonction utilitaire pour formater la date
-const formatDate = (dateString: string) => {
-  return format(new Date(dateString), "dd-MM-yyyy HH:mm", { locale: fr });
 };
 
 const showMessage = (type: "success" | "error", message: string) => {

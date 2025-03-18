@@ -47,7 +47,11 @@
           :key="player._id"
         >
           {{ player.username }} - Check-in:
-          {{ selectedTournamentDetails.checkIns[player._id] ? "Oui" : "Non" }}
+          {{
+            player._id && selectedTournamentDetails?.checkIns?.[player._id]
+              ? "Oui"
+              : "Non"
+          }}
         </li>
       </ul>
     </div>
