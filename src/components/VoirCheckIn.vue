@@ -1,65 +1,289 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\VoirCheckIn.vue -->
 <template>
-  <div class="container mx-auto p-4 bg-neon-gradient min-h-screen">
-    <h1 class="text-4xl text-white mb-8 neon-text">Voir les Check-in</h1>
+  <div class="check-in-container">
+    <h1 class="cyber-title">Statut des Check-ins</h1>
 
-    <div class="mb-4">
-      <label for="game" class="block text-lg text-white mb-2 neon-label"
-        >Sélectionner un jeu</label
-      >
-      <select
-        id="game"
-        v-model="selectedGame"
-        @change="fetchTournamentsByGame"
-        class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        <option v-for="game in games" :key="game._id" :value="game._id">
-          {{ game.name }}
-        </option>
-      </select>
+    <!-- Formulaire de sélection -->
+    <div class="selection-grid">
+      <!-- Sélection du jeu -->
+      <div class="form-group">
+        <label for="game" class="form-label">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+            />
+          </svg>
+          Sélectionner un jeu
+        </label>
+        <div class="select-wrapper">
+          <select
+            id="game"
+            v-model="selectedGame"
+            @change="fetchTournamentsByGame"
+            class="cyber-select"
+          >
+            <option value="" disabled selected>Choisissez un jeu</option>
+            <option v-for="game in games" :key="game._id" :value="game._id">
+              {{ game.name }}
+            </option>
+          </select>
+          <div class="select-arrow"></div>
+        </div>
+      </div>
+
+      <!-- Sélection du tournoi -->
+      <div class="form-group" v-if="tournaments.length > 0">
+        <label for="tournament" class="form-label">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Sélectionner un tournoi
+        </label>
+        <div class="select-wrapper">
+          <select
+            id="tournament"
+            v-model="selectedTournament"
+            @change="fetchTournamentDetails"
+            class="cyber-select"
+          >
+            <option value="" disabled selected>Choisissez un tournoi</option>
+            <option
+              v-for="tournament in tournaments"
+              :key="tournament._id"
+              :value="tournament._id"
+            >
+              {{ tournament.name }}
+            </option>
+          </select>
+          <div class="select-arrow"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="mb-4" v-if="tournaments.length > 0">
-      <label for="tournament" class="block text-lg text-white mb-2 neon-label"
-        >Sélectionner un tournoi</label
-      >
-      <select
-        id="tournament"
-        v-model="selectedTournament"
-        @change="fetchTournamentDetails"
-        class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        <option
-          v-for="tournament in tournaments"
-          :key="tournament._id"
-          :value="tournament._id"
-        >
-          {{ tournament.name }}
-        </option>
-      </select>
-    </div>
+    <!-- Détails du tournoi et statuts des check-ins -->
+    <div v-if="selectedTournamentDetails" class="tournament-details-container">
+      <div class="tournament-header">
+        <h2 class="tournament-name">{{ selectedTournamentDetails.name }}</h2>
+        <div class="tournament-stats">
+          <div class="stat-item">
+            <span class="stat-label">Date:</span>
+            <span class="stat-value">{{
+              new Date(selectedTournamentDetails.date).toLocaleString()
+            }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Joueurs:</span>
+            <span class="stat-value">{{
+              selectedTournamentDetails.players.length
+            }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Check-ins:</span>
+            <span class="stat-value"
+              >{{ getCheckedInCount() }} /
+              {{ selectedTournamentDetails.players.length }}</span
+            >
+          </div>
+        </div>
+      </div>
 
-    <div v-if="selectedTournamentDetails">
-      <h2 class="text-xl font-bold mb-4 text-white">Joueurs du tournoi</h2>
-      <ul class="text-white">
-        <li
+      <div class="check-in-progress">
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            :style="{ width: getCheckedInPercentage() + '%' }"
+          ></div>
+        </div>
+        <div class="progress-text">
+          {{ getCheckedInPercentage() }}% des joueurs ont fait leur check-in
+        </div>
+      </div>
+
+      <div class="players-grid">
+        <div
           v-for="player in selectedTournamentDetails.players"
           :key="player._id"
+          :class="[
+            'player-card',
+            {
+              'checked-in':
+                player._id && selectedTournamentDetails?.checkIns?.[player._id],
+            },
+          ]"
         >
-          {{ player.username }} - Check-in:
-          {{
-            player._id && selectedTournamentDetails?.checkIns?.[player._id]
-              ? "Oui"
-              : "Non"
-          }}
-        </li>
-      </ul>
+          <div class="player-avatar">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="player-info">
+            <div class="player-name">{{ player.username }}</div>
+            <div
+              :class="[
+                'check-in-status',
+                {
+                  'status-yes':
+                    player._id &&
+                    selectedTournamentDetails?.checkIns?.[player._id],
+                  'status-no': !(
+                    player._id &&
+                    selectedTournamentDetails?.checkIns?.[player._id]
+                  ),
+                },
+              ]"
+            >
+              <svg
+                v-if="
+                  player._id &&
+                  selectedTournamentDetails?.checkIns?.[player._id]
+                "
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <svg
+                v-else
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {{
+                player._id && selectedTournamentDetails?.checkIns?.[player._id]
+                  ? "Check-in confirmé"
+                  : "En attente"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-container">
+        <button class="refresh-button" @click="fetchTournamentDetails">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Rafraîchir les statuts
+        </button>
+      </div>
+    </div>
+
+    <!-- État vide ou chargement -->
+    <div
+      v-else-if="selectedTournament && !selectedTournamentDetails"
+      class="empty-state loading"
+    >
+      <svg
+        class="animate-spin h-10 w-10"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <p>Chargement des informations du tournoi...</p>
+    </div>
+
+    <div
+      v-else-if="tournaments.length > 0 && !selectedTournament"
+      class="empty-state"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-16 w-16"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+        <path
+          fill-rule="evenodd"
+          d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <p>Veuillez sélectionner un tournoi pour voir les status des check-ins</p>
+    </div>
+
+    <div
+      v-else-if="selectedGame && tournaments.length === 0"
+      class="empty-state"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-16 w-16"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <p>Aucun tournoi actif pour ce jeu</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
 import type { Game } from "../services/gameService";
@@ -82,6 +306,9 @@ const fetchGames = async () => {
 
 // Récupérer les tournois pour un jeu sélectionné
 const fetchTournamentsByGame = async () => {
+  selectedTournament.value = "";
+  selectedTournamentDetails.value = null;
+
   if (selectedGame.value) {
     const allTournaments = await tournamentService.getTournamentsByGame(
       selectedGame.value
@@ -101,6 +328,31 @@ const fetchTournamentDetails = async () => {
   }
 };
 
+// Calculer le nombre de joueurs ayant fait leur check-in
+const getCheckedInCount = () => {
+  if (
+    !selectedTournamentDetails.value ||
+    !selectedTournamentDetails.value.checkIns
+  )
+    return 0;
+
+  return Object.values(selectedTournamentDetails.value.checkIns).filter(Boolean)
+    .length;
+};
+
+// Calculer le pourcentage de check-ins
+const getCheckedInPercentage = () => {
+  if (
+    !selectedTournamentDetails.value ||
+    !selectedTournamentDetails.value.players.length
+  )
+    return 0;
+
+  const count = getCheckedInCount();
+  const total = selectedTournamentDetails.value.players.length;
+  return Math.round((count / total) * 100);
+};
+
 // Charger les jeux au montage du composant
 onMounted(() => {
   fetchGames();
@@ -108,5 +360,394 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Add any specific styles for the VoirCheckIn component here */
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+
+/* Container principal */
+.check-in-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2rem;
+  background: rgba(13, 6, 23, 0.7);
+  border-radius: 1rem;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de grille en arrière-plan */
+.check-in-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      to right,
+      rgba(139, 92, 246, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
+  transform: perspective(500px) rotateX(10deg);
+  opacity: 0.3;
+}
+
+/* Titre principal avec effet néon */
+.cyber-title {
+  font-family: "Audiowide", cursive;
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+    0 0 40px #ff00ff;
+  position: relative;
+  letter-spacing: 2px;
+}
+
+/* Grille de sélection */
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Groupe de formulaire */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Label du formulaire */
+.form-label {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #06b6d4;
+  margin-bottom: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
+}
+
+/* Container pour le select */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Select stylisé */
+.cyber-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  color: white;
+  background-color: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  border-radius: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+.cyber-select:focus {
+  outline: none;
+  border-color: #06b6d4;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+/* Flèche personnalisée pour le select */
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #06b6d4;
+  pointer-events: none;
+}
+
+/* Container des détails du tournoi */
+.tournament-details-container {
+  background: rgba(17, 24, 39, 0.7);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* En-tête du tournoi */
+.tournament-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+  padding-bottom: 1rem;
+}
+
+/* Nom du tournoi */
+.tournament-name {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f0abfc;
+  text-shadow: 0 0 5px rgba(240, 171, 252, 0.7);
+}
+
+/* Stats du tournoi */
+.tournament-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #a78bfa;
+  font-family: "Orbitron", sans-serif;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  color: white;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+}
+
+/* Barre de progression des check-ins */
+.check-in-progress {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  height: 0.75rem;
+  background: rgba(55, 65, 81, 0.5);
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  text-align: center;
+  color: #a78bfa;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.875rem;
+}
+
+/* Grille des joueurs */
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Carte de joueur */
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.player-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.25rem;
+  height: 100%;
+  background: #ef4444;
+  opacity: 0.7;
+}
+
+.player-card.checked-in::before {
+  background: #10b981;
+}
+
+.player-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Avatar du joueur */
+.player-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: rgba(17, 24, 39, 0.7);
+  border-radius: 50%;
+  color: #a78bfa;
+}
+
+/* Informations du joueur */
+.player-info {
+  flex: 1;
+}
+
+.player-name {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+/* Statut de check-in */
+.check-in-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-family: "Orbitron", sans-serif;
+}
+
+.status-yes {
+  color: #10b981;
+}
+
+.status-no {
+  color: #ef4444;
+}
+
+/* Conteneur d'actions */
+.actions-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* Bouton de rafraîchissement */
+.refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  color: white;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.refresh-button:hover {
+  background: linear-gradient(45deg, #3b82f6, #60a5fa);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+  transform: translateY(-2px);
+}
+
+.refresh-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.6s ease;
+}
+
+.refresh-button:hover::before {
+  left: 100%;
+}
+
+/* États vides */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: rgba(17, 24, 39, 0.5);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+}
+
+.empty-state svg {
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  font-family: "Orbitron", sans-serif;
+  text-align: center;
+}
+
+/* État de chargement */
+.empty-state.loading {
+  color: #8b5cf6;
+}
+
+/* Animation de rotation */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Media queries pour responsive */
+@media (max-width: 768px) {
+  .check-in-container {
+    padding: 1rem;
+  }
+
+  .cyber-title {
+    font-size: 2rem;
+  }
+
+  .tournament-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 </style>

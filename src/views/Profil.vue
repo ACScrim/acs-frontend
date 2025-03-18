@@ -94,18 +94,28 @@
       <div
         class="bg-black/75 bg-opacity-50 rounded-lg p-8 border border-pink-500 shadow-lg shadow-pink-500/30 transform transition-all hover:scale-[1.02]"
       >
+        <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
+        <!-- Remplacer l'icône SVG actuelle dans la section des tournois -->
+
         <h2 class="text-3xl text-white mb-6 neon-text flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-8 w-8 mr-3 text-pink-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z"
-              clip-rule="evenodd"
-            />
+            <!-- Icône d'arbre de tournoi / bracket -->
+            <path d="M2 2v5h5" />
+            <path d="M2 7h12v5H2z" />
+            <path d="M14 4v8" />
+            <path d="M14 12h5v5h-5z" />
+            <path d="M19 17h3v5h-3z" />
+            <path d="M8 12v5h6" />
+            <path d="M8 17h3v5H8z" />
           </svg>
           Tournois
         </h2>
@@ -191,28 +201,6 @@ onMounted(() => {
 
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
-.neon-text {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-}
-
-.neon-text-purple {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 30px #a855f7,
-    0 0 40px #a855f7;
-}
-
-.neon-text-cyan {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee, 0 0 30px #22d3ee,
-    0 0 40px #22d3ee;
-}
-
 .glow-badge {
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.7);
 }

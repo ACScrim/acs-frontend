@@ -229,14 +229,408 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+
+/* Container principal */
+.container {
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 6, 23, 0.9) 0%,
+    rgba(29, 7, 66, 0.8) 100%
+  );
+  border-radius: 1rem;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Titre principal avec effet néon */
+.neon-text {
+  font-family: "Audiowide", cursive;
+  color: #ffffff;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+    0 0 40px #ff00ff;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  text-align: center;
+  animation: pulsate 2s infinite alternate;
+}
+
+@keyframes pulsate {
+  0% {
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  }
+  100% {
+    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
+      0 0 50px #ff00ff;
+  }
+}
+
+/* Label avec effet néon */
+.neon-label {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  color: #22d3ee;
+  text-shadow: 0 0 5px rgba(34, 211, 238, 0.7);
+  margin-bottom: 0.5rem;
+  display: block;
+  letter-spacing: 1px;
+}
+
+/* Select stylisé */
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(17, 24, 39, 0.8);
+  color: white;
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  border-radius: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2306b6d4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.5em;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+  transition: all 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #06b6d4;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+/* Input stylisé */
+input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(17, 24, 39, 0.8);
+  color: white;
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  border-radius: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #06b6d4;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Détails du tournoi */
+h2 {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  color: #f0abfc;
+  text-shadow: 0 0 5px rgba(240, 171, 252, 0.7);
+  margin: 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(240, 171, 252, 0.3);
+}
+
+p {
+  font-family: "Orbitron", sans-serif;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+}
+
+strong {
+  color: #a78bfa;
+  font-weight: 700;
+}
+
+/* Grille des équipes */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Carte d'équipe */
 .team-card {
-  border: 2px solid #ff00ff;
-  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: rgba(31, 41, 55, 0.7);
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4),
+    inset 0 0 10px rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.team-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6);
 }
 
 .team-card:hover {
-  border-color: #3c0c3c;
-  box-shadow: 0 0 20px #3c0c3c, 0 0 30px #3c0c3c;
+  transform: translateY(-5px);
+  border-color: rgba(236, 72, 153, 0.7);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5),
+    inset 0 0 15px rgba(236, 72, 153, 0.3);
+}
+
+/* Équipe gagnante */
+.bg-green-500 {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.8),
+    rgba(5, 150, 105, 0.9)
+  );
+  border: 2px solid #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6),
+    inset 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.bg-green-500::before {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+/* Liste de joueurs */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+li {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(55, 65, 81, 0.8);
+  border-radius: 0.375rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+li:hover {
+  background-color: rgba(75, 85, 99, 0.8);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+
+li::before {
+  content: "▶";
+  color: #a78bfa;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Boutons */
+button {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Bouton de mise à jour */
+.bg-blue-500 {
+  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  color: white;
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.bg-blue-500:hover {
+  background: linear-gradient(45deg, #3b82f6, #60a5fa);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+  transform: translateY(-2px);
+}
+
+.bg-blue-500:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bouton déclarer vainqueur */
+.bg-green-500 {
+  background: linear-gradient(45deg, #10b981, #34d399);
+  color: white;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  width: 100%;
+  margin-top: 1rem;
+  text-transform: uppercase;
+}
+
+.bg-green-500:hover {
+  background: linear-gradient(45deg, #34d399, #6ee7b7);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+  transform: translateY(-2px);
+}
+
+.bg-green-500:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Effet de brillance qui balaie le bouton */
+button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.6s ease;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+/* Animation pour les boutons et cartes */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  }
+}
+
+/* Animation pour les notifications */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .neon-text {
+    font-size: 1.75rem;
+  }
+
+  button {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Animation de grille en fond (lignes horizontales) */
+.container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      0deg,
+      transparent 24%,
+      rgba(139, 92, 246, 0.05) 25%,
+      rgba(139, 92, 246, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(139, 92, 246, 0.05) 75%,
+      rgba(139, 92, 246, 0.05) 76%,
+      transparent 77%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      rgba(139, 92, 246, 0.05) 25%,
+      rgba(139, 92, 246, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(139, 92, 246, 0.05) 75%,
+      rgba(139, 92, 246, 0.05) 76%,
+      transparent 77%
+    );
+  background-size: 50px 50px;
+  z-index: -1;
+}
+
+/* Mise à jour pour le mode écran divisé score/équipes */
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.mt-2,
+.mt-4 {
+  margin-top: 0.5rem;
+}
+
+.mb-2,
+.mb-4 {
+  margin-bottom: 0.5rem;
 }
 </style>

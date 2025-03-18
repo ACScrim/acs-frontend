@@ -1,75 +1,176 @@
 <template>
-  <div class="mx-auto p-8 pt-20">
-    <h1 class="text-4xl text-white mb-8 neon-text">
-      Synchronisation des joueurs avec les utilisateurs
-    </h1>
-    <p class="text-white mb-4">
-      Le username de Player et de User doit être similaire, faire les
-      modifications si nécessaire.
-    </p>
-    <div class="flex flex-col md:flex-row justify-between">
-      <div class="w-full md:w-1/2 pr-4 mb-4 overflow-x-auto">
-        <h2 class="text-2xl text-white mb-4">Players</h2>
-        <table class="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th class="py-2 px-4 border-b">Nom d'utilisateur</th>
-              <th class="py-2 px-4 border-b">Actions</th>
-              <th class="py-2 px-4 border-b hidden md:table-cell">
-                ID Discord
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="player in players" :key="player._id">
-              <td class="py-2 px-4 border-b">{{ player.username }}</td>
-              <td class="py-2 px-4 border-b">
-                <button
-                  @click="editPlayerUsername(player)"
-                  class="bg-blue-500 text-white px-4 py-2 rounded"
+  <div
+    class="bg-gradient-to-br from-gray-900 to-purple-900 min-h-screen p-6 relative overflow-hidden"
+  >
+    <!-- Grille d'arrière-plan rétro -->
+    <div class="absolute inset-0 z-0 bg-grid-pattern opacity-20"></div>
+
+    <!-- Container principal -->
+    <div class="relative z-10 max-w-6xl mx-auto pt-8">
+      <!-- Titre principal -->
+      <h1
+        class="text-5xl font-audiowide text-center mb-10 text-white neon-text-pink"
+      >
+        Synchronisation des Joueurs
+      </h1>
+
+      <!-- Instructions -->
+      <div
+        class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 shadow-lg shadow-purple-500/20 mb-8"
+      >
+        <p class="text-cyan-300 font-orbitron text-lg">
+          Le username de <span class="text-pink-400 font-bold">Player</span> et
+          de <span class="text-purple-400 font-bold">User</span> doit être
+          similaire, effectuez les modifications nécessaires avant la
+          synchronisation.
+        </p>
+      </div>
+
+      <!-- Tables de comparaison -->
+      <div class="flex flex-col lg:flex-row gap-8 mb-8">
+        <!-- Table des joueurs -->
+        <div
+          class="w-full lg:w-1/2 bg-gray-900/60 backdrop-blur-sm rounded-xl border border-cyan-500/30 shadow-lg shadow-cyan-500/20 overflow-hidden"
+        >
+          <div class="border-b border-cyan-500/40 p-4">
+            <h2 class="text-2xl font-orbitron text-cyan-300 neon-text-cyan">
+              Players
+            </h2>
+          </div>
+          <div
+            class="p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-gray-800"
+          >
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-cyan-500/30">
+                  <th class="py-3 px-4 text-left font-orbitron text-cyan-300">
+                    Username
+                  </th>
+                  <th class="py-3 px-4 text-left font-orbitron text-cyan-300">
+                    Actions
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left font-orbitron text-cyan-300 hidden md:table-cell"
+                  >
+                    Discord ID
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="player in players"
+                  :key="player._id"
+                  class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors duration-200"
                 >
-                  Modifier
-                </button>
-              </td>
-              <td class="py-2 px-4 border-b hidden md:table-cell">
-                {{ player.discordId }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <td class="py-4 px-4 text-white font-orbitron">
+                    {{ player.username }}
+                  </td>
+                  <td class="py-4 px-4">
+                    <button
+                      @click="editPlayerUsername(player)"
+                      class="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white font-orbitron text-sm px-4 py-2 rounded shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all duration-200 hover:-translate-y-0.5"
+                    >
+                      Modifier
+                    </button>
+                  </td>
+                  <td
+                    class="py-4 px-4 text-gray-300 font-mono hidden md:table-cell"
+                  >
+                    {{ player.discordId || "—" }}
+                  </td>
+                </tr>
+                <tr v-if="players.length === 0">
+                  <td
+                    colspan="3"
+                    class="py-8 text-center text-gray-400 font-orbitron"
+                  >
+                    Aucun joueur trouvé
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table des utilisateurs -->
+        <div
+          class="w-full lg:w-1/2 bg-gray-900/60 backdrop-blur-sm rounded-xl border border-purple-500/30 shadow-lg shadow-purple-500/20 overflow-hidden"
+        >
+          <div class="border-b border-purple-500/40 p-4">
+            <h2 class="text-2xl font-orbitron text-purple-400 neon-text-purple">
+              Users
+            </h2>
+          </div>
+          <div
+            class="p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-gray-800"
+          >
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-purple-500/30">
+                  <th class="py-3 px-4 text-left font-orbitron text-purple-400">
+                    Username
+                  </th>
+                  <th class="py-3 px-4 text-left font-orbitron text-purple-400">
+                    Email
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left font-orbitron text-purple-400 hidden md:table-cell"
+                  >
+                    Discord ID
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="user in users"
+                  :key="user._id"
+                  class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors duration-200"
+                >
+                  <td class="py-4 px-4 text-white font-orbitron">
+                    {{ user.username }}
+                  </td>
+                  <td class="py-4 px-4 text-gray-300 font-mono">
+                    {{ user.email }}
+                  </td>
+                  <td
+                    class="py-4 px-4 text-gray-300 font-mono hidden md:table-cell"
+                  >
+                    {{ user.discordId || "—" }}
+                  </td>
+                </tr>
+                <tr v-if="users.length === 0">
+                  <td
+                    colspan="3"
+                    class="py-8 text-center text-gray-400 font-orbitron"
+                  >
+                    Aucun utilisateur trouvé
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="w-full md:w-1/2 pl-4 mb-4 overflow-x-auto">
-        <h2 class="text-2xl text-white mb-4">Users</h2>
-        <table class="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th class="py-2 px-4 border-b">Nom d'utilisateur</th>
-              <th class="py-2 px-4 border-b">Email</th>
-              <th class="py-2 px-4 border-b hidden md:table-cell">
-                ID Discord
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user._id">
-              <td class="py-2 px-4 border-b">{{ user.username }}</td>
-              <td class="py-2 px-4 border-b">{{ user.email }}</td>
-              <td class="py-2 px-4 border-b hidden md:table-cell">
-                {{ user.discordId }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+      <!-- Bouton de synchronisation -->
+      <div class="flex justify-center">
+        <button
+          @click="synchronizePlayers"
+          class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-orbitron text-lg px-8 py-4 rounded-lg shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/50 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group"
+        >
+          <span class="relative z-10"
+            >Synchroniser les joueurs avec les utilisateurs</span
+          >
+          <span
+            class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"
+          ></span>
+        </button>
       </div>
+
+      <!-- Notifications -->
+      <Toast v-if="error" type="error" :message="error" />
+      <Toast v-if="success" type="success" :message="success" />
     </div>
-    <button
-      @click="synchronizePlayers"
-      class="mt-4 bg-green-500 text-white px-6 py-3 rounded"
-    >
-      Synchroniser les joueurs avec les utilisateurs
-    </button>
-    <Toast v-if="error" type="error" :message="error" />
-    <Toast v-if="success" type="success" :message="success" />
   </div>
 </template>
 
@@ -99,11 +200,19 @@ const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 
 const fetchPlayers = async () => {
-  players.value = await playerService.getPlayers();
+  try {
+    players.value = await playerService.getPlayers();
+  } catch (err) {
+    showMessage("error", "Erreur lors du chargement des joueurs.");
+  }
 };
 
 const fetchUsers = async () => {
-  users.value = await userService.fetchAllUsers();
+  try {
+    users.value = await userService.fetchAllUsers();
+  } catch (err) {
+    showMessage("error", "Erreur lors du chargement des utilisateurs.");
+  }
 };
 
 const synchronizePlayers = async () => {
@@ -119,7 +228,7 @@ const synchronizePlayers = async () => {
 
 const editPlayerUsername = (player: Player) => {
   const newUsername = prompt("Modifier le nom d'utilisateur:", player.username);
-  if (newUsername) {
+  if (newUsername && newUsername !== player.username) {
     playerService
       .updatePlayerUsername(player._id!, newUsername)
       .then(() => {
@@ -160,35 +269,85 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.neon-text {
-  font-family: "Streamster", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap");
+
+/* Ajout des classes personnalisées non-disponibles dans Tailwind */
+.font-audiowide {
+  font-family: "Audiowide", cursive;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.font-orbitron {
+  font-family: "Orbitron", sans-serif;
 }
 
-th,
-td {
-  padding: 12px;
-  border: 1px solid #ddd;
+.neon-text-pink {
+  text-shadow: 0 0 5px #ec4899, 0 0 15px #ec4899, 0 0 20px #ec4899,
+    0 0 40px #ec4899;
+  animation: pulsate 1.5s infinite alternate;
 }
 
-th {
-  background-color: #f4f4f4;
+.neon-text-cyan {
+  text-shadow: 0 0 5px #06b6d4, 0 0 15px #06b6d4;
 }
 
-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.neon-text-purple {
+  text-shadow: 0 0 5px #a855f7, 0 0 15px #a855f7;
 }
 
-button:hover {
-  background-color: #0056b3;
+@keyframes pulsate {
+  0% {
+    text-shadow: 0 0 5px #ec4899, 0 0 15px #ec4899;
+  }
+  100% {
+    text-shadow: 0 0 10px #ec4899, 0 0 20px #ec4899, 0 0 30px #ec4899,
+      0 0 40px #ec4899;
+  }
+}
+
+/* Grille d'arrière-plan */
+.bg-grid-pattern {
+  background-image: linear-gradient(
+      rgba(139, 92, 246, 0.3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: perspective(500px) rotateX(30deg);
+  background-position: center center;
+}
+
+/* Scrollbar personnalisée */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thumb-cyan-500::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-thumb-purple-500::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-track-gray-800::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+}
+
+/* Animation de scintillement pour le bouton */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
 }
 </style>
