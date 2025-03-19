@@ -1,14 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import playerService from "../services/playerService";
-import type { Player } from "../services/playerService";
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  role: string;
-  discordId: string;
-}
+import type { Player, User } from "../types";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
