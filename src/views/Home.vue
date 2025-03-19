@@ -67,39 +67,74 @@ import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
 import type { User } from "../types/User";
 
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
+
+/**
+ * Accès au store utilisateur et à la session active
+ */
 const userStore = useUserStore();
 const user = computed<User | null>(() => userStore.user);
 
-const isLoading = ref(true);
-const isAuthenticating = ref(false);
-const error = ref<string | null>(null);
+/**
+ * États d'interface
+ */
+const isLoading = ref(true); // Indicateur de chargement
+const isAuthenticating = ref(false); // Indicateur de processus d'authentification
+const error = ref<string | null>(null); // Message d'erreur
 
+//-------------------------------------------------------
+// SECTION: Authentification
+//-------------------------------------------------------
+
+/**
+ * Déclenche le processus d'authentification Discord
+ * Redirige l'utilisateur vers l'autorisation OAuth2 de Discord
+ */
 const loginWithDiscord = () => {
   try {
     isAuthenticating.value = true;
+
+    // Récupération des variables d'environnement pour OAuth2
     const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
     const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
 
+    // Vérification de la configuration
     if (!clientId || !redirectUri) {
       throw new Error("Configuration Discord manquante");
     }
 
+    // Redirection vers la page d'autorisation Discord
     window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=identify+email`;
   } catch (err) {
+    // Gestion des erreurs d'authentification
     error.value = "Impossible de se connecter à Discord. Veuillez réessayer.";
     isAuthenticating.value = false;
     console.error("Erreur d'authentification Discord:", err);
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Cycle de vie
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ * - Préchargement des images
+ * - Récupération des informations utilisateur
+ */
 onMounted(async () => {
+  // Préchargement des images pour une meilleure expérience utilisateur
   const preloadImages = ["../assets/logo.svg", "../assets/discord-Logo.png"];
   preloadImages.forEach((src) => {
     const img = new Image();
     img.src = src;
   });
+
+  // Récupération des informations utilisateur depuis le store
   try {
     await userStore.fetchUser();
   } catch (err) {

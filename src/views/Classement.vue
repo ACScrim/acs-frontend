@@ -181,30 +181,56 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 
-// Services
+//-------------------------------------------------------
+// SECTION: Imports et services
+//-------------------------------------------------------
+
+// Services pour l'accès aux données
 import playerService from "../services/playerService";
 import gameService from "../services/gameService";
 
-// Types
+// Types pour le typage fort
 import type { PlayerRanking, Game } from "../types";
 
-// Constantes
+//-------------------------------------------------------
+// SECTION: Constantes et configuration
+//-------------------------------------------------------
+
+/**
+ * Valeurs par défaut pour le tri du classement
+ */
 const DEFAULT_SORT_KEY: keyof PlayerRanking = "totalPoints";
 const DEFAULT_SORT_ORDER = "desc";
 
-// Variables réactives
-const rankings = ref<PlayerRanking[]>([]);
-const games = ref<Game[]>([]);
-const selectedGame = ref<string>("");
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
 
-// Variables réactives pour le tri
+/**
+ * Données principales
+ */
+const rankings = ref<PlayerRanking[]>([]); // Liste des classements de joueurs
+const games = ref<Game[]>([]); // Liste des jeux disponibles
+const selectedGame = ref<string>(""); // Jeu sélectionné pour le filtrage
+
+/**
+ * État du tri
+ */
 const sortKey = ref<keyof PlayerRanking>(DEFAULT_SORT_KEY);
 const sortOrder = ref<string>(DEFAULT_SORT_ORDER);
 
-const isLoading = ref<boolean>(true);
+/**
+ * État de l'interface
+ */
+const isLoading = ref<boolean>(true); // Indicateur de chargement
+
+//-------------------------------------------------------
+// SECTION: Récupération des données
+//-------------------------------------------------------
 
 /**
- * Fonction pour récupérer le classement des joueurs
+ * Récupère le classement général des joueurs
+ * Gère l'état de chargement et les erreurs
  */
 const fetchRankings = async () => {
   isLoading.value = true;
@@ -220,7 +246,8 @@ const fetchRankings = async () => {
 };
 
 /**
- * Fonction pour récupérer le classement des joueurs par jeu
+ * Récupère le classement des joueurs filtré par jeu
+ * Si aucun jeu n'est sélectionné, récupère le classement général
  */
 const fetchRankingsByGame = async () => {
   isLoading.value = true;
@@ -249,7 +276,7 @@ const fetchRankingsByGame = async () => {
 };
 
 /**
- * Fonction pour récupérer la liste des jeux
+ * Récupère la liste des jeux pour le filtre
  */
 const fetchGames = async () => {
   try {
@@ -260,9 +287,14 @@ const fetchGames = async () => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Gestion du tri
+//-------------------------------------------------------
+
 /**
- * Fonction pour trier le classement
- * @param key Clé de tri
+ * Gère le tri du tableau de classement
+ * Implémente une logique cyclique: ascendant → descendant → défaut
+ * @param key - Clé de colonne sur laquelle effectuer le tri
  */
 const sortBy = (key: string) => {
   const typedKey = key as keyof PlayerRanking;
@@ -274,12 +306,12 @@ const sortBy = (key: string) => {
       sortOrder.value = "desc";
     }
     // Si on est en ordre descendant et pas sur la colonne par défaut
-    else if (typedKey !== "totalPoints") {
+    else if (typedKey !== DEFAULT_SORT_KEY) {
       // Revenir au tri par défaut
-      sortKey.value = "totalPoints";
-      sortOrder.value = "desc";
+      sortKey.value = DEFAULT_SORT_KEY;
+      sortOrder.value = DEFAULT_SORT_ORDER;
     }
-    // Si on est déjà en tri descendant sur totalPoints, ne rien faire
+    // Si on est déjà en tri descendant sur la colonne par défaut, ne rien faire
   }
   // Si on clique sur une nouvelle colonne
   else {
@@ -289,7 +321,8 @@ const sortBy = (key: string) => {
 };
 
 /**
- * Classement trié
+ * Propriété calculée qui retourne le classement trié selon les critères actuels
+ * Gère le tri des données numériques et textuelles
  */
 const sortedRankings = computed(() => {
   return [...rankings.value].sort((a, b) => {
@@ -297,16 +330,28 @@ const sortedRankings = computed(() => {
     const valueB = b[sortKey.value];
 
     let result;
+    // Tri spécifique pour les chaînes de caractères (utiliser localeCompare)
     if (typeof valueA === "string" && typeof valueB === "string") {
       result = valueA.localeCompare(valueB);
-    } else {
+    }
+    // Tri pour les autres types de données (nombres, etc.)
+    else {
       result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     }
 
+    // Inverser le résultat si l'ordre est descendant
     return sortOrder.value === "asc" ? result : -result;
   });
 });
 
+//-------------------------------------------------------
+// SECTION: Cycle de vie
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ * Charge les données nécessaires pour l'affichage
+ */
 onMounted(() => {
   fetchRankings();
   fetchGames();

@@ -71,6 +71,20 @@
               </div>
             </div>
           </div>
+          <!-- Dans le formulaire de création de badge, après l'input imageUrl -->
+          <div>
+            <label
+              for="description"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Description (optionnelle)</label
+            >
+            <textarea
+              id="description"
+              v-model="newBadge.description"
+              rows="3"
+              class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron resize-none"
+            ></textarea>
+          </div>
 
           <div class="flex justify-end">
             <button
@@ -330,9 +344,16 @@
                 @error="handleImageError"
               />
             </div>
-            <span class="text-white font-orbitron text-center line-clamp-2">{{
-              badge.title
-            }}</span>
+            <span class="text-white font-orbitron text-center line-clamp-2">
+              {{ badge.title }}
+            </span>
+            <!-- Ajouter la description si elle existe -->
+            <p
+              v-if="badge.description"
+              class="text-gray-400 text-xs mt-2 text-center line-clamp-3"
+            >
+              {{ badge.description }}
+            </p>
           </div>
         </div>
 
@@ -381,7 +402,12 @@ import type { Badge, Player } from "../types";
 import Toast from "@/shared/Toast.vue";
 
 // Variables réactives
-const newBadge = ref<Badge>({ title: "", imageUrl: "" });
+const newBadge = ref<Badge>({
+  title: "",
+  imageUrl: "",
+  description: "", // Ajout du champ description
+});
+
 const playerSearch = ref("");
 const playerSearchResults = ref<Player[]>([]);
 const selectedPlayer = ref<Player | null>(null);
@@ -424,7 +450,7 @@ const createBadge = async () => {
   try {
     const createdBadge = await badgeService.createBadge(newBadge.value);
     badges.value.push(createdBadge);
-    newBadge.value = { title: "", imageUrl: "" };
+    newBadge.value = { title: "", imageUrl: "", description: "" }; // Réinitialiser avec description
     showMessage("success", "Badge créé avec succès !");
   } catch (error) {
     console.error("Erreur lors de la création du badge:", error);
@@ -484,6 +510,10 @@ const fetchBadges = async () => {
   }
 };
 
+/**
+ * Récupère les badges d'un joueur
+ * @param playerId Id du joueur
+ */
 const fetchPlayerBadges = async (playerId: string) => {
   try {
     const player = await playerService.getPlayerById(playerId);
@@ -506,6 +536,9 @@ const fetchPlayerBadges = async (playerId: string) => {
   }
 };
 
+/**
+ * Formulaire de recherche d'un joueur
+ */
 const searchPlayers = async () => {
   if (playerSearch.value.length > 0) {
     playerSearchResults.value = await playerService.searchPlayers(
@@ -539,6 +572,9 @@ const handleImageError = (e: Event) => {
   }
 };
 
+/**
+ * Valide les données du formulaire de badge
+ */
 const validateBadgeForm = () => {
   const errors = [];
 
@@ -556,6 +592,11 @@ const validateBadgeForm = () => {
     } catch (e) {
       errors.push("Veuillez entrer une URL d'image valide");
     }
+  }
+
+  // Vérifier la longueur de la description si elle est fournie
+  if (newBadge.value.description && newBadge.value.description.length > 200) {
+    errors.push("La description ne doit pas dépasser 200 caractères");
   }
 
   return errors;

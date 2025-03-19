@@ -26,8 +26,18 @@
         </p>
       </div>
 
+      <!-- Ajout d'un indicateur de chargement -->
+      <div v-if="isLoading" class="flex justify-center items-center h-40">
+        <div class="animate-pulse flex flex-col items-center">
+          <div
+            class="w-16 h-16 border-4 border-t-pink-500 border-r-transparent border-b-cyan-500 border-l-transparent rounded-full animate-spin"
+          ></div>
+          <p class="mt-4 text-white font-orbitron">Chargement...</p>
+        </div>
+      </div>
+
       <!-- Tables de comparaison -->
-      <div class="flex flex-col lg:flex-row gap-8 mb-8">
+      <div v-else class="flex flex-col lg:flex-row gap-8 mb-8">
         <!-- Table des joueurs -->
         <div
           class="w-full lg:w-1/2 bg-gray-900/60 backdrop-blur-sm rounded-xl border border-cyan-500/30 shadow-lg shadow-cyan-500/20 overflow-hidden"
@@ -179,26 +189,52 @@ import { ref, onMounted } from "vue";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
 import Toast from "../shared/Toast.vue";
+import type { Player, User } from "../types";
 
-interface Player {
-  _id?: string;
-  username: string;
-  discordId?: string;
-  userId?: string;
-}
+//-------------------------------------------------------
+// SECTION: Définition des états
+//-------------------------------------------------------
 
-interface User {
-  _id?: string;
-  username: string;
-  email: string;
-  discordId?: string;
-}
+/**
+ * Stockage des données récupérées depuis l'API
+ */
+const players = ref<Player[]>([]); // Liste des joueurs
+const users = ref<User[]>([]); // Liste des utilisateurs
 
-const players = ref<Player[]>([]);
-const users = ref<User[]>([]);
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
+/**
+ * États pour le système de notifications
+ */
+const error = ref<string | null>(null); // Message d'erreur
+const success = ref<string | null>(null); // Message de succès
 
+/**
+ * État du chargement des données
+ */
+const isLoading = ref(true); // Indicateur de chargement actif
+
+//-------------------------------------------------------
+// SECTION: Récupération des données
+//-------------------------------------------------------
+
+/**
+ * Charge les données des joueurs et des utilisateurs en parallèle
+ * Gère l'état de chargement global
+ */
+const fetchData = async () => {
+  isLoading.value = true;
+  try {
+    await Promise.all([fetchPlayers(), fetchUsers()]);
+  } catch (err) {
+    console.error("Erreur de chargement des données:", err);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/**
+ * Récupère la liste des joueurs depuis l'API
+ * Affiche une notification en cas d'erreur
+ */
 const fetchPlayers = async () => {
   try {
     players.value = await playerService.getPlayers();
@@ -207,6 +243,10 @@ const fetchPlayers = async () => {
   }
 };
 
+/**
+ * Récupère la liste des utilisateurs depuis l'API
+ * Affiche une notification en cas d'erreur
+ */
 const fetchUsers = async () => {
   try {
     users.value = await userService.fetchAllUsers();
@@ -215,17 +255,31 @@ const fetchUsers = async () => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Actions utilisateur
+//-------------------------------------------------------
+
+/**
+ * Déclenche la synchronisation des joueurs avec les utilisateurs
+ * Cette opération met en correspondance les joueurs et les utilisateurs
+ * ayant des noms d'utilisateur similaires
+ */
 const synchronizePlayers = async () => {
   try {
     await playerService.synchronizePlayers();
     showMessage("success", "Synchronisation réussie !");
-    fetchPlayers();
+    fetchPlayers(); // Rafraîchit la liste des joueurs après synchronisation
   } catch (err) {
     console.error("Erreur lors de la synchronisation:", err);
     showMessage("error", "Erreur lors de la synchronisation.");
   }
 };
 
+/**
+ * Permet de modifier le nom d'utilisateur d'un joueur
+ * Affiche une boîte de dialogue pour saisir le nouveau nom
+ * @param player - Le joueur dont le nom doit être modifié
+ */
 const editPlayerUsername = (player: Player) => {
   const newUsername = prompt("Modifier le nom d'utilisateur:", player.username);
   if (newUsername && newUsername !== player.username) {
@@ -233,7 +287,7 @@ const editPlayerUsername = (player: Player) => {
       .updatePlayerUsername(player._id!, newUsername)
       .then(() => {
         showMessage("success", "Nom d'utilisateur mis à jour avec succès !");
-        fetchPlayers();
+        fetchPlayers(); // Rafraîchit la liste après modification
       })
       .catch((err) => {
         console.error(
@@ -248,7 +302,17 @@ const editPlayerUsername = (player: Player) => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Gestion des notifications
+//-------------------------------------------------------
+
+/**
+ * Affiche un message de notification temporaire
+ * @param type - Type de notification ("success" ou "error")
+ * @param message - Contenu du message
+ */
 const showMessage = (type: "success" | "error", message: string) => {
+  // Défini le message approprié selon le type
   if (type === "success") {
     success.value = message;
     error.value = null;
@@ -256,15 +320,24 @@ const showMessage = (type: "success" | "error", message: string) => {
     error.value = message;
     success.value = null;
   }
+
+  // Auto-effacement après 3 secondes
   setTimeout(() => {
     success.value = null;
     error.value = null;
   }, 3000);
 };
 
+//-------------------------------------------------------
+// SECTION: Cycle de vie du composant
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ * Charge les données nécessaires à l'affichage
+ */
 onMounted(() => {
-  fetchPlayers();
-  fetchUsers();
+  fetchData();
 });
 </script>
 

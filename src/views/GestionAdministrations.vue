@@ -232,11 +232,27 @@ import userService from "../services/userService";
 import Toast from "@/shared/Toast.vue";
 import type { User } from "../types";
 
-const users = ref<User[]>([]);
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
-const searchTerm = ref("");
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
 
+/**
+ * Données des utilisateurs et UI
+ */
+const users = ref<User[]>([]); // Liste des utilisateurs
+const error = ref<string | null>(null); // Message d'erreur
+const success = ref<string | null>(null); // Message de succès
+const searchTerm = ref(""); // Terme de recherche
+
+//-------------------------------------------------------
+// SECTION: Propriétés calculées
+//-------------------------------------------------------
+
+/**
+ * Filtre les utilisateurs selon le terme de recherche
+ * Recherche dans le nom d'utilisateur, l'email ou le rôle
+ * @returns Liste des utilisateurs filtrée
+ */
 const filteredUsers = computed(() => {
   if (!searchTerm.value) return users.value;
 
@@ -249,6 +265,15 @@ const filteredUsers = computed(() => {
   );
 });
 
+//-------------------------------------------------------
+// SECTION: Fonctions utilitaires
+//-------------------------------------------------------
+
+/**
+ * Génère les initiales à partir du nom d'utilisateur
+ * @param username - Nom d'utilisateur
+ * @returns Initiales en majuscules (1 ou 2 lettres)
+ */
 const getUserInitials = (username: string) => {
   if (!username) return "?";
   const nameParts = username.split(" ");
@@ -257,7 +282,31 @@ const getUserInitials = (username: string) => {
 };
 
 /**
+ * Affiche un message de notification temporaire
+ * @param type - Type de notification ("success" ou "error")
+ * @param message - Contenu du message
+ */
+const showMessage = (type: "success" | "error", message: string) => {
+  if (type === "success") {
+    success.value = message;
+    error.value = null;
+  } else {
+    error.value = message;
+    success.value = null;
+  }
+  setTimeout(() => {
+    success.value = null;
+    error.value = null;
+  }, 3000);
+};
+
+//-------------------------------------------------------
+// SECTION: Appels API et gestion des données
+//-------------------------------------------------------
+
+/**
  * Récupère la liste des utilisateurs depuis l'API
+ * Gère les erreurs avec des messages appropriés
  */
 const fetchUsers = async () => {
   try {
@@ -274,6 +323,11 @@ const fetchUsers = async () => {
   }
 };
 
+/**
+ * Met à jour le rôle d'un utilisateur
+ * Envoie la requête à l'API et affiche un message de confirmation
+ * @param user - Utilisateur à mettre à jour
+ */
 const updateUserRole = async (user: any) => {
   try {
     await userService.updateUserRole(user._id, user.role);
@@ -281,27 +335,21 @@ const updateUserRole = async (user: any) => {
       "success",
       `Le rôle de ${user.username} a été mis à jour avec succès !`
     );
-    fetchUsers();
+    fetchUsers(); // Rafraîchit la liste des utilisateurs
   } catch (err) {
     console.error("Erreur lors de la mise à jour du rôle:", err);
     showMessage("error", "Erreur lors de la mise à jour du rôle.");
   }
 };
 
-const showMessage = (type: "success" | "error", message: string) => {
-  if (type === "success") {
-    success.value = message;
-    error.value = null;
-  } else {
-    error.value = message;
-    success.value = null;
-  }
-  setTimeout(() => {
-    success.value = null;
-    error.value = null;
-  }, 3000);
-};
+//-------------------------------------------------------
+// SECTION: Cycle de vie du composant
+//-------------------------------------------------------
 
+/**
+ * Initialisation du composant au montage
+ * Charge la liste des utilisateurs
+ */
 onMounted(() => {
   fetchUsers();
 });

@@ -59,6 +59,28 @@
           </div>
         </label>
       </div>
+      <!-- Ajoutez cela dans la section des filtres -->
+      <div class="flex items-center">
+        <label class="cyberpunk-checkbox-container">
+          <input type="checkbox" v-model="sortAscending" class="hidden" />
+          <div class="cyberpunk-checkbox flex items-center">
+            <div
+              class="checkbox-visual relative w-6 h-6 bg-gray-800 border border-pink-500 mr-3"
+            >
+              <div
+                v-if="sortAscending"
+                class="absolute inset-1 bg-pink-500"
+              ></div>
+            </div>
+            <span class="text-white font-orbitron">
+              Ordre chronologique
+              <span class="ml-1 text-sm text-gray-400">
+                ({{ sortAscending ? "ancien → récent" : "récent → ancien" }})
+              </span>
+            </span>
+          </div>
+        </label>
+      </div>
     </div>
 
     <!-- Notifications -->
@@ -516,61 +538,15 @@
     </div>
 
     <!-- Modal de confirmation -->
-    <div
+    <ConfirmationDialog
       v-if="showPopup"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 backdrop-blur-sm"
-    >
-      <div
-        class="bg-gray-900 p-8 rounded-lg border border-pink-500 shadow-lg shadow-pink-500/20 w-full max-w-md"
-      >
-        <h2 class="text-2xl text-white font-audiowide mb-4 flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 mr-2 text-pink-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Confirmation
-        </h2>
-        <div class="my-6 text-white">
-          <p class="mb-2">
-            Voulez-vous
-            <span class="font-bold text-pink-400">{{
-              actionType === "register" ? "vous inscrire" : "vous désinscrire"
-            }}</span>
-            au tournoi :
-          </p>
-          <p class="text-cyan-300 font-orbitron text-xl my-3 text-center">
-            {{ selectedTournament?.name }}
-          </p>
-          <p>
-            en tant que
-            <span class="text-purple-400 font-bold">{{ user?.username }}</span>
-            ?
-          </p>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button
-            @click="confirmAction"
-            class="neon-button-cyan px-4 py-2 rounded font-orbitron"
-          >
-            Confirmer
-          </button>
-          <button
-            @click="closePopup"
-            class="neon-button-gray px-4 py-2 rounded font-orbitron"
-          >
-            Annuler
-          </button>
-        </div>
-      </div>
-    </div>
+      :title="'Confirmation'"
+      :message="`Voulez-vous ${
+        actionType === 'register' ? 'vous inscrire' : 'vous désinscrire'
+      } au tournoi ${selectedTournament?.name} en tant que ${user?.username} ?`"
+      @confirm="confirmAction"
+      @cancel="closePopup"
+    />
   </div>
 </template>
 
@@ -582,32 +558,94 @@ import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
 import type { Game, Tournament } from "../types";
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
+
+// Données des jeux et tournois
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
+
+// Options de filtrage et d'affichage
 const selectedGame = ref<string>("");
 const showFinished = ref<boolean>(false);
+const sortAscending = ref<boolean>(false);
+
+// États pour l'interface des tournois
 const showParticipants = ref<{ [key: string]: boolean }>({});
 const showDescription = ref<{ [key: string]: boolean }>({});
+
+// États pour le modal de confirmation
 const showPopup = ref<boolean>(false);
 const selectedTournament = ref<Tournament | null>(null);
 const actionType = ref<string>("register");
 
-const userStore = useUserStore();
-const user = computed(() => userStore.user);
+// États pour le système de check-in
+const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
+// État du système de notifications
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
 
+//-------------------------------------------------------
+// SECTION: Store et propriétés calculées
+//-------------------------------------------------------
+
+// Accès au store utilisateur
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
+
+/**
+ * Filtre et trie les tournois selon les critères sélectionnés
+ * - Filtre par jeu sélectionné
+ * - Filtre par statut (terminé ou à venir)
+ * - Trie par date
+ */
+const filteredTournaments = computed(() => {
+  // Filtrage des tournois selon les critères
+  const filtered = tournaments.value.filter((tournament) => {
+    const matchesGame = selectedGame.value
+      ? tournament.game._id === selectedGame.value
+      : true;
+    const matchesFinished = showFinished.value ? true : !tournament.finished;
+    return matchesGame && matchesFinished;
+  });
+
+  // Tri chronologique configurable
+  return filtered.sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return sortAscending.value
+      ? dateA - dateB // Ordre croissant (ancien → récent)
+      : dateB - dateA; // Ordre décroissant (récent → ancien)
+  });
+});
+
+//-------------------------------------------------------
+// SECTION: Récupération des données
+//-------------------------------------------------------
+
+/**
+ * Récupère la liste des jeux depuis l'API
+ */
 const fetchGames = async () => {
   games.value = await gameService.getGames();
 };
 
+/**
+ * Récupère la liste des tournois depuis l'API
+ * et vérifie les check-ins de l'utilisateur
+ */
 const fetchTournaments = async () => {
-  checkedInPlayers.value = {}; // Réinitialise les check-ins
+  // Réinitialiser les états de check-in
+  checkedInPlayers.value = {};
+
+  // Récupérer tous les tournois
   tournaments.value = await tournamentService.getTournaments();
 
-  // Vérifie si l'utilisateur est check-in
+  // Vérifier l'état de check-in du joueur pour chaque tournoi
   if (user.value) {
     const player = await playerService.getPlayerByIdUser(user.value._id);
     if (player && player._id) {
@@ -625,16 +663,14 @@ const fetchTournaments = async () => {
   }
 };
 
-const filteredTournaments = computed(() => {
-  return tournaments.value.filter((tournament) => {
-    const matchesGame = selectedGame.value
-      ? tournament.game._id === selectedGame.value
-      : true;
-    const matchesFinished = showFinished.value ? true : !tournament.finished;
-    return matchesGame && matchesFinished;
-  });
-});
+//-------------------------------------------------------
+// SECTION: Gestion des onglets des tournois
+//-------------------------------------------------------
 
+/**
+ * Bascule l'affichage de la liste des participants d'un tournoi
+ * @param tournamentId - ID du tournoi
+ */
 const toggleParticipants = (tournamentId: string) => {
   showParticipants.value[tournamentId] = !showParticipants.value[tournamentId];
   if (showParticipants.value[tournamentId]) {
@@ -642,6 +678,10 @@ const toggleParticipants = (tournamentId: string) => {
   }
 };
 
+/**
+ * Bascule l'affichage de la description d'un tournoi
+ * @param tournamentId - ID du tournoi
+ */
 const toggleDescription = (tournamentId: string) => {
   showDescription.value[tournamentId] = !showDescription.value[tournamentId];
   if (showDescription.value[tournamentId]) {
@@ -649,21 +689,41 @@ const toggleDescription = (tournamentId: string) => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Gestion des inscriptions aux tournois
+//-------------------------------------------------------
+
+/**
+ * Ouvre le popup de confirmation pour l'inscription ou désinscription
+ * @param tournament - Objet tournoi
+ * @param type - Type d'action ("register" ou "unregister")
+ */
 const openRegistrationPopup = (tournament: Tournament, type: string) => {
   selectedTournament.value = tournament;
   actionType.value = type;
   showPopup.value = true;
 };
 
+/**
+ * Ferme le popup de confirmation
+ */
 const closePopup = () => {
   showPopup.value = false;
-  selectedTournament.value = null;
+  // Réinitialisation différée pour éviter les changements visuels pendant la transition de sortie
+  setTimeout(() => {
+    selectedTournament.value = null;
+    actionType.value = "register";
+  }, 300); // Correspondant à la durée de l'animation fadeOut
 };
 
+/**
+ * Exécute l'action d'inscription ou de désinscription après confirmation
+ */
 const confirmAction = async () => {
   if (selectedTournament.value && user.value) {
     try {
       if (actionType.value === "register" && selectedTournament.value._id) {
+        // Inscription au tournoi
         await tournamentService.registerPlayer(
           selectedTournament.value._id,
           user.value._id
@@ -671,6 +731,7 @@ const confirmAction = async () => {
         showMessage("success", "Inscription réussie !");
       } else {
         if (selectedTournament.value._id) {
+          // Désinscription du tournoi
           await tournamentService.unregisterPlayer(
             selectedTournament.value._id,
             user.value._id
@@ -687,34 +748,26 @@ const confirmAction = async () => {
   }
 };
 
+/**
+ * Vérifie si l'utilisateur courant est inscrit à un tournoi
+ * @param tournament - Objet tournoi à vérifier
+ * @returns true si l'utilisateur est inscrit, false sinon
+ */
 const isUserRegistered = (tournament: Tournament) => {
   return user.value
     ? tournament.players.some((player) => player.userId === user.value?._id)
     : false;
 };
 
-const isWithin24Hours = (dateString: string) => {
-  const tournamentDate = new Date(dateString); // Date du tournoi en heure locale
-  const now = new Date(); // Date actuelle en heure locale
+//-------------------------------------------------------
+// SECTION: Gestion des check-ins
+//-------------------------------------------------------
 
-  const diff = tournamentDate.getTime() - now.getTime(); // Différence en milliseconde
-
-  return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
-};
-
-const formatLocalDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleString("fr-FR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-const checkedInPlayers = ref<{ [key: string]: boolean }>({});
-
+/**
+ * Change l'état de check-in d'un joueur pour un tournoi
+ * @param tournamentId - ID du tournoi
+ * @param checkedIn - Nouvel état de check-in
+ */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   checkedInPlayers.value[tournamentId] = checkedIn;
 
@@ -734,6 +787,45 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   }
 };
 
+/**
+ * Vérifie si un tournoi est dans les 24 heures précédant son début (pour check-in)
+ * @param dateString - Date du tournoi au format string
+ * @returns true si le tournoi est dans les 24 prochaines heures, false sinon
+ */
+const isWithin24Hours = (dateString: string) => {
+  const tournamentDate = new Date(dateString); // Date du tournoi en heure locale
+  const now = new Date(); // Date actuelle en heure locale
+
+  const diff = tournamentDate.getTime() - now.getTime(); // Différence en milliseconde
+
+  return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+};
+
+//-------------------------------------------------------
+// SECTION: Utilitaires et formatage
+//-------------------------------------------------------
+
+/**
+ * Formate une date au format local français
+ * @param dateString - Date au format string
+ * @returns Date formatée (JJ/MM/AAAA HH:MM)
+ */
+const formatLocalDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleString("fr-FR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+/**
+ * Affiche un message de notification temporaire
+ * @param type - Type de message ("success" ou "error")
+ * @param message - Contenu du message
+ */
 const showMessage = (type: "success" | "error", message: string) => {
   if (type === "success") {
     success.value = message;
@@ -742,12 +834,20 @@ const showMessage = (type: "success" | "error", message: string) => {
     error.value = message;
     success.value = null;
   }
+  // Auto-effacement après 3 secondes
   setTimeout(() => {
     success.value = null;
     error.value = null;
   }, 3000);
 };
 
+//-------------------------------------------------------
+// SECTION: Cycle de vie du composant
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ */
 onMounted(() => {
   fetchGames();
   fetchTournaments();

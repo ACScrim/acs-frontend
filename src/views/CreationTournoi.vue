@@ -183,15 +183,44 @@ import GestionEquipe from "../components/GestionEquipe.vue";
 import EndTournoi from "../components/EndTournoi.vue";
 import VoirCheckIn from "../components/VoirCheckIn.vue";
 
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
+
+/**
+ * Gestion de la navigation par onglets
+ * Valeurs possibles: "creation", "teams", "checkin", "end"
+ */
 const activeTab = ref("creation");
+
+/**
+ * Nombre total d'onglets pour le calcul de l'indicateur
+ */
 const tabCount = 4;
 
-// Calcul de la position et largeur de l'indicateur d'onglet actif
+//-------------------------------------------------------
+// SECTION: Propriétés calculées
+//-------------------------------------------------------
+
+/**
+ * Calcule le style CSS pour l'indicateur visuel d'onglet actif
+ * Positionne et dimensionne dynamiquement l'indicateur en fonction de l'onglet sélectionné
+ * @returns Objet de style CSS avec position left et width
+ */
 const tabIndicatorStyle = computed(() => {
+  // Liste ordonnée des identifiants d'onglets
   const tabs = ["creation", "teams", "checkin", "end"];
+
+  // Détermine l'index de l'onglet actif
   const activeIndex = tabs.indexOf(activeTab.value);
+
+  // Calcule la position en pourcentage (pour le positionnement CSS)
   const position = (activeIndex / tabCount) * 100;
+
+  // Calcule la largeur en pourcentage (divisée équitablement)
   const width = 100 / tabCount;
+
+  // Retourne les propriétés CSS à appliquer
   return {
     left: `${position}%`,
     width: `${width}%`,

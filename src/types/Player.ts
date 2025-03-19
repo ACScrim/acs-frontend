@@ -20,4 +20,5 @@ export interface PlayerRanking {
   totalTournaments: number;
   totalVictories: number;
   tournamentsParticipated: Tournament[];
+  result: string;
 }

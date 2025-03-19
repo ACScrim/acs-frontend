@@ -225,39 +225,72 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 
-// Services
-import gameService from "../../services/gameService";
+//-------------------------------------------------------
+// SECTION: Imports
+//-------------------------------------------------------
 
-// Components
+/**
+ * Services et composants
+ */
+import gameService from "../../services/gameService";
 import Toast from "@/shared/Toast.vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 
-// Types
+/**
+ * Types
+ */
 import type { Game } from "../../types";
 
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
+
+/**
+ * Données du formulaire de création
+ */
 const game = ref<Game>({
   name: "",
   description: "",
 });
 
-// State
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
-const isLoading = ref(false);
-const loadingGames = ref(false);
-const errors = ref<Record<string, string>>({});
-const isInitialized = ref(false);
+/**
+ * États de l'interface
+ */
+const error = ref<string | null>(null); // Message d'erreur
+const success = ref<string | null>(null); // Message de succès
+const isLoading = ref(false); // État de chargement pour la création
+const loadingGames = ref(false); // État de chargement pour la liste
+const errors = ref<Record<string, string>>({}); // Erreurs de validation par champ
+const isInitialized = ref(false); // Indique si le composant est initialisé
+
+/**
+ * Gestion des messages toast
+ */
 let messageTimeout: ReturnType<typeof setTimeout> | null = null;
 
-// Variables
+/**
+ * Liste des jeux existants
+ */
 const games = ref<Game[]>([]);
 
-// Variables pour la suppression
-const gameToDelete = ref<Game | null>(null);
-const showDeleteConfirmation = ref(false);
-const deleteConfirmMessage = ref("");
-const isDeleting = ref(false);
+/**
+ * États pour la suppression
+ */
+const gameToDelete = ref<Game | null>(null); // Jeu à supprimer
+const showDeleteConfirmation = ref(false); // Afficher le dialogue de confirmation
+const deleteConfirmMessage = ref(""); // Message de confirmation
+const isDeleting = ref(false); // État de chargement pour la suppression
 
+//-------------------------------------------------------
+// SECTION: Gestion du formulaire
+//-------------------------------------------------------
+
+/**
+ * Crée un nouveau jeu
+ * - Valide le formulaire
+ * - Envoie les données au service
+ * - Gère les messages de succès/erreur
+ */
 const createGame = async () => {
   if (isLoading.value) return; // Empêcher les doubles clics
   if (!validateForm()) {
@@ -278,54 +311,12 @@ const createGame = async () => {
   }
 };
 
-const fetchGames = async () => {
-  loadingGames.value = true;
-  try {
-    const fetchedGames = await gameService.getGames();
-    games.value = [...fetchedGames];
-  } catch (err) {
-    console.error("Erreur lors de la récupération des jeux:", err);
-    showMessage("error", "Impossible de charger la liste des jeux");
-  } finally {
-    loadingGames.value = false;
-    isInitialized.value = true;
-  }
-};
-
-const isDuplicate = (): boolean => {
-  return games.value.some(
-    (existingGame) =>
-      existingGame.name.toLowerCase() === game.value.name.toLowerCase()
-  );
-};
-
-const showMessage = (
-  type: "success" | "error",
-  message: string,
-  duration = 5000
-) => {
-  // Annuler les timeouts précédents pour éviter des comportements inattendus
-  if (messageTimeout) {
-    clearTimeout(messageTimeout);
-  }
-
-  if (type === "success") {
-    success.value = message;
-    error.value = null;
-  } else {
-    error.value = message;
-    success.value = null;
-  }
-
-  // Stocker la référence du timeout pour pouvoir l'annuler si nécessaire
-  messageTimeout = setTimeout(() => {
-    success.value = null;
-    error.value = null;
-    messageTimeout = null;
-  }, duration);
-};
 /**
- * Valider le formulaire de création de jeu
+ * Valide le formulaire de création de jeu
+ * Vérifie:
+ * - Champs obligatoires
+ * - Unicité du nom
+ * - Longueur des champs
  * @returns {boolean} true si le formulaire est valide, sinon false
  */
 const validateForm = (): boolean => {
@@ -357,20 +348,103 @@ const validateForm = (): boolean => {
   return true;
 };
 
-// Fonction pour afficher la confirmation de suppression
+/**
+ * Vérifie si un jeu avec le même nom existe déjà
+ * @returns {boolean} true si le nom est déjà utilisé
+ */
+const isDuplicate = (): boolean => {
+  return games.value.some(
+    (existingGame) =>
+      existingGame.name.toLowerCase() === game.value.name.toLowerCase()
+  );
+};
+
+//-------------------------------------------------------
+// SECTION: Récupération des données
+//-------------------------------------------------------
+
+/**
+ * Récupère la liste des jeux depuis l'API
+ * Met à jour l'état de chargement et gère les erreurs
+ */
+const fetchGames = async () => {
+  loadingGames.value = true;
+  try {
+    const fetchedGames = await gameService.getGames();
+    games.value = [...fetchedGames];
+  } catch (err) {
+    console.error("Erreur lors de la récupération des jeux:", err);
+    showMessage("error", "Impossible de charger la liste des jeux");
+  } finally {
+    loadingGames.value = false;
+    isInitialized.value = true;
+  }
+};
+
+//-------------------------------------------------------
+// SECTION: Gestion des notifications
+//-------------------------------------------------------
+
+/**
+ * Affiche un message toast temporaire
+ * @param type - Type de notification ("success" ou "error")
+ * @param message - Contenu du message
+ * @param duration - Durée d'affichage en millisecondes
+ */
+const showMessage = (
+  type: "success" | "error",
+  message: string,
+  duration = 5000
+) => {
+  // Annuler les timeouts précédents pour éviter des comportements inattendus
+  if (messageTimeout) {
+    clearTimeout(messageTimeout);
+  }
+
+  if (type === "success") {
+    success.value = message;
+    error.value = null;
+  } else {
+    error.value = message;
+    success.value = null;
+  }
+
+  // Stocker la référence du timeout pour pouvoir l'annuler si nécessaire
+  messageTimeout = setTimeout(() => {
+    success.value = null;
+    error.value = null;
+    messageTimeout = null;
+  }, duration);
+};
+
+//-------------------------------------------------------
+// SECTION: Gestion de la suppression
+//-------------------------------------------------------
+
+/**
+ * Affiche le dialogue de confirmation de suppression
+ * @param gameToRemove - Jeu à supprimer
+ */
 const confirmDelete = (gameToRemove: Game) => {
   gameToDelete.value = gameToRemove;
   deleteConfirmMessage.value = `Êtes-vous sûr de vouloir supprimer le jeu "${gameToRemove.name}" ? Cette action est irréversible.`;
   showDeleteConfirmation.value = true;
 };
 
-// Fonction pour annuler la suppression
+/**
+ * Annule la suppression et ferme le dialogue de confirmation
+ */
 const cancelDelete = () => {
   showDeleteConfirmation.value = false;
   gameToDelete.value = null;
 };
 
-// Fonction pour supprimer le jeu
+/**
+ * Supprime un jeu après confirmation
+ * - Effectue l'appel à l'API
+ * - Met à jour la liste locale
+ * - Affiche un message de confirmation
+ */
 const deleteGame = async () => {
   if (!gameToDelete.value?._id || isDeleting.value) return;
 
@@ -398,12 +472,24 @@ const deleteGame = async () => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Cycle de vie
+//-------------------------------------------------------
+
+/**
+ * Nettoyage des ressources lors du démontage du composant
+ * Évite les fuites de mémoire en annulant les timeouts
+ */
 onUnmounted(() => {
   if (messageTimeout) {
     clearTimeout(messageTimeout);
   }
 });
 
+/**
+ * Initialisation du composant au montage
+ * Charge la liste des jeux existants
+ */
 onMounted(() => {
   fetchGames();
 });

@@ -226,40 +226,66 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import userService from "../services/userService";
 import playerService from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 
-// Types
+//-------------------------------------------------------
+// SECTION: Définition des types
+//-------------------------------------------------------
+
+/**
+ * Structure d'un utilisateur avec son profil joueur associé
+ */
 interface User {
-  _id?: string;
-  username: string;
-  email: string;
-  role: "user" | "admin" | "superadmin";
-  avatarUrl?: string;
-  playerId?: string;
+  _id?: string; // ID unique de l'utilisateur
+  username: string; // Nom d'utilisateur
+  email: string; // Email
+  role: "user" | "admin" | "superadmin"; // Rôle dans l'application
+  avatarUrl?: string; // URL de l'avatar (optionnel)
+  playerId?: string; // ID du profil joueur associé (optionnel)
 }
 
-// Refs
-const users = ref<User[]>([]);
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
-const loading = ref(true);
-const searchTerm = ref("");
-const currentPage = ref(1);
-const itemsPerPage = 10;
+//-------------------------------------------------------
+// SECTION: États du composant
+//-------------------------------------------------------
 
-// Options de tri
+/**
+ * États principaux
+ */
+const users = ref<User[]>([]); // Liste des utilisateurs
+const error = ref<string | null>(null); // Message d'erreur
+const success = ref<string | null>(null); // Message de succès
+const loading = ref(true); // État de chargement
+
+/**
+ * États pour la recherche et la pagination
+ */
+const searchTerm = ref(""); // Terme de recherche
+const currentPage = ref(1); // Page actuelle
+const itemsPerPage = 10; // Nombre d'éléments par page
+
+/**
+ * Options de tri
+ */
 const sortOptions = [
   { id: "username-asc", label: "Nom (A-Z)" },
   { id: "username-desc", label: "Nom (Z-A)" },
   { id: "role-asc", label: "Rôle (croissant)" },
   { id: "role-desc", label: "Rôle (décroissant)" },
 ];
-const currentSort = ref("username-asc");
+const currentSort = ref("username-asc"); // Option de tri sélectionnée
 
-// Fonctions utilitaires
+//-------------------------------------------------------
+// SECTION: Fonctions utilitaires
+//-------------------------------------------------------
+
+/**
+ * Extrait les initiales d'un nom d'utilisateur
+ * @param username - Nom d'utilisateur
+ * @returns Les initiales du nom (1 ou 2 lettres)
+ */
 const getUserInitials = (username: string) => {
   if (!username) return "?";
   const nameParts = username.split(" ");
@@ -267,13 +293,31 @@ const getUserInitials = (username: string) => {
   return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
 };
 
+/**
+ * Gère les erreurs de chargement d'image
+ * @param e - Événement d'erreur
+ */
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
     e.target.src = "https://via.placeholder.com/50?text=?";
   }
 };
 
-// Computed properties
+/**
+ * Réinitialise la pagination à la première page
+ */
+const resetPagination = () => {
+  currentPage.value = 1;
+};
+
+//-------------------------------------------------------
+// SECTION: Propriétés calculées
+//-------------------------------------------------------
+
+/**
+ * Filtre les utilisateurs selon le terme de recherche
+ * @returns Liste filtrée des utilisateurs
+ */
 const searchResults = computed(() => {
   if (!searchTerm.value.trim()) return users.value;
 
@@ -285,6 +329,10 @@ const searchResults = computed(() => {
   );
 });
 
+/**
+ * Trie les utilisateurs selon le critère sélectionné
+ * @returns Liste triée des utilisateurs
+ */
 const sortedUsers = computed(() => {
   const usersToSort = [...searchResults.value];
 
@@ -307,40 +355,60 @@ const sortedUsers = computed(() => {
   }
 });
 
+/**
+ * Calcule le nombre total de pages pour la pagination
+ * @returns Nombre total de pages
+ */
 const totalPages = computed(() =>
   Math.ceil(sortedUsers.value.length / itemsPerPage)
 );
 
+/**
+ * Extrait les utilisateurs à afficher sur la page courante
+ * @returns Liste paginée des utilisateurs
+ */
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return sortedUsers.value.slice(start, end);
 });
 
-// Méthodes de navigation entre les pages
+//-------------------------------------------------------
+// SECTION: Navigation entre pages
+//-------------------------------------------------------
+
+/**
+ * Passe à la page suivante
+ */
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
 
+/**
+ * Revient à la page précédente
+ */
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-// Reset la pagination lors d'une recherche
-const resetPagination = () => {
-  currentPage.value = 1;
-};
+//-------------------------------------------------------
+// SECTION: Appels API et récupération des données
+//-------------------------------------------------------
 
-// Méthodes d'appel API
+/**
+ * Récupère les utilisateurs et leurs profils joueur associés
+ * Établit les relations entre utilisateurs et joueurs pour la navigation
+ */
 const fetchUsers = async () => {
   loading.value = true;
   error.value = null;
 
   try {
+    // Récupération de tous les utilisateurs
     const fetchedUsers = await userService.fetchAllUsers();
 
     // Récupérer tous les joueurs en parallèle
@@ -377,18 +445,27 @@ const fetchUsers = async () => {
   }
 };
 
-// Lifecycle hooks
+//-------------------------------------------------------
+// SECTION: Cycle de vie et réactivité
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ */
 onMounted(() => {
   fetchUsers();
 });
 
-// Watchers
-import { watch } from "vue";
-
+/**
+ * Réinitialiser la pagination lorsque le terme de recherche change
+ */
 watch(searchTerm, () => {
   resetPagination();
 });
 
+/**
+ * Réinitialiser la pagination lorsque le critère de tri change
+ */
 watch(currentSort, () => {
   resetPagination();
 });

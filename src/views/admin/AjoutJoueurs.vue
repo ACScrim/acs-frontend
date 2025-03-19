@@ -237,38 +237,63 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-//Services
+//-------------------------------------------------------
+// SECTION: Imports
+//-------------------------------------------------------
+
+/**
+ * Services pour l'accès aux données
+ */
 import playerService from "../../services/playerService";
 
-//Components
+/**
+ * Composants UI réutilisables
+ */
 import ConfirmationDialog from "../../shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
 
-//Types
+/**
+ * Types pour le typage fort
+ */
 import type { Player } from "../../types";
 
+//-------------------------------------------------------
+// SECTION: État du composant
+//-------------------------------------------------------
+
+/**
+ * Données du formulaire
+ */
 const player = ref<Player>({
   username: "",
   userId: "",
 });
 
-// Etat UI
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
-const isLoading = ref(false);
-const showPlayers = ref(false);
-const showConfirmation = ref(false);
-const formErrors = ref<Record<string, string>>({});
-
-// Etat de l'application
-const players = ref<Player[]>([]);
-const playerIdToDelete = ref<string | null>(null);
+/**
+ * États pour l'interface utilisateur
+ */
+const error = ref<string | null>(null); // Message d'erreur
+const success = ref<string | null>(null); // Message de succès
+const isLoading = ref(false); // État de chargement
+const showPlayers = ref(false); // Affichage de la liste des joueurs
+const showConfirmation = ref(false); // Affichage du dialogue de confirmation
+const formErrors = ref<Record<string, string>>({}); // Erreurs de validation par champ
 
 /**
- * Fonction permettant d'afficher le toast d'erreur ou de succès
- * @param type succès ou error
- * @param message Message a afficher sur l'erreur
- * @param duration Durée de l'affichage du message
+ * État de l'application
+ */
+const players = ref<Player[]>([]); // Liste des joueurs récupérés
+const playerIdToDelete = ref<string | null>(null); // ID du joueur à supprimer
+
+//-------------------------------------------------------
+// SECTION: Gestion des notifications
+//-------------------------------------------------------
+
+/**
+ * Affiche un message toast temporaire
+ * @param type - Type de notification ("success" ou "error")
+ * @param message - Contenu du message
+ * @param duration - Durée d'affichage en millisecondes
  */
 const showMessage = (
   type: "success" | "error",
@@ -292,9 +317,10 @@ const showMessage = (
 };
 
 /**
- * Fonction auxiliaire pour gérer les erreurs API
- * @param err
- * @param defaultMessage
+ * Traite les erreurs d'API de manière uniforme
+ * Extrait le message d'erreur si disponible et affiche une notification
+ * @param err - Erreur capturée
+ * @param defaultMessage - Message par défaut si aucun détail n'est disponible
  */
 const handleApiError = (
   err: unknown,
@@ -307,8 +333,12 @@ const handleApiError = (
   showMessage("error", errorMessage);
 };
 
+//-------------------------------------------------------
+// SECTION: Validation du formulaire
+//-------------------------------------------------------
+
 /**
- * Fonction de validation du formulaire
+ * Valide le formulaire d'ajout de joueur
  * @returns true si le formulaire est valide, false sinon
  */
 const validateForm = (): boolean => {
@@ -322,8 +352,13 @@ const validateForm = (): boolean => {
   return true;
 };
 
+//-------------------------------------------------------
+// SECTION: Opérations CRUD sur les joueurs
+//-------------------------------------------------------
+
 /**
- * Fonction permettant d'ajouter un joueur à la base de données
+ * Ajoute un nouveau joueur à la base de données
+ * Valide le formulaire, envoie les données et gère les messages
  */
 const addPlayer = async () => {
   if (!validateForm()) return;
@@ -354,7 +389,8 @@ const addPlayer = async () => {
 };
 
 /**
- * Fonction permettant de récupérer la liste des joueurs
+ * Récupère la liste des joueurs depuis l'API
+ * Met à jour l'état de chargement et gère les erreurs
  */
 const fetchPlayers = async () => {
   isLoading.value = true;
@@ -374,26 +410,8 @@ const fetchPlayers = async () => {
 };
 
 /**
- * Fonction permettant de basculer l'affichage des joueurs
- */
-const togglePlayers = async () => {
-  if (!showPlayers.value && players.value.length === 0) {
-    await fetchPlayers();
-  }
-  showPlayers.value = !showPlayers.value;
-};
-
-/**
- * Demande de confirmation de suppression du joueur
- * @param id id du joueur à supprimer
- */
-const confirmDelete = (id: string) => {
-  playerIdToDelete.value = id;
-  showConfirmation.value = true;
-};
-
-/**
- * Fonction permettant de supprimer un joueur
+ * Supprime un joueur après confirmation
+ * Met à jour la liste des joueurs et affiche un message de confirmation
  */
 const deletePlayer = async () => {
   if (!playerIdToDelete.value) return;
@@ -401,7 +419,7 @@ const deletePlayer = async () => {
   try {
     await playerService.deletePlayer(playerIdToDelete.value);
     showMessage("success", "Joueur supprimé avec succès !");
-    fetchPlayers(); // Refresh the player list
+    fetchPlayers(); // Rafraîchit la liste des joueurs
   } catch (err) {
     showMessage(
       "error",
@@ -414,6 +432,38 @@ const deletePlayer = async () => {
   }
 };
 
+//-------------------------------------------------------
+// SECTION: Gestion de l'interface
+//-------------------------------------------------------
+
+/**
+ * Bascule l'affichage de la liste des joueurs
+ * Charge les joueurs si ce n'est pas déjà fait
+ */
+const togglePlayers = async () => {
+  if (!showPlayers.value && players.value.length === 0) {
+    await fetchPlayers();
+  }
+  showPlayers.value = !showPlayers.value;
+};
+
+/**
+ * Affiche le dialogue de confirmation de suppression
+ * @param id - ID du joueur à supprimer
+ */
+const confirmDelete = (id: string) => {
+  playerIdToDelete.value = id;
+  showConfirmation.value = true;
+};
+
+//-------------------------------------------------------
+// SECTION: Cycle de vie
+//-------------------------------------------------------
+
+/**
+ * Initialisation du composant au montage
+ * Précharge la liste des joueurs pour améliorer la réactivité
+ */
 onMounted(() => {
   // Pré-charger les joueurs si nécessaire, mais de façon non bloquante
   if (players.value.length === 0) {
