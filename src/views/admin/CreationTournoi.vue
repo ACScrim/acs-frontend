@@ -178,10 +178,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import CreationTournoiForm from "../components/CreationTournoiForm.vue";
-import GestionEquipe from "../components/GestionEquipe.vue";
-import EndTournoi from "../components/EndTournoi.vue";
-import VoirCheckIn from "../components/VoirCheckIn.vue";
+import CreationTournoiForm from "../../components/gestion-tournois/CreationTournoiForm.vue";
+import GestionEquipe from "../../components/gestion-tournois/GestionEquipe.vue";
+import EndTournoi from "../../components/gestion-tournois/EndTournoi.vue";
+import VoirCheckIn from "../../components/gestion-tournois/VoirCheckIn.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant

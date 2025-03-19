@@ -11,6 +11,7 @@ export interface Team {
   name: string;
   players: Player[];
   score: number;
+  ranking: number;
 }
 
 /**

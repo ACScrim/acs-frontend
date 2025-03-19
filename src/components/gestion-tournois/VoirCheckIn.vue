@@ -284,9 +284,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import gameService from "../services/gameService";
-import tournamentService from "../services/tournamentService";
-import type { Game, Tournament, Player } from "../types";
+import gameService from "../../services/gameService";
+import tournamentService from "../../services/tournamentService";
+import type { Game, Tournament, Player } from "../../types";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);

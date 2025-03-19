@@ -228,9 +228,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import userService from "../services/userService";
+import userService from "../../services/userService";
 import Toast from "@/shared/Toast.vue";
-import type { User } from "../types";
+import type { User } from "../../types";
 
 //-------------------------------------------------------
 // SECTION: État du composant

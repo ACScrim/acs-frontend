@@ -186,10 +186,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import playerService from "../services/playerService";
-import userService from "../services/userService";
-import Toast from "../shared/Toast.vue";
-import type { Player, User } from "../types";
+import playerService from "../../services/playerService";
+import userService from "../../services/userService";
+import Toast from "../../shared/Toast.vue";
+import type { Player, User } from "../../types";
 
 //-------------------------------------------------------
 // SECTION: Définition des états

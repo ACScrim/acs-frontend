@@ -205,6 +205,28 @@ const checkInPlayer = async (
   return response.data;
 };
 
+/**
+ * Met à jour le classement d'une équipe dans un tournoi
+ * @param tournamentId - ID du tournoi
+ * @param teamId - ID de l'équipe
+ * @param ranking - Nouveau classement (1 = premier, 2 = deuxième, etc.)
+ * @returns Tournoi avec le classement mis à jour
+ */
+const updateTeamRanking = async (
+  tournamentId: string,
+  teamId: string,
+  ranking: number
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/teams/${teamId}/ranking`,
+    { ranking },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -218,4 +240,5 @@ export default {
   registerPlayer,
   unregisterPlayer,
   checkInPlayer,
+  updateTeamRanking,
 };

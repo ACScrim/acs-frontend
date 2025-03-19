@@ -228,16 +228,12 @@
                   formatDate(tournament.date)
                 }}</span>
                 <span
-                  v-if="tournament && 'result' in tournament"
-                  class="px-2 py-1 rounded text-xs font-orbitron"
-                  :class="{
-                    'bg-green-900/50 text-green-400 border border-green-500/50':
-                      tournament.result === 'Victoire',
-                    'bg-red-900/50 text-red-400 border border-red-500/50':
-                      tournament.result === 'Défaite',
-                  }"
+                  v-if="tournament && 'rank' in tournament"
+                  class="px-3 py-1 rounded text-xs font-orbitron"
+                  :class="getRankingClass(tournament.rank ?? 0)"
                 >
-                  {{ tournament.result }}
+                  {{ getRankingLabel(tournament.rank ?? 0) }} /
+                  {{ tournament.numberOfTeams }}
                 </span>
               </div>
             </li>
@@ -477,7 +473,6 @@ const fetchPlayerProfile = async () => {
       try {
         const userData = await userService.getUserById(player.value.userId);
         user.value = userData;
-        console.log("Utilisateur associé:", user.value);
       } catch (userErr) {
         console.error(
           "Erreur lors de la récupération de l'utilisateur:",
@@ -501,6 +496,46 @@ const fetchPlayerProfile = async () => {
     error.value = "Impossible de charger le profil de ce joueur.";
   } finally {
     loading.value = false;
+  }
+};
+
+/**
+ * Obtient le libellé correspondant au classement
+ * @param rank - Rang de l'équipe (1 pour 1er, 2 pour 2ème, etc.)
+ * @returns Libellé formaté avec emoji pour les 3 premiers rangs
+ */
+const getRankingLabel = (rank: number): string => {
+  if (!rank) return "Non classé";
+
+  switch (rank) {
+    case 1:
+      return "🥇 Or";
+    case 2:
+      return "🥈 Argent";
+    case 3:
+      return "🥉 Bronze";
+    default:
+      return `${rank}ème`;
+  }
+};
+
+/**
+ * Obtient la classe CSS correspondant au rang pour styliser les badges
+ * @param rank - Rang de l'équipe
+ * @returns Classe CSS pour l'apparence du badge
+ */
+const getRankingClass = (rank: number): string => {
+  if (!rank) return "bg-gray-700 text-gray-300 border border-gray-600";
+
+  switch (rank) {
+    case 1:
+      return "bg-yellow-500/70 text-yellow-900 border border-yellow-400";
+    case 2:
+      return "bg-gray-300/70 text-gray-800 border border-gray-200";
+    case 3:
+      return "bg-amber-700/70 text-amber-100 border border-amber-600";
+    default:
+      return "bg-purple-700/70 text-white border border-purple-600";
   }
 };
 

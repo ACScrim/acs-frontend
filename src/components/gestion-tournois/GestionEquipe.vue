@@ -287,9 +287,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import gameService from "../services/gameService";
-import tournamentService from "../services/tournamentService";
-import type { Game, Tournament, Team, Player } from "../types";
+import gameService from "../../services/gameService";
+import tournamentService from "../../services/tournamentService";
+import type { Game, Tournament, Team, Player } from "../../types";
 import { VueDraggableNext } from "vue-draggable-next"; // Importer vue-draggable-next
 import Toast from "@/shared/Toast.vue";
 
