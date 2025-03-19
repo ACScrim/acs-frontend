@@ -57,7 +57,7 @@
       </p>
     </div>
     <div
-      v-if="rankings.length > 0"
+      v-else
       class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 overflow-hidden"
     >
       <table class="min-w-full text-white">
@@ -175,16 +175,6 @@
         </tbody>
       </table>
     </div>
-
-    <div
-      v-else
-      class="flex flex-col items-center justify-center p-12 bg-black/50 border border-pink-500/30 rounded-lg"
-    >
-      <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500 mb-4"
-      ></div>
-      <p class="text-white font-orbitron">Chargement du classement...</p>
-    </div>
   </div>
 </template>
 
@@ -198,12 +188,19 @@ import gameService from "../services/gameService";
 // Types
 import type { PlayerRanking, Game } from "../types";
 
+// Constantes
+const DEFAULT_SORT_KEY: keyof PlayerRanking = "totalPoints";
+const DEFAULT_SORT_ORDER = "desc";
+
 // Variables réactives
 const rankings = ref<PlayerRanking[]>([]);
 const games = ref<Game[]>([]);
 const selectedGame = ref<string>("");
-const sortKey = ref<keyof PlayerRanking>("totalPoints");
-const sortOrder = ref<string>("desc");
+
+// Variables réactives pour le tri
+const sortKey = ref<keyof PlayerRanking>(DEFAULT_SORT_KEY);
+const sortOrder = ref<string>(DEFAULT_SORT_ORDER);
+
 const isLoading = ref<boolean>(true);
 
 /**
@@ -222,24 +219,38 @@ const fetchRankings = async () => {
   }
 };
 
+/**
+ * Fonction pour récupérer le classement des joueurs par jeu
+ */
 const fetchRankingsByGame = async () => {
-  if (selectedGame.value) {
-    try {
+  isLoading.value = true;
+
+  try {
+    if (selectedGame.value) {
       const response = await playerService.getPlayerRankingsByGame(
         selectedGame.value
       );
       rankings.value = response;
-    } catch (error) {
-      console.error(
-        "Erreur lors de la récupération du classement par jeu:",
-        error
-      );
+    } else {
+      await fetchRankings();
     }
-  } else {
-    fetchRankings();
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération du classement par jeu:",
+      error
+    );
+  } finally {
+    // Ne pas mettre isLoading à false si on appelle fetchRankings
+    // car fetchRankings gère déjà cela
+    if (selectedGame.value) {
+      isLoading.value = false;
+    }
   }
 };
 
+/**
+ * Fonction pour récupérer la liste des jeux
+ */
 const fetchGames = async () => {
   try {
     const response = await gameService.getGames();
@@ -256,30 +267,42 @@ const fetchGames = async () => {
 const sortBy = (key: string) => {
   const typedKey = key as keyof PlayerRanking;
 
+  // Si on clique sur la même colonne
   if (sortKey.value === typedKey) {
-    // Évite de changer la valeur si c'est déjà la même
+    // Si on est en ordre ascendant, passer en descendant
     if (sortOrder.value === "asc") {
       sortOrder.value = "desc";
-    } else if (sortKey.value !== "totalPoints") {
-      // Ne pas changer si on est déjà au tri par défaut
-      // Réinitialiser au tri par défaut
+    }
+    // Si on est en ordre descendant et pas sur la colonne par défaut
+    else if (typedKey !== "totalPoints") {
+      // Revenir au tri par défaut
       sortKey.value = "totalPoints";
       sortOrder.value = "desc";
     }
-  } else {
+    // Si on est déjà en tri descendant sur totalPoints, ne rien faire
+  }
+  // Si on clique sur une nouvelle colonne
+  else {
     sortKey.value = typedKey;
-    sortOrder.value = "asc";
+    sortOrder.value = "asc"; // Commencer en ordre ascendant
   }
 };
 
+/**
+ * Classement trié
+ */
 const sortedRankings = computed(() => {
   return [...rankings.value].sort((a, b) => {
-    let result = 0;
-    if (a[sortKey.value] < b[sortKey.value]) {
-      result = -1;
-    } else if (a[sortKey.value] > b[sortKey.value]) {
-      result = 1;
+    const valueA = a[sortKey.value];
+    const valueB = b[sortKey.value];
+
+    let result;
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      result = valueA.localeCompare(valueB);
+    } else {
+      result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     }
+
     return sortOrder.value === "asc" ? result : -result;
   });
 });

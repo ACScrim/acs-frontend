@@ -238,14 +238,14 @@
 import { ref, onMounted } from "vue";
 
 //Services
-import playerService from "../services/playerService";
+import playerService from "../../services/playerService";
 
 //Components
-import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
+import ConfirmationDialog from "../../shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
 
 //Types
-import type { Player } from "../types";
+import type { Player } from "../../types";
 
 const player = ref<Player>({
   username: "",

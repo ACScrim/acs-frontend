@@ -13,7 +13,12 @@ const getGames = async (): Promise<Game[]> => {
   return response.data;
 };
 
+const deleteGame = async (id: string): Promise<void> => {
+  await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
+};
+
 export default {
   createGame,
   getGames,
+  deleteGame,
 };

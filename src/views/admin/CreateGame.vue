@@ -50,6 +50,12 @@
               placeholder="Entrez le nom du jeu"
             />
           </div>
+          <div
+            v-if="errors.name"
+            class="text-red-400 text-sm mt-1 font-orbitron"
+          >
+            {{ errors.name }}
+          </div>
         </div>
 
         <div class="mb-6">
@@ -140,8 +146,29 @@
           <div
             v-for="game in games"
             :key="game._id"
-            class="bg-slate-800/60 rounded-lg overflow-hidden border border-purple-500/30 shadow-md transition-all duration-300 p-4 hover:transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/80"
+            class="bg-slate-800/60 rounded-lg overflow-hidden border border-purple-500/30 shadow-md transition-all duration-300 p-4 hover:transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/80 group"
           >
+            <!-- Bouton de suppression avec apparition au survol -->
+            <button
+              @click="confirmDelete(game)"
+              class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 w-8 h-8 flex items-center justify-center rounded-full bg-red-900/20 text-red-400 border border-red-500/30 hover:bg-red-900/40 hover:text-red-300 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/20 transition-all duration-300 transform group-hover:scale-100 scale-90"
+              title="Supprimer ce jeu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
             <div
               class="font-orbitron text-lg font-semibold text-gray-100 mb-2 pb-2 border-b border-purple-500/30"
             >
@@ -184,34 +211,58 @@
 
       <Toast v-if="error" type="error" :message="error" />
       <Toast v-if="success" type="success" :message="success" />
+      <ConfirmationDialog
+        v-if="showDeleteConfirmation"
+        :title="'Supprimer le jeu'"
+        :message="deleteConfirmMessage"
+        @confirm="deleteGame"
+        @cancel="cancelDelete"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import gameService from "../services/gameService";
-import Toast from "@/shared/Toast.vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
-interface Game {
-  _id?: string;
-  name: string;
-  description?: string;
-}
+// Services
+import gameService from "../../services/gameService";
+
+// Components
+import Toast from "@/shared/Toast.vue";
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
+
+// Types
+import type { Game } from "../../types";
 
 const game = ref<Game>({
   name: "",
   description: "",
 });
 
+// State
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const isLoading = ref(false);
-const games = ref<Game[]>([]);
 const loadingGames = ref(false);
+const errors = ref<Record<string, string>>({});
+const isInitialized = ref(false);
+let messageTimeout: ReturnType<typeof setTimeout> | null = null;
+
+// Variables
+const games = ref<Game[]>([]);
+
+// Variables pour la suppression
+const gameToDelete = ref<Game | null>(null);
+const showDeleteConfirmation = ref(false);
+const deleteConfirmMessage = ref("");
+const isDeleting = ref(false);
 
 const createGame = async () => {
   if (isLoading.value) return; // Empêcher les doubles clics
+  if (!validateForm()) {
+    return; // Arrêter si validation échoue
+  }
   isLoading.value = true;
 
   try {
@@ -230,15 +281,34 @@ const createGame = async () => {
 const fetchGames = async () => {
   loadingGames.value = true;
   try {
-    games.value = await gameService.getGames();
+    const fetchedGames = await gameService.getGames();
+    games.value = [...fetchedGames];
   } catch (err) {
     console.error("Erreur lors de la récupération des jeux:", err);
+    showMessage("error", "Impossible de charger la liste des jeux");
   } finally {
     loadingGames.value = false;
+    isInitialized.value = true;
   }
 };
 
-const showMessage = (type: "success" | "error", message: string) => {
+const isDuplicate = (): boolean => {
+  return games.value.some(
+    (existingGame) =>
+      existingGame.name.toLowerCase() === game.value.name.toLowerCase()
+  );
+};
+
+const showMessage = (
+  type: "success" | "error",
+  message: string,
+  duration = 5000
+) => {
+  // Annuler les timeouts précédents pour éviter des comportements inattendus
+  if (messageTimeout) {
+    clearTimeout(messageTimeout);
+  }
+
   if (type === "success") {
     success.value = message;
     error.value = null;
@@ -246,11 +316,93 @@ const showMessage = (type: "success" | "error", message: string) => {
     error.value = message;
     success.value = null;
   }
-  setTimeout(() => {
+
+  // Stocker la référence du timeout pour pouvoir l'annuler si nécessaire
+  messageTimeout = setTimeout(() => {
     success.value = null;
     error.value = null;
-  }, 5000);
+    messageTimeout = null;
+  }, duration);
 };
+/**
+ * Valider le formulaire de création de jeu
+ * @returns {boolean} true si le formulaire est valide, sinon false
+ */
+const validateForm = (): boolean => {
+  errors.value = {};
+
+  if (!game.value.name.trim()) {
+    errors.value.name = "Le nom du jeu est obligatoire";
+    return false;
+  }
+
+  if (isDuplicate()) {
+    errors.value.name = "Un jeu avec ce nom existe déjà";
+    return false;
+  }
+
+  // Limiter la longueur du nom
+  if (game.value.name.length > 50) {
+    errors.value.name = "Le nom du jeu ne doit pas dépasser 50 caractères";
+    return false;
+  }
+
+  // Limiter la longueur de la description
+  if (game.value.description && game.value.description.length > 500) {
+    errors.value.description =
+      "La description ne doit pas dépasser 500 caractères";
+    return false;
+  }
+
+  return true;
+};
+
+// Fonction pour afficher la confirmation de suppression
+const confirmDelete = (gameToRemove: Game) => {
+  gameToDelete.value = gameToRemove;
+  deleteConfirmMessage.value = `Êtes-vous sûr de vouloir supprimer le jeu "${gameToRemove.name}" ? Cette action est irréversible.`;
+  showDeleteConfirmation.value = true;
+};
+
+// Fonction pour annuler la suppression
+const cancelDelete = () => {
+  showDeleteConfirmation.value = false;
+  gameToDelete.value = null;
+};
+
+// Fonction pour supprimer le jeu
+const deleteGame = async () => {
+  if (!gameToDelete.value?._id || isDeleting.value) return;
+
+  isDeleting.value = true;
+
+  try {
+    await gameService.deleteGame(gameToDelete.value._id);
+
+    // Mettre à jour la liste des jeux localement
+    games.value = games.value.filter((g) => g._id !== gameToDelete.value?._id);
+
+    showMessage(
+      "success",
+      `Le jeu "${gameToDelete.value.name}" a été supprimé avec succès!`
+    );
+
+    // Fermer le dialogue de confirmation
+    showDeleteConfirmation.value = false;
+  } catch (err) {
+    console.error("Erreur lors de la suppression du jeu:", err);
+    showMessage("error", "Impossible de supprimer le jeu. Veuillez réessayer.");
+  } finally {
+    isDeleting.value = false;
+    gameToDelete.value = null;
+  }
+};
+
+onUnmounted(() => {
+  if (messageTimeout) {
+    clearTimeout(messageTimeout);
+  }
+});
 
 onMounted(() => {
   fetchGames();
