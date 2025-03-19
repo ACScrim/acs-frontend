@@ -176,7 +176,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
-import type { Player, PlayerRanking } from "../services/playerService";
+import type { Player, PlayerRanking } from "../types";
 
 const route = useRoute();
 const player = ref<Player | null>(null);

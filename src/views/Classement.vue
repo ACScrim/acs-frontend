@@ -25,6 +25,38 @@
     </div>
 
     <div
+      v-if="isLoading"
+      class="flex flex-col items-center justify-center p-12 bg-black/50 border border-pink-500/30 rounded-lg"
+    >
+      <div
+        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500 mb-4"
+      ></div>
+      <p class="text-white font-orbitron">Chargement du classement...</p>
+    </div>
+
+    <div
+      v-else-if="rankings.length === 0"
+      class="flex flex-col items-center justify-center p-12 bg-black/50 border border-pink-500/30 rounded-lg"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-16 w-16 text-pink-500 mb-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <p class="text-white font-orbitron">
+        Aucun classement disponible pour le moment.
+      </p>
+    </div>
+    <div
       v-if="rankings.length > 0"
       class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 overflow-hidden"
     >
@@ -158,23 +190,35 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+
+// Services
 import playerService from "../services/playerService";
 import gameService from "../services/gameService";
 
+// Types
 import type { PlayerRanking, Game } from "../types";
 
+// Variables réactives
 const rankings = ref<PlayerRanking[]>([]);
 const games = ref<Game[]>([]);
 const selectedGame = ref<string>("");
 const sortKey = ref<keyof PlayerRanking>("totalPoints");
 const sortOrder = ref<string>("desc");
+const isLoading = ref<boolean>(true);
 
+/**
+ * Fonction pour récupérer le classement des joueurs
+ */
 const fetchRankings = async () => {
+  isLoading.value = true;
+
   try {
     const response = await playerService.getPlayerRankings();
     rankings.value = response;
   } catch (error) {
     console.error("Erreur lors de la récupération du classement:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -205,11 +249,25 @@ const fetchGames = async () => {
   }
 };
 
+/**
+ * Fonction pour trier le classement
+ * @param key Clé de tri
+ */
 const sortBy = (key: string) => {
-  if (sortKey.value === key) {
-    sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  const typedKey = key as keyof PlayerRanking;
+
+  if (sortKey.value === typedKey) {
+    // Évite de changer la valeur si c'est déjà la même
+    if (sortOrder.value === "asc") {
+      sortOrder.value = "desc";
+    } else if (sortKey.value !== "totalPoints") {
+      // Ne pas changer si on est déjà au tri par défaut
+      // Réinitialiser au tri par défaut
+      sortKey.value = "totalPoints";
+      sortOrder.value = "desc";
+    }
   } else {
-    sortKey.value = key as keyof PlayerRanking;
+    sortKey.value = typedKey;
     sortOrder.value = "asc";
   }
 };
