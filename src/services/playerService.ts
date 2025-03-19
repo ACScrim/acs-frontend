@@ -1,43 +1,7 @@
 import axios from "axios";
-import type { Badge } from "./badgeService";
+import type { Player, PlayerRanking } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL + "/players";
-
-export interface Player {
-  _id?: string;
-  username: string;
-  userId: string;
-  discordId?: string;
-  badges?: Badge[];
-}
-
-export interface PlayerCheckedIn extends Player {
-  checkedIn: boolean;
-}
-
-export interface Tournament {
-  _id?: string;
-  name: string;
-  date: string;
-}
-
-export interface PlayerRanking {
-  playerId: string;
-  username: string;
-  totalPoints: number;
-  totalTournaments: number;
-  totalVictories: number;
-  tournamentsParticipated: Tournament[];
-}
-
-export interface TournamentWinner {
-  tournamentId: string;
-  tournamentName: string;
-  winningTeam: {
-    name: string;
-    players: Player[];
-  };
-}
 
 const addPlayer = async (player: Player): Promise<Player> => {
   const response = await axios.post(API_URL, player, { withCredentials: true });

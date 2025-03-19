@@ -326,9 +326,7 @@ import Toast from "@/shared/Toast.vue";
 import tournamentService from "../services/tournamentService";
 import gameService from "../services/gameService";
 import playerService from "../services/playerService";
-import type { Tournament } from "../services/tournamentService";
-import type { Game } from "../services/gameService";
-import type { Player, PlayerCheckedIn } from "../services/playerService";
+import type { Tournament, Game, Player, PlayerCheckedIn } from "../types";
 
 const tournaments = ref<Tournament[]>([]);
 const selectedTournament = ref<string>("");
@@ -524,9 +522,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 /* Conteneur principal */
 .edit-tournament-container {
   display: flex;

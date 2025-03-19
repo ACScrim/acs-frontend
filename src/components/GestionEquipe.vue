@@ -289,9 +289,7 @@
 import { ref, onMounted } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
-import type { Game } from "../services/gameService";
-import type { Tournament, Team } from "../services/tournamentService";
-import type { Player } from "../services/playerService";
+import type { Game, Tournament, Team, Player } from "../types";
 import { VueDraggableNext } from "vue-draggable-next"; // Importer vue-draggable-next
 import Toast from "@/shared/Toast.vue";
 
@@ -394,9 +392,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 /* Container principal */
 .team-management-container {
   padding: 2rem;

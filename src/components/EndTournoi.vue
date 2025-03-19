@@ -127,9 +127,7 @@ import { ref, onMounted } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
-import type { Game } from "../services/gameService";
-import type { Tournament, Team } from "../services/tournamentService";
-import type { Player } from "../services/playerService";
+import type { Game, Tournament, Team, Player } from "../types";
 import Toast from "@/shared/Toast.vue";
 
 const games = ref<Game[]>([]);
@@ -229,9 +227,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 /* Container principal */
 .container {
   padding: 2rem;

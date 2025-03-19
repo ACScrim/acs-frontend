@@ -354,9 +354,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import badgeService from "../services/badgeService";
-import type { Badge } from "../services/badgeService";
+import type { Badge, Player } from "../types";
 import playerService from "../services/playerService";
-import type { Player } from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 
 const newBadge = ref<Badge>({ title: "", imageUrl: "" });
@@ -499,9 +498,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap");
-
 /* Ajout des classes personnalisées non-disponibles dans Tailwind */
 .font-audiowide {
   font-family: "Audiowide", cursive;

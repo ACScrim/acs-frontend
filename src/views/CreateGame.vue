@@ -5,8 +5,11 @@
       <div
         class="bg-black/50 backdrop-blur-xl rounded-lg p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
       >
-        <h1 class="text-4xl text-white mb-4 neon-text text-center">
-          Création d'un jeu
+        <h1 class="text-4xl text-white mb-4 font-audiowide text-center">
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-600 neon-text-pink"
+            >Création d'un jeu</span
+          >
         </h1>
         <div class="flex justify-center">
           <div
@@ -23,7 +26,7 @@
         <div class="mb-6">
           <label
             for="name"
-            class="block text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
+            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -46,14 +49,13 @@
               required
               placeholder="Entrez le nom du jeu"
             />
-            <div class="input-glow"></div>
           </div>
         </div>
 
         <div class="mb-6">
           <label
             for="description"
-            class="block text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
+            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -76,14 +78,13 @@
               class="w-full p-3 pl-4 text-white bg-gray-900/70 border border-cyan-500/50 rounded-md focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 font-orbitron min-h-[120px]"
               placeholder="Entrez une description du jeu (optionnel)"
             ></textarea>
-            <div class="input-glow"></div>
           </div>
         </div>
 
         <div class="flex justify-center">
           <button
             type="submit"
-            class="neon-button-pink font-orbitron flex items-center px-8 py-3 text-lg"
+            class="inline-flex items-center justify-center px-8 py-3 text-lg bg-gradient-to-r from-purple-800 to-purple-600 text-white font-orbitron font-bold rounded border border-pink-500 shadow-md hover:shadow-lg hover:shadow-pink-500/30 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="isLoading"
           >
             <svg
@@ -114,7 +115,7 @@
         </div>
       </form>
 
-      <!-- Liste des jeux existants (à ajouter si nécessaire) -->
+      <!-- Liste des jeux existants -->
       <div
         class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 p-6 mb-8"
       >
@@ -132,17 +133,33 @@
           Jeux disponibles
         </h2>
 
-        <div class="game-grid" v-if="games.length > 0">
-          <div v-for="game in games" :key="game._id" class="game-card">
-            <div class="game-card-title">{{ game.name }}</div>
-            <p class="game-card-description">
+        <div
+          v-if="games.length > 0"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
+          <div
+            v-for="game in games"
+            :key="game._id"
+            class="bg-slate-800/60 rounded-lg overflow-hidden border border-purple-500/30 shadow-md transition-all duration-300 p-4 hover:transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/80"
+          >
+            <div
+              class="font-orbitron text-lg font-semibold text-gray-100 mb-2 pb-2 border-b border-purple-500/30"
+            >
+              {{ game.name }}
+            </div>
+            <p class="text-gray-300 text-sm leading-relaxed">
               {{ game.description || "Aucune description" }}
             </p>
           </div>
         </div>
 
-        <div v-else-if="loadingGames" class="loading-container">
-          <div class="loading-spinner"></div>
+        <div
+          v-else-if="loadingGames"
+          class="flex flex-col justify-center items-center py-12"
+        >
+          <div
+            class="w-10 h-10 border-4 border-purple-500/10 border-t-purple-500 rounded-full animate-spin"
+          ></div>
           <p class="text-cyan-400 mt-4 font-orbitron">Chargement des jeux...</p>
         </div>
 
@@ -241,125 +258,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 .font-audiowide {
   font-family: "Audiowide", cursive;
 }
 
 .font-orbitron {
   font-family: "Orbitron", sans-serif;
-}
-
-.neon-text {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-}
-
-/* Style des boutons */
-.neon-button-pink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to right, #4a0072, #9900ff);
-  color: white;
-  font-weight: bold;
-  border: 1px solid #ec4899;
-  border-radius: 4px;
-  box-shadow: 0 0 5px #ec4899, inset 0 0 5px #ec4899;
-  transition: all 0.3s ease;
-}
-
-.neon-button-pink:hover {
-  background: linear-gradient(to right, #9900ff, #ff00ff);
-  box-shadow: 0 0 10px #ec4899, inset 0 0 10px #ec4899;
-  transform: translateY(-2px);
-}
-
-.neon-button-pink:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Effet glow pour les inputs */
-.input-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  border-radius: 0.375rem;
-  transition: all 0.3s ease;
-}
-
-input:focus + .input-glow,
-textarea:focus + .input-glow {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
-}
-
-/* Animation de chargement */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 4px solid rgba(139, 92, 246, 0.1);
-  border-top-color: #8b5cf6;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Grille de jeux */
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.game-card {
-  background: rgba(30, 41, 59, 0.6);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  padding: 16px;
-}
-
-.game-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.8);
-}
-
-.game-card-title {
-  font-family: "Orbitron", sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #f3f4f6;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-}
-
-.game-card-description {
-  color: #cbd5e1;
-  font-size: 14px;
-  line-height: 1.5;
 }
 </style>

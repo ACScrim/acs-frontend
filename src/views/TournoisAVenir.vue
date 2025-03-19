@@ -581,8 +581,7 @@ import tournamentService from "../services/tournamentService";
 import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
-import type { Game } from "../services/gameService";
-import type { Tournament } from "../services/tournamentService";
+import type { Game, Tournament } from "../types";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);

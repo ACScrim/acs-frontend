@@ -286,9 +286,7 @@
 import { ref, onMounted, computed } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
-import type { Game } from "../services/gameService";
-import type { Tournament } from "../services/tournamentService";
-import type { Player } from "../services/playerService";
+import type { Game, Tournament, Player } from "../types";
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
@@ -360,9 +358,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 /* Container principal */
 .check-in-container {
   display: flex;

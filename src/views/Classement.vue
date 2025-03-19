@@ -161,8 +161,7 @@ import { ref, computed, onMounted } from "vue";
 import playerService from "../services/playerService";
 import gameService from "../services/gameService";
 
-import type { PlayerRanking } from "../services/playerService";
-import type { Game } from "../services/gameService";
+import type { PlayerRanking, Game } from "../types";
 
 const rankings = ref<PlayerRanking[]>([]);
 const games = ref<Game[]>([]);
@@ -234,18 +233,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.neon-text {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
 }
 
 .font-audiowide {

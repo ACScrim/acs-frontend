@@ -1,19 +1,57 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Home.vue -->
 <template>
-  <div class="flex items-center justify-center min-h-screen p-4">
-    <div class="flex flex-col items-center justify-center w-full max-w-4xl">
-      <div class="glitch-container">
-        <h1 class="neon-text mt-4">Bienvenue sur</h1>
+  <div
+    class="relative flex items-center justify-center min-h-screen p-4 overflow-hidden"
+  >
+    <!-- Grille rétro en arrière-plan -->
+    <div class="absolute inset-0 z-0">
+      <!-- Lignes horizontales -->
+      <div
+        class="absolute w-[150%] h-[1px] top-[33%] -left-[25%] bg-pink-500/20 shadow-glow-pink transform perspective rotate-x-60"
+      ></div>
+      <div
+        class="absolute w-[150%] h-[1px] top-[50%] -left-[25%] bg-cyan-500/20 shadow-glow-cyan transform perspective rotate-x-60"
+      ></div>
+      <div
+        class="absolute w-[150%] h-[1px] top-[67%] -left-[25%] bg-purple-500/20 shadow-glow-purple transform perspective rotate-x-60"
+      ></div>
+
+      <!-- Lignes verticales -->
+      <div
+        class="absolute h-[150%] w-[1px] -top-[25%] left-[33%] bg-pink-500/20 shadow-glow-pink transform perspective rotate-y-60"
+      ></div>
+      <div
+        class="absolute h-[150%] w-[1px] -top-[25%] left-[50%] bg-cyan-500/20 shadow-glow-cyan transform perspective rotate-y-60"
+      ></div>
+      <div
+        class="absolute h-[150%] w-[1px] -top-[25%] left-[67%] bg-purple-500/20 shadow-glow-purple transform perspective rotate-y-60"
+      ></div>
+    </div>
+
+    <div
+      class="flex flex-col items-center justify-center w-full max-w-4xl z-10"
+    >
+      <!-- Titre avec effet de glitch -->
+      <div class="glitch-container relative overflow-hidden px-2.5">
+        <h1 class="text-5xl font-audiowide text-white neon-text mt-4">
+          Bienvenue sur
+        </h1>
       </div>
 
-      <div class="logo-container">
-        <img src="../assets/logo.svg" class="logo" alt="Logo" />
+      <!-- Logo -->
+      <div class="relative my-8 flex items-center justify-center">
+        <img
+          src="../assets/logo.svg"
+          class="h-48 w-auto transition-all duration-500 filter hover:scale-105 hover:rotate-2 animate-float logo-shadow"
+          alt="Logo"
+        />
       </div>
 
+      <!-- Bouton de connexion Discord -->
       <button
         v-if="!user"
         @click="loginWithDiscord"
-        class="neon-button-discord mt-8"
+        class="flex items-center justify-center mt-8 px-8 py-3 bg-gradient-to-r from-pink-700 to-pink-600 text-white border-2 border-pink-700 rounded shadow-glow-discord font-orbitron text-base font-semibold tracking-wider uppercase transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-discord-hover relative overflow-hidden group"
       >
         <img
           src="../assets/discord-Logo.png"
@@ -21,9 +59,16 @@
           class="h-6 w-6 mr-2"
         />
         Connexion via Discord
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-shine"
+        ></div>
       </button>
 
-      <div v-else class="welcome-badge mt-8">
+      <!-- Badge de bienvenue -->
+      <div
+        v-else
+        class="flex items-center mt-8 px-8 py-3 bg-gradient-to-r from-cyan-700 to-cyan-600 text-white border-2 border-cyan-600 rounded shadow-glow-welcome font-orbitron text-base font-semibold tracking-wider animate-pulse-subtle"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6 mr-2"
@@ -63,26 +108,104 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
-/* Style principal */
-.neon-text {
-  font-size: 48px;
+/* Polices */
+.font-audiowide {
   font-family: "Audiowide", cursive;
-  color: white;
+}
+
+.font-orbitron {
+  font-family: "Orbitron", sans-serif;
+}
+
+/* Effet de néon pour le texte */
+.neon-text {
   text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 20px #ff00ff,
     0 0 20px #ff00ff, 0 0 20px #ff00ff;
   letter-spacing: 2px;
 }
 
-/* Effet de glitch */
-.glitch-container {
-  position: relative;
-  overflow: hidden;
-  padding: 0 10px;
+/* Ombres pour les éléments */
+.shadow-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
 }
 
+.shadow-glow-cyan {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+.shadow-glow-purple {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+.shadow-glow-discord {
+  box-shadow: 0 0 10px rgba(87, 101, 242, 0.7),
+    inset 0 0 10px rgba(87, 101, 242, 0.5);
+}
+
+.shadow-glow-discord-hover {
+  box-shadow: 0 0 20px rgba(87, 101, 242, 0.9),
+    inset 0 0 15px rgba(87, 101, 242, 0.5);
+}
+
+.shadow-glow-welcome {
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
+    inset 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.logo-shadow {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.7));
+}
+
+.logo-shadow:hover {
+  filter: drop-shadow(0 0 15px rgba(255, 0, 255, 1))
+    drop-shadow(0 0 30px rgba(255, 0, 255, 0.7));
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
+      inset 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.9),
+      inset 0 0 15px rgba(6, 182, 212, 0.7);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 1.5s;
+}
+
+/* Effet de glitch */
 .glitch-container::before,
 .glitch-container::after {
   content: "Bienvenue sur";
@@ -138,184 +261,16 @@ onMounted(() => {
   }
 }
 
-/* Style du logo */
-.logo-container {
-  position: relative;
-  margin: 2rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Transformations 3D pour la grille */
+.perspective {
+  perspective: 100px;
 }
 
-.logo {
-  height: 12em;
-  will-change: filter;
-  transition: all 0.5s ease;
-  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.7));
-  z-index: 2;
-  animation: float 6s ease-in-out infinite;
+.rotate-x-60 {
+  transform: rotateX(60deg);
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 15px rgba(255, 0, 255, 1))
-    drop-shadow(0 0 30px rgba(255, 0, 255, 0.7));
-  transform: scale(1.05) rotate(2deg);
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-/* Bouton Discord */
-.neon-button-discord {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 2rem;
-  background: linear-gradient(45deg, #a32a8f, #c50f89);
-  color: white;
-  border: 2px solid #972a8e;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(87, 101, 242, 0.7),
-    inset 0 0 10px rgba(87, 101, 242, 0.5);
-  font-family: "Orbitron", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.neon-button-discord::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: all 0.6s ease;
-  z-index: -1;
-}
-
-.neon-button-discord:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(87, 101, 242, 0.9),
-    inset 0 0 15px rgba(87, 101, 242, 0.5);
-}
-
-.neon-button-discord:hover::before {
-  left: 100%;
-}
-
-.neon-button-discord:active {
-  transform: translateY(-2px);
-}
-
-/* Badge de bienvenue */
-.welcome-badge {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 2rem;
-  background: linear-gradient(45deg, #06b6d4, #22d3ee);
-  color: white;
-  border: 2px solid #06b6d4;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
-    inset 0 0 10px rgba(6, 182, 212, 0.5);
-  font-family: "Orbitron", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
-      inset 0 0 10px rgba(6, 182, 212, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.9),
-      inset 0 0 15px rgba(6, 182, 212, 0.7);
-  }
-  100% {
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
-      inset 0 0 10px rgba(6, 182, 212, 0.5);
-  }
-}
-
-/* Grille rétro en arrière-plan */
-.grid-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-
-.neon-grid-horizontal {
-  position: absolute;
-  height: 1px;
-  width: 150%;
-  background: rgba(236, 72, 153, 0.2);
-  top: 33%;
-  left: -25%;
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-  transform: perspective(100px) rotateX(60deg);
-}
-
-.neon-grid-horizontal:nth-child(2) {
-  top: 50%;
-  background: rgba(6, 182, 212, 0.2);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-.neon-grid-horizontal:nth-child(3) {
-  top: 67%;
-  background: rgba(139, 92, 246, 0.2);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
-}
-
-.neon-grid-vertical {
-  position: absolute;
-  width: 1px;
-  height: 150%;
-  background: rgba(236, 72, 153, 0.2);
-  top: -25%;
-  left: 33%;
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-  transform: perspective(100px) rotateY(60deg);
-}
-
-.neon-grid-vertical:nth-child(5) {
-  left: 50%;
-  background: rgba(6, 182, 212, 0.2);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-.neon-grid-vertical:nth-child(6) {
-  left: 67%;
-  background: rgba(139, 92, 246, 0.2);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+.rotate-y-60 {
+  transform: rotateY(60deg);
 }
 </style>

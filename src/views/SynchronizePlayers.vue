@@ -269,9 +269,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap");
-
 /* Ajout des classes personnalisées non-disponibles dans Tailwind */
 .font-audiowide {
   font-family: "Audiowide", cursive;

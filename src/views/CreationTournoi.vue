@@ -4,7 +4,7 @@
     <div
       class="bg-black/50 backdrop-blur-xl rounded-lg p-6 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
     >
-      <h1 class="text-4xl text-white mb-4 neon-text text-center">
+      <h1 class="text-4xl text-white mb-4 font-audiowide text-center neon-text">
         Gestion des Tournois
       </h1>
       <div class="flex justify-center">
@@ -15,12 +15,18 @@
     </div>
 
     <!-- Onglets -->
-    <div class="tabs-container mb-8">
-      <div class="tabs flex flex-col md:flex-row justify-around gap-4">
+    <div
+      class="relative bg-black/70 backdrop-blur-md rounded-lg p-4 mb-8 border border-purple-500/30 shadow-lg shadow-purple-500/15 overflow-hidden"
+    >
+      <div class="flex flex-col md:flex-row justify-around gap-4 z-10 relative">
         <button
-          :class="{ 'active-tab': activeTab === 'creation' }"
+          :class="[
+            'flex items-center justify-center px-6 py-3 rounded-lg font-orbitron text-sm font-medium tracking-wider border transition-all duration-300 shadow-md transform hover:-translate-y-0.5 w-full md:w-auto',
+            activeTab === 'creation'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
+              : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
+          ]"
           @click="activeTab = 'creation'"
-          class="tab w-full md:w-auto"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,11 +41,19 @@
             />
           </svg>
           <span>Gestion des tournois</span>
+          <span
+            v-if="activeTab === 'creation'"
+            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-pink-600 hidden md:block"
+          ></span>
         </button>
         <button
-          :class="{ 'active-tab': activeTab === 'teams' }"
+          :class="[
+            'flex items-center justify-center px-6 py-3 rounded-lg font-orbitron text-sm font-medium tracking-wider border transition-all duration-300 shadow-md transform hover:-translate-y-0.5 w-full md:w-auto',
+            activeTab === 'teams'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
+              : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
+          ]"
           @click="activeTab = 'teams'"
-          class="tab w-full md:w-auto"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,11 +66,19 @@
             />
           </svg>
           <span>Gestion des Équipes</span>
+          <span
+            v-if="activeTab === 'teams'"
+            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-pink-600 hidden md:block"
+          ></span>
         </button>
         <button
-          :class="{ 'active-tab': activeTab === 'checkin' }"
+          :class="[
+            'flex items-center justify-center px-6 py-3 rounded-lg font-orbitron text-sm font-medium tracking-wider border transition-all duration-300 shadow-md transform hover:-translate-y-0.5 w-full md:w-auto',
+            activeTab === 'checkin'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
+              : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
+          ]"
           @click="activeTab = 'checkin'"
-          class="tab w-full md:w-auto"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -71,11 +93,19 @@
             />
           </svg>
           <span>Voir les Check-in</span>
+          <span
+            v-if="activeTab === 'checkin'"
+            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-pink-600 hidden md:block"
+          ></span>
         </button>
         <button
-          :class="{ 'active-tab': activeTab === 'end' }"
+          :class="[
+            'flex items-center justify-center px-6 py-3 rounded-lg font-orbitron text-sm font-medium tracking-wider border transition-all duration-300 shadow-md transform hover:-translate-y-0.5 w-full md:w-auto',
+            activeTab === 'end'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
+              : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
+          ]"
           @click="activeTab = 'end'"
-          class="tab w-full md:w-auto"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -90,34 +120,55 @@
             />
           </svg>
           <span>Terminer un tournoi</span>
+          <span
+            v-if="activeTab === 'end'"
+            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-pink-600 hidden md:block"
+          ></span>
         </button>
       </div>
 
       <!-- Indicateur d'onglet actif -->
-      <div class="tab-indicator-container">
-        <div class="tab-indicator" :style="tabIndicatorStyle"></div>
+      <div class="relative h-1 mt-2 bg-gray-700/40 rounded hidden md:block">
+        <div
+          class="absolute h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded shadow-glow transition-all duration-300 ease-in-out"
+          :style="tabIndicatorStyle"
+        ></div>
       </div>
     </div>
 
     <!-- Contenu des onglets -->
     <div
-      class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500 shadow-lg shadow-cyan-500/30 p-6 tab-content-container"
+      class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500 shadow-lg shadow-cyan-500/30 p-6 min-h-[400px]"
     >
-      <transition name="tab-fade" mode="out-in">
-        <div v-if="activeTab === 'creation'" key="creation" class="tab-content">
+      <transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 translate-x-5"
+        leave-active-class="transition-all duration-300 ease-in"
+        leave-to-class="opacity-0 -translate-x-5"
+        mode="out-in"
+      >
+        <div
+          v-if="activeTab === 'creation'"
+          key="creation"
+          class="animate-fadeIn"
+        >
           <CreationTournoiForm />
         </div>
-        <div v-else-if="activeTab === 'teams'" key="teams" class="tab-content">
+        <div
+          v-else-if="activeTab === 'teams'"
+          key="teams"
+          class="animate-fadeIn"
+        >
           <GestionEquipe />
         </div>
         <div
           v-else-if="activeTab === 'checkin'"
           key="checkin"
-          class="tab-content"
+          class="animate-fadeIn"
         >
           <VoirCheckIn />
         </div>
-        <div v-else-if="activeTab === 'end'" key="end" class="tab-content">
+        <div v-else-if="activeTab === 'end'" key="end" class="animate-fadeIn">
           <EndTournoi />
         </div>
       </transition>
@@ -126,7 +177,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import CreationTournoiForm from "../components/CreationTournoiForm.vue";
 import GestionEquipe from "../components/GestionEquipe.vue";
 import EndTournoi from "../components/EndTournoi.vue";
@@ -149,9 +200,6 @@ const tabIndicatorStyle = computed(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 .font-audiowide {
   font-family: "Audiowide", cursive;
 }
@@ -166,139 +214,7 @@ const tabIndicatorStyle = computed(() => {
     0 0 40px #ff00ff;
 }
 
-/* Style des onglets */
-.tabs-container {
-  position: relative;
-  background: rgba(13, 13, 15, 0.7);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  overflow: hidden;
-  padding: 16px;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
-}
-
-.tabs {
-  position: relative;
-  z-index: 10;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: rgba(30, 41, 59, 0.7);
-  color: #cbd5e1;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tab:hover {
-  transform: translateY(-2px);
-  background: rgba(51, 65, 85, 0.8);
-  color: white;
-  box-shadow: 0 6px 12px rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.4);
-}
-
-.active-tab {
-  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
-  transform: translateY(-2px);
-  position: relative;
-}
-
-.active-tab::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid #ec4899;
-}
-
-/* Indicateur d'onglet */
-.tab-indicator-container {
-  position: relative;
-  height: 4px;
-  margin-top: 8px;
-  background: rgba(107, 114, 128, 0.2);
-  border-radius: 2px;
-}
-
-.tab-indicator {
-  position: absolute;
-  height: 100%;
-  background: linear-gradient(to right, #8b5cf6, #ec4899);
-  border-radius: 2px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
-}
-
-/* Conteneur de contenu d'onglet */
-.tab-content-container {
-  min-height: 400px;
-}
-
-/* Animation des onglets */
-.tab-fade-enter-active,
-.tab-fade-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
-}
-.tab-fade-enter-from {
-  opacity: 0;
-  transform: translateX(20px);
-}
-.tab-fade-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .tabs {
-    gap: 12px;
-  }
-
-  .active-tab::after {
-    display: none;
-  }
-
-  .tab-indicator {
-    display: none;
-  }
-}
-
-/* Animation de lueur pour les bordures */
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
-  }
-}
-
-.tab-content {
-  animation: fadeIn 0.5s ease-out;
-}
-
+/* Animation de fadeIn */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -306,5 +222,14 @@ const tabIndicatorStyle = computed(() => {
   to {
     opacity: 1;
   }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Shadow glow pour l'indicateur d'onglet */
+.shadow-glow {
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
 }
 </style>

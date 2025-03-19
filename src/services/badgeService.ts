@@ -1,12 +1,7 @@
 import axios from "axios";
+import type { Badge } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL + "/badges";
-
-export interface Badge {
-  _id?: string;
-  title: string;
-  imageUrl: string;
-}
 
 const createBadge = async (badge: Badge): Promise<Badge> => {
   const response = await axios.post(API_URL, badge, { withCredentials: true });

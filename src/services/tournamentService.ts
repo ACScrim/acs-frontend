@@ -1,28 +1,6 @@
 import axios from "axios";
-import type { Game } from "./gameService";
-import type { Player } from "./playerService";
+import type { Tournament } from "../types";
 const API_URL = import.meta.env.VITE_API_URL + "/tournaments";
-
-export interface Tournament {
-  _id?: string;
-  name: string;
-  game: Game;
-  date: string;
-  discordChannelName: string;
-  players: Player[];
-  finished: boolean;
-  teams?: Team[];
-  description?: string;
-  winningTeam?: Team;
-  checkIns?: { [key: string]: boolean };
-}
-
-export interface Team {
-  _id: string;
-  name: string;
-  players: Player[];
-  score: number;
-}
 
 const createTournament = async (
   tournament: Tournament

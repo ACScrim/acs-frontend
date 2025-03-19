@@ -5,7 +5,9 @@
       <div
         class="bg-black/50 backdrop-blur-xl rounded-lg p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
       >
-        <h1 class="text-4xl text-white mb-4 neon-text text-center">
+        <h1
+          class="text-4xl text-white mb-4 font-audiowide text-center neon-text"
+        >
           Ajout de joueurs
         </h1>
         <div class="flex justify-center">
@@ -19,11 +21,12 @@
       <form
         @submit.prevent="addPlayer"
         class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500 shadow-lg shadow-cyan-500/30 p-8 mb-8"
+        novalidate
       >
         <div class="mb-6">
           <label
             for="username"
-            class="block text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
+            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -43,19 +46,27 @@
             <input
               type="text"
               id="username"
+              name="username"
               v-model="player.username"
               class="w-full p-3 pl-4 text-white bg-gray-900/70 border border-cyan-500/50 rounded-md focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 font-orbitron"
               required
+              aria-required="true"
               placeholder="Entrez le nom du joueur"
             />
-            <div class="input-glow"></div>
+          </div>
+          <div
+            v-if="formErrors.username"
+            class="text-red-400 text-sm mt-1 font-orbitron"
+          >
+            {{ formErrors.username }}
           </div>
         </div>
         <div class="flex justify-center">
           <button
             type="submit"
-            class="neon-button-pink font-orbitron flex items-center"
+            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-800 to-purple-600 text-white font-orbitron font-bold rounded border border-pink-500 shadow-md hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900"
             :disabled="isLoading"
+            :class="{ 'opacity-70 cursor-not-allowed': isLoading }"
           >
             <svg
               v-if="isLoading"
@@ -90,7 +101,7 @@
       <!-- Bouton pour afficher les joueurs existants -->
       <button
         @click="togglePlayers"
-        class="neon-button-cyan w-full font-orbitron flex items-center justify-center mb-8"
+        class="w-full flex items-center justify-center px-6 py-3 mb-8 bg-gradient-to-r from-cyan-800 to-cyan-600 text-white font-orbitron font-bold rounded border border-cyan-500 shadow-md hover:shadow-lg hover:bg-gradient-to-r hover:from-cyan-600 hover:to-cyan-500 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -119,9 +130,17 @@
       </button>
 
       <!-- Liste des joueurs existants -->
-      <div v-if="showPlayers" class="player-list-container">
-        <div v-if="isLoading" class="loading-container">
-          <div class="loading-spinner"></div>
+      <div
+        v-if="showPlayers"
+        class="transform transition-all duration-500 opacity-100 translate-y-0"
+      >
+        <div
+          v-if="isLoading"
+          class="flex flex-col justify-center items-center p-12 bg-black/50 rounded-lg"
+        >
+          <div
+            class="w-10 h-10 border-4 border-cyan-500/10 border-t-cyan-500 rounded-full animate-spin"
+          ></div>
           <p class="text-cyan-400 mt-4 font-orbitron">
             Chargement des joueurs...
           </p>
@@ -149,19 +168,22 @@
             <li
               v-for="player in players"
               :key="player._id"
-              class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 flex justify-between items-center player-item"
+              class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 flex justify-between items-center group relative overflow-hidden"
             >
-              <span class="text-white font-orbitron player-name">{{
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
+              ></div>
+              <span class="text-white font-orbitron z-10">{{
                 player.username
               }}</span>
               <button
                 @click="player._id && confirmDelete(player._id)"
-                class="delete-button"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-red-900/20 text-red-400 border border-red-500/30 hover:bg-red-900/40 hover:text-red-300 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/20 transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                 aria-label="Supprimer le joueur"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
+                  class="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -213,26 +235,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+
+//Services
 import playerService from "../services/playerService";
+
+//Components
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
-import type { Player } from "../services/playerService";
+
+//Types
+import type { Player } from "../types";
 
 const player = ref<Player>({
   username: "",
   userId: "",
 });
 
+// Etat UI
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
-const players = ref<Player[]>([]);
+const isLoading = ref(false);
 const showPlayers = ref(false);
 const showConfirmation = ref(false);
-const playerIdToDelete = ref<string | null>(null);
-const isLoading = ref(false);
+const formErrors = ref<Record<string, string>>({});
 
-const showMessage = (type: "success" | "error", message: string) => {
+// Etat de l'application
+const players = ref<Player[]>([]);
+const playerIdToDelete = ref<string | null>(null);
+
+/**
+ * Fonction permettant d'afficher le toast d'erreur ou de succès
+ * @param type succès ou error
+ * @param message Message a afficher sur l'erreur
+ * @param duration Durée de l'affichage du message
+ */
+const showMessage = (
+  type: "success" | "error",
+  message: string,
+  duration = 3000
+) => {
   if (type === "success") {
     success.value = message;
     error.value = null;
@@ -240,27 +282,80 @@ const showMessage = (type: "success" | "error", message: string) => {
     error.value = message;
     success.value = null;
   }
-  setTimeout(() => {
-    success.value = null;
-    error.value = null;
-  }, 3000);
+
+  if (duration > 0) {
+    setTimeout(() => {
+      if (type === "success") success.value = null;
+      else error.value = null;
+    }, duration);
+  }
 };
 
+/**
+ * Fonction auxiliaire pour gérer les erreurs API
+ * @param err
+ * @param defaultMessage
+ */
+const handleApiError = (
+  err: unknown,
+  defaultMessage = "Une erreur est survenue"
+) => {
+  console.error("Erreur API:", err);
+  const errorMessage =
+    (err as any)?.response?.data?.message ||
+    (err instanceof Error ? err.message : defaultMessage);
+  showMessage("error", errorMessage);
+};
+
+/**
+ * Fonction de validation du formulaire
+ * @returns true si le formulaire est valide, false sinon
+ */
+const validateForm = (): boolean => {
+  formErrors.value = {};
+
+  if (!player.value.username.trim()) {
+    formErrors.value.username = "Le nom du joueur est obligatoire";
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * Fonction permettant d'ajouter un joueur à la base de données
+ */
 const addPlayer = async () => {
+  if (!validateForm()) return;
+  if (isLoading.value) return; // Prévenir les soumissions multiples
+
+  // Validation préalable
+  if (!player.value.username.trim()) {
+    showMessage("error", "Veuillez entrer un nom de joueur valide");
+    return;
+  }
+
+  isLoading.value = true;
+
   try {
     await playerService.addPlayer(player.value);
     showMessage("success", "Joueur ajouté avec succès !");
     player.value = { username: "", userId: "" };
-    fetchPlayers();
+
+    // Si les joueurs sont déjà affichés, rafraîchir la liste
+    if (showPlayers.value) {
+      await fetchPlayers();
+    }
   } catch (err) {
-    console.error("Erreur lors de l'ajout du joueur:", err);
-    showMessage(
-      "error",
-      (err as any).response?.data?.message || "Erreur inconnue."
-    );
+    handleApiError(err, "Erreur lors de l'ajout du joueur");
+  } finally {
+    isLoading.value = false;
   }
 };
 
+/**
+ * Fonction permettant de récupérer la liste des joueurs
+ */
 const fetchPlayers = async () => {
   isLoading.value = true;
   try {
@@ -278,6 +373,9 @@ const fetchPlayers = async () => {
   }
 };
 
+/**
+ * Fonction permettant de basculer l'affichage des joueurs
+ */
 const togglePlayers = async () => {
   if (!showPlayers.value && players.value.length === 0) {
     await fetchPlayers();
@@ -285,11 +383,18 @@ const togglePlayers = async () => {
   showPlayers.value = !showPlayers.value;
 };
 
+/**
+ * Demande de confirmation de suppression du joueur
+ * @param id id du joueur à supprimer
+ */
 const confirmDelete = (id: string) => {
   playerIdToDelete.value = id;
   showConfirmation.value = true;
 };
 
+/**
+ * Fonction permettant de supprimer un joueur
+ */
 const deletePlayer = async () => {
   if (!playerIdToDelete.value) return;
 
@@ -308,174 +413,34 @@ const deletePlayer = async () => {
     playerIdToDelete.value = null;
   }
 };
+
+onMounted(() => {
+  // Pré-charger les joueurs si nécessaire, mais de façon non bloquante
+  if (players.value.length === 0) {
+    fetchPlayers();
+  }
+});
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
 .font-orbitron {
   font-family: "Orbitron", sans-serif;
 }
 
-.neon-text {
+.font-audiowide {
   font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
 }
-
-/* Style des boutons */
-.neon-button-pink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(to right, #4a0072, #9900ff);
-  color: white;
-  font-weight: bold;
-  border: 1px solid #ec4899;
-  border-radius: 4px;
-  box-shadow: 0 0 5px #ec4899, inset 0 0 5px #ec4899;
-  transition: all 0.3s ease;
-}
-
-.neon-button-pink:hover {
-  background: linear-gradient(to right, #9900ff, #ff00ff);
-  box-shadow: 0 0 10px #ec4899, inset 0 0 10px #ec4899;
-  transform: translateY(-2px);
-}
-
-.neon-button-cyan {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(to right, #0e7490, #06b6d4);
-  color: white;
-  font-weight: bold;
-  border: 1px solid #06b6d4;
-  border-radius: 4px;
-  box-shadow: 0 0 5px #06b6d4, inset 0 0 5px #06b6d4;
-  transition: all 0.3s ease;
-}
-
-.neon-button-cyan:hover {
-  background: linear-gradient(to right, #06b6d4, #22d3ee);
-  box-shadow: 0 0 10px #06b6d4, inset 0 0 10px #06b6d4;
-  transform: translateY(-2px);
-}
-
-/* Effet glow pour l'input */
-.input-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  border-radius: 0.375rem;
-  transition: all 0.3s ease;
-}
-
-input:focus + .input-glow {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
-}
-
-/* Liste des joueurs */
-.player-list-container {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+/* Animation de scintillement pour les éléments de la liste */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    transform: translateX(100%);
   }
 }
 
-.player-item {
-  position: relative;
-  overflow: hidden;
-}
-
-.player-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(139, 92, 246, 0.1),
-    transparent
-  );
-  transition: left 0.7s ease;
-  z-index: 0;
-}
-
-.player-item:hover::before {
-  left: 100%;
-}
-
-.player-name {
-  position: relative;
-  z-index: 1;
-}
-
-/* Bouton supprimer */
-.delete-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(220, 38, 38, 0.1);
-  color: #ef4444;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(220, 38, 38, 0.3);
-}
-
-.delete-button:hover {
-  background: rgba(220, 38, 38, 0.2);
-  color: #f87171;
-  box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
-  transform: scale(1.1);
-}
-
-/* Animation de chargement */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 0.5rem;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 4px solid rgba(6, 182, 212, 0.1);
-  border-top-color: #06b6d4;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.animate-shine {
+  animation: shine 1.5s infinite;
 }
 </style>

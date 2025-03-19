@@ -268,9 +268,9 @@
 import { ref, computed } from "vue";
 import tournamentService from "../services/tournamentService";
 import gameService from "../services/gameService";
-import type { Game } from "../services/gameService";
+import type { Game } from "../types";
 import playerService from "../services/playerService";
-import type { Player, PlayerCheckedIn } from "../services/playerService";
+import type { Player, PlayerCheckedIn } from "../types";
 import Toast from "@/shared/Toast.vue";
 
 const name = ref<string>("");
@@ -410,9 +410,6 @@ fetchAllPlayers();
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
-
 /* Conteneur principal */
 .tournament-creation-container {
   display: flex;
