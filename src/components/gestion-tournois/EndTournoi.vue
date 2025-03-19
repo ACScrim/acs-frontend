@@ -155,10 +155,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import gameService from "../services/gameService";
-import tournamentService from "../services/tournamentService";
-import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
-import type { Game, Tournament, Team, Player } from "../types";
+import gameService from "../../services/gameService";
+import tournamentService from "../../services/tournamentService";
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
+import type { Game, Tournament, Team, Player } from "../../types";
 import Toast from "@/shared/Toast.vue";
 
 /**

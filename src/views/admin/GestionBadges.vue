@@ -392,11 +392,11 @@
 import { ref, onMounted, computed } from "vue";
 
 // Services
-import badgeService from "../services/badgeService";
-import playerService from "../services/playerService";
+import badgeService from "../../services/badgeService";
+import playerService from "../../services/playerService";
 
 // Types
-import type { Badge, Player } from "../types";
+import type { Badge, Player } from "../../types";
 
 // Components
 import Toast from "@/shared/Toast.vue";

@@ -266,11 +266,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import tournamentService from "../services/tournamentService";
-import gameService from "../services/gameService";
-import type { Game } from "../types";
-import playerService from "../services/playerService";
-import type { Player, PlayerCheckedIn } from "../types";
+import tournamentService from "../../services/tournamentService";
+import gameService from "../../services/gameService";
+import type { Game } from "../../types";
+import playerService from "../../services/playerService";
+import type { Player, PlayerCheckedIn } from "../../types";
 import Toast from "@/shared/Toast.vue";
 
 const name = ref<string>("");

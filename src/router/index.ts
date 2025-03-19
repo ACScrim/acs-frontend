@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import CreateGame from "../views/admin/CreateGame.vue";
-import GestionAdministrations from "../views/GestionAdministrations.vue";
-import CreationTournoi from "../views/CreationTournoi.vue";
-import SynchronizePlayers from "../views/SynchronizePlayers.vue";
+import GestionAdministrations from "../views/admin/GestionAdministrations.vue";
+import SynchronizePlayers from "../views/admin/SynchronizePlayers.vue";
 import TournoisAVenir from "../views/TournoisAVenir.vue";
 import Classement from "../views/Classement.vue";
 import Membres from "../views/Membres.vue";
-import GestionBadges from "../views/GestionBadges.vue";
+import GestionBadges from "../views/admin/GestionBadges.vue";
 import Profil from "../views/Profil.vue"; // Import du composant Profil
 import AjoutJoueurs from "../views/admin/AjoutJoueurs.vue";
+import CreationTournoi from "../views/admin/CreationTournoi.vue";
 
 const routes = [
   { path: "/", component: Home },
