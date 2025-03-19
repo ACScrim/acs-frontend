@@ -230,13 +230,7 @@
 import { ref, onMounted, computed } from "vue";
 import userService from "../services/userService";
 import Toast from "@/shared/Toast.vue";
-
-interface User {
-  _id?: string;
-  username: string;
-  role: string;
-  email: string;
-}
+import type { User } from "../types";
 
 const users = ref<User[]>([]);
 const error = ref<string | null>(null);
@@ -262,12 +256,21 @@ const getUserInitials = (username: string) => {
   return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
 };
 
+/**
+ * Récupère la liste des utilisateurs depuis l'API
+ */
 const fetchUsers = async () => {
   try {
     users.value = await userService.fetchAllUsers();
-  } catch (err) {
+  } catch (err: any) {
+    // Typage de l'erreur
     console.error("Erreur lors de la récupération des utilisateurs:", err);
-    showMessage("error", "Erreur lors de la récupération des utilisateurs.");
+    // Message plus spécifique selon le type d'erreur
+    const message =
+      err.response?.status === 403
+        ? "Vous n'avez pas les permissions nécessaires pour voir tous les utilisateurs."
+        : "Erreur lors de la récupération des utilisateurs.";
+    showMessage("error", message);
   }
 };
 

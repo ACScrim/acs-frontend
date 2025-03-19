@@ -3,31 +3,6 @@
   <div
     class="relative flex items-center justify-center min-h-screen p-4 overflow-hidden"
   >
-    <!-- Grille rétro en arrière-plan -->
-    <div class="absolute inset-0 z-0">
-      <!-- Lignes horizontales -->
-      <div
-        class="absolute w-[150%] h-[1px] top-[33%] -left-[25%] bg-pink-500/20 shadow-glow-pink transform perspective rotate-x-60"
-      ></div>
-      <div
-        class="absolute w-[150%] h-[1px] top-[50%] -left-[25%] bg-cyan-500/20 shadow-glow-cyan transform perspective rotate-x-60"
-      ></div>
-      <div
-        class="absolute w-[150%] h-[1px] top-[67%] -left-[25%] bg-purple-500/20 shadow-glow-purple transform perspective rotate-x-60"
-      ></div>
-
-      <!-- Lignes verticales -->
-      <div
-        class="absolute h-[150%] w-[1px] -top-[25%] left-[33%] bg-pink-500/20 shadow-glow-pink transform perspective rotate-y-60"
-      ></div>
-      <div
-        class="absolute h-[150%] w-[1px] -top-[25%] left-[50%] bg-cyan-500/20 shadow-glow-cyan transform perspective rotate-y-60"
-      ></div>
-      <div
-        class="absolute h-[150%] w-[1px] -top-[25%] left-[67%] bg-purple-500/20 shadow-glow-purple transform perspective rotate-y-60"
-      ></div>
-    </div>
-
     <div
       class="flex flex-col items-center justify-center w-full max-w-4xl z-10"
     >
@@ -56,7 +31,7 @@
         <img
           src="../assets/discord-Logo.png"
           alt="Discord Logo"
-          class="h-6 w-6 mr-2"
+          class="h-6 w-10 mr-2"
         />
         Connexion via Discord
         <div
@@ -88,22 +63,54 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
+import type { User } from "../types/User";
 
 const userStore = useUserStore();
-const user = computed(() => userStore.user);
+const user = computed<User | null>(() => userStore.user);
+
+const isLoading = ref(true);
+const isAuthenticating = ref(false);
+const error = ref<string | null>(null);
 
 const loginWithDiscord = () => {
-  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
-  const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
-  window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
-    redirectUri
-  )}&scope=identify+email`;
+  try {
+    isAuthenticating.value = true;
+    const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+    const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
+
+    if (!clientId || !redirectUri) {
+      throw new Error("Configuration Discord manquante");
+    }
+
+    window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=identify+email`;
+  } catch (err) {
+    error.value = "Impossible de se connecter à Discord. Veuillez réessayer.";
+    isAuthenticating.value = false;
+    console.error("Erreur d'authentification Discord:", err);
+  }
 };
 
-onMounted(() => {
-  userStore.fetchUser();
+onMounted(async () => {
+  const preloadImages = ["../assets/logo.svg", "../assets/discord-Logo.png"];
+  preloadImages.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+  try {
+    await userStore.fetchUser();
+  } catch (err) {
+    console.error(
+      "Erreur lors de la récupération des données utilisateur:",
+      err
+    );
+    error.value = "Impossible de récupérer vos informations.";
+  } finally {
+    isLoading.value = false;
+  }
 });
 </script>
 

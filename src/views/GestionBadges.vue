@@ -54,6 +54,22 @@
               class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron"
               required
             />
+            <!-- Ajouter après l'input imageUrl -->
+            <div v-if="newBadge.imageUrl" class="mt-2 mb-4">
+              <label class="block text-lg text-cyan-300 mb-2 font-orbitron"
+                >Prévisualisation</label
+              >
+              <div
+                class="w-20 h-20 rounded-full flex items-center justify-center bg-gray-700/70 p-1 border border-pink-500/30 overflow-hidden mx-auto"
+              >
+                <img
+                  :src="newBadge.imageUrl"
+                  alt="Prévisualisation"
+                  class="max-h-full max-w-full object-contain"
+                  @error="handleImageError"
+                />
+              </div>
+            </div>
           </div>
 
           <div class="flex justify-end">
@@ -353,11 +369,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+
+// Services
 import badgeService from "../services/badgeService";
-import type { Badge, Player } from "../types";
 import playerService from "../services/playerService";
+
+// Types
+import type { Badge, Player } from "../types";
+
+// Components
 import Toast from "@/shared/Toast.vue";
 
+// Variables réactives
 const newBadge = ref<Badge>({ title: "", imageUrl: "" });
 const playerSearch = ref("");
 const playerSearchResults = ref<Player[]>([]);
@@ -369,6 +392,11 @@ const selectedPlayerBadges = ref<Badge[]>([]);
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 
+/**
+ * Fonction pour afficher une notification à l'utilisateur
+ * @param type  "success" ou "error"
+ * @param message Message à afficher
+ */
 const showMessage = (type: "success" | "error", message: string) => {
   if (type === "success") {
     success.value = message;
@@ -383,7 +411,16 @@ const showMessage = (type: "success" | "error", message: string) => {
   }, 3000);
 };
 
+/**
+ * Crée un badge à partir des données du formulaire
+ */
 const createBadge = async () => {
+  const errors = validateBadgeForm();
+
+  if (errors.length > 0) {
+    showMessage("error", errors[0]);
+    return;
+  }
   try {
     const createdBadge = await badgeService.createBadge(newBadge.value);
     badges.value.push(createdBadge);
@@ -395,6 +432,9 @@ const createBadge = async () => {
   }
 };
 
+/**
+ * Associe un badge à un joueur
+ */
 const assignBadge = async () => {
   try {
     if (selectedPlayer.value && badgeId.value) {
@@ -412,6 +452,10 @@ const assignBadge = async () => {
   }
 };
 
+/**
+ * Retirer un badge d'un joueur
+ * @param badgeId ID du badge à supprimer
+ */
 const removeBadge = async (badgeId: string) => {
   try {
     if (selectedPlayer.value) {
@@ -428,6 +472,9 @@ const removeBadge = async (badgeId: string) => {
   }
 };
 
+/**
+ * Récupère la liste des badges
+ */
 const fetchBadges = async () => {
   try {
     badges.value = await badgeService.getBadges();
@@ -490,6 +537,28 @@ const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
     e.target.src = "https://via.placeholder.com/50?text=?";
   }
+};
+
+const validateBadgeForm = () => {
+  const errors = [];
+
+  if (!newBadge.value.title.trim()) {
+    errors.push("Le titre du badge est requis");
+  } else if (newBadge.value.title.length > 50) {
+    errors.push("Le titre ne doit pas dépasser 50 caractères");
+  }
+
+  if (!newBadge.value.imageUrl.trim()) {
+    errors.push("L'URL de l'image est requise");
+  } else {
+    try {
+      new URL(newBadge.value.imageUrl);
+    } catch (e) {
+      errors.push("Veuillez entrer une URL d'image valide");
+    }
+  }
+
+  return errors;
 };
 
 onMounted(() => {
