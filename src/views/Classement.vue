@@ -82,22 +82,7 @@
                 <span v-else class="text-gray-500">▼</span>
               </button>
             </th>
-            <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              Points
-              <button @click="sortBy('totalPoints')" class="sort-button">
-                <span
-                  v-if="sortKey === 'totalPoints' && sortOrder === 'asc'"
-                  class="text-cyan-400"
-                  >▲</span
-                >
-                <span
-                  v-else-if="sortKey === 'totalPoints' && sortOrder === 'desc'"
-                  class="text-cyan-400"
-                  >▼</span
-                >
-                <span v-else class="text-gray-500">▼</span>
-              </button>
-            </th>
+
             <th class="py-4 px-4 text-center font-audiowide text-pink-400">
               Tournois
               <button @click="sortBy('totalTournaments')" class="sort-button">
@@ -162,9 +147,6 @@
                 {{ ranking.username }}
               </router-link>
             </td>
-            <td class="py-4 px-4 text-center font-orbitron text-yellow-300">
-              {{ ranking.totalPoints }}
-            </td>
             <td class="py-4 px-4 text-center font-orbitron text-cyan-400">
               {{ ranking.totalTournaments }}
             </td>
@@ -199,7 +181,7 @@ import type { PlayerRanking, Game } from "../types";
 /**
  * Valeurs par défaut pour le tri du classement
  */
-const DEFAULT_SORT_KEY: keyof PlayerRanking = "totalPoints";
+const DEFAULT_SORT_KEY: keyof PlayerRanking = "totalVictories";
 const DEFAULT_SORT_ORDER = "desc";
 
 //-------------------------------------------------------

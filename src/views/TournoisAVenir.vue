@@ -114,7 +114,7 @@
       <div
         v-for="tournament in filteredTournaments"
         :key="tournament._id"
-        class="tournament-card mb-8 relative overflow-hidden transition-all duration-300 hover:scale-101"
+        class="bg-gray-900/70 backdrop-blur rounded-lg overflow-hidden transition-all duration-300 hover:translate-y-[-3px] mb-8 relative hover:scale-101"
         :class="{
           'tournament-finished': tournament.finished,
           'tournament-upcoming': !tournament.finished,
@@ -122,13 +122,13 @@
       >
         <!-- Header du tournoi -->
         <div
-          class="tournament-header flex flex-col md:flex-row justify-between items-start md:items-center p-4 md:p-6"
+          class="bg-gray-900/80 border-b border-gray-700/60 flex flex-col md:flex-row justify-between items-start md:items-center p-4 md:p-6"
         >
           <div>
             <h2 class="text-2xl md:text-3xl text-white font-audiowide mb-2">
               {{ tournament.name }}
             </h2>
-            <div class="tournament-meta flex flex-wrap gap-4 mb-2">
+            <div class="font-orbitron flex flex-wrap gap-4 mb-2">
               <p class="text-white flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +182,7 @@
             <button
               v-if="!isUserRegistered(tournament)"
               @click="openRegistrationPopup(tournament, 'register')"
-              class="neon-button-pink px-4 py-2 rounded flex items-center"
+              class="bg-gradient-to-r from-purple-900 to-fuchsia-600 text-white border border-pink-500 shadow-[0_0_5px_#ec4899,inset_0_0_5px_#ec4899] transition-all duration-300 hover:bg-gradient-to-r hover:from-fuchsia-600 hover:to-pink-500 hover:shadow-[0_0_10px_#ec4899,inset_0_0_10px_#ec4899] px-4 py-2 rounded flex items-center"
             >
               <span class="mr-2 font-orbitron">S'inscrire</span>
               <svg
@@ -207,7 +207,7 @@
               :class="{
                 'neon-button-green':
                   tournament._id && checkedInPlayers[tournament._id],
-                'neon-button-yellow':
+                'bg-gradient-to-r from-amber-800 to-amber-500 text-white border border-amber-400 shadow-[0_0_5px_#fbbf24,inset_0_0_5px_#fbbf24] transition-all duration-300 hover:bg-gradient-to-r hover:from-amber-500 hover:to-amber-300 hover:shadow-[0_0_10px_#fbbf24,inset_0_0_10px_#fbbf24] px-4 py-2 rounded flex items-center':
                   tournament._id && !checkedInPlayers[tournament._id],
               }"
               class="px-4 py-2 rounded flex items-center"
@@ -261,8 +261,9 @@
           <button
             @click="toggleParticipants(tournament._id ?? '')"
             :class="{
-              'tab-active': tournament._id && showParticipants[tournament._id],
-              'tab-inactive':
+              'text-pink-500 border-b-2 border-pink-500 bg-pink-500/10':
+                tournament._id && showParticipants[tournament._id],
+              'text-gray-400 border-b-2 border-transparent hover:text-gray-300 hover:bg-gray-500/10':
                 !tournament._id || !showParticipants[tournament._id],
             }"
             class="tab-button flex items-center px-6 py-2"
@@ -282,8 +283,9 @@
           <button
             @click="toggleDescription(tournament._id ?? '')"
             :class="{
-              'tab-active': tournament._id && showDescription[tournament._id],
-              'tab-inactive':
+              'text-pink-500 border-b-2 border-pink-500 bg-pink-500/10':
+                tournament._id && showDescription[tournament._id],
+              'text-gray-400 border-b-2 border-transparent hover:text-gray-300 hover:bg-gray-500/10':
                 !tournament._id || !showDescription[tournament._id],
             }"
             class="tab-button flex items-center px-6 py-2"
@@ -327,8 +329,10 @@
         <div class="tournament-content p-4 md:p-6 bg-gray-900 bg-opacity-70">
           <!-- Onglet participants -->
           <div
-            v-if="tournament._id && showParticipants[tournament._id]"
-            class="tab-content animate__animated animate__fadeIn"
+            v-if="
+              tournament && tournament._id && showParticipants[tournament._id]
+            "
+            class="min-h-[150px] animate__animated animate__fadeIn"
           >
             <h3
               class="text-xl text-white font-audiowide mb-4 flex items-center"
@@ -408,12 +412,15 @@
                 {{ player.username }}
               </li>
             </ul>
+            <p v-else class="text-gray-400 italic py-4 text-center">
+              Aucune équipe inscrite pour ce tournoi.
+            </p>
           </div>
 
           <!-- Onglet description -->
           <div
             v-if="tournament._id && showDescription[tournament._id]"
-            class="tab-content animate__animated animate__fadeIn"
+            class="min-h-[150px] animate__animated animate__fadeIn"
           >
             <h3
               class="text-xl text-white font-audiowide mb-4 flex items-center"
@@ -450,63 +457,453 @@
           <!-- Résultats (si tournoi terminé) -->
           <div
             v-if="tournament.finished"
-            class="mt-6 bg-gradient-to-r from-green-900/30 to-blue-900/30 p-4 rounded-lg border border-green-600"
+            class="mt-6 bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-6 rounded-xl border border-indigo-500/50 shadow-inner"
           >
             <h3
               class="text-xl text-white font-audiowide mb-4 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-yellow-400"
+                class="h-6 w-6 mr-2 text-amber-400"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
                 <path
                   fill-rule="evenodd"
-                  d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                 />
               </svg>
-              Résultats
+              <span class="glow-text">Classement final</span>
             </h3>
-            <div class="bg-black bg-opacity-50 p-4 rounded">
-              <p
-                class="font-orbitron mb-2 text-lg text-yellow-300 flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+              <!-- Podium -->
+              <div class="col-span-1 md:col-span-3 mb-8">
+                <div class="relative mt-24 md:mt-32 mb-12 podium-container">
+                  <!-- Le podium physique -->
+                  <div class="flex justify-center items-end h-40 md:h-52">
+                    <!-- 2ème place -->
+                    <div class="w-1/4 md:w-1/5 relative">
+                      <div
+                        class="silver-podium h-24 md:h-32 rounded-t-lg"
+                      ></div>
+                      <div
+                        class="absolute top-0 left-0 right-0 transform -translate-y-20 md:-translate-y-24"
+                      >
+                        <div
+                          class="mx-auto w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center border-4 border-gray-200 shadow-xl"
+                        >
+                          <span class="text-2xl md:text-3xl">🥈</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 1ère place -->
+                    <div class="w-1/4 md:w-1/5 relative mx-1 md:mx-3 z-10">
+                      <div class="gold-podium h-32 md:h-40 rounded-t-lg"></div>
+                      <div
+                        class="absolute top-0 left-0 right-0 transform -translate-y-24 md:-translate-y-28"
+                      >
+                        <div
+                          class="mx-auto w-20 h-20 md:w-24 md:h-24 gold-circle rounded-full flex items-center justify-center border-4 border-amber-400 shadow-xl"
+                        >
+                          <span class="text-3xl md:text-4xl">🏆</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 3ème place -->
+                    <div class="w-1/4 md:w-1/5 relative">
+                      <div
+                        class="bronze-podium h-16 md:h-24 rounded-t-lg"
+                      ></div>
+                      <div
+                        class="absolute top-0 left-0 right-0 transform -translate-y-16 md:-translate-y-20"
+                      >
+                        <div
+                          class="mx-auto w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-amber-700 to-amber-800 rounded-full flex items-center justify-center border-4 border-amber-700 shadow-xl"
+                        >
+                          <span class="text-xl md:text-2xl">🥉</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Les équipes gagnantes sur le podium -->
+                  <div class="flex justify-center mt-8">
+                    <!-- 2ème place équipes -->
+                    <div class="w-1/3 px-1 md:px-2">
+                      <h4
+                        class="text-sm md:text-base font-audiowide text-gray-300 mb-2 text-center"
+                      >
+                        🥈
+                        {{
+                          getTeamsByRank(tournament, 2).length > 1
+                            ? "Ex aequo"
+                            : "Argent"
+                        }}
+                      </h4>
+                      <div class="space-y-2">
+                        <div
+                          v-for="team in getTeamsByRank(tournament, 2)"
+                          :key="team._id"
+                          class="bg-gradient-to-br from-gray-700/70 to-gray-600/70 text-white p-3 rounded-lg border-2 border-gray-400/80 shadow-lg transform transition-transform hover:scale-105 team-card"
+                        >
+                          <p
+                            class="font-bold text-sm md:text-base font-audiowide truncate text-center"
+                          >
+                            {{ team.name }}
+                          </p>
+                          <div class="mt-2 space-y-1">
+                            <div
+                              v-for="player in team.players"
+                              :key="player._id"
+                              class="text-xs bg-gray-800/80 p-1 rounded flex items-center"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-3 w-3 mr-1 text-white opacity-70"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="truncate">{{
+                                player.username
+                              }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 1ère place équipes -->
+                    <div class="w-1/3 px-1 md:px-2 -mt-4">
+                      <h4
+                        class="text-sm md:text-lg font-audiowide text-yellow-400 mb-2 text-center glow-gold"
+                      >
+                        🏆
+                        {{
+                          getTeamsByRank(tournament, 1).length > 1
+                            ? "Champions ex aequo"
+                            : "Champion"
+                        }}
+                      </h4>
+                      <div class="space-y-2">
+                        <div
+                          v-for="team in getTeamsByRank(tournament, 1)"
+                          :key="team._id"
+                          class="bg-gradient-to-br from-amber-700/70 to-yellow-600/70 p-3 rounded-lg border-2 border-yellow-500 shadow-lg shadow-yellow-500/30 transform transition-transform hover:scale-105 team-card"
+                        >
+                          <p
+                            class="font-bold text-sm md:text-base text-white font-audiowide truncate text-center"
+                          >
+                            {{ team.name }}
+                          </p>
+                          <div class="mt-2 space-y-1">
+                            <div
+                              v-for="player in team.players"
+                              :key="player._id"
+                              class="text-xs bg-black/40 p-1 rounded flex items-center"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-3 w-3 mr-1 text-yellow-200"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="truncate">{{
+                                player.username
+                              }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 3ème place équipes -->
+                    <div class="w-1/3 px-1 md:px-2">
+                      <h4
+                        class="text-sm md:text-base font-audiowide text-amber-700 mb-2 text-center"
+                      >
+                        🥉
+                        {{
+                          getTeamsByRank(tournament, 3).length > 1
+                            ? "Ex aequo"
+                            : "Bronze"
+                        }}
+                      </h4>
+                      <div class="space-y-2">
+                        <div
+                          v-for="team in getTeamsByRank(tournament, 3)"
+                          :key="team._id"
+                          class="bg-gradient-to-br from-amber-900/70 to-amber-700/70 text-white p-3 rounded-lg border-2 border-amber-700/80 shadow-lg transform transition-transform hover:scale-105 team-card"
+                        >
+                          <p
+                            class="font-bold text-sm md:text-base font-audiowide truncate text-center"
+                          >
+                            {{ team.name }}
+                          </p>
+                          <div class="mt-2 space-y-1">
+                            <div
+                              v-for="player in team.players"
+                              :key="player._id"
+                              class="text-xs bg-gray-800/80 p-1 rounded flex items-center"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-3 w-3 mr-1 text-white opacity-70"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="truncate">{{
+                                player.username
+                              }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Autres classements -->
+              <div class="col-span-1 md:col-span-3 mt-12">
+                <!-- En-tête dépliable -->
+                <button
+                  @click="toggleOtherRankings(tournament._id ?? '')"
+                  class="w-full text-left p-4 bg-gray-800/50 rounded-lg border border-indigo-800/30 flex justify-between items-center hover:bg-indigo-900/20 transition-colors"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                {{ tournament.winningTeam?.name || "Équipe gagnante" }}
-              </p>
-              <ul class="space-y-1 mt-2">
-                <li
-                  v-for="player in tournament.winningTeam?.players"
-                  class="text-white flex items-center"
-                >
+                  <h3
+                    class="text-xl text-white font-audiowide flex items-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 mr-2 text-indigo-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Autres classements
+                    <span class="text-sm text-gray-400 ml-2 font-orbitron">
+                      ({{
+                        (tournament.teams ?? []).filter(
+                          (t) => t.ranking > 3 || !t.ranking || t.ranking === 0
+                        ).length
+                      }}
+                      équipes)
+                    </span>
+                  </h3>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 text-yellow-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                    :class="[
+                      isOtherRankingsExpanded(tournament._id ?? '')
+                        ? 'transform rotate-180'
+                        : '',
+                      'h-5 w-5 text-indigo-400 transition-transform',
+                    ]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
                     <path
-                      fill-rule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clip-rule="evenodd"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
                     />
                   </svg>
-                  {{ player.username }}
-                </li>
-              </ul>
+                </button>
+
+                <!-- Contenu dépliable -->
+                <div
+                  v-if="
+                    tournament._id && isOtherRankingsExpanded(tournament._id)
+                  "
+                  class="mt-4 space-y-8 bg-gray-900/30 p-4 rounded-lg border border-indigo-800/20 animate__animated animate__fadeIn"
+                >
+                  <!-- Équipes classées (4e et plus) -->
+                  <div
+                    v-if="
+                      Object.keys(
+                        groupTeamsByRank(
+                          (tournament.teams ?? []).filter((t) => t.ranking > 3)
+                        )
+                      ).length > 0
+                    "
+                    class="space-y-6"
+                  >
+                    <div
+                      v-for="(teams, rank) in groupTeamsByRank(
+                        (tournament.teams ?? []).filter((t) => t.ranking > 3)
+                      )"
+                      :key="rank"
+                      class="mb-6"
+                    >
+                      <h4
+                        class="text-lg font-audiowide text-indigo-300 mb-4 border-b border-indigo-800 pb-2"
+                      >
+                        {{ getRankingLabel(parseInt(rank), teams.length) }}
+                      </h4>
+
+                      <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                      >
+                        <div
+                          v-for="team in teams"
+                          :key="team._id"
+                          :class="[
+                            'p-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-105',
+                            getRankingClass(team.ranking),
+                          ]"
+                        >
+                          <h5
+                            class="text-lg font-bold font-audiowide mb-3 flex items-center"
+                          >
+                            <span class="truncate">{{ team.name }}</span>
+                            <span
+                              class="ml-auto bg-indigo-600/70 text-white text-xs px-2 py-1 rounded"
+                            >
+                              {{ team.ranking }}e
+                            </span>
+                          </h5>
+
+                          <ul
+                            v-if="team.players && team.players.length > 0"
+                            class="space-y-2"
+                          >
+                            <li
+                              v-for="player in team.players"
+                              :key="player._id"
+                              class="text-sm bg-gray-800/50 p-2 rounded flex items-center"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 mr-2 text-indigo-400"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="truncate">{{
+                                player.username
+                              }}</span>
+                            </li>
+                          </ul>
+                          <p
+                            v-else
+                            class="text-gray-400 italic text-sm text-center"
+                          >
+                            Aucun membre dans cette équipe
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Équipes non classées -->
+                  <div
+                    v-if="
+                      tournament.teams &&
+                      tournament.teams.some(
+                        (t) => !t.ranking || t.ranking === 0
+                      )
+                    "
+                    class="mb-6"
+                  >
+                    <h4
+                      class="text-lg font-audiowide text-gray-400 mb-4 border-b border-gray-800 pb-2"
+                    >
+                      Non classées
+                    </h4>
+
+                    <div
+                      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
+                      <div
+                        v-for="team in tournament.teams.filter(
+                          (t) => !t.ranking || t.ranking === 0
+                        )"
+                        :key="team._id"
+                        class="p-4 rounded-lg shadow-lg bg-gradient-to-br from-gray-900/30 to-gray-800/30 text-gray-300 border border-gray-700 transition-all duration-300 hover:scale-105 team-card"
+                      >
+                        <h5
+                          class="text-lg font-bold font-audiowide mb-3 flex items-center"
+                        >
+                          <span class="truncate">{{ team.name }}</span>
+                          <span
+                            class="ml-auto bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded"
+                          >
+                            Non classé
+                          </span>
+                        </h5>
+
+                        <ul class="space-y-2">
+                          <li
+                            v-for="player in team.players"
+                            :key="player._id"
+                            class="text-sm bg-gray-800/80 p-2 rounded flex items-center"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-4 w-4 mr-2 text-gray-400"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd"
+                              />
+                            </svg>
+                            <span class="truncate">{{ player.username }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Message s'il n'y a pas d'équipes classées au-delà du podium -->
+                  <div
+                    v-if="
+                      !(tournament.teams ?? []).some((t) => t.ranking > 3) &&
+                      !(tournament.teams ?? []).some(
+                        (t) => !t.ranking || t.ranking === 0
+                      )
+                    "
+                    class="p-6 text-center text-gray-400 italic"
+                  >
+                    Pas d'autres équipes classées au-delà du podium.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -560,34 +957,31 @@ import Toast from "@/shared/Toast.vue";
 import type { Game, Tournament } from "../types";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 
-//-------------------------------------------------------
+// Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------
 
-// Données des jeux et tournois
+// États globaux
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
+const success = ref<string | null>(null);
+const error = ref<string | null>(null);
 
-// Options de filtrage et d'affichage
+// États de filtrage et d'affichage
 const selectedGame = ref<string>("");
 const showFinished = ref<boolean>(false);
 const sortAscending = ref<boolean>(false);
 
-// États pour l'interface des tournois
+// États d'interface et d'interaction
 const showParticipants = ref<{ [key: string]: boolean }>({});
 const showDescription = ref<{ [key: string]: boolean }>({});
-
-// États pour le modal de confirmation
-const showPopup = ref<boolean>(false);
-const selectedTournament = ref<Tournament | null>(null);
-const actionType = ref<string>("register");
-
-// États pour le système de check-in
+const showOtherRankings = ref<{ [key: string]: boolean }>({});
 const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
-// État du système de notifications
-const success = ref<string | null>(null);
-const error = ref<string | null>(null);
+// États du modal de confirmation
+const showPopup = ref<boolean>(false);
+const selectedTournament = ref<Tournament | null>(null);
+const actionType = ref<string>("register"); // "register" ou "unregister"
 
 //-------------------------------------------------------
 // SECTION: Store et propriétés calculées
@@ -601,38 +995,35 @@ const user = computed(() => userStore.user);
  * Filtre et trie les tournois selon les critères sélectionnés
  * - Filtre par jeu sélectionné
  * - Filtre par statut (terminé ou à venir)
- * - Trie par date
+ * - Trie par date (ascendant ou descendant)
  */
 const filteredTournaments = computed(() => {
-  // Filtrage des tournois selon les critères
-  const filtered = tournaments.value.filter((tournament) => {
-    const matchesGame = selectedGame.value
-      ? tournament.game._id === selectedGame.value
-      : true;
-    const matchesFinished = showFinished.value ? true : !tournament.finished;
-    return matchesGame && matchesFinished;
-  });
+  // Appliquer d'abord les filtres pour réduire le nombre d'éléments à trier
+  let filtered = tournaments.value;
+
+  // Filtre par jeu si un jeu est sélectionné
+  if (selectedGame.value) {
+    filtered = filtered.filter((t) => t.game._id === selectedGame.value);
+  }
+
+  // Filtre par statut (terminé/à venir)
+  if (!showFinished.value) {
+    filtered = filtered.filter((t) => !t.finished);
+  }
 
   // Tri chronologique configurable
+  const sortMultiplier = sortAscending.value ? 1 : -1;
+
   return filtered.sort((a, b) => {
     const dateA = new Date(a.date).getTime();
     const dateB = new Date(b.date).getTime();
-    return sortAscending.value
-      ? dateA - dateB // Ordre croissant (ancien → récent)
-      : dateB - dateA; // Ordre décroissant (récent → ancien)
+    return (dateA - dateB) * sortMultiplier;
   });
 });
 
 //-------------------------------------------------------
 // SECTION: Récupération des données
 //-------------------------------------------------------
-
-/**
- * Récupère la liste des jeux depuis l'API
- */
-const fetchGames = async () => {
-  games.value = await gameService.getGames();
-};
 
 /**
  * Récupère la liste des tournois depuis l'API
@@ -658,7 +1049,6 @@ const fetchTournaments = async () => {
             false;
         }
       });
-      console.log("tournaments.value", tournaments.value);
     }
   }
 };
@@ -687,6 +1077,17 @@ const toggleDescription = (tournamentId: string) => {
   if (showDescription.value[tournamentId]) {
     showParticipants.value[tournamentId] = false;
   }
+};
+
+// Fonction pour basculer l'affichage des autres classements
+const toggleOtherRankings = (tournamentId: string) => {
+  showOtherRankings.value[tournamentId] =
+    !showOtherRankings.value[tournamentId];
+};
+
+// Vérifier si la section des autres classements est dépliée
+const isOtherRankingsExpanded = (tournamentId: string) => {
+  return !!showOtherRankings.value[tournamentId];
 };
 
 //-------------------------------------------------------
@@ -764,11 +1165,12 @@ const isUserRegistered = (tournament: Tournament) => {
 //-------------------------------------------------------
 
 /**
- * Change l'état de check-in d'un joueur pour un tournoi
+ * Change l'état de check-in d'un joueur pour un tournoi avec retour visuel immédiat
  * @param tournamentId - ID du tournoi
  * @param checkedIn - Nouvel état de check-in
  */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
+  // Optimistic UI: mettre à jour l'interface avant que la requête soit terminée
   checkedInPlayers.value[tournamentId] = checkedIn;
 
   try {
@@ -778,12 +1180,22 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
         user.value._id,
         checkedIn
       );
+
+      showMessage(
+        "success",
+        checkedIn ? "Check-in confirmé !" : "Check-in annulé."
+      );
     }
-    showMessage("success", "Check-in réussi !");
-    fetchTournaments(); // Recharge les tournois pour mettre à jour l'état
   } catch (error) {
+    // En cas d'erreur, remettre l'état précédent
+    checkedInPlayers.value[tournamentId] = !checkedIn;
     console.error("Erreur lors du check-in:", error);
-    showMessage("error", "Erreur lors du check-in.");
+    showMessage(
+      "error",
+      `Erreur: Impossible de ${
+        checkedIn ? "confirmer" : "annuler"
+      } le check-in.`
+    );
   }
 };
 
@@ -825,20 +1237,104 @@ const formatLocalDate = (dateString: string) => {
  * Affiche un message de notification temporaire
  * @param type - Type de message ("success" ou "error")
  * @param message - Contenu du message
+ * @param duration - Durée d'affichage en ms (défaut: 3000ms)
  */
-const showMessage = (type: "success" | "error", message: string) => {
+const showMessage = (
+  type: "success" | "error",
+  message: string,
+  duration: number = 3000
+) => {
+  // Réinitialiser tout message précédent
+  success.value = null;
+  error.value = null;
+
+  // Définir le nouveau message
   if (type === "success") {
     success.value = message;
-    error.value = null;
   } else {
     error.value = message;
-    success.value = null;
   }
-  // Auto-effacement après 3 secondes
+
+  // Auto-effacement après la durée spécifiée
   setTimeout(() => {
-    success.value = null;
-    error.value = null;
-  }, 3000);
+    if (type === "success") {
+      success.value = null;
+    } else {
+      error.value = null;
+    }
+  }, duration);
+};
+
+/**
+ * Obtient le libellé correspondant au classement avec gestion des égalités
+ * @param rank - Rang de l'équipe (1=or, 2=argent, 3=bronze, etc.)
+ * @param equalCount - Nombre d'équipes ayant ce même rang (pour les ex aequo)
+ * @returns Libellé formaté avec emoji et indication d'égalité si nécessaire
+ */
+const getRankingLabel = (
+  rank: number | null | undefined,
+  equalCount: number = 1
+): string => {
+  // Cas des équipes non classées
+  if (rank === null || rank === undefined || rank === 0) {
+    return "Non classé";
+  }
+
+  // Déterminer le libellé de base selon le rang
+  let label;
+  switch (rank) {
+    case 1:
+      label = "🥇 Or";
+      break;
+    case 2:
+      label = "🥈 Argent";
+      break;
+    case 3:
+      label = "🥉 Bronze";
+      break;
+    default:
+      label = `${rank}ème`;
+  }
+
+  // Ajouter l'indication d'égalité si plusieurs équipes ont ce rang
+  if (equalCount > 1) {
+    label += ` (${equalCount} équipes ex aequo)`;
+  }
+
+  return label;
+};
+
+/**
+ * Récupère toutes les équipes ayant un rang spécifique dans un tournoi
+ * @param tournament - Tournoi contenant les équipes
+ * @param rank - Rang à rechercher (1=or, 2=argent, 3=bronze, etc.)
+ * @returns Tableau d'équipes ayant ce rang
+ */
+const getTeamsByRank = (tournament: Tournament, rank: number) => {
+  // Vérification de sécurité avant de filtrer
+  return (tournament?.teams ?? []).filter((team) => team.ranking === rank);
+};
+
+/**
+ * Regroupe les équipes par rang pour l'affichage des égalités
+ * @param teams - Tableau d'équipes à regrouper
+ * @returns Objet avec les rangs comme clés et les tableaux d'équipes comme valeurs
+ */
+const groupTeamsByRank = (teams: any[]): Record<string, any[]> => {
+  if (!teams?.length) return {};
+
+  // Utiliser reduce pour regrouper les équipes par rang
+  return teams.reduce((acc: Record<string, any[]>, team) => {
+    // Gérer les cas où ranking est undefined, null ou 0
+    const ranking = team.ranking;
+    const rankKey = ranking && ranking > 0 ? ranking.toString() : "0";
+
+    // Initialiser le tableau pour ce rang s'il n'existe pas encore
+    if (!acc[rankKey]) acc[rankKey] = [];
+
+    acc[rankKey].push(team);
+    return acc;
+  }, {});
 };
 
 //-------------------------------------------------------
@@ -846,24 +1342,194 @@ const showMessage = (type: "success" | "error", message: string) => {
 //-------------------------------------------------------
 
 /**
+ * Initialise les états de check-in pour l'utilisateur connecté
+ */
+const initializeCheckInStates = async () => {
+  checkedInPlayers.value = {};
+
+  if (!user.value) return;
+
+  try {
+    const player = await playerService.getPlayerByIdUser(user.value._id);
+    if (!player?._id) return;
+
+    tournaments.value.forEach((tournament) => {
+      if (tournament._id) {
+        checkedInPlayers.value[tournament._id] = !!(
+          tournament.checkIns &&
+          player._id &&
+          tournament.checkIns[player._id]
+        );
+      }
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation des check-ins:", error);
+  }
+};
+
+/**
+ * Initialise les états d'interface pour les accordéons et onglets
+ */
+const initializeUIStates = () => {
+  // Initialiser tous les accordéons comme fermés par défaut
+  tournaments.value.forEach((tournament) => {
+    if (tournament._id) {
+      showOtherRankings.value[tournament._id] = false;
+      showParticipants.value[tournament._id] = false;
+      showDescription.value[tournament._id] = false;
+    }
+  });
+};
+
+/**
+ * Détermine les classes CSS pour styliser les cartes d'équipe selon leur classement
+ * @param rank - Rang de l'équipe
+ * @returns Classes CSS pour la carte
+ */
+const getRankingClass = (rank: number | null | undefined): string => {
+  if (rank === null || rank === undefined || rank === 0) {
+    return "bg-gradient-to-br from-gray-900/30 to-gray-800/30 border-gray-700";
+  }
+
+  switch (rank) {
+    case 1:
+      return "bg-gradient-to-br from-amber-700/70 to-yellow-600/70 border-yellow-500";
+    case 2:
+      return "bg-gradient-to-br from-gray-700/70 to-gray-600/70 border-gray-400";
+    case 3:
+      return "bg-gradient-to-br from-amber-900/70 to-amber-700/70 border-amber-700";
+    default:
+      return "bg-gradient-to-br from-indigo-900/30 to-indigo-800/30 border-indigo-700/50";
+  }
+};
+
+/**
  * Initialisation du composant au montage
  */
-onMounted(() => {
-  fetchGames();
-  fetchTournaments();
+onMounted(async () => {
+  try {
+    // Chargement parallèle des jeux et tournois pour plus de rapidité
+    const [gamesResult, tournamentsResult] = await Promise.all([
+      gameService.getGames(),
+      tournamentService.getTournaments(),
+    ]);
+
+    games.value = gamesResult;
+    tournaments.value = tournamentsResult;
+
+    // Initialisation des états d'interface
+    await initializeCheckInStates();
+    initializeUIStates();
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation:", error);
+    showMessage("error", "Erreur lors du chargement des données");
+  }
 });
 </script>
 
 <style scoped>
+/* Base et layout */
 .container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.neon-text {
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
+/* Typographie spéciale */
+.font-audiowide {
+  font-family: "Audiowide", cursive; /* Police pour les titres futuristes */
+}
+
+.font-orbitron {
+  font-family: "Orbitron", sans-serif; /* Police pour les données et chiffres */
+}
+
+/* Distinction entre tournois à venir et terminés */
+.tournament-upcoming {
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.1); /* Lueur rose pour tournois à venir */
+}
+
+.tournament-finished {
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.1); /* Lueur verte pour tournois terminés */
+}
+
+/* Podium et affichage des résultats */
+.gold-podium {
+  background: linear-gradient(to bottom, #f59e0b, #d97706);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.silver-podium {
+  background: linear-gradient(to bottom, #9ca3af, #6b7280);
+  box-shadow: 0 0 15px rgba(156, 163, 175, 0.5);
+}
+
+.bronze-podium {
+  background: linear-gradient(to bottom, #92400e, #78350f);
+  box-shadow: 0 0 15px rgba(146, 64, 14, 0.5);
+}
+
+/* Animation pour la médaille d'or sur le podium */
+.gold-circle {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+  }
+}
+
+/* Animation plus subtile pour les badges Or */
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+/* Styles spécifiques pour les équipes hors podium */
+.col-span-1.md\:col-span-3.mt-12 {
+  border-top: 1px solid rgba(79, 70, 229, 0.3);
+  padding-top: 2rem;
+}
+
+/* Animation subtile pour les cartes d'équipe au survol */
+[class*="hover:scale-105"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[class*="hover:scale-105"]:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+/* Style pour les classements numérotés */
+[class*="bg-indigo-600"] {
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  font-family: "Orbitron", sans-serif;
+}
+
+/* Améliore la lisibilité des noms de joueurs */
+.truncate {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .glow-pink {
@@ -903,65 +1569,10 @@ onMounted(() => {
   box-shadow: 0 0 15px rgba(74, 222, 128, 0.1);
 }
 
-.tournament-header {
-  background: rgba(17, 24, 39, 0.8);
-  border-bottom: 1px solid rgba(55, 65, 81, 0.6);
-}
-
-.tournament-meta {
-  font-family: "Orbitron", sans-serif;
-}
-
 .tab-button {
   color: #fff;
   font-family: "Orbitron", sans-serif;
   transition: all 0.3s ease;
-}
-
-.tab-active {
-  color: #ec4899;
-  border-bottom: 2px solid #ec4899;
-  background: rgba(236, 72, 153, 0.1);
-}
-
-.tab-inactive {
-  color: #9ca3af;
-  border-bottom: 2px solid transparent;
-}
-
-.tab-inactive:hover {
-  color: #d1d5db;
-  background: rgba(156, 163, 175, 0.1);
-}
-
-.tab-content {
-  min-height: 150px;
-}
-
-.neon-button-pink {
-  background: linear-gradient(to right, #4a0072, #9900ff);
-  color: white;
-  border: 1px solid #ec4899;
-  box-shadow: 0 0 5px #ec4899, inset 0 0 5px #ec4899;
-  transition: all 0.3s ease;
-}
-
-.neon-button-pink:hover {
-  background: linear-gradient(to right, #9900ff, #ff00ff);
-  box-shadow: 0 0 10px #ec4899, inset 0 0 10px #ec4899;
-}
-
-.neon-button-yellow {
-  background: linear-gradient(to right, #725200, #ffbb00);
-  color: white;
-  border: 1px solid #fbbf24;
-  box-shadow: 0 0 5px #fbbf24, inset 0 0 5px #fbbf24;
-  transition: all 0.3s ease;
-}
-
-.neon-button-yellow:hover {
-  background: linear-gradient(to right, #ffbb00, #ffdd00);
-  box-shadow: 0 0 10px #fbbf24, inset 0 0 10px #fbbf24;
 }
 
 .neon-button-green {
@@ -1049,5 +1660,206 @@ onMounted(() => {
 
 .font-orbitron {
   font-family: "Orbitron", sans-serif;
+}
+
+/* Animation pour les badges */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Amélioration du contraste pour les identifiants de joueurs */
+.truncate {
+  color: #ffffff; /* Texte blanc pour meilleur contraste */
+  letter-spacing: 0.01em; /* Légère augmentation de l'espacement des lettres */
+}
+
+/* Amélioration du background des équipes hors podium */
+[class*="from-indigo-900\/30"] {
+  background: linear-gradient(
+    to bottom right,
+    rgba(49, 46, 129, 0.4),
+    rgba(67, 56, 202, 0.4)
+  );
+  border: 1px solid rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Icône plus visible pour les joueurs hors podium */
+.text-indigo-400 {
+  color: #818cf8; /* Couleur plus vive pour l'icône */
+}
+
+/* Style spécifique pour les joueurs des équipes non classées */
+.text-sm.bg-gray-800\/80 {
+  color: #ffffff;
+  background-color: rgba(55, 65, 81, 0.8);
+  border-left: 2px solid rgba(156, 163, 175, 0.6);
+}
+/* Styles pour le podium amélioré */
+.gold-podium {
+  background: linear-gradient(to bottom, #f59e0b, #d97706);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.silver-podium {
+  background: linear-gradient(to bottom, #9ca3af, #6b7280);
+  box-shadow: 0 0 15px rgba(156, 163, 175, 0.5);
+}
+
+.bronze-podium {
+  background: linear-gradient(to bottom, #92400e, #78350f);
+  box-shadow: 0 0 15px rgba(146, 64, 14, 0.5);
+}
+
+.gold-circle {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+  }
+}
+
+.glow-gold {
+  text-shadow: 0 0 5px rgba(251, 191, 36, 0.7), 0 0 10px rgba(251, 191, 36, 0.5);
+  animation: glow-pulse 2s infinite alternate;
+}
+
+@keyframes glow-pulse {
+  from {
+    text-shadow: 0 0 5px rgba(251, 191, 36, 0.7),
+      0 0 10px rgba(251, 191, 36, 0.5);
+  }
+  to {
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.9),
+      0 0 15px rgba(251, 191, 36, 0.7);
+  }
+}
+
+/* Styles pour l'accordéon des autres classements */
+.animate__fadeIn {
+  animation-duration: 0.3s;
+}
+
+/* Animation de rotation de la flèche */
+.transition-transform {
+  transition: transform 0.3s ease;
+}
+
+/* Style du bouton dépliant */
+button.w-full {
+  transition: all 0.3s ease;
+}
+
+button.w-full:hover {
+  background-color: rgba(79, 70, 229, 0.2);
+}
+
+button.w-full:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+/* Styles améliorés pour le podium */
+.podium-container {
+  position: relative;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  padding-top: 1.5rem;
+}
+
+/* Effet de perspective pour le podium */
+.podium-container::before {
+  content: "";
+  position: absolute;
+  top: 90%;
+  left: 10%;
+  right: 10%;
+  height: 20px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  z-index: 0;
+  filter: blur(5px);
+}
+
+.gold-podium,
+.silver-podium,
+.bronze-podium {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Lueurs dynamiques autour du podium */
+.gold-podium::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: rgba(245, 158, 11, 0.3);
+  filter: blur(10px);
+  animation: glow-float 3s ease-in-out infinite;
+}
+
+@keyframes glow-float {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px);
+  }
+}
+
+/* Effet cyberpunk pour les cartes des équipes */
+.team-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 0, 255, 0.3),
+    rgba(0, 255, 255, 0.3)
+  );
+  z-index: -1;
+  transform: scale(1.05);
+  animation: border-pulse 3s infinite;
+}
+
+@keyframes border-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 </style>

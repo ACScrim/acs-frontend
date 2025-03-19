@@ -517,12 +517,9 @@ const fetchBadges = async () => {
 const fetchPlayerBadges = async (playerId: string) => {
   try {
     const player = await playerService.getPlayerById(playerId);
-    console.log("badges reçus:", player.badges);
 
     // Les badges sont déjà des objets complets, pas besoin de les récupérer individuellement
     selectedPlayerBadges.value = player.badges || [];
-
-    console.log("Badges récupérés avec succès:", selectedPlayerBadges.value);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des badges du joueur:",
