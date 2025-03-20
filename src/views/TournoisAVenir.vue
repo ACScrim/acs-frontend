@@ -551,9 +551,7 @@ onMounted(async () => {
     showMessage("error", "Erreur lors du chargement des données");
   } finally {
     // Désactiver l'état de chargement
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 800); // Légère temporisation pour une meilleure UX
+    isLoading.value = false;
   }
 });
 </script>

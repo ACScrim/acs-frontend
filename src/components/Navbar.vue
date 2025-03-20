@@ -30,7 +30,7 @@
         </span>
 
         <router-link to="/" class="logo-link">
-          <span class="neon-text-pink font-audiowide text-2xl">ACS</span>
+          <img src="../assets/Logo_ACS.png" alt="" class="navbar-logo" />
         </router-link>
       </div>
 
@@ -730,5 +730,60 @@ onBeforeUnmount(() => {
 .slide-fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
+}
+
+/* Style du logo dans la navbar */
+.logo-link {
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: visible;
+}
+
+.logo-link:hover {
+  transform: scale(1.08);
+}
+
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.7));
+  transition: all 0.3s ease;
+}
+
+.logo-link:hover .navbar-logo {
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.9)) brightness(1.1);
+}
+
+/* Effet de lueur au survol */
+.logo-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(236, 72, 153, 0.2) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.logo-link:hover::after {
+  opacity: 1;
+}
+
+/* Ajustement responsive pour le logo */
+@media (max-width: 640px) {
+  .navbar-logo {
+    height: 36px;
+  }
 }
 </style>
