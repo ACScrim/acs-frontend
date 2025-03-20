@@ -13,11 +13,12 @@
         class="flex flex-col items-center justify-center"
         :class="!user ? 'max-w-md' : ''"
       >
-        <!-- Titre avec effet de glitch -->
-        <div class="glitch-container relative overflow-hidden px-2.5">
-          <h1 class="text-5xl font-audiowide text-white neon-text mt-4">
-            Alors, ça scrim ?
+        <!-- Remplacer la section du titre avec effet de glitch -->
+        <div class="title-container">
+          <h1 class="cyber-main-title">
+            <span class="neon-text-title">Alors, ça scrim ?</span>
           </h1>
+          <div class="cyber-line-h pink"></div>
         </div>
 
         <!-- Logo -->
@@ -79,7 +80,12 @@
             class="text-2xl font-audiowide text-white mb-4 flex items-center relative"
           >
             <span class="neon-text-cyan mr-2">PROCHAIN TOURNOI</span>
-            <span class="cyber-badge">LIVE</span>
+            <span
+              class="cyber-badge"
+              :class="{ live: isTournamentLive, soon: !isTournamentLive }"
+            >
+              {{ isTournamentLive ? "LIVE" : "BIENTÔT" }}
+            </span>
           </h2>
 
           <div v-if="isLoading">
@@ -438,6 +444,21 @@ const countdownUnits = computed(() => [
 ]);
 
 /**
+ * Détermine si le prochain tournoi est en cours (LIVE)
+ */
+const isTournamentLive = computed(() => {
+  if (!nextTournament.value || !nextTournament.value.date) {
+    return false;
+  }
+
+  const now = new Date();
+  const tournamentDate = new Date(nextTournament.value.date);
+
+  // Le tournoi est LIVE s'il a commencé mais n'est pas marqué comme terminé
+  return tournamentDate <= now && !nextTournament.value.finished;
+});
+
+/**
  * Équipes sur le podium du dernier tournoi
  */
 const podiumTeams = computed(() => {
@@ -696,21 +717,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Polices - essentielles car non disponibles en Tailwind par défaut */
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
-}
-
-/* Effets néon - spécifiques et difficiles à reproduire en Tailwind pur */
-.neon-text {
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 20px #ff00ff;
-  letter-spacing: 2px;
-}
-
 .neon-text-cyan {
   color: #06b6d4;
   text-shadow: 0 0 10px #06b6d4, 0 0 15px #06b6d4, 0 0 20px #06b6d4;
@@ -802,62 +808,6 @@ onUnmounted(() => {
 
 .animate-shine {
   animation: shine 1.5s;
-}
-
-/* Effet de glitch - complexe et spécifique */
-.glitch-container::before,
-.glitch-container::after {
-  content: "Alors, ça scrim ?";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  opacity: 0.8;
-}
-
-.glitch-container::before {
-  color: #0ff;
-  z-index: -1;
-  left: 3px;
-  text-shadow: -2px 0 #ff00ff;
-  animation: glitch-animation 3s infinite linear alternate-reverse;
-}
-
-.glitch-container::after {
-  color: #f0f;
-  z-index: -2;
-  left: -3px;
-  text-shadow: 2px 0 #00ffff;
-  animation: glitch-animation 2s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-animation {
-  0% {
-    clip-path: inset(71% 0 10% 0);
-    transform: translate(-2px, 2px);
-  }
-  20% {
-    clip-path: inset(29% 0 71% 0);
-    transform: translate(1px, -3px);
-  }
-  40% {
-    clip-path: inset(57% 0 25% 0);
-    transform: translate(3px, 1px);
-  }
-  60% {
-    clip-path: inset(89% 0 7% 0);
-    transform: translate(1px, -2px);
-  }
-  80% {
-    clip-path: inset(23% 0 67% 0);
-    transform: translate(-2px, 4px);
-  }
-  100% {
-    clip-path: inset(82% 0 12% 0);
-    transform: translate(2px, -4px);
-  }
 }
 
 /* Éléments cyberpunk spécifiques */
@@ -1166,5 +1116,125 @@ h2:hover .neon-text-pink {
 
 .cyberpunk-card:hover::before {
   transform: translateX(100%);
+}
+
+/* Conteneur du titre principal */
+.title-container {
+  position: relative;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem; /* Ajouter de l'espace en haut */
+  text-align: center;
+  overflow: visible;
+}
+
+/* Style du titre principal */
+.cyber-main-title {
+  font-family: "Audiowide", cursive;
+  font-size: min(3rem, 12vw); /* Taille responsive */
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  z-index: 1;
+  white-space: nowrap; /* Empêche le retour à la ligne */
+}
+
+/* Effet néon pour le titre principal */
+.neon-text-title {
+  color: #ffffff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff,
+    0 0 20px #ff00ff;
+  animation: neon-pulse 2s infinite alternate;
+  position: relative;
+  display: inline-block;
+}
+
+/* Animation de pulsation néon */
+@keyframes neon-pulse {
+  from {
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff,
+      0 0 20px #ff00ff;
+  }
+  to {
+    text-shadow: 0 0 5px #ff00ff, 0 0 15px #ff00ff, 0 0 25px #ff00ff,
+      0 0 35px #ff00ff;
+  }
+}
+
+/* Ligne horizontale décorative avec gradient */
+.cyber-line-h.pink {
+  position: absolute;
+  top: 90%;
+  left: 10%;
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ec4899, transparent);
+  opacity: 0.7;
+}
+
+/* Animation de survol pour le titre */
+.cyber-main-title:hover .neon-text-title {
+  animation: title-glitch 0.3s ease-in-out;
+}
+
+@keyframes title-glitch {
+  0%,
+  100% {
+    transform: translate(0);
+    text-shadow: 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+  }
+  25% {
+    transform: translate(-2px, -2px);
+    text-shadow: -2px 0 #ec4899, 2px 2px #ff00ff;
+  }
+  50% {
+    transform: translate(2px, 2px);
+    text-shadow: 2px -2px #ec4899, -2px 0 #ff00ff;
+  }
+  75% {
+    transform: translate(-2px, 2px);
+    text-shadow: 0 -2px #ec4899, -2px 2px #ff00ff;
+  }
+}
+
+/* Ajouter un effet de scanline au titre */
+.cyber-main-title::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(255, 0, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanline 6s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Responsive pour les écrans plus petits */
+@media (max-width: 640px) {
+  .cyber-main-title {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+  }
 }
 </style>
