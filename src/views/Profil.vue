@@ -54,7 +54,9 @@
               }}</span>
             </div>
           </div>
-          <h1 class="text-4xl sm:text-5xl text-white neon-text font-audiowide">
+          <h1
+            class="text-4xl sm:text-5xl text-white neon-text font-audiowide capitalize"
+          >
             {{ player.username }}
           </h1>
         </div>

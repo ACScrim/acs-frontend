@@ -84,3 +84,11 @@ button {
     );
   }
 }
+
+.font-audiowide {
+  font-family: "Audiowide", cursive; /* Police pour les titres futuristes */
+}
+
+.font-orbitron {
+  font-family: "Orbitron", sans-serif; /* Police pour les données et chiffres */
+}

@@ -157,7 +157,7 @@
                 <router-link
                   v-if="user.playerId"
                   :to="{ name: 'Profil', params: { id: user.playerId } }"
-                  class="text-lg text-white hover:text-pink-400 font-orbitron transition-colors member-link"
+                  class="text-lg text-white hover:text-pink-400 font-orbitron transition-colors member-link capitalize"
                 >
                   {{ user.username }}
                 </router-link>

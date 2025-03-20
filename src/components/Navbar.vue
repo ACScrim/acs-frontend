@@ -79,7 +79,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span class="user-name ml-2 hidden sm:inline font-orbitron">
+          <span
+            class="user-name ml-2 hidden sm:inline font-orbitron capitalize"
+          >
             {{ user.username }}
           </span>
         </span>

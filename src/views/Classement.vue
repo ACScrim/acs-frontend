@@ -142,7 +142,7 @@
             <td class="py-4 px-4 text-center">
               <router-link
                 :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                class="text-white hover:text-pink-400 font-orbitron transition-colors player-link"
+                class="text-white hover:text-pink-400 font-orbitron transition-colors player-link capitalize"
               >
                 {{ ranking.username }}
               </router-link>

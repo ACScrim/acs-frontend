@@ -56,7 +56,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        Bienvenue, {{ user.username }}!
+        <p class="capitalize">Bienvenue, {{ user.username }}!</p>
       </div>
     </div>
   </div>
