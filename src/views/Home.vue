@@ -16,7 +16,7 @@
         <!-- Titre avec effet de glitch -->
         <div class="glitch-container relative overflow-hidden px-2.5">
           <h1 class="text-5xl font-audiowide text-white neon-text mt-4">
-            Bienvenue sur
+            Alors, ça scrim ?
           </h1>
         </div>
 
@@ -807,7 +807,7 @@ onUnmounted(() => {
 /* Effet de glitch - complexe et spécifique */
 .glitch-container::before,
 .glitch-container::after {
-  content: "Bienvenue sur";
+  content: "Alors, ça scrim ?";
   position: absolute;
   top: 0;
   left: 0;
