@@ -267,16 +267,11 @@
     <!-- État de chargement -->
     <div
       v-else
-      class="flex justify-center items-center h-64"
+      class="max-w-4xl mx-auto pt-12"
       role="status"
       aria-live="polite"
     >
-      <div class="animate-pulse flex flex-col items-center">
-        <div
-          class="w-20 h-20 border-4 border-t-pink-500 border-r-transparent border-b-cyan-500 border-l-transparent rounded-full animate-spin"
-        ></div>
-        <p class="mt-4 text-white font-orbitron">Chargement du profil...</p>
-      </div>
+      <CyberpunkLoader />
     </div>
 
     <!-- Modal détail badge -->
@@ -337,6 +332,7 @@ import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
 import type { Player, PlayerRanking, Badge, User } from "../types";
+import CyberpunkLoader from "@/shared/CyberpunkLoader.vue"; // Importer le composant de loader
 
 //-------------------------------------------------------
 // SECTION: Définition des états

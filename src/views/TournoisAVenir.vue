@@ -109,6 +109,11 @@
       Veuillez vous connecter pour pouvoir vous inscrire aux tournois.
     </div>
 
+    <!-- Affichage du loader pendant le chargement -->
+    <div v-if="isLoading" class="my-12">
+      <CyberpunkLoader />
+    </div>
+
     <!-- Liste des tournois -->
     <div v-if="filteredTournaments.length > 0">
       <tournament-card
@@ -182,6 +187,7 @@ import Toast from "@/shared/Toast.vue";
 import type { Game, Tournament } from "../types";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentCard from "@/components/tournois-a-venir/TournamentCard.vue";
+import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
@@ -192,6 +198,7 @@ const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
+const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
 
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
@@ -256,26 +263,39 @@ const filteredTournaments = computed(() => {
  * et vérifie les check-ins de l'utilisateur
  */
 const fetchTournaments = async () => {
-  // Réinitialiser les états de check-in
-  checkedInPlayers.value = {};
+  // Activer l'état de chargement
+  isLoading.value = true;
 
-  // Récupérer tous les tournois
-  tournaments.value = await tournamentService.getTournaments();
+  try {
+    // Réinitialiser les états de check-in
+    checkedInPlayers.value = {};
 
-  // Vérifier l'état de check-in du joueur pour chaque tournoi
-  if (user.value) {
-    const player = await playerService.getPlayerByIdUser(user.value._id);
-    if (player && player._id) {
-      tournaments.value.forEach((tournament) => {
-        if (tournament._id) {
-          checkedInPlayers.value[tournament._id] =
-            (tournament.checkIns &&
-              player._id &&
-              tournament.checkIns[player._id]) ||
-            false;
-        }
-      });
+    // Récupérer tous les tournois
+    tournaments.value = await tournamentService.getTournaments();
+
+    // Vérifier l'état de check-in du joueur pour chaque tournoi
+    if (user.value) {
+      const player = await playerService.getPlayerByIdUser(user.value._id);
+      if (player && player._id) {
+        tournaments.value.forEach((tournament) => {
+          if (tournament._id) {
+            checkedInPlayers.value[tournament._id] =
+              (tournament.checkIns &&
+                player._id &&
+                tournament.checkIns[player._id]) ||
+              false;
+          }
+        });
+      }
     }
+  } catch (error) {
+    console.error("Erreur lors du chargement des tournois:", error);
+    showMessage("error", "Impossible de charger les tournois");
+  } finally {
+    // Désactiver l'état de chargement, qu'il y ait eu une erreur ou non
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 100); // Légère temporisation pour une meilleure UX
   }
 };
 
@@ -365,7 +385,10 @@ const confirmAction = async () => {
           selectedTournament.value._id,
           user.value._id
         );
-        showMessage("success", "Inscription réussie !");
+        showMessage(
+          "success",
+          "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+        );
       } else {
         if (selectedTournament.value._id) {
           // Désinscription du tournoi
@@ -374,7 +397,10 @@ const confirmAction = async () => {
             user.value._id
           );
         }
-        showMessage("success", "Désinscription réussie !");
+        showMessage(
+          "success",
+          "Désinscription réussie ! Triste de te voir partir :("
+        );
       }
       fetchTournaments();
       closePopup();
@@ -504,6 +530,9 @@ const initializeUIStates = () => {
  * Initialisation du composant au montage
  */
 onMounted(async () => {
+  // Activer l'état de chargement
+  isLoading.value = true;
+
   try {
     // Chargement parallèle des jeux et tournois pour plus de rapidité
     const [gamesResult, tournamentsResult] = await Promise.all([
@@ -520,6 +549,11 @@ onMounted(async () => {
   } catch (error) {
     console.error("Erreur lors de l'initialisation:", error);
     showMessage("error", "Erreur lors du chargement des données");
+  } finally {
+    // Désactiver l'état de chargement
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 800); // Légère temporisation pour une meilleure UX
   }
 });
 </script>

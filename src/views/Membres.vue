@@ -69,18 +69,14 @@
       </div>
     </div>
 
-    <!-- État de chargement -->
+    <!-- État de chargement avec CyberpunkLoader -->
     <div
       v-if="loading"
       class="text-center my-12"
       role="status"
       aria-live="polite"
     >
-      <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500 mb-4"
-        aria-hidden="true"
-      ></div>
-      <p class="text-white font-orbitron">Chargement des membres...</p>
+      <CyberpunkLoader />
     </div>
 
     <!-- État d'erreur -->
@@ -230,6 +226,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import userService from "../services/userService";
 import playerService from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
+import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 
 //-------------------------------------------------------
 // SECTION: Définition des types

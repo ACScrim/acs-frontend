@@ -67,18 +67,13 @@
           @click="toggleMenu"
           class="text-white cursor-pointer flex items-center group"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-pink-400 group-hover:text-cyan-400 transition-colors"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <img
+            :src="
+              user.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png'
+            "
+            alt="Avatar"
+            class="w-8 h-8 rounded-full border border-cyan-500/50 shadow-glow-cyan"
+          />
           <span
             class="user-name ml-2 hidden sm:inline font-orbitron capitalize"
           >
@@ -95,7 +90,7 @@
           <img
             src="../assets/discord-Logo.png"
             alt="Discord Logo"
-            class="h-6 w-6 mr-2"
+            class="h-6 w-10 mr-2"
           />
           Connexion
         </button>
