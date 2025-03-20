@@ -16,7 +16,10 @@
         <!-- Remplacer la section du titre avec effet de glitch -->
         <div class="title-container">
           <h1 class="cyber-main-title">
-            <span class="neon-text-title">Alors, ça scrim ?</span>
+            <span class="neon-text-title"
+              >Alors, <br />
+              ça scrim ?</span
+            >
           </h1>
           <div class="cyber-line-h pink"></div>
         </div>

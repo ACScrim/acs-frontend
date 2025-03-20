@@ -262,22 +262,48 @@
         </div>
       </div>
 
-      <button @click="saveTeams" class="neon-button-green">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        Valider les équipes
-      </button>
+      <div class="button-group">
+        <button @click="saveTeams" class="neon-button-green">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Valider les équipes
+        </button>
+        <button @click="saveTeamDefinitive" class="neon-button-pink">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Valider les équipes définitives
+        </button>
+      </div>
     </div>
+
+    <!-- Ajouter cette ligne avant la fermeture de template -->
+    <ConfirmationDialog
+      v-if="showConfirmationDialog"
+      title="Valider les équipes définitives"
+      message="Attention ! Cette action est irréversible et va finaliser les équipes du tournoi. Les canaux Discord seront créés automatiquement. Voulez-vous continuer ?"
+      @confirm="confirmTeamDefinitive"
+      @cancel="cancelConfirmation"
+    />
 
     <!-- Messages d'état -->
     <Toast v-if="error" type="error" :message="error" />
@@ -292,6 +318,7 @@ import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, Team, Player } from "../../types";
 import { VueDraggableNext } from "vue-draggable-next"; // Importer vue-draggable-next
 import Toast from "@/shared/Toast.vue";
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue"; // Importer le composant ConfirmationDialog
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
@@ -299,6 +326,8 @@ const selectedGame = ref("");
 const selectedTournament = ref("");
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
+
+const showConfirmationDialog = ref(false); // Ajouter cette ligne
 
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
@@ -369,6 +398,49 @@ const saveTeams = async () => {
       showMessage("success", "Equipes enregistrées avec succès !");
     }
   }
+};
+
+const saveTeamDefinitive = async () => {
+  showConfirmationDialog.value = true;
+};
+
+const confirmTeamDefinitive = async () => {
+  showConfirmationDialog.value = false;
+
+  if (selectedTournament.value && selectedTournamentDetails.value) {
+    try {
+      const updatedTournament = {
+        ...selectedTournamentDetails.value,
+        teams: teams.value,
+        game: selectedTournamentDetails.value.game,
+        finished: true,
+      };
+
+      await tournamentService.updateTournament(
+        selectedTournament.value,
+        updatedTournament
+      );
+
+      await tournamentService.createDiscordChannels(teams.value);
+      showMessage(
+        "success",
+        "Équipes définitives enregistrées avec succès et canaux Discord créés !"
+      );
+
+      // Réinitialiser les champs si nécessaire ou rediriger l'utilisateur
+      // fetchTournamentDetails(); // Actualiser les détails du tournoi
+    } catch (err) {
+      showMessage(
+        "error",
+        "Une erreur est survenue lors de la validation des équipes"
+      );
+      console.error("Erreur lors de la validation des équipes:", err);
+    }
+  }
+};
+
+const cancelConfirmation = () => {
+  showConfirmationDialog.value = false;
 };
 
 const showMessage = (type: "success" | "error", message: string) => {
@@ -846,5 +918,39 @@ input:focus + .input-glow {
 
 .neon-button-green:hover {
   box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap; /* Pour qu'ils passent à la ligne sur mobile */
+}
+
+/* Style pour le bouton définitif rose */
+.neon-button-pink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: rgba(236, 72, 153, 0.7);
+  color: white;
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  border-radius: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+  transition: all 0.3s ease;
+}
+
+.neon-button-pink:hover {
+  background: rgba(236, 72, 153, 0.8);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+  transform: translateY(-2px);
+}
+
+.neon-button-pink:active {
+  transform: translateY(1px);
 }
 </style>

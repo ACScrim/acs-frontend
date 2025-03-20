@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Tournament } from "../types";
-
+import type { Team } from "../types";
 /**
  * URL de base pour les opérations sur les tournois
  */
@@ -69,6 +69,16 @@ const updateTournament = async (
     withCredentials: true,
   });
   return response.data;
+};
+
+const createDiscordChannels = async (teams: Team[]): Promise<void> => {
+  await axios.post(
+    `${API_URL}/create-discord-channels`,
+    { teams },
+    {
+      withCredentials: true,
+    }
+  );
 };
 
 /**
@@ -241,4 +251,5 @@ export default {
   unregisterPlayer,
   checkInPlayer,
   updateTeamRanking,
+  createDiscordChannels,
 };
