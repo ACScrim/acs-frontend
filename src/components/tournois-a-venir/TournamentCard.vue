@@ -315,10 +315,9 @@
         >
           <p
             v-if="tournament.description"
-            class="text-white leading-relaxed font-orbitron"
-          >
-            {{ tournament.description }}
-          </p>
+            class="text-white leading-relaxed description-text"
+            v-html="formatDescription(tournament.description)"
+          ></p>
           <p v-else class="text-gray-400 italic font-orbitron">
             Pas de description disponible pour ce tournoi.
           </p>
@@ -402,6 +401,16 @@ const formatLocalDate = (dateString: string) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+// Ajouter cette fonction dans la partie script
+const formatDescription = (description: string) => {
+  if (!description) return "";
+
+  // Remplacer les points (suivis d'un espace ou d'un caractère) par un point et un saut de ligne
+  return description
+    .replace(/\.(\s|$)/g, ".<br>$1") // Ajouter un saut de ligne après chaque point
+    .replace(/<br>$/, ""); // Supprimer le dernier saut de ligne s'il existe
 };
 </script>
 
@@ -602,5 +611,44 @@ const formatLocalDate = (dateString: string) => {
   to {
     opacity: 1;
   }
+}
+
+/* Ajouter dans la section style */
+.description-text {
+  font-family: "Roboto", "Arial", sans-serif; /* Police plus lisible */
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  font-size: 0.95rem;
+  font-weight: 300;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Améliorations du conteneur de description */
+.bg-gray-800\/80 {
+  backdrop-filter: blur(5px);
+  padding: 1.25rem;
+  border-radius: 8px;
+}
+
+/* Animation subtile pour le texte */
+@keyframes gentle-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 4px rgba(6, 182, 212, 0.2);
+  }
+}
+
+.description-text {
+  animation: gentle-glow 4s infinite;
+}
+
+/* Style pour les sauts de ligne */
+.description-text br {
+  display: block;
+  content: "";
+  margin-top: 0.5rem;
 }
 </style>

@@ -94,7 +94,7 @@
 
       <!-- Nom du channel Discord -->
       <div class="form-group">
-        <label for="discordChannelName" class="form-label">
+        <label for="discordChannelName" class="form-label flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -108,6 +108,25 @@
             />
           </svg>
           Nom du Channel Discord <span class="text-pink-500">*</span>
+          <span class="tooltip-icon ml-2 relative group">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4 text-cyan-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+              />
+            </svg>
+            <div class="tooltip-content">
+              Ne pas inclure le symbole "#" dans le nom du canal
+            </div>
+          </span>
         </label>
         <div class="input-wrapper">
           <input
@@ -743,5 +762,60 @@ fetchAllPlayers();
     box-shadow: 0 0 10px rgba(236, 72, 153, 0.5),
       0 0 20px rgba(236, 72, 153, 0.3);
   }
+}
+
+/* Tooltip pour les informations supplémentaires */
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+}
+
+/* Modification du style du tooltip pour éviter le débordement */
+.tooltip-content {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  padding: 0.5rem;
+  background: rgba(8, 8, 28, 0.95);
+  color: #06b6d4;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  /* Remplacer white-space: nowrap par ces propriétés */
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+  width: auto;
+  min-width: 180px;
+  max-width: 250px;
+
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 50;
+  pointer-events: none;
+  font-family: "Orbitron", sans-serif;
+  font-weight: normal;
+}
+
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(8, 8, 28, 0.95) transparent transparent transparent;
+}
+
+.tooltip-icon:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-110%);
 }
 </style>
