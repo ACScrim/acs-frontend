@@ -163,7 +163,7 @@
               id="numTeams"
               v-model="numTeams"
               min="2"
-              max="10"
+              max="20"
             />
             <div class="input-glow"></div>
           </div>

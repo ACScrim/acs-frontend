@@ -271,151 +271,131 @@
           </svg>
         </button>
 
-        <!-- Contenu dépliable -->
+        <!-- Remplacer la partie du contenu dépliable par ceci -->
         <div
           v-if="isOtherRankingsExpanded"
           class="mt-4 space-y-8 bg-gray-900/50 p-6 rounded-lg border border-indigo-500/30 animate__animated animate__fadeIn shadow-inner backdrop-blur-sm"
         >
-          <!-- Équipes classées (4e et plus) -->
-          <div
-            v-if="
-              Object.keys(
-                groupTeamsByRank(
-                  (tournament.teams ?? []).filter((t) => t.ranking > 3)
-                )
-              ).length > 0
-            "
-            class="space-y-6"
-          >
-            <div
-              v-for="(teams, rank) in groupTeamsByRank(
-                (tournament.teams ?? []).filter((t) => t.ranking > 3)
-              )"
-              :key="rank"
-              class="mb-6"
-            >
-              <h4
-                class="text-lg font-audiowide text-indigo-300 mb-4 border-b border-indigo-500/50 pb-2 glow-text-sm"
-              >
-                {{ getRankingLabel(parseInt(rank), teams.length) }}
-              </h4>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div
-                  v-for="team in teams"
+          <!-- Affichage en tableau pour toutes les équipes au-delà du podium, peu importe leur nombre -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-white">
+              <thead>
+                <tr class="bg-gray-800/80 border-b border-pink-500/50">
+                  <th
+                    class="py-3 px-4 text-center font-audiowide text-pink-400"
+                  >
+                    Position
+                  </th>
+                  <th class="py-3 px-4 text-left font-audiowide text-pink-400">
+                    Équipe
+                  </th>
+                  <th
+                    class="py-3 px-4 text-center font-audiowide text-pink-400"
+                  >
+                    Membres
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Équipes avec classement (rang > 3) -->
+                <tr
+                  v-for="team in sortedTeamsBeyondPodium"
                   :key="team._id"
-                  :class="[
-                    'p-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 cyberpunk-card',
-                    getRankingClass(team.ranking),
-                  ]"
+                  :class="{
+                    'bg-purple-900/20':
+                      sortedTeamsBeyondPodium.indexOf(team) % 2 === 0,
+                    'hover:bg-cyan-900/20': true,
+                  }"
+                  class="transition-colors border-b border-gray-700/50"
                 >
-                  <h5
-                    class="text-lg font-bold font-audiowide mb-3 flex items-center"
-                  >
-                    <span class="truncate">{{ team.name }}</span>
+                  <td class="py-3 px-4 text-center font-orbitron">
                     <span
-                      class="ml-auto bg-indigo-600/70 text-white text-xs px-2 py-1 rounded font-orbitron"
+                      class="px-3 py-1 rounded-lg"
+                      :class="{
+                        'bg-indigo-900/70 text-white position-badge':
+                          team.ranking > 0,
+                        'bg-gray-700/50': !team.ranking || team.ranking === 0,
+                      }"
                     >
-                      {{ team.ranking }}e
+                      {{ team.ranking > 0 ? `${team.ranking}e` : "NC" }}
                     </span>
-                  </h5>
-
-                  <ul
-                    v-if="team.players && team.players.length > 0"
-                    class="space-y-2"
-                  >
-                    <li
-                      v-for="player in team.players"
-                      :key="player._id"
-                      class="text-sm bg-gray-800/70 p-2 rounded flex items-center border-l-2 border-indigo-500/50"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 text-indigo-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                  </td>
+                  <td class="py-3 px-4 font-audiowide text-left">
+                    {{ team.name }}
+                  </td>
+                  <td class="py-3 px-4">
+                    <div class="flex flex-wrap gap-1 justify-center">
+                      <span
+                        v-for="player in team.players"
+                        :key="player._id"
+                        class="text-xs bg-gray-800/80 px-2 py-1 rounded inline-flex items-center player-pill"
                       >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <span class="truncate font-orbitron">{{
-                        player.username
-                      }}</span>
-                    </li>
-                  </ul>
-                  <p v-else class="text-gray-400 italic text-sm text-center">
-                    Aucun membre dans cette équipe
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-3 w-3 mr-1 text-indigo-400"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="truncate max-w-[100px]">{{
+                          player.username
+                        }}</span>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
 
-          <!-- Équipes non classées -->
-          <div
-            v-if="
-              tournament.teams &&
-              tournament.teams.some((t) => !t.ranking || t.ranking === 0)
-            "
-            class="mb-6"
-          >
-            <h4
-              class="text-lg font-audiowide text-gray-400 mb-4 border-b border-gray-600/50 pb-2"
-            >
-              Non classées
-            </h4>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div
-                v-for="team in tournament.teams.filter(
-                  (t) => !t.ranking || t.ranking === 0
-                )"
-                :key="team._id"
-                class="p-4 rounded-lg shadow-lg bg-gradient-to-br from-gray-900/40 to-gray-800/40 text-gray-300 border border-gray-600/50 transition-all duration-300 hover:scale-105 team-card-unranked"
-              >
-                <h5
-                  class="text-lg font-bold font-audiowide mb-3 flex items-center"
+                <!-- Équipes non classées -->
+                <tr
+                  v-for="team in unrankedTeams"
+                  :key="team._id"
+                  :class="{
+                    'bg-gray-800/40': unrankedTeams.indexOf(team) % 2 === 0,
+                    'hover:bg-gray-700/30': true,
+                  }"
+                  class="transition-colors border-b border-gray-700/50 text-gray-400"
                 >
-                  <span class="truncate">{{ team.name }}</span>
-                </h5>
-
-                <ul
-                  v-if="team.players && team.players.length > 0"
-                  class="space-y-2"
-                >
-                  <li
-                    v-for="player in team.players"
-                    :key="player._id"
-                    class="text-sm bg-gray-800/80 p-2 rounded flex items-center border-l-2 border-gray-600/50"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-gray-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <span class="truncate font-orbitron">{{
-                      player.username
-                    }}</span>
-                  </li>
-                </ul>
-                <p
-                  v-else
-                  class="text-gray-400 italic text-sm text-center font-orbitron"
-                >
-                  Aucun membre dans cette équipe
-                </p>
-              </div>
-            </div>
+                  <td class="py-3 px-4 text-center font-orbitron">
+                    <span class="px-3 py-1 rounded-lg bg-gray-700/50">
+                      NC
+                    </span>
+                  </td>
+                  <td class="py-3 px-4 font-audiowide text-left">
+                    {{ team.name }}
+                  </td>
+                  <td class="py-3 px-4">
+                    <div class="flex flex-wrap gap-1 justify-center">
+                      <span
+                        v-for="player in team.players"
+                        :key="player._id"
+                        class="text-xs bg-gray-800/80 px-2 py-1 rounded inline-flex items-center player-pill-unranked"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-3 w-3 mr-1 text-gray-500"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="truncate max-w-[100px]">{{
+                          player.username
+                        }}</span>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <!-- Message s'il n'y a pas d'équipes classées au-delà du podium -->
@@ -437,7 +417,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
 import type { Tournament } from "../../types";
 
 const props = defineProps({
@@ -465,92 +445,25 @@ const getTeamsByRank = (rank: number) => {
 };
 
 /**
- * Regroupe les équipes par rang pour l'affichage des égalités
- * @param teams - Tableau d'équipes à regrouper
- * @returns Objet avec les rangs comme clés et les tableaux d'équipes comme valeurs
+ * Propriété calculée qui trie et retourne les équipes au-delà du podium (rank > 3)
  */
-const groupTeamsByRank = (teams: any[]): Record<string, any[]> => {
-  if (!teams?.length) return {};
-
-  // Utiliser reduce pour regrouper les équipes par rang
-  return teams.reduce((acc: Record<string, any[]>, team) => {
-    // Gérer les cas où ranking est undefined, null ou 0
-    const ranking = team.ranking;
-    const rankKey = ranking && ranking > 0 ? ranking.toString() : "0";
-
-    // Initialiser le tableau pour ce rang s'il n'existe pas encore
-    if (!acc[rankKey]) acc[rankKey] = [];
-
-    acc[rankKey].push(team);
-    return acc;
-  }, {});
-};
+const sortedTeamsBeyondPodium = computed(() => {
+  return (props.tournament?.teams ?? [])
+    .filter((team) => team.ranking > 3)
+    .sort((a, b) => a.ranking - b.ranking);
+});
 
 /**
- * Obtient le libellé correspondant au classement avec gestion des égalités
- * @param rank - Rang de l'équipe (1=or, 2=argent, 3=bronze, etc.)
- * @param equalCount - Nombre d'équipes ayant ce même rang (pour les ex aequo)
- * @returns Libellé formaté avec emoji et indication d'égalité si nécessaire
+ * Propriété calculée qui retourne les équipes non classées
  */
-const getRankingLabel = (
-  rank: number | null | undefined,
-  equalCount: number = 1
-): string => {
-  // Cas des équipes non classées
-  if (rank === null || rank === undefined || rank === 0) {
-    return "Non classé";
-  }
-
-  // Déterminer le libellé de base selon le rang
-  let label;
-  switch (rank) {
-    case 1:
-      label = "🥇 Or";
-      break;
-    case 2:
-      label = "🥈 Argent";
-      break;
-    case 3:
-      label = "🥉 Bronze";
-      break;
-    default:
-      label = `${rank}ème`;
-  }
-
-  // Ajouter l'indication d'égalité si plusieurs équipes ont ce rang
-  if (equalCount > 1) {
-    label += ` (${equalCount} équipes ex aequo)`;
-  }
-
-  return label;
-};
-
-/**
- * Détermine les classes CSS pour styliser les cartes d'équipe selon leur classement
- * @param rank - Rang de l'équipe
- * @returns Classes CSS pour la carte
- */
-const getRankingClass = (rank: number | null | undefined): string => {
-  if (rank === null || rank === undefined || rank === 0) {
-    return "bg-gradient-to-br from-gray-900/30 to-gray-800/30 border-gray-700";
-  }
-
-  switch (rank) {
-    case 1:
-      return "bg-gradient-to-br from-amber-700/70 to-yellow-600/70 border-yellow-500";
-    case 2:
-      return "bg-gradient-to-br from-gray-700/70 to-gray-600/70 border-gray-400";
-    case 3:
-      return "bg-gradient-to-br from-amber-900/70 to-amber-700/70 border-amber-700";
-    default:
-      return "bg-gradient-to-br from-indigo-900/30 to-indigo-800/30 border-indigo-700/50";
-  }
-};
+const unrankedTeams = computed(() => {
+  return (props.tournament?.teams ?? []).filter(
+    (team) => !team.ranking || team.ranking === 0
+  );
+});
 
 // Dans le script, ajoutez une fonction explicite pour gérer le clic
 const handleToggleOtherRankings = () => {
-  console.log("Composant TournamentPodium: handleToggleOtherRankings appelé");
-  console.log("ID du tournoi émis:", props.tournament._id);
   emit("toggle-other-rankings", props.tournament._id);
 };
 </script>
@@ -831,88 +744,6 @@ const handleToggleOtherRankings = () => {
   animation: cyber-glitch 8s infinite;
 }
 
-/* Améliorer le contraste pour les équipes non classées */
-.team-card-unranked {
-  position: relative;
-  overflow: hidden;
-  color: white !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.team-card-unranked::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(
-    45deg,
-    rgba(99, 102, 241, 0.2),
-    rgba(0, 205, 205, 0.2)
-  );
-  z-index: -1;
-  transform: scale(1.05);
-  animation: border-pulse-unranked 4s infinite;
-}
-
-.team-card-unranked::after {
-  content: "";
-  position: absolute;
-  top: -150%;
-  left: -150%;
-  width: 400%;
-  height: 400%;
-  background: linear-gradient(
-    135deg,
-    transparent,
-    rgba(99, 102, 241, 0.05),
-    transparent,
-    rgba(99, 102, 241, 0.05),
-    transparent
-  );
-  transform: rotate(45deg);
-  animation: cyber-grid 12s linear infinite;
-}
-
-/* Améliorer la lisibilité des joueurs dans les équipes */
-.text-sm.bg-gray-800\/80,
-.text-sm.bg-gray-800\/70 {
-  color: white !important;
-  font-weight: 500;
-  background-color: rgba(31, 41, 55, 0.85) !important;
-  border-left: 2px solid rgba(165, 180, 252, 0.7);
-}
-
-.text-sm.bg-gray-800\/80:hover {
-  background-color: rgba(55, 65, 81, 0.9);
-  border-left-width: 3px;
-  transform: translateX(2px);
-}
-
-/* Effet d'encadrement pour les badges de rang */
-.bg-indigo-600\/70 {
-  background-color: rgba(79, 70, 229, 0.8) !important;
-  border: 1px solid rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
-  position: relative;
-  overflow: hidden;
-}
-
-.bg-indigo-600\/70::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transform: translateX(-100%);
-  animation: badge-shine 3s infinite;
-}
-
 /* Bouton accordéon cyberpunk */
 .cyberpunk-accordion {
   position: relative;
@@ -954,56 +785,6 @@ const handleToggleOtherRankings = () => {
 
 .cyberpunk-accordion:hover::after {
   transform: translateX(5px);
-}
-
-/* Styles des cartes pour les équipes classées */
-.cyberpunk-card {
-  position: relative;
-  overflow: hidden;
-  border-width: 1px;
-  transition: all 0.3s ease;
-  color: white !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.cyberpunk-card::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(99, 102, 241, 0.8),
-    transparent
-  );
-  top: -10px;
-  left: 0;
-  animation: scan-line 3s infinite;
-  z-index: 2;
-}
-
-.cyberpunk-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  animation: glitch 5s infinite;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Styles spécifiques pour les cartes de classement */
-.bg-gradient-to-br.from-indigo-900\/30.to-indigo-800\/30 {
-  color: white !important;
-  font-weight: 500;
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(49, 46, 129, 0.6),
-    rgba(55, 48, 163, 0.6)
-  ) !important;
 }
 
 /* Améliorations des cartes de joueurs */
@@ -1165,15 +946,6 @@ const handleToggleOtherRankings = () => {
   }
 }
 
-@keyframes cyber-grid {
-  0% {
-    transform: rotate(45deg) translateY(0);
-  }
-  100% {
-    transform: rotate(45deg) translateY(50%);
-  }
-}
-
 @keyframes border-pulse-gold {
   0%,
   100% {
@@ -1216,48 +988,127 @@ const handleToggleOtherRankings = () => {
   }
 }
 
-@keyframes badge-shine {
+/* Styles pour le tableau compact */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+th {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  background: linear-gradient(
+    to right,
+    rgba(79, 70, 229, 0.2),
+    rgba(236, 72, 153, 0.2)
+  );
+}
+
+tbody tr {
+  position: relative;
+  overflow: hidden;
+}
+
+tbody tr::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(to right, rgba(124, 58, 237, 0.2), transparent);
+  transition: width 0.3s ease;
+  z-index: -1;
+  top: 0;
+}
+
+tbody tr:hover::after {
+  width: 100%;
+}
+
+/* Styles pour les pilules de joueurs en mode tableau */
+.player-pill {
+  background-color: rgba(79, 70, 229, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.player-pill:hover {
+  background-color: rgba(79, 70, 229, 0.4);
+  transform: translateY(-1px);
+}
+
+.player-pill-unranked {
+  background-color: rgba(75, 85, 99, 0.2);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.player-pill-unranked:hover {
+  background-color: rgba(75, 85, 99, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Remplacer les anciens styles pour les badges par ceux-ci */
+
+/* Style amélioré pour les badges de position avec effet brillant */
+.position-badge {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    to right,
+    rgba(79, 70, 229, 0.7),
+    rgba(99, 102, 241, 0.7)
+  );
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+  animation: badge-glow 3s infinite;
+}
+
+/* Animation de brillance pour les badges */
+.position-badge::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  transition: all 0.5s;
+  animation: shine-effect 5s infinite;
+}
+
+/* Animation de pulsation pour les badges */
+@keyframes badge-glow {
   0%,
-  30%,
   100% {
-    transform: translateX(-100%);
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
   }
-  40%,
-  90% {
-    transform: translateX(100%);
+  50% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.7);
   }
 }
 
-@keyframes scan-line {
+/* Animation de balayage brillant */
+@keyframes shine-effect {
   0% {
-    top: -10px;
+    transform: rotate(45deg) translateY(-100%);
   }
+  20%,
   100% {
-    top: 110%;
-  }
-}
-
-@keyframes glitch {
-  0%,
-  100% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    transform: translate(0);
-  }
-  20% {
-    clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
-    transform: translate(2px, 0);
-  }
-  40% {
-    clip-path: polygon(0 0, 97% 3%, 100% 100%, 3% 95%);
-    transform: translate(-2px, 0);
-  }
-  60% {
-    clip-path: polygon(0 0, 100% 0, 97% 97%, 3% 100%);
-    transform: translate(0, 2px);
-  }
-  80% {
-    clip-path: polygon(3% 0, 100% 5%, 100% 93%, 0 97%);
-    transform: translate(0, -2px);
+    transform: rotate(45deg) translateY(100%);
   }
 }
 </style>

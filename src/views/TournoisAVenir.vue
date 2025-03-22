@@ -328,11 +328,6 @@ const toggleTab = (tournamentId: string, tab: string) => {
  * @param tournamentId - ID du tournoi
  */
 const toggleOtherRankings = (tournamentId: string) => {
-  console.log("Toggle Other Rankings appelé pour le tournoi:", tournamentId);
-
-  // Débogage - valeur avant changement
-  console.log("État avant toggle:", showOtherRankings.value[tournamentId]);
-
   // S'assurer que l'objet existe
   if (!showOtherRankings.value) {
     showOtherRankings.value = {};
@@ -342,9 +337,6 @@ const toggleOtherRankings = (tournamentId: string) => {
   const updatedState = { ...showOtherRankings.value };
   updatedState[tournamentId] = !updatedState[tournamentId];
   showOtherRankings.value = updatedState;
-
-  // Débogage - valeur après changement
-  console.log("État après toggle:", showOtherRankings.value[tournamentId]);
 };
 //-------------------------------------------------------
 // SECTION: Gestion des inscriptions aux tournois
