@@ -66,10 +66,33 @@ const removeBadgeFromPlayer = async (
   );
 };
 
+/**
+ * Met à jour un badge existant
+ * @param badgeId - ID du badge à mettre à jour
+ * @param badge - Nouvelles données du badge
+ * @returns Le badge mis à jour
+ */
+const updateBadge = async (badgeId: string, badge: Badge): Promise<Badge> => {
+  const response = await axios.put(`${API_URL}/${badgeId}`, badge, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+/**
+ * Supprime un badge existant
+ * @param badgeId - ID du badge à supprimer
+ */
+const deleteBadge = async (badgeId: string): Promise<void> => {
+  await axios.delete(`${API_URL}/${badgeId}`, { withCredentials: true });
+};
+
 export default {
   createBadge,
   getBadges,
   getBadgeById,
   assignBadgeToPlayer,
   removeBadgeFromPlayer,
+  updateBadge,
+  deleteBadge,
 };

@@ -334,6 +334,43 @@
             :key="badge._id"
             class="bg-gray-800/60 rounded-lg p-4 flex flex-col items-center border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 group"
           >
+            <div class="flex justify-end w-full mb-2">
+              <!-- Boutons d'action -->
+              <button
+                @click="openEditBadgeModal(badge)"
+                class="p-2 text-cyan-400 hover:text-cyan-300 transition-colors mr-2"
+                title="Modifier ce badge"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                  />
+                </svg>
+              </button>
+              <button
+                @click="confirmDeleteBadge(badge)"
+                class="p-2 text-pink-400 hover:text-pink-300 transition-colors"
+                title="Supprimer ce badge"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
             <div
               class="w-16 h-16 rounded-full flex items-center justify-center bg-gray-700/70 p-1 mb-3 border border-pink-500/30 overflow-hidden group-hover:border-pink-500/70 transition-colors duration-300"
             >
@@ -382,6 +419,172 @@
       </div>
     </div>
 
+    <!-- Modal de modification de badge -->
+    <div
+      v-if="showEditModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-gray-900/95 w-full max-w-md rounded-lg border border-purple-500/50 shadow-xl shadow-purple-500/30 p-6 animate__animated animate__fadeInUp animate__faster"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-orbitron text-cyan-300 neon-text-cyan">
+            Modifier le badge
+          </h3>
+          <button
+            @click="showEditModal = false"
+            class="text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <form @submit.prevent="updateBadge" class="space-y-4">
+          <div>
+            <label
+              for="edit-title"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Titre</label
+            >
+            <input
+              id="edit-title"
+              v-model="editingBadge.title"
+              type="text"
+              class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="edit-imageUrl"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >URL de l'image</label
+            >
+            <input
+              id="edit-imageUrl"
+              v-model="editingBadge.imageUrl"
+              type="text"
+              class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron"
+              required
+            />
+            <div v-if="editingBadge.imageUrl" class="mt-2 mb-4">
+              <label class="block text-sm text-cyan-300 mb-2 font-orbitron"
+                >Prévisualisation</label
+              >
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center bg-gray-700/70 p-1 border border-pink-500/30 overflow-hidden mx-auto"
+              >
+                <img
+                  :src="editingBadge.imageUrl"
+                  alt="Prévisualisation"
+                  class="max-h-full max-w-full object-contain"
+                  @error="handleImageError"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="edit-description"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Description (optionnelle)</label
+            >
+            <textarea
+              id="edit-description"
+              v-model="editingBadge.description"
+              rows="3"
+              class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              @click="showEditModal = false"
+              class="px-4 py-2 bg-gray-700 text-white rounded-lg font-orbitron hover:bg-gray-600 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg font-orbitron shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/50 hover:-translate-y-1 transition-all duration-300"
+            >
+              Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-gray-900/95 w-full max-w-md rounded-lg border border-red-500/50 shadow-xl shadow-red-500/30 p-6 animate__animated animate__fadeInUp animate__faster"
+      >
+        <div class="text-center mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 text-red-500 mx-auto mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <h3 class="text-xl font-orbitron text-red-300 mb-2">
+            Confirmer la suppression
+          </h3>
+          <p class="text-white">
+            Êtes-vous sûr de vouloir supprimer le badge
+            <strong>{{ badgeToDelete?.title }}</strong
+            >?
+          </p>
+          <p class="text-gray-400 text-sm mt-2">
+            Cette action est irréversible et supprimera également ce badge de
+            tous les joueurs qui le possèdent.
+          </p>
+        </div>
+
+        <div class="flex justify-center space-x-4">
+          <button
+            @click="showDeleteModal = false"
+            class="px-4 py-2 bg-gray-700 text-white rounded-lg font-orbitron hover:bg-gray-600 transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            @click="deleteBadge"
+            class="px-4 py-2 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg font-orbitron shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
@@ -400,6 +603,12 @@ import type { Badge, Player } from "../../types";
 
 // Components
 import Toast from "@/shared/Toast.vue";
+
+// Variables réactives pour les modales
+const showEditModal = ref(false);
+const showDeleteModal = ref(false);
+const editingBadge = ref<Badge>({ title: "", imageUrl: "", description: "" });
+const badgeToDelete = ref<Badge | null>(null);
 
 // Variables réactives
 const newBadge = ref<Badge>({
@@ -441,7 +650,7 @@ const showMessage = (type: "success" | "error", message: string) => {
  * Crée un badge à partir des données du formulaire
  */
 const createBadge = async () => {
-  const errors = validateBadgeForm();
+  const errors = validateBadgeForm(newBadge.value);
 
   if (errors.length > 0) {
     showMessage("error", errors[0]);
@@ -491,6 +700,86 @@ const removeBadge = async (badgeId: string) => {
       );
       fetchPlayerBadges(selectedPlayer.value._id!);
       showMessage("success", "Badge supprimé avec succès !");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la suppression du badge:", error);
+    showMessage("error", "Erreur lors de la suppression du badge.");
+  }
+};
+
+/**
+ * Ouvre la modale de modification avec les données du badge
+ */
+const openEditBadgeModal = (badge: Badge) => {
+  editingBadge.value = { ...badge };
+  showEditModal.value = true;
+};
+
+/**
+ * Confirme la suppression d'un badge
+ */
+const confirmDeleteBadge = (badge: Badge) => {
+  badgeToDelete.value = badge;
+  showDeleteModal.value = true;
+};
+
+/**
+ * Met à jour un badge existant
+ */
+const updateBadge = async () => {
+  const errors = validateBadgeForm(editingBadge.value);
+  if (errors.length > 0) {
+    showMessage("error", errors[0]);
+    return;
+  }
+
+  try {
+    if (editingBadge.value._id) {
+      const updatedBadge = await badgeService.updateBadge(
+        editingBadge.value._id,
+        editingBadge.value
+      );
+
+      // Mettre à jour le badge dans la liste
+      const index = badges.value.findIndex((b) => b._id === updatedBadge._id);
+      if (index !== -1) {
+        badges.value[index] = updatedBadge;
+      }
+
+      showEditModal.value = false;
+      showMessage("success", "Badge mis à jour avec succès !");
+
+      // Actualiser les badges du joueur sélectionné si nécessaire
+      if (selectedPlayer.value) {
+        fetchPlayerBadges(selectedPlayer.value._id!);
+      }
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du badge:", error);
+    showMessage("error", "Erreur lors de la mise à jour du badge.");
+  }
+};
+
+/**
+ * Supprime un badge
+ */
+const deleteBadge = async () => {
+  try {
+    if (badgeToDelete.value?._id) {
+      await badgeService.deleteBadge(badgeToDelete.value._id);
+
+      // Supprimer le badge de la liste
+      badges.value = badges.value.filter(
+        (b) => b._id !== badgeToDelete.value?._id
+      );
+
+      showDeleteModal.value = false;
+      showMessage("success", "Badge supprimé avec succès !");
+
+      // Actualiser les badges du joueur sélectionné si nécessaire
+      if (selectedPlayer.value) {
+        fetchPlayerBadges(selectedPlayer.value._id!);
+      }
     }
   } catch (error) {
     console.error("Erreur lors de la suppression du badge:", error);
@@ -571,28 +860,29 @@ const handleImageError = (e: Event) => {
 
 /**
  * Valide les données du formulaire de badge
+ * @param badge Badge à valider
  */
-const validateBadgeForm = () => {
+const validateBadgeForm = (badge: Badge) => {
   const errors = [];
 
-  if (!newBadge.value.title.trim()) {
+  if (!badge.title.trim()) {
     errors.push("Le titre du badge est requis");
-  } else if (newBadge.value.title.length > 50) {
+  } else if (badge.title.length > 50) {
     errors.push("Le titre ne doit pas dépasser 50 caractères");
   }
 
-  if (!newBadge.value.imageUrl.trim()) {
+  if (!badge.imageUrl.trim()) {
     errors.push("L'URL de l'image est requise");
   } else {
     try {
-      new URL(newBadge.value.imageUrl);
+      new URL(badge.imageUrl);
     } catch (e) {
       errors.push("Veuillez entrer une URL d'image valide");
     }
   }
 
   // Vérifier la longueur de la description si elle est fournie
-  if (newBadge.value.description && newBadge.value.description.length > 200) {
+  if (badge.description && badge.description.length > 200) {
     errors.push("La description ne doit pas dépasser 200 caractères");
   }
 
