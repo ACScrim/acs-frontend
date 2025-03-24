@@ -156,6 +156,9 @@
           />
         </svg>
         Participants
+        <span class="ml-1 text-sm opacity-80">
+          ({{ getParticipantsCount() }})
+        </span>
       </button>
       <button
         @click="$emit('toggle-tab', tournament._id, 'description')"
@@ -180,6 +183,43 @@
           />
         </svg>
         Description
+      </button>
+      <button
+        v-if="tournament.finished"
+        @click="togglePodium"
+        :class="{
+          'text-green-400 border-b-2 border-green-500 bg-green-900/20':
+            showPodium,
+          'text-gray-400 border-b-2 border-transparent hover:text-green-400 hover:bg-green-900/10':
+            !showPodium,
+        }"
+        class="tab-button flex items-center px-6 py-3 font-orbitron transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <rect x="8" y="7" width="8" height="12" rx="1" stroke-width="1.5" />
+          <rect x="16" y="11" width="5" height="8" rx="1" stroke-width="1.5" />
+          <rect x="3" y="13" width="5" height="6" rx="1" stroke-width="1.5" />
+        </svg>
+        Résultats
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 ml-1 transition-transform"
+          :class="showPodium ? 'rotate-180' : ''"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
       </button>
       <div class="flex-grow"></div>
       <div
@@ -326,7 +366,7 @@
 
       <!-- Résultats (si tournoi terminé) -->
       <tournament-podium
-        v-if="tournament.finished"
+        v-if="tournament.finished && showPodium"
         :tournament="tournament"
         :is-other-rankings-expanded="showOtherRankings"
         @toggle-other-rankings="$emit('toggle-other-rankings', $event)"
@@ -336,9 +376,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from "vue";
+import { defineProps, defineEmits, computed, ref } from "vue";
 import type { Tournament } from "../../types";
 import TournamentPodium from "./TournamentPodium.vue";
+
+const showPodium = ref(false);
 
 // Dans la partie script, ajoutez la propriété showOtherRankings
 const props = defineProps({
@@ -376,6 +418,10 @@ const emit = defineEmits([
   "toggle-other-rankings",
 ]);
 
+const togglePodium = () => {
+  showPodium.value = !showPodium.value;
+};
+
 const isUserRegistered = computed(() => {
   return props.user
     ? props.tournament.players.some(
@@ -401,6 +447,20 @@ const formatLocalDate = (dateString: string) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+// Fonction pour compter le nombre de participants
+const getParticipantsCount = () => {
+  if (props.tournament.teams && props.tournament.teams.length > 0) {
+    // Si le tournoi est en équipes, compter le nombre total de joueurs dans toutes les équipes
+    return props.tournament.teams.reduce((total, team) => {
+      return total + (team.players ? team.players.length : 0);
+    }, 0);
+  } else if (props.tournament.players) {
+    // Sinon, renvoyer le nombre de joueurs inscrits individuellement
+    return props.tournament.players.length;
+  }
+  return 0;
 };
 
 // Ajouter cette fonction dans la partie script
