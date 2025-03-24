@@ -1,8 +1,7 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Membres.vue -->
 <template>
-  <div class="container mx-auto p-8 pt-20">
+  <div class="container mx-auto p-4 sm:p-8 pt-20">
     <h1
-      class="text-4xl text-white mb-8 neon-text font-audiowide text-center"
+      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
       tabindex="0"
     >
       Liste des membres
@@ -42,7 +41,7 @@
       <div class="relative">
         <select
           v-model="currentSort"
-          class="appearance-none bg-black/50 border border-cyan-500/50 text-cyan-400 font-orbitron px-4 py-2 pr-8 rounded-lg focus:outline-none focus:border-cyan-500"
+          class="appearance-none bg-black/50 border border-cyan-500/50 text-cyan-400 text-sm sm:text-base font-orbitron px-3 py-1 sm:px-4 sm:py-2 pr-8 rounded-lg focus:outline-none focus:border-cyan-500"
           aria-label="Trier par"
         >
           <option
@@ -72,7 +71,7 @@
     <!-- État de chargement avec CyberpunkLoader -->
     <div
       v-if="loading"
-      class="text-center my-12"
+      class="text-center my-8 sm:my-12"
       role="status"
       aria-live="polite"
     >
@@ -82,11 +81,11 @@
     <!-- État d'erreur -->
     <div
       v-else-if="error"
-      class="text-center my-12 p-6 border border-red-500 bg-red-900/20 rounded-lg"
+      class="text-center my-8 sm:my-12 p-4 sm:p-6 border border-red-500 bg-red-900/20 rounded-lg"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-12 w-12 text-red-400 mx-auto mb-4"
+        class="h-10 w-10 sm:h-12 sm:w-12 text-red-400 mx-auto mb-4"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -106,7 +105,7 @@
     </div>
 
     <!-- Liste vide -->
-    <div v-else-if="sortedUsers.length === 0" class="text-center my-12">
+    <div v-else-if="sortedUsers.length === 0" class="text-center my-8 sm:my-12">
       <p class="text-white font-orbitron">Aucun membre trouvé</p>
     </div>
 
@@ -127,24 +126,28 @@
           v-for="user in paginatedUsers"
           :key="user._id"
           role="listitem"
-          class="member-card p-4 transition-all hover:bg-purple-900/20"
+          class="member-card p-3 sm:p-4 transition-all hover:bg-purple-900/20"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
+          <!-- Version mobile (flex-col) et desktop (flex-row) -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            <!-- Avatar et informations utilisateur -->
+            <div class="flex items-center gap-3 sm:gap-4">
               <div class="avatar-container">
                 <img
                   v-if="user.avatarUrl"
                   :src="user.avatarUrl"
                   alt="Avatar"
-                  class="w-16 h-16 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
+                  class="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
                   loading="lazy"
                   @error="handleImageError($event)"
                 />
                 <div
                   v-else
-                  class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
+                  class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
                 >
-                  <span class="text-pink-500 text-xl font-bold">{{
+                  <span class="text-pink-500 text-sm sm:text-xl font-bold">{{
                     getUserInitials(user.username)
                   }}</span>
                 </div>
@@ -153,14 +156,17 @@
                 <router-link
                   v-if="user.playerId"
                   :to="{ name: 'Profil', params: { id: user.playerId } }"
-                  class="text-lg text-white hover:text-pink-400 font-orbitron transition-colors member-link capitalize"
+                  class="text-base sm:text-lg text-white hover:text-pink-400 font-orbitron transition-colors member-link capitalize"
                 >
                   {{ user.username }}
                 </router-link>
-                <span v-else class="text-lg text-white font-orbitron">
+                <span
+                  v-else
+                  class="text-base sm:text-lg text-white font-orbitron"
+                >
                   {{ user.username }}
                 </span>
-                <div class="text-sm text-gray-400 mt-1">
+                <div class="text-xs sm:text-sm text-gray-400 mt-1">
                   <span v-if="user.role === 'admin'" class="role-badge admin"
                     >Admin</span
                   >
@@ -173,17 +179,21 @@
                 </div>
               </div>
             </div>
-            <div class="view-profile-button">
+
+            <!-- Bouton de profil - aligné à droite sur desktop, centré sur mobile -->
+            <div
+              class="view-profile-button mt-3 sm:mt-0 flex justify-center sm:justify-end"
+            >
               <router-link
                 v-if="user.playerId"
                 :to="{ name: 'Profil', params: { id: user.playerId } }"
-                class="px-4 py-2 rounded text-sm neon-button-cyan font-orbitron"
+                class="px-3 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm neon-button-cyan font-orbitron"
               >
                 Voir profil
               </router-link>
               <span
                 v-else
-                class="px-4 py-2 text-sm text-gray-400 font-orbitron"
+                class="px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm text-gray-400 font-orbitron"
               >
                 Pas de profil
               </span>
@@ -194,23 +204,28 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="totalPages > 1" class="flex justify-center mt-8 space-x-2">
+    <div
+      v-if="totalPages > 1"
+      class="flex justify-center mt-6 sm:mt-8 space-x-1 sm:space-x-2"
+    >
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
-        class="px-4 py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
       >
         &laquo; Précédent
       </button>
 
-      <div class="flex items-center px-4 font-orbitron text-white">
+      <div
+        class="flex items-center px-2 sm:px-4 font-orbitron text-white text-xs sm:text-sm"
+      >
         Page {{ currentPage }} / {{ totalPages }}
       </div>
 
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages"
-        class="px-4 py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
       >
         Suivant &raquo;
       </button>
@@ -505,12 +520,20 @@ watch(currentSort, () => {
 
 .role-badge {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.7rem;
   font-family: "Orbitron", sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+@media (max-width: 640px) {
+  .role-badge {
+    padding: 1px 5px;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+  }
 }
 
 .role-badge.admin {
@@ -572,6 +595,14 @@ watch(currentSort, () => {
   text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 20px #ff00ff,
     0 0 20px #ff00ff, 0 0 20px #ff00ff;
   letter-spacing: 2px;
+}
+
+/* Réduire l'intensité du neon sur mobile pour éviter le flou */
+@media (max-width: 640px) {
+  .neon-text {
+    text-shadow: 0 0 5px #ff00ff, 0 0 15px #ff00ff;
+    letter-spacing: 1px;
+  }
 }
 
 .shadow-glow {

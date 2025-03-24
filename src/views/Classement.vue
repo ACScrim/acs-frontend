@@ -1,21 +1,26 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Classement.vue -->
 <template>
-  <div class="container mx-auto p-8 pt-20">
-    <h1 class="text-4xl text-white mb-8 neon-text font-audiowide text-center">
+  <div class="container mx-auto p-4 sm:p-8 pt-20">
+    <h1
+      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
+    >
       Classement des joueurs
     </h1>
 
+    <!-- Sélecteur de jeux -->
     <div
-      class="bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500 shadow-lg shadow-pink-500/30 p-6 mb-8"
+      class="bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500 shadow-lg shadow-pink-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
     >
-      <label for="game" class="block text-lg text-white mb-2 font-orbitron">
+      <label
+        for="game"
+        class="block text-base sm:text-lg text-white mb-2 font-orbitron"
+      >
         Filtrer par jeu
       </label>
       <select
         id="game"
         v-model="selectedGame"
         @change="fetchRankingsByGame"
-        class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded font-orbitron focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/50 transition-all"
+        class="w-full p-2 sm:p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded font-orbitron focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/50 transition-all"
       >
         <option value="">Tous les jeux</option>
         <option v-for="game in games" :key="game._id" :value="game._id">
@@ -34,13 +39,14 @@
       <CyberpunkLoader />
     </div>
 
+    <!-- Message "Aucun classement" -->
     <div
       v-else-if="rankings.length === 0"
-      class="flex flex-col items-center justify-center p-12 bg-black/50 border border-pink-500/30 rounded-lg"
+      class="flex flex-col items-center justify-center p-6 sm:p-12 bg-black/50 border border-pink-500/30 rounded-lg"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16 text-pink-500 mb-4"
+        class="h-12 w-12 sm:h-16 sm:w-16 text-pink-500 mb-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -52,15 +58,18 @@
           d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <p class="text-white font-orbitron">
+      <p class="text-white font-orbitron text-center">
         Aucun classement disponible pour le moment.
       </p>
     </div>
+
+    <!-- Tableau pour écrans moyens et grands -->
     <div
       v-else
       class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 overflow-hidden"
     >
-      <table class="min-w-full text-white">
+      <!-- Version desktop du tableau (caché sur mobile) -->
+      <table class="min-w-full text-white hidden md:table">
         <thead>
           <tr class="bg-gray-800/80 border-b border-pink-500/50">
             <th class="py-4 px-4 text-center font-audiowide text-pink-400">
@@ -156,6 +165,92 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Version mobile du tableau (affichée uniquement sur mobile) -->
+      <div class="md:hidden">
+        <!-- Barre de tri pour mobile -->
+        <div
+          class="flex justify-between items-center p-3 bg-gray-800/80 border-b border-pink-500/50"
+        >
+          <div class="flex gap-2 items-center">
+            <span class="font-audiowide text-pink-400 text-sm">Trier par:</span>
+            <!-- Inverser l'ordre des filtres: Nom d'abord, puis Victoires -->
+            <button
+              @click="sortBy('username')"
+              class="px-2 py-1 text-xs font-orbitron rounded border"
+              :class="
+                sortKey === 'username'
+                  ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300'
+                  : 'border-gray-600 text-gray-400'
+              "
+            >
+              Nom
+              <span v-if="sortKey === 'username'" class="ml-1">
+                {{ sortOrder === "asc" ? "▲" : "▼" }}
+              </span>
+            </button>
+            <button
+              @click="sortBy('totalVictories')"
+              class="px-2 py-1 text-xs font-orbitron rounded border"
+              :class="
+                sortKey === 'totalVictories'
+                  ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300'
+                  : 'border-gray-600 text-gray-400'
+              "
+            >
+              Victoires
+              <span v-if="sortKey === 'totalVictories'" class="ml-1">
+                {{ sortOrder === "asc" ? "▲" : "▼" }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Liste des joueurs version mobile -->
+        <div class="divide-y divide-gray-700/50">
+          <div
+            v-for="(ranking, index) in sortedRankings"
+            :key="ranking.playerId"
+            :class="{
+              'bg-purple-900/20': index % 2 === 0,
+            }"
+            class="p-3 transition-colors"
+          >
+            <!-- Structure modifiée pour avoir rang - joueur - victoires alignés horizontalement -->
+            <div class="flex items-center">
+              <!-- Rang - maintenant avec une meilleure visibilité -->
+              <div class="w-12 flex justify-center">
+                <span
+                  :class="{ 'rank-top': index < 3 }"
+                  class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 border border-purple-500/50 font-orbitron text-white text-sm"
+                >
+                  {{ index + 1 }}
+                </span>
+              </div>
+
+              <!-- Joueur -->
+              <div class="flex-grow">
+                <router-link
+                  :to="{ name: 'Profil', params: { id: ranking.playerId } }"
+                  class="text-white hover:text-pink-400 font-orbitron transition-colors player-link capitalize text-sm"
+                >
+                  {{ ranking.username }}
+                </router-link>
+              </div>
+
+              <!-- Victoires (déplacé au centre) - sur une seule ligne -->
+              <div class="flex items-center ml-auto">
+                <div class="flex items-center">
+                  <span class="font-orbitron text-pink-400 text-sm mr-1">
+                    {{ ranking.totalVictories }}
+                  </span>
+                  <span class="text-xs text-gray-400">victoires</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -349,14 +444,6 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
-}
-
 .sort-button {
   background: none;
   border: none;
@@ -433,5 +520,15 @@ select {
 select:focus {
   background-image: linear-gradient(45deg, transparent 50%, #06b6d4 50%),
     linear-gradient(135deg, #06b6d4 50%, transparent 50%);
+}
+
+/* Ajout pour les rangs sur mobile */
+@media (max-width: 768px) {
+  .rank-top {
+    background: linear-gradient(to right, #4a0072, #9900ff);
+    box-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
+    color: white !important; /* Force la couleur du texte en blanc */
+    border-color: rgba(236, 72, 153, 0.7) !important; /* Bordure plus visible */
+  }
 }
 </style>

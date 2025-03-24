@@ -1168,7 +1168,7 @@ h2:hover .neon-text-pink {
   width: 100%;
   padding: 0.5rem 0;
   margin-bottom: 1rem;
-  margin-top: 1.5rem; /* Ajouter de l'espace en haut */
+  margin-top: 2.5rem; /* Augmentation de la marge supérieure pour tous les écrans */
   text-align: center;
   overflow: visible;
 }
@@ -1274,11 +1274,17 @@ h2:hover .neon-text-pink {
   }
 }
 
-/* Responsive pour les écrans plus petits */
+/* Styles responsifs spécifiques pour le titre */
 @media (max-width: 640px) {
   .cyber-main-title {
     font-size: 2rem;
     padding: 0.5rem 1rem;
+    margin-top: 1rem; /* Marge supplémentaire en haut du titre */
+  }
+
+  /* Augmenter l'espacement en haut de la page sur mobile */
+  .title-container {
+    margin-top: 3.5rem; /* Plus d'espace sur mobile */
   }
 }
 </style>
