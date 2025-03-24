@@ -384,19 +384,26 @@ const onDragEnd = () => {
 
 // Enregistrer les équipes en base de données
 const saveTeams = async () => {
-  if (selectedTournament.value) {
-    if (selectedTournamentDetails.value) {
-      const updatedTournament = {
-        ...selectedTournamentDetails.value,
-        teams: teams.value,
-        game: selectedTournamentDetails.value.game,
-      };
-      await tournamentService.updateTournament(
+  if (selectedTournament.value && teams.value.length > 0) {
+    try {
+      // Utiliser le nouvel endpoint dédié plutôt que updateTournament
+      await tournamentService.updateTournamentTeams(
         selectedTournament.value,
-        updatedTournament
+        teams.value
       );
-      showMessage("success", "Equipes enregistrées avec succès !");
+      showMessage("success", "Équipes enregistrées avec succès !");
+    } catch (err) {
+      console.error("Erreur lors de l'enregistrement des équipes:", err);
+      showMessage(
+        "error",
+        "Une erreur est survenue lors de l'enregistrement des équipes"
+      );
     }
+  } else {
+    showMessage(
+      "error",
+      "Impossible d'enregistrer les équipes: données manquantes"
+    );
   }
 };
 
@@ -409,19 +416,24 @@ const confirmTeamDefinitive = async () => {
 
   if (selectedTournament.value && selectedTournamentDetails.value) {
     try {
-      const updatedTournament = {
-        ...selectedTournamentDetails.value,
-        teams: teams.value,
-        game: selectedTournamentDetails.value.game,
-        finished: true,
-      };
-
-      await tournamentService.updateTournament(
+      // D'abord, mettre à jour les équipes avec l'endpoint dédié
+      await tournamentService.updateTournamentTeams(
         selectedTournament.value,
-        updatedTournament
+        teams.value
       );
 
+      // Ensuite, marquer le tournoi comme terminé (cette opération doit rester avec updateTournament)
+      if (selectedTournamentDetails.value) {
+        await tournamentService.updateTournament(selectedTournament.value, {
+          ...selectedTournamentDetails.value,
+          finished: true,
+          game: selectedTournamentDetails.value.game,
+        });
+      }
+
+      // Créer les canaux Discord
       await tournamentService.createDiscordChannels(teams.value);
+
       showMessage(
         "success",
         "Équipes définitives enregistrées avec succès et canaux Discord créés !"
@@ -436,6 +448,11 @@ const confirmTeamDefinitive = async () => {
       );
       console.error("Erreur lors de la validation des équipes:", err);
     }
+  } else {
+    showMessage(
+      "error",
+      "Impossible de valider les équipes: données manquantes"
+    );
   }
 };
 

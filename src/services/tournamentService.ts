@@ -194,6 +194,27 @@ const unregisterPlayer = async (
 };
 
 /**
+ * Met à jour uniquement les équipes d'un tournoi
+ * Méthode dédiée pour optimiser les performances et éviter les conflits
+ * @param tournamentId - ID du tournoi
+ * @param teams - Nouvelles équipes à sauvegarder
+ * @returns Tournoi avec les équipes mises à jour
+ */
+const updateTournamentTeams = async (
+  tournamentId: string,
+  teams: Team[]
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/teams`,
+    { teams },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data.tournament;
+};
+
+/**
  * Enregistre le check-in d'un joueur pour un tournoi
  * @param tournamentId - ID du tournoi
  * @param userId - ID de l'utilisateur
@@ -252,4 +273,5 @@ export default {
   checkInPlayer,
   updateTeamRanking,
   createDiscordChannels,
+  updateTournamentTeams,
 };
