@@ -327,7 +327,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
@@ -548,6 +548,16 @@ const getRankingClass = (rank: number): string => {
 onMounted(() => {
   fetchPlayerProfile();
 });
+
+// Ajouter ce watcher pour réagir aux changements d'ID dans l'URL
+watch(
+  () => route.params.id,
+  (newId, oldId) => {
+    if (newId !== oldId) {
+      fetchPlayerProfile();
+    }
+  }
+);
 </script>
 
 <style scoped>
