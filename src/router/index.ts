@@ -63,6 +63,11 @@ const routes = [
     name: "Profil",
     component: Profil,
   },
+  {
+    path: "/auth-error",
+    name: "AuthError",
+    component: () => import("../views/AuthError.vue"),
+  },
 ];
 
 const router = createRouter({

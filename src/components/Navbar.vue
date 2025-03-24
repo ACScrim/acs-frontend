@@ -441,7 +441,7 @@ const loginWithDiscord = () => {
   const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
   window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
     redirectUri
-  )}&scope=identify+email`;
+  )}&scope=identify+guilds+email`;
 };
 
 onMounted(() => {

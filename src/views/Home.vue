@@ -484,7 +484,6 @@ const podiumTeams = computed(() => {
     .sort((a, b) => (a.ranking || 999) - (b.ranking || 999))
     .slice(0, 3);
 
-  console.log("[DEBUG] Équipes du podium filtrées:", teams);
   return teams;
 });
 
@@ -512,7 +511,7 @@ const loginWithDiscord = () => {
     // Redirection vers la page d'autorisation Discord
     window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
-    )}&scope=identify+email`;
+    )}&scope=identify+guilds+email`;
   } catch (err) {
     // Gestion des erreurs d'authentification
     error.value = "Impossible de se connecter à Discord. Veuillez réessayer.";
@@ -533,14 +532,62 @@ const fetchTournaments = async () => {
     // Récupérer tous les tournois
     tournaments.value = await tournamentService.getTournaments();
 
-    // Trouver le prochain tournoi (date future la plus proche)
+    // Date actuelle
     const now = new Date();
-    const upcomingTournaments = tournaments.value
-      .filter((t) => new Date(t.date) > now && !t.finished)
+
+    // Date de début du jour suivant la date actuelle
+    const tomorrowStart = new Date(now);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+    tomorrowStart.setHours(0, 0, 0, 0);
+
+    // Obtenir la date actuelle sans heure/minute/secondes
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+
+    // Trouver tous les tournois non terminés
+    const unfinishedTournaments = tournaments.value
+      .filter((t) => !t.finished)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    nextTournament.value =
-      upcomingTournaments.length > 0 ? upcomingTournaments[0] : null;
+    // D'abord, chercher un tournoi non terminé qui a lieu aujourd'hui (le plus récent)
+    const todaysTournament = unfinishedTournaments.find((t) => {
+      const tournamentDate = new Date(t.date);
+      const tournamentDayStart = new Date(tournamentDate);
+      tournamentDayStart.setHours(0, 0, 0, 0);
+
+      // Le tournoi est d'aujourd'hui
+      return tournamentDayStart.getTime() === todayStart.getTime();
+    });
+
+    if (todaysTournament) {
+      // Si on a un tournoi aujourd'hui, on l'utilise
+      nextTournament.value = todaysTournament;
+    } else {
+      // Sinon, chercher un tournoi non terminé de hier (le plus récent)
+      const yesterdayStart = new Date(todayStart);
+      yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+
+      const yesterdaysTournament = unfinishedTournaments.find((t) => {
+        const tournamentDate = new Date(t.date);
+        const tournamentDayStart = new Date(tournamentDate);
+        tournamentDayStart.setHours(0, 0, 0, 0);
+
+        // Le tournoi est d'hier
+        return tournamentDayStart.getTime() === yesterdayStart.getTime();
+      });
+
+      if (yesterdaysTournament) {
+        // Si on a un tournoi d'hier, on l'utilise
+        nextTournament.value = yesterdaysTournament;
+      } else {
+        // Si on n'a ni tournoi aujourd'hui ni tournoi hier, chercher le prochain tournoi futur
+        const upcomingTournament = unfinishedTournaments.find(
+          (t) => new Date(t.date) > now
+        );
+
+        nextTournament.value = upcomingTournament || null;
+      }
+    }
 
     // Trouver le dernier tournoi terminé (date passée la plus récente)
     const finishedTournaments = tournaments.value
