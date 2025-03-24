@@ -362,9 +362,18 @@ const fetchTournaments = async () => {
     console.error("Erreur lors de la récupération des tournois:", error);
   }
 };
+// Convertit une date ISO UTC en format local pour l'input datetime-local
+const formatDateForInput = (isoString: string) => {
+  const date = new Date(isoString);
 
-const formatDate = (isoString: string) => {
-  return isoString.slice(0, 16); // Garde la partie YYYY-MM-DDTHH:mm
+  // Format YYYY-MM-DDTHH:MM requis par l'input datetime-local
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
 const loadTournamentDetails = async () => {
@@ -372,9 +381,13 @@ const loadTournamentDetails = async () => {
     const tournament = await tournamentService.getTournamentById(
       selectedTournament.value
     );
+
     name.value = tournament.name;
     game.value = (tournament.game as any)._id;
-    date.value = formatDate(tournament.date);
+
+    // Formater la date pour l'affichage dans le champ date
+    date.value = formatDateForInput(tournament.date);
+
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || "";
 
@@ -441,20 +454,25 @@ const removePlayer = (player: PlayerCheckedIn) => {
 
 const editTournament = async () => {
   try {
+    // Créer un objet Date à partir de l'entrée du formulaire
+    const selectedDate = new Date(date.value);
+
     const tournament: Tournament = {
       _id: selectedTournament.value,
       name: name.value,
       game: games.value.find((g) => g._id === game.value) as Game,
-      date: new Date(date.value).toISOString(),
+      date: selectedDate.toISOString(), // Convertir automatiquement en UTC
       discordChannelName: discordChannelName.value,
       description: description.value,
       players: selectedPlayers.value,
       finished: false,
     };
+
     await tournamentService.updateTournament(
       selectedTournament.value,
       tournament
     );
+
     showMessage("success", "Tournoi modifié avec succès !");
   } catch (err) {
     console.error("Erreur lors de la modification du tournoi:", err);
