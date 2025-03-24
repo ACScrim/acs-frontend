@@ -379,7 +379,6 @@ import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
 import type { Player, PlayerRanking, Badge, User } from "../types";
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue"; // Importer le composant de loader
 
 //-------------------------------------------------------
 // SECTION: Définition des états
