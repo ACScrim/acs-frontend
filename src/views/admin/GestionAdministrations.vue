@@ -88,10 +88,25 @@
             }"
           >
             <div class="flex items-center px-2">
+              <!-- Avatar utilisateur avec fallback en initiales -->
               <div
-                class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 text-white font-bold text-sm mr-3"
+                class="w-10 h-10 rounded-full mr-3 overflow-hidden flex items-center justify-center"
+                :class="
+                  user.avatarUrl
+                    ? 'bg-transparent'
+                    : 'bg-gradient-to-br from-purple-600 to-pink-500'
+                "
               >
-                {{ getUserInitials(user.username) }}
+                <img
+                  v-if="user.avatarUrl"
+                  :src="user.avatarUrl"
+                  :alt="user.username"
+                  class="w-full h-full object-cover"
+                  @error="handleAvatarError(user)"
+                />
+                <span v-else class="text-white font-bold text-sm">
+                  {{ getUserInitials(user.username) }}
+                </span>
               </div>
               <span class="text-white font-orbitron text-sm">{{
                 user.username
@@ -276,9 +291,29 @@ const filteredUsers = computed(() => {
  */
 const getUserInitials = (username: string) => {
   if (!username) return "?";
-  const nameParts = username.split(" ");
-  if (nameParts.length === 1) return username.charAt(0).toUpperCase();
-  return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
+  const nameParts = username.trim().split(/\s+/); // Division plus robuste (gère espaces multiples)
+
+  if (nameParts.length === 1) {
+    // Si un seul mot, prendre jusqu'à 2 premières lettres
+    return username.substring(0, 2).toUpperCase();
+  }
+
+  // Sinon prendre l'initiale du premier et du dernier mot
+  return (
+    nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)
+  ).toUpperCase();
+};
+
+/**
+ * Gère les erreurs de chargement d'avatar
+ * @param event - Événement d'erreur
+ * @param user - Utilisateur concerné
+ */
+const handleAvatarError = (user: User) => {
+  // Marquer l'avatar comme non disponible pour afficher les initiales à la place
+  if (user) {
+    user.avatarUrl = ""; // Supprimer l'URL pour déclencher l'affichage des initiales
+  }
 };
 
 /**
@@ -421,5 +456,13 @@ onMounted(() => {
 .scrollbar-track-gray-800\/50::-webkit-scrollbar-track {
   background: rgba(31, 41, 55, 0.5);
   border-radius: 4px;
+}
+
+.user-avatar {
+  transition: opacity 0.3s ease;
+}
+
+.user-avatar-loading {
+  opacity: 0.6;
 }
 </style>
