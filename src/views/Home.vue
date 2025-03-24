@@ -267,32 +267,15 @@
                 <div
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
-                  class="p-2 rounded"
-                  :class="{
-                    'bg-gradient-to-r from-yellow-900/30 to-yellow-700/30 border border-yellow-500/50':
-                      index === 0,
-                    'bg-gradient-to-r from-gray-800/30 to-gray-700/30 border border-gray-400/50':
-                      index === 1,
-                    'bg-gradient-to-r from-amber-900/30 to-amber-800/30 border border-amber-700/50':
-                      index === 2,
-                  }"
+                  class="p-2 rounded bg-gradient-to-r from-yellow-900/30 to-yellow-700/30 border border-yellow-500/50"
                 >
                   <div class="flex items-center">
                     <div
-                      class="h-8 w-8 rounded-full flex items-center justify-center mr-3"
-                      :class="{
-                        'bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-glow-gold':
-                          index === 0,
-                      }"
+                      class="h-8 w-8 rounded-full flex items-center justify-center mr-3 bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-glow-gold"
                     >
                       <span class="text-black font-bold">{{ index + 1 }}</span>
                     </div>
-                    <div
-                      class="flex-1 truncate font-orbitron"
-                      :class="{
-                        'text-yellow-400': index === 0,
-                      }"
-                    >
+                    <div class="flex-1 truncate font-orbitron text-yellow-400">
                       {{ team.name }}
                     </div>
                   </div>
@@ -307,11 +290,7 @@
                       <span
                         v-for="player in team.players"
                         :key="player._id"
-                        class="inline-flex items-center px-2 py-1 rounded-full text-xs"
-                        :class="{
-                          'bg-yellow-900/40 text-yellow-300 border border-yellow-500/50':
-                            index === 0,
-                        }"
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-900/40 text-yellow-300 border border-yellow-500/50"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

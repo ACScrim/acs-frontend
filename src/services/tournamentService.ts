@@ -124,26 +124,6 @@ const updateTeamScore = async (
 };
 
 /**
- * Marque un tournoi comme terminé avec l'équipe gagnante
- * @param tournamentId - ID du tournoi
- * @param winningTeamId - ID de l'équipe gagnante
- * @returns Tournoi finalisé
- */
-const finishTournament = async (
-  tournamentId: string,
-  winningTeamId: string
-): Promise<Tournament> => {
-  const response = await axios.put(
-    `${API_URL}/${tournamentId}/finish`,
-    { winningTeamId },
-    {
-      withCredentials: true,
-    }
-  );
-  return response.data;
-};
-
-/**
  * Supprime un tournoi
  * @param tournamentId - ID du tournoi à supprimer
  */
@@ -258,6 +238,23 @@ const updateTeamRanking = async (
   return response.data;
 };
 
+/**
+ * Marque un tournoi comme terminé sans déclarer d'équipe gagnante particulière
+ * Toutes les équipes classées 1ère seront considérées comme gagnantes
+ * @param tournamentId - ID du tournoi
+ * @returns Tournoi mis à jour
+ */
+const markTournamentAsFinished = async (
+  tournamentId: string
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/mark-finished`,
+    {},
+    { withCredentials: true }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -266,7 +263,6 @@ export default {
   getTournaments,
   generateTeams,
   updateTeamScore,
-  finishTournament,
   deleteTournament,
   registerPlayer,
   unregisterPlayer,
@@ -274,4 +270,5 @@ export default {
   updateTeamRanking,
   createDiscordChannels,
   updateTournamentTeams,
+  markTournamentAsFinished,
 };

@@ -20,7 +20,6 @@ export interface TournamentParticipation {
   rank: number | null;
   teamName: string;
   numberOfTeams: number;
-  winningTeamId: string | null;
 }
 
 export interface PlayerRanking {

@@ -1,12 +1,11 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\EndTournoi.vue -->
 <template>
   <div class="container mx-auto p-4 bg-neon-gradient min-h-screen">
-    <!-- Sélection du jeu et du tournoi -->
+    <!-- Sélection du jeu et du tournoi - inchangé -->
     <h1 class="text-4xl text-white mb-8 neon-text">Terminer un Tournoi</h1>
     <div class="mb-4">
-      <label for="game" class="block text-lg text-white mb-2 neon-label"
-        >Sélectionner un jeu</label
-      >
+      <label for="game" class="block text-lg text-white mb-2 neon-label">
+        Sélectionner un jeu
+      </label>
       <select
         id="game"
         v-model="selectedGame"
@@ -19,9 +18,9 @@
       </select>
     </div>
     <div class="mb-4" v-if="tournaments.length > 0">
-      <label for="tournament" class="block text-lg text-white mb-2 neon-label"
-        >Sélectionner un tournoi</label
-      >
+      <label for="tournament" class="block text-lg text-white mb-2 neon-label">
+        Sélectionner un tournoi
+      </label>
       <select
         id="tournament"
         v-model="selectedTournament"
@@ -38,7 +37,7 @@
       </select>
     </div>
 
-    <!-- Détails du tournoi -->
+    <!-- Détails du tournoi - inchangé -->
     <div v-if="selectedTournamentDetails">
       <h2 class="text-xl font-bold mb-4 text-white">Détails du tournoi</h2>
       <p class="text-white">
@@ -52,6 +51,28 @@
         <strong>Discord Channel:</strong>
         {{ selectedTournamentDetails.discordChannelName }}
       </p>
+
+      <!-- Statut du tournoi -->
+      <div
+        v-if="selectedTournamentDetails.finished"
+        class="mt-4 p-4 bg-green-500/20 text-green-300 border border-green-500 rounded-lg flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        Ce tournoi est déjà terminé
+      </div>
     </div>
 
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
@@ -65,11 +86,40 @@
         <p class="text-white">
           Attribuez un rang à chaque équipe : 1 pour la première place, 2 pour
           la deuxième, etc. Plusieurs équipes peuvent avoir le même rang (ex:
-          deux équipes à la 1ère place). Déclarer un vainqueur met fin au
-          tournoi et il n'est plus possible de modifier.
+          deux équipes à la 1ère place). Les équipes classées en 1ère position
+          seront considérées comme gagnantes.
         </p>
       </div>
 
+      <!-- Bouton pour terminer le tournoi -->
+      <div
+        v-if="
+          selectedTournamentDetails &&
+          !selectedTournamentDetails.finished &&
+          hasRankings()
+        "
+        class="mb-6 p-4 bg-gradient-to-r from-purple-900/70 to-pink-900/70 rounded-lg border border-pink-500"
+      >
+        <div class="flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">
+              Finaliser le tournoi
+            </h3>
+            <p class="text-cyan-300 text-sm mb-4 md:mb-0">
+              Une fois le tournoi terminé, les rankings seront verrouillés et
+              les résultats comptabilisés dans le classement des joueurs.
+            </p>
+          </div>
+          <button
+            @click="confirmFinishTournament()"
+            class="mt-2 md:mt-0 px-6 py-3 text-lg font-bold text-white bg-gradient-to-r from-green-600 to-cyan-600 rounded-lg shadow neon-button hover:from-green-500 hover:to-cyan-500 focus:outline-none focus:ring-2 focus:ring-green-500 transform transition-all hover:-translate-y-1"
+          >
+            Terminer le tournoi
+          </button>
+        </div>
+      </div>
+
+      <!-- Cards des équipes - Grid layout inchangé -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
           v-for="(team, index) in teams"
@@ -107,7 +157,7 @@
                       ? getRankingButtonActiveClass(rank)
                       : 'bg-gray-700 text-white hover:bg-gray-600',
                   ]"
-                  :disabled="!!winningTeamId"
+                  :disabled="selectedTournamentDetails?.finished"
                 >
                   {{ getRankingLabel(rank) }}
                 </button>
@@ -119,21 +169,13 @@
                       ? 'bg-gray-500 text-white'
                       : 'bg-gray-700 text-white hover:bg-gray-600',
                   ]"
-                  :disabled="!!winningTeamId"
+                  :disabled="selectedTournamentDetails?.finished"
                 >
                   Non classé
                 </button>
               </div>
             </div>
           </div>
-          <button
-            v-if="team.ranking === 1"
-            @click="confirmFinishTournament(team._id)"
-            class="mt-4 px-6 py-3 text-lg font-bold text-white bg-green-500 rounded shadow neon-button hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            :disabled="!!winningTeamId"
-          >
-            Déclarer Vainqueur
-          </button>
         </div>
       </div>
     </div>
@@ -146,7 +188,7 @@
     <ConfirmationDialog
       v-if="showConfirmationDialog"
       :title="'Confirmer la fin du tournoi'"
-      :message="'Êtes-vous sûr de vouloir déclarer cette équipe comme gagnante ? Cette action est irréversible.'"
+      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Cette action est irréversible et les résultats seront comptabilisés dans le classement des joueurs.'"
       @confirm="finishTournament"
       @cancel="showConfirmationDialog = false"
     />
@@ -187,14 +229,8 @@ const selectedTournamentDetails = ref<
 /** Liste des équipes du tournoi */
 const teams = ref<Team[]>([]);
 
-/** ID de l'équipe gagnante si le tournoi est terminé */
-const winningTeamId = ref<string | null>(null);
-
 /** Contrôle l'affichage de la boîte de dialogue de confirmation */
 const showConfirmationDialog = ref(false);
-
-/** ID de l'équipe à désigner comme gagnante */
-const teamToFinish = ref<string | null>(null);
 
 /** Message d'erreur à afficher */
 const error = ref<string | null>(null);
@@ -239,8 +275,6 @@ const fetchTournamentDetails = async () => {
     // Si des équipes existent déjà, les afficher
     if (selectedTournamentDetails.value.teams) {
       teams.value = selectedTournamentDetails.value.teams || [];
-      winningTeamId.value =
-        selectedTournamentDetails.value.winningTeam?._id ?? null;
     }
   }
 };
@@ -355,6 +389,14 @@ const getRankingButtonActiveClass = (rank: number): string => {
 };
 
 /**
+ * Vérifie si au moins une équipe a un ranking défini
+ * Utilisé pour activer/désactiver le bouton "Terminer le tournoi"
+ */
+const hasRankings = (): boolean => {
+  return teams.value.some((team) => team.ranking > 0);
+};
+
+/**
  * =============================================================
  * UTILITAIRES ET FORMATAGE
  * =============================================================
@@ -385,27 +427,37 @@ const formatLocalDate = (dateString: string) => {
 
 /**
  * Affiche la boîte de dialogue de confirmation avant de terminer le tournoi
- *
- * @param teamId - Identifiant de l'équipe à déclarer gagnante
  */
-const confirmFinishTournament = (teamId: string) => {
-  teamToFinish.value = teamId;
+const confirmFinishTournament = () => {
   showConfirmationDialog.value = true;
 };
 
 /**
- * Termine le tournoi en déclarant une équipe gagnante
+ * Termine le tournoi en considérant toutes les équipes de rang 1 comme gagnantes
  * Appelée après confirmation par l'utilisateur
  */
 const finishTournament = async () => {
-  if (selectedTournament.value && teamToFinish.value) {
-    await tournamentService.finishTournament(
-      selectedTournament.value,
-      teamToFinish.value
-    );
-    winningTeamId.value = teamToFinish.value;
-    showConfirmationDialog.value = false;
-    showMessage("success", "Tournoi terminé avec succès !");
+  if (selectedTournament.value) {
+    try {
+      // Utiliser la fonction spécialisée pour marquer le tournoi comme terminé
+      await tournamentService.markTournamentAsFinished(
+        selectedTournament.value
+      );
+
+      // Fermer la boîte de dialogue et rafraîchir les détails
+      showConfirmationDialog.value = false;
+
+      // Rafraîchir les détails du tournoi
+      await fetchTournamentDetails();
+
+      showMessage(
+        "success",
+        "Tournoi terminé avec succès ! Les équipes classées en 1ère position sont considérées comme gagnantes."
+      );
+    } catch (error) {
+      console.error("Erreur lors de la finalisation du tournoi:", error);
+      showMessage("error", "Erreur lors de la finalisation du tournoi");
+    }
   }
 };
 

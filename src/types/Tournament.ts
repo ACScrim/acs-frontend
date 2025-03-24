@@ -30,7 +30,6 @@ export interface Tournament {
   finished: boolean;
   teams?: Team[];
   description?: string;
-  winningTeam?: Team;
   checkIns?: { [key: string]: boolean };
 }
 
@@ -43,8 +42,4 @@ export interface Tournament {
 export interface TournamentWinner {
   tournamentId: string;
   tournamentName: string;
-  winningTeam: {
-    name: string;
-    players: Player[];
-  };
 }
