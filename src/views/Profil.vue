@@ -196,11 +196,40 @@
             >({{ tournamentCount }})</span
           >
         </h2>
-        <!-- Section des tournois -->
+
+        <!-- Options de tri pour les tournois -->
+        <div v-if="hasTournaments" class="flex justify-end mb-4">
+          <div class="relative">
+            <select
+              v-model="tournamentSort"
+              class="appearance-none bg-black/50 border border-pink-500/50 text-pink-400 text-sm font-orbitron px-3 py-1 pr-8 rounded-lg focus:outline-none focus:border-pink-500"
+              aria-label="Trier les tournois"
+            >
+              <option value="date-desc">Plus récents d'abord</option>
+              <option value="date-asc">Plus anciens d'abord</option>
+              <option value="rank-asc">Meilleurs classements</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pink-400"
+            >
+              <svg
+                class="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Liste des tournois -->
         <div v-if="hasTournaments">
           <ul class="space-y-4">
             <li
-              v-for="tournament in playerRanking?.tournamentsParticipated || []"
+              v-for="tournament in paginatedTournaments"
               :key="tournament._id"
               class="bg-gray-800/70 p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between transform transition-all hover:bg-gray-700/90 duration-300"
             >
@@ -240,6 +269,34 @@
               </div>
             </li>
           </ul>
+
+          <!-- Pagination pour les tournois -->
+          <div
+            v-if="totalTournamentPages > 1"
+            class="flex justify-center mt-6 space-x-2"
+          >
+            <button
+              @click="prevTournamentPage"
+              :disabled="currentTournamentPage === 1"
+              class="px-3 py-1 bg-black/70 border border-pink-500/50 text-pink-400 rounded-md text-xs disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-pink-500 hover:shadow-glow-pink"
+            >
+              &laquo; Précédent
+            </button>
+
+            <div
+              class="flex items-center px-3 font-orbitron text-white text-xs"
+            >
+              Page {{ currentTournamentPage }} / {{ totalTournamentPages }}
+            </div>
+
+            <button
+              @click="nextTournamentPage"
+              :disabled="currentTournamentPage === totalTournamentPages"
+              class="px-3 py-1 bg-black/70 border border-pink-500/50 text-pink-400 rounded-md text-xs disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-pink-500 hover:shadow-glow-pink"
+            >
+              Suivant &raquo;
+            </button>
+          </div>
         </div>
         <div
           v-else
@@ -262,16 +319,6 @@
           Aucun tournoi pour le moment
         </div>
       </div>
-    </div>
-
-    <!-- État de chargement -->
-    <div
-      v-else
-      class="max-w-4xl mx-auto pt-12"
-      role="status"
-      aria-live="polite"
-    >
-      <CyberpunkLoader />
     </div>
 
     <!-- Modal détail badge -->
@@ -337,6 +384,12 @@ import CyberpunkLoader from "@/shared/CyberpunkLoader.vue"; // Importer le compo
 //-------------------------------------------------------
 // SECTION: Définition des états
 //-------------------------------------------------------
+/**
+ * États pour la pagination et le tri des tournois
+ */
+const tournamentSort = ref("date-desc"); // Tri par défaut: plus récents d'abord
+const currentTournamentPage = ref(1); // Page actuelle pour les tournois
+const tournamentsPerPage = 5; // Nombre de tournois par page
 
 /**
  * Données principales du profil
@@ -537,6 +590,74 @@ const getRankingClass = (rank: number): string => {
   }
 };
 
+/**
+ * Trie les tournois selon le critère sélectionné
+ */
+const sortedTournaments = computed(() => {
+  const tournaments = playerRanking.value?.tournamentsParticipated || [];
+
+  switch (tournamentSort.value) {
+    case "date-desc":
+      return [...tournaments].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+    case "date-asc":
+      return [...tournaments].sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+    case "rank-asc":
+      return [...tournaments].sort((a, b) => {
+        // D'abord trier par rang (les non-classés en dernier)
+        const rankA = a.rank || 999;
+        const rankB = b.rank || 999;
+        return rankA - rankB;
+      });
+    default:
+      return tournaments;
+  }
+});
+
+/**
+ * Calcule le nombre total de pages pour la pagination des tournois
+ */
+const totalTournamentPages = computed(() =>
+  Math.ceil((sortedTournaments.value?.length || 0) / tournamentsPerPage)
+);
+
+/**
+ * Extrait les tournois à afficher sur la page courante
+ */
+const paginatedTournaments = computed(() => {
+  const start = (currentTournamentPage.value - 1) * tournamentsPerPage;
+  const end = start + tournamentsPerPage;
+  return sortedTournaments.value?.slice(start, end) || [];
+});
+
+/**
+ * Passe à la page suivante des tournois
+ */
+const nextTournamentPage = () => {
+  if (currentTournamentPage.value < totalTournamentPages.value) {
+    currentTournamentPage.value++;
+  }
+};
+
+/**
+ * Revient à la page précédente des tournois
+ */
+const prevTournamentPage = () => {
+  if (currentTournamentPage.value > 1) {
+    currentTournamentPage.value--;
+  }
+};
+
+/**
+ * Réinitialise la pagination quand le tri change
+ */
+watch(tournamentSort, () => {
+  currentTournamentPage.value = 1;
+});
+
 //-------------------------------------------------------
 // SECTION: Cycle de vie du composant
 //-------------------------------------------------------
@@ -634,5 +755,18 @@ h2 {
 
 .font-audiowide {
   font-family: "Audiowide", cursive;
+}
+
+.shadow-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+}
+
+/* Assurer que les boutons de pagination sont bien alignés */
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
 }
 </style>
