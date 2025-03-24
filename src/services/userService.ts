@@ -59,8 +59,27 @@ const getUserById = async (userId: string) => {
   }
 };
 
+/**
+ * Supprime un utilisateur et ses données associées
+ * @param userId - ID de l'utilisateur à supprimer
+ * @returns Message de confirmation de suppression
+ * @throws Erreur si la suppression échoue
+ */
+const deleteUser = async (userId: string) => {
+  try {
+    const response = await axios.delete(`${API_URL}/users/${userId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error; // Propage l'erreur pour gestion par l'appelant
+  }
+};
+
 export default {
   fetchAllUsers,
   updateUserRole,
   getUserById,
+  deleteUser,
 };

@@ -165,7 +165,50 @@
                   </svg>
                 </div>
               </div>
+              <!-- Bouton de suppression -->
+              <button
+                @click="confirmDeleteUser(user)"
+                class="ml-3 p-2 rounded-md bg-gray-800/80 border border-red-500/50 hover:border-red-500 text-red-400 hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all duration-200 group relative"
+                :disabled="user.role === 'superadmin'"
+                :class="{
+                  'opacity-30 cursor-not-allowed': user.role === 'superadmin',
+                }"
+                :title="
+                  user.role === 'superadmin'
+                    ? 'Impossible de supprimer un superadmin'
+                    : 'Supprimer cet utilisateur'
+                "
+              >
+                <!-- Icône de suppression cyberpunk -->
+                <svg
+                  class="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 7L18 7M10 11V17M14 11V17M4 7H20L18.4 21H5.6L4 7ZM8 7L9 3H15L16 7H8Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <!-- Effet lumineux au survol -->
+                <span
+                  class="absolute -inset-1 bg-gradient-to-r from-red-500 to-pink-500 opacity-0 group-hover:opacity-30 blur-sm rounded-lg transition-opacity duration-200"
+                ></span>
+              </button>
             </div>
+            <!-- Ajouter le composant de dialogue de confirmation -->
+            <ConfirmationDialog
+              v-if="showDeleteDialog"
+              :title="'Supprimer ' + userToDelete?.username"
+              :message="`Êtes-vous sûr de vouloir supprimer l'utilisateur ${userToDelete?.username} ? Cette action supprimera également toutes les données associées et est irréversible.`"
+              @confirm="deleteUser"
+              @cancel="cancelDelete"
+            />
           </div>
 
           <div
@@ -246,6 +289,73 @@ import { ref, onMounted, computed } from "vue";
 import userService from "../../services/userService";
 import Toast from "@/shared/Toast.vue";
 import type { User } from "../../types";
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
+
+//-------------------------------------------------------
+// SECTION: État pour la suppression
+//-------------------------------------------------------
+
+const showDeleteDialog = ref(false);
+const userToDelete = ref<User | null>(null);
+
+/**
+ * Affiche la boîte de dialogue de confirmation pour supprimer un utilisateur
+ * @param user - Utilisateur à supprimer
+ */
+const confirmDeleteUser = (user: User) => {
+  // Ne pas permettre la suppression des superadmins
+  if (user.role === "superadmin") {
+    return;
+  }
+
+  userToDelete.value = user;
+  showDeleteDialog.value = true;
+};
+
+/**
+ * Ferme la boîte de dialogue sans action
+ */
+const cancelDelete = () => {
+  showDeleteDialog.value = false;
+  userToDelete.value = null;
+};
+
+/**
+ * Supprime l'utilisateur après confirmation
+ */
+const deleteUser = async () => {
+  if (!userToDelete.value) return;
+
+  try {
+    await userService.deleteUser(userToDelete.value._id);
+    showMessage(
+      "success",
+      `L'utilisateur ${userToDelete.value.username} a été supprimé avec succès.`
+    );
+
+    // Rafraîchir la liste des utilisateurs
+    await fetchUsers();
+  } catch (err: any) {
+    console.error("Erreur lors de la suppression de l'utilisateur:", err);
+
+    // Messages d'erreur spécifiques selon le code de statut
+    let errorMsg = "Erreur lors de la suppression de l'utilisateur.";
+    if (err.response) {
+      if (err.response.status === 403) {
+        errorMsg =
+          "Vous n'avez pas les permissions nécessaires pour supprimer cet utilisateur.";
+      } else if (err.response.status === 404) {
+        errorMsg = "Utilisateur introuvable.";
+      }
+    }
+
+    showMessage("error", errorMsg);
+  } finally {
+    // Fermer le dialogue dans tous les cas
+    showDeleteDialog.value = false;
+    userToDelete.value = null;
+  }
+};
 
 //-------------------------------------------------------
 // SECTION: État du composant
