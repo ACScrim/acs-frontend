@@ -41,7 +41,7 @@
 
     <!-- Message "Aucun classement" -->
     <div
-      v-else-if="rankings.length === 0"
+      v-else-if="sortedRankings.length === 0"
       class="flex flex-col items-center justify-center p-6 sm:p-12 bg-black/50 border border-pink-500/30 rounded-lg"
     >
       <svg
@@ -132,7 +132,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="(ranking, index) in sortedRankings"
+            v-for="(ranking, index) in paginatedRankings"
             :key="ranking.playerId"
             :class="{
               'bg-purple-900/20': index % 2 === 0,
@@ -145,7 +145,7 @@
                 :class="{ 'rank-top': index < 3 }"
                 class="px-3 py-1 rounded-full"
               >
-                {{ index + 1 }}
+                {{ (currentPage - 1) * itemsPerPage + index + 1 }}
               </span>
             </td>
             <td class="py-4 px-4 text-center">
@@ -209,7 +209,7 @@
         <!-- Liste des joueurs version mobile -->
         <div class="divide-y divide-gray-700/50">
           <div
-            v-for="(ranking, index) in sortedRankings"
+            v-for="(ranking, index) in paginatedRankings"
             :key="ranking.playerId"
             :class="{
               'bg-purple-900/20': index % 2 === 0,
@@ -221,10 +221,10 @@
               <!-- Rang - maintenant avec une meilleure visibilité -->
               <div class="w-12 flex justify-center">
                 <span
-                  :class="{ 'rank-top': index < 3 }"
+                  :class="{ 'rank-top': calculateGlobalRank(index) <= 3 }"
                   class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 border border-purple-500/50 font-orbitron text-white text-sm"
                 >
-                  {{ index + 1 }}
+                  {{ (currentPage - 1) * itemsPerPage + index + 1 }}
                 </span>
               </div>
 
@@ -251,6 +251,34 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Pagination -->
+    <div
+      v-if="totalPages > 1"
+      class="flex justify-center mt-6 sm:mt-8 space-x-1 sm:space-x-2"
+    >
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+      >
+        &laquo; Précédent
+      </button>
+
+      <div
+        class="flex items-center px-2 sm:px-4 font-orbitron text-white text-xs sm:text-sm"
+      >
+        Page {{ currentPage }} / {{ totalPages }}
+      </div>
+
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+      >
+        Suivant &raquo;
+      </button>
     </div>
   </div>
 </template>
@@ -304,6 +332,12 @@ const sortOrder = ref<string>(DEFAULT_SORT_ORDER);
  */
 const isLoading = ref<boolean>(true); // Indicateur de chargement
 
+/**
+ * État de pagination
+ */
+const currentPage = ref(1);
+const itemsPerPage = 10; // Nombre d'éléments par page
+
 //-------------------------------------------------------
 // SECTION: Récupération des données
 //-------------------------------------------------------
@@ -314,6 +348,7 @@ const isLoading = ref<boolean>(true); // Indicateur de chargement
  */
 const fetchRankings = async () => {
   isLoading.value = true;
+  currentPage.value = 1; // Réinitialiser à la première page
 
   try {
     const response = await playerService.getPlayerRankings();
@@ -331,6 +366,7 @@ const fetchRankings = async () => {
  */
 const fetchRankingsByGame = async () => {
   isLoading.value = true;
+  currentPage.value = 1; // Réinitialiser à la première page
 
   try {
     if (selectedGame.value) {
@@ -398,6 +434,9 @@ const sortBy = (key: string) => {
     sortKey.value = typedKey;
     sortOrder.value = "asc"; // Commencer en ordre ascendant
   }
+
+  // Revenir à la première page après un tri
+  currentPage.value = 1;
 };
 
 /**
@@ -423,6 +462,51 @@ const sortedRankings = computed(() => {
     return sortOrder.value === "asc" ? result : -result;
   });
 });
+
+//-------------------------------------------------------
+// SECTION: Pagination
+//-------------------------------------------------------
+
+/**
+ * Calcule le nombre total de pages pour la pagination
+ */
+const totalPages = computed(() =>
+  Math.ceil(sortedRankings.value.length / itemsPerPage)
+);
+
+/**
+ * Extrait les classements à afficher sur la page courante
+ */
+const paginatedRankings = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = Math.min(start + itemsPerPage, sortedRankings.value.length);
+  return sortedRankings.value.slice(start, end);
+});
+
+/**
+ * Passe à la page suivante
+ */
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+/**
+ * Revient à la page précédente
+ */
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+/**
+ * Calcule le rang global d'un joueur basé sur son index dans la page courante
+ */
+const calculateGlobalRank = (index: number): number => {
+  return (currentPage.value - 1) * itemsPerPage + index + 1;
+};
 
 //-------------------------------------------------------
 // SECTION: Cycle de vie
