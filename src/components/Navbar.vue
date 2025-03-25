@@ -37,6 +37,13 @@
       <!-- Navigation principale -->
       <div class="hidden md:flex flex-grow justify-center space-x-16">
         <router-link
+          to="/annonces"
+          class="nav-link font-orbitron"
+          :class="{ 'nav-link-active': isActive('/annonces') }"
+        >
+          Annonces
+        </router-link>
+        <router-link
           to="/classement"
           class="nav-link font-orbitron"
           :class="{ 'nav-link-active': isActive('/classement') }"
@@ -167,6 +174,26 @@
         <!-- Menu déroulant mobile -->
         <transition name="slide-fade">
           <div v-if="mobileMenuOpen" class="mobile-dropdown">
+            <router-link
+              to="/annonces"
+              @click="closeAllMenus"
+              class="mobile-dropdown-item"
+              :class="{ 'mobile-dropdown-active': isActive('/annonces') }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a2 2 0 000 4h.586l-1.293 1.293a1 1 0 101.414 1.414L7 11.414V13a1 1 0 001 1h2.586l2.707 2.707a1 1 0 001.414-1.414L15 14.586V13a2 2 0 002-2V3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Annonces
+            </router-link>
             <router-link
               to="/classement"
               @click="closeAllMenus"

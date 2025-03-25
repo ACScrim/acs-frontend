@@ -69,6 +69,64 @@
           </svg>
           <p class="capitalize">Bienvenue, {{ user.username }}!</p>
         </div>
+        <div
+          v-if="user && latestAnnouncement"
+          @click="goToAnnouncement"
+          class="mt-6 p-3 border border-pink-500/50 rounded-lg bg-black/60 hover:bg-black/80 transition-all cursor-pointer group hover:shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1"
+        >
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-pink-500 mr-2 group-hover:animate-pulse"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span class="text-sm font-orbitron text-white"
+              >Dernière annonce:</span
+            >
+          </div>
+
+          <div class="mt-2">
+            <h3 class="text-base text-pink-400 font-orbitron truncate">
+              {{ latestAnnouncement.title }}
+              <span
+                v-if="latestAnnouncement.featured"
+                class="ml-2 px-1.5 py-0.5 bg-pink-700/30 text-pink-400 text-[10px] uppercase rounded inline-block align-middle"
+              >
+                Featured
+              </span>
+            </h3>
+            <p class="text-xs text-gray-400 mt-1">
+              {{ formatAnnouncementDate(latestAnnouncement.createdAt) }}
+            </p>
+          </div>
+
+          <div class="flex justify-end mt-2">
+            <span
+              class="text-xs text-cyan-400 flex items-center group-hover:text-pink-400 transition-colors"
+            >
+              Voir l'annonce
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3 ml-1 transform group-hover:translate-x-1 transition-transform"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
       </div>
 
       <!-- Colonne de droite -->
@@ -382,8 +440,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/userStore";
 import tournamentService from "../services/tournamentService";
+import announcementService from "../services/announcementService";
+import type { Announcement } from "../types";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import type { User } from "../types/User";
 import type { Tournament } from "../types";
@@ -397,7 +458,8 @@ import type { Tournament } from "../types";
  */
 const userStore = useUserStore();
 const user = computed<User | null>(() => userStore.user);
-
+const latestAnnouncement = ref<Announcement | null>(null);
+const router = useRouter();
 /**
  * États d'interface et données
  */
@@ -702,6 +764,63 @@ const formatTime = (dateString: string | Date): string => {
   }
 };
 
+/**
+ * Récupère la dernière annonce publiée
+ */
+const fetchLatestAnnouncement = async () => {
+  try {
+    // Récupérer toutes les annonces
+    const announcements = await announcementService.getAnnouncements();
+
+    // Filtrer uniquement les annonces publiées
+    const publishedAnnouncements = announcements.filter((a) => a.published);
+
+    if (publishedAnnouncements.length > 0) {
+      // Trier par date de création (la plus récente en premier)
+      publishedAnnouncements.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      // Prendre la première annonce (la plus récente)
+      latestAnnouncement.value = publishedAnnouncements[0];
+    }
+  } catch (err) {
+    console.error(
+      "Erreur lors de la récupération de la dernière annonce:",
+      err
+    );
+  }
+};
+
+/**
+ * Formatte la date d'une annonce
+ */
+const formatAnnouncementDate = (dateString: string): string => {
+  if (!dateString) return "Date inconnue";
+  try {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  } catch (e) {
+    return "Date invalide";
+  }
+};
+
+/**
+ * Redirection vers la page de l'annonce
+ */
+const goToAnnouncement = () => {
+  if (latestAnnouncement.value && latestAnnouncement.value._id) {
+    router.push(`/annonces/${latestAnnouncement.value._id}`);
+  }
+};
+
 //-------------------------------------------------------
 // SECTION: Cycle de vie
 //-------------------------------------------------------
@@ -718,6 +837,10 @@ onMounted(async () => {
 
     // Récupération des tournois - faire cette opération séparément
     await fetchTournaments();
+    // Récupérer la dernière annonce
+    if (userStore.user) {
+      await fetchLatestAnnouncement();
+    }
 
     // Si nous avons un prochain tournoi, démarrer le compteur
     if (nextTournament.value) {
