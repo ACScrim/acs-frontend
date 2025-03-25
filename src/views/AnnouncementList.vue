@@ -1,8 +1,6 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\AnnouncementList.vue -->
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-b from-purple-900/30 via-black to-blue-900/20 pt-20 sm:pt-24 pb-16"
-  >
+  <div class="container pt-20 sm:pt-24 pb-16">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
       <!-- Effet grille rétro en overlay -->
       <div
@@ -17,14 +15,10 @@
       <!-- En-tête avec titre et bouton "Nouvelle annonce" pour les admins -->
       <div class="relative mb-12 text-center">
         <h1
-          class="text-4xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-300 to-cyan-400 font-audiowide uppercase tracking-widest mb-6 sm:mb-8"
+          class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
         >
           Dernières annonces
         </h1>
-
-        <div
-          class="w-32 h-1 mx-auto bg-gradient-to-r from-cyan-400 to-pink-500 rounded shadow-[0_0_10px_rgba(6,182,212,0.7)]"
-        ></div>
 
         <!-- Sous-titre avec design cyberpunk -->
         <div class="mt-4 inline-block border-b-2 border-pink-500/50 pb-1 px-6">
@@ -140,42 +134,84 @@
         <div
           v-for="announcement in announcements"
           :key="announcement._id"
-          class="group relative bg-black/75 backdrop-blur-sm border border-gray-800/70 rounded-lg overflow-hidden transition-all duration-500 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/20"
+          :class="[
+            'group relative backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-500',
+            announcement.featured
+              ? 'bg-gradient-to-r from-pink-900/20 via-purple-900/30 to-pink-900/20 border-2 border-pink-500/70 hover:border-pink-400/80 hover:shadow-lg hover:shadow-pink-500/30'
+              : 'bg-black/75 border border-gray-800/70 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/20',
+          ]"
         >
           <!-- Effet de survol subtil -->
           <div
-            class="absolute inset-0 bg-gradient-to-r from-purple-800/0 via-purple-800/10 to-purple-800/0 opacity-0 group-hover:opacity-100 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1500 pointer-events-none"
+            :class="[
+              'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1500 pointer-events-none',
+              announcement.featured
+                ? 'from-pink-800/0 via-pink-800/20 to-pink-800/0'
+                : 'from-purple-800/0 via-purple-800/10 to-purple-800/0',
+            ]"
           ></div>
+
+          <!-- Badge Featured position absolue pour un impact visuel plus fort -->
+          <div
+            v-if="announcement.featured"
+            class="absolute top-0 right-0 z-20 transform translate-x-3 -translate-y-1 rotate-12"
+          >
+            <div class="relative">
+              <div
+                class="px-3 py-1 bg-pink-600/90 text-white text-sm uppercase rounded-md font-orbitron tracking-wider shadow-lg shadow-pink-500/30 border border-pink-400/50"
+              >
+                Featured
+              </div>
+              <!-- Effet de lueur sous le badge -->
+              <div
+                class="absolute -inset-2 bg-pink-500 opacity-20 blur-lg rounded-full -z-10 animate-pulse-slow"
+              ></div>
+            </div>
+          </div>
 
           <!-- En-tête de l'annonce -->
           <div
-            class="bg-gradient-to-r from-gray-900/90 via-purple-900/20 to-gray-900/90 px-6 py-5 border-b border-cyan-500/30 relative"
+            :class="[
+              'px-6 py-5 border-b relative',
+              announcement.featured
+                ? 'bg-gradient-to-r from-pink-900/80 via-purple-800/60 to-pink-900/80 border-pink-500/50'
+                : 'bg-gradient-to-r from-gray-900/90 via-purple-900/20 to-gray-900/90 border-cyan-500/30',
+            ]"
           >
             <!-- Ligne néon au bas de l'en-tête -->
             <div
-              class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-cyan-500/0 via-cyan-400/70 to-cyan-500/0 shadow-[0_0_5px_#0ff] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+              :class="[
+                'absolute bottom-0 left-0 w-full h-[1px] opacity-50 group-hover:opacity-100 transition-opacity duration-300',
+                announcement.featured
+                  ? 'bg-gradient-to-r from-pink-500/0 via-pink-400/70 to-pink-500/0 shadow-[0_0_5px_#f0f]'
+                  : 'bg-gradient-to-r from-cyan-500/0 via-cyan-400/70 to-cyan-500/0 shadow-[0_0_5px_#0ff]',
+              ]"
             ></div>
 
             <div
               class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
             >
               <h2
-                class="text-xl font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 group-hover:from-pink-400 group-hover:to-cyan-500 transition-all duration-500"
+                :class="[
+                  'text-xl font-orbitron text-transparent bg-clip-text transition-all duration-500',
+                  announcement.featured
+                    ? 'bg-gradient-to-r from-pink-300 to-purple-300 group-hover:from-pink-200 group-hover:to-purple-200'
+                    : 'bg-gradient-to-r from-cyan-400 to-pink-500 group-hover:from-pink-400 group-hover:to-cyan-500',
+                ]"
               >
                 {{ announcement.title }}
-                <span
-                  v-if="announcement.featured"
-                  class="ml-2 px-2 py-0.5 bg-pink-700/30 text-pink-400 text-xs uppercase rounded align-middle border border-pink-500/30"
-                >
-                  Featured
-                </span>
               </h2>
 
               <!-- Actions admin avec design amélioré -->
               <div v-if="isAdmin" class="flex space-x-3">
                 <button
                   @click="navigateToEdit(announcement._id)"
-                  class="p-1.5 rounded bg-gray-800/70 text-cyan-400 hover:bg-cyan-900/30 hover:text-cyan-300 transition-all duration-300 border border-cyan-500/0 hover:border-cyan-500/50"
+                  :class="[
+                    'p-1.5 rounded transition-all duration-300 border',
+                    announcement.featured
+                      ? 'bg-pink-900/50 text-pink-300 hover:bg-pink-800/70 hover:text-pink-200 border-pink-500/0 hover:border-pink-500/50'
+                      : 'bg-gray-800/70 text-cyan-400 hover:bg-cyan-900/30 hover:text-cyan-300 border-cyan-500/0 hover:border-cyan-500/50',
+                  ]"
                   title="Modifier l'annonce"
                 >
                   <svg
@@ -217,12 +253,20 @@
             </div>
 
             <div
-              class="mt-2 flex flex-wrap items-center text-sm text-gray-500 gap-4 font-mono"
+              class="mt-2 flex flex-wrap items-center text-sm gap-4 font-mono"
+              :class="
+                announcement.featured ? 'text-gray-300/80' : 'text-gray-500'
+              "
             >
               <div class="flex items-center group/date">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1 text-pink-400 group-hover/date:text-cyan-400 transition-colors duration-300"
+                  :class="[
+                    'h-4 w-4 mr-1 transition-colors duration-300',
+                    announcement.featured
+                      ? 'text-pink-300 group-hover/date:text-purple-300'
+                      : 'text-pink-400 group-hover/date:text-cyan-400',
+                  ]"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -233,7 +277,12 @@
                   />
                 </svg>
                 <span
-                  class="group-hover/date:text-cyan-300 transition-colors duration-300"
+                  :class="[
+                    'transition-colors duration-300',
+                    announcement.featured
+                      ? 'group-hover/date:text-purple-200'
+                      : 'group-hover/date:text-cyan-300',
+                  ]"
                   >{{ formatDate(announcement.createdAt) }}</span
                 >
               </div>
@@ -248,15 +297,30 @@
                       'https://cdn.discordapp.com/embed/avatars/0.png'
                     "
                     alt="Avatar"
-                    class="w-5 h-5 rounded-full mr-2 border border-cyan-500/30 group-hover/user:border-pink-500/50 transition-all duration-300 p-[1px] bg-black/50"
+                    :class="[
+                      'w-5 h-5 rounded-full mr-2 p-[1px] bg-black/50 transition-all duration-300',
+                      announcement.featured
+                        ? 'border border-pink-300/50 group-hover/user:border-purple-300/80'
+                        : 'border border-cyan-500/30 group-hover/user:border-pink-500/50',
+                    ]"
                   />
                   <!-- Glow effect -->
                   <div
-                    class="absolute inset-0 rounded-full bg-cyan-400/10 group-hover/user:bg-pink-400/10 blur-sm -z-10 transition-colors duration-300"
+                    :class="[
+                      'absolute inset-0 rounded-full blur-sm -z-10 transition-colors duration-300',
+                      announcement.featured
+                        ? 'bg-pink-400/20 group-hover/user:bg-purple-400/20'
+                        : 'bg-cyan-400/10 group-hover/user:bg-pink-400/10',
+                    ]"
                   ></div>
                 </div>
                 <span
-                  class="text-cyan-300/70 group-hover/user:text-pink-300/70 transition-colors duration-300"
+                  :class="[
+                    'transition-colors duration-300',
+                    announcement.featured
+                      ? 'text-pink-200/90 group-hover/user:text-purple-200/90'
+                      : 'text-cyan-300/70 group-hover/user:text-pink-300/70',
+                  ]"
                   >{{ announcement.createdBy.username }}</span
                 >
               </div>
@@ -264,7 +328,14 @@
           </div>
 
           <!-- Aperçu du contenu avec design amélioré -->
-          <div class="relative px-6 py-6">
+          <div
+            :class="[
+              'relative',
+              announcement.featured
+                ? 'px-6 py-6 bg-gradient-to-b from-pink-900/20 to-black/90'
+                : 'px-6 py-6',
+            ]"
+          >
             <!-- Vignette pour donner un effet de profondeur -->
             <div
               class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 pointer-events-none"
@@ -273,14 +344,27 @@
             <!-- Contenu et bouton -->
             <div class="relative z-10">
               <div
-                class="prose prose-sm prose-invert prose-cyan max-w-none line-clamp-3 mb-3"
-                v-html="truncateHTML(announcement.content, 150)"
+                :class="[
+                  'prose prose-sm prose-invert max-w-none line-clamp-3 mb-3',
+                  announcement.featured ? 'prose-pink' : 'prose-cyan',
+                ]"
+                v-html="
+                  truncateHTML(
+                    announcement.content,
+                    announcement.featured ? 250 : 150
+                  )
+                "
               ></div>
 
               <!-- YouTube preview avec badge amélioré -->
               <div
                 v-if="announcement.youtubeUrl"
-                class="mt-3 inline-flex items-center bg-pink-900/30 border border-pink-500/30 rounded-full px-3 py-1 text-pink-400 text-xs"
+                :class="[
+                  'mt-3 inline-flex items-center rounded-full px-3 py-1 text-xs border',
+                  announcement.featured
+                    ? 'bg-pink-900/40 border-pink-400/40 text-pink-300'
+                    : 'bg-pink-900/30 border-pink-500/30 text-pink-400',
+                ]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -299,25 +383,45 @@
               </div>
 
               <!-- Bouton lire la suite amélioré -->
-              <div class="mt-5">
+              <div :class="['mt-5', announcement.featured ? 'text-right' : '']">
                 <router-link
                   :to="`/annonces/${announcement._id}`"
-                  class="inline-flex items-center group/button relative"
+                  :class="[
+                    'inline-flex items-center group/button relative',
+                    announcement.featured
+                      ? 'py-2 px-4 border border-pink-500/50 rounded hover:bg-pink-900/30 transition-all'
+                      : '',
+                  ]"
                 >
                   <span
-                    class="relative overflow-hidden bg-transparent text-cyan-400 group-hover/button:text-pink-400 transition-colors duration-300 font-orbitron uppercase tracking-wider text-sm py-1"
+                    :class="[
+                      'relative overflow-hidden bg-transparent transition-colors duration-300 font-orbitron uppercase tracking-wider text-sm py-1',
+                      announcement.featured
+                        ? 'text-pink-300 group-hover/button:text-pink-100'
+                        : 'text-cyan-400 group-hover/button:text-pink-400',
+                    ]"
                   >
                     Lire la suite
 
                     <!-- Ligne animée -->
                     <span
-                      class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-cyan-400/30 via-cyan-400 to-cyan-400/30 transform scale-x-0 group-hover/button:scale-x-100 transition-transform duration-300 origin-left"
+                      :class="[
+                        'absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 group-hover/button:scale-x-100 transition-transform duration-300 origin-left',
+                        announcement.featured
+                          ? 'bg-gradient-to-r from-pink-300/30 via-pink-300 to-pink-300/30'
+                          : 'bg-gradient-to-r from-cyan-400/30 via-cyan-400 to-cyan-400/30',
+                      ]"
                     ></span>
                   </span>
 
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 ml-2 text-cyan-400 group-hover/button:text-pink-400 transition-colors duration-300 transform group-hover/button:translate-x-1"
+                    :class="[
+                      'h-4 w-4 ml-2 transition-all duration-300 transform group-hover/button:translate-x-1',
+                      announcement.featured
+                        ? 'text-pink-300 group-hover/button:text-pink-100'
+                        : 'text-cyan-400 group-hover/button:text-pink-400',
+                    ]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -333,6 +437,12 @@
               </div>
             </div>
           </div>
+
+          <!-- Effet de brillance subtil pour les annonces featured -->
+          <div
+            v-if="announcement.featured"
+            class="absolute inset-0 bg-gradient-to-r from-pink-500/0 via-pink-500/5 to-pink-500/0 animate-pulse-slow pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          ></div>
         </div>
       </div>
 
@@ -504,6 +614,10 @@ const truncateHTML = (html: string, maxLength: number) => {
 </script>
 
 <style scoped>
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 /* Animation de rotation lente */
 @keyframes spin-slow {
   from {
@@ -618,5 +732,19 @@ const truncateHTML = (html: string, maxLength: number) => {
   border-radius: 0.2em;
   font-family: "Share Tech Mono", monospace;
   border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
 }
 </style>

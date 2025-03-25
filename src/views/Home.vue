@@ -72,59 +72,159 @@
         <div
           v-if="user && latestAnnouncement"
           @click="goToAnnouncement"
-          class="mt-6 p-3 border border-pink-500/50 rounded-lg bg-black/60 hover:bg-black/80 transition-all cursor-pointer group hover:shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1"
+          class="mt-6 relative overflow-hidden bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500/50 shadow-lg shadow-pink-500/20 transition-all cursor-pointer group hover:border-pink-500/70 hover:shadow-pink-500/30 transform hover:-translate-y-1"
         >
-          <div class="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-pink-500 mr-2 group-hover:animate-pulse"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="text-sm font-orbitron text-white"
-              >Dernière annonce:</span
-            >
-          </div>
+          <!-- Effet grille rétro en overlay -->
+          <div
+            class="absolute inset-0 bg-[url('/grid.png')] bg-repeat opacity-10 pointer-events-none"
+          ></div>
 
-          <div class="mt-2">
-            <h3 class="text-base text-pink-400 font-orbitron truncate">
-              {{ latestAnnouncement.title }}
-              <span
-                v-if="latestAnnouncement.featured"
-                class="ml-2 px-1.5 py-0.5 bg-pink-700/30 text-pink-400 text-[10px] uppercase rounded inline-block align-middle"
-              >
-                Featured
-              </span>
-            </h3>
-            <p class="text-xs text-gray-400 mt-1">
-              {{ formatAnnouncementDate(latestAnnouncement.createdAt) }}
-            </p>
-          </div>
+          <!-- Effet scanlines -->
+          <div
+            class="absolute inset-0 bg-[url('/scanline.png')] bg-repeat opacity-5 pointer-events-none"
+          ></div>
 
-          <div class="flex justify-end mt-2">
-            <span
-              class="text-xs text-cyan-400 flex items-center group-hover:text-pink-400 transition-colors"
-            >
-              Voir l'annonce
+          <!-- Lignes de bordure coin supérieur gauche -->
+          <div
+            class="absolute top-0 left-0 w-6 h-[2px] bg-cyan-500 group-hover:w-8 transition-all duration-300"
+          ></div>
+          <div
+            class="absolute top-0 left-0 h-6 w-[2px] bg-cyan-500 group-hover:h-8 transition-all duration-300"
+          ></div>
+
+          <!-- Lignes de bordure coin inférieur droit -->
+          <div
+            class="absolute bottom-0 right-0 w-6 h-[2px] bg-pink-500 group-hover:w-8 transition-all duration-300"
+          ></div>
+          <div
+            class="absolute bottom-0 right-0 h-6 w-[2px] bg-pink-500 group-hover:h-8 transition-all duration-300"
+          ></div>
+
+          <!-- En-tête avec design amélioré -->
+          <div
+            class="relative bg-gradient-to-r from-purple-900/70 via-black/40 to-purple-900/70 p-3 border-b border-pink-500/30"
+          >
+            <!-- Ligne néon au bas de l'en-tête -->
+            <div
+              class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-cyan-500/0 via-cyan-400/50 to-cyan-500/0 shadow-[0_0_5px_#0ff] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+
+            <!-- Titre et icône -->
+            <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-3 w-3 ml-1 transform group-hover:translate-x-1 transition-transform"
+                class="h-5 w-5 text-pink-500 mr-2 group-hover:text-pink-400 group-hover:animate-pulse transition-colors"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
                 <path
                   fill-rule="evenodd"
-                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                  d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z"
                   clip-rule="evenodd"
                 />
               </svg>
-            </span>
+              <span
+                class="text-sm font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-400"
+              >
+                Dernière annonce
+              </span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-black/40">
+            <!-- Titre de l'annonce avec effet néon -->
+            <h3
+              class="text-base font-orbitron truncate text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-300 to-cyan-400 group-hover:from-pink-400 group-hover:via-purple-300 group-hover:to-pink-400 transition-all duration-500"
+            >
+              {{ latestAnnouncement.title }}
+              <span
+                v-if="latestAnnouncement.featured"
+                class="ml-2 px-1.5 py-0.5 bg-pink-700/30 text-pink-400 text-[10px] uppercase rounded inline-block align-middle border border-pink-500/50"
+              >
+                Featured
+              </span>
+            </h3>
+
+            <!-- Métadonnées de l'annonce -->
+            <div class="flex items-center mt-2 text-xs text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3 mr-1 text-pink-400 group-hover:text-cyan-400 transition-colors duration-300"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="font-mono">{{
+                formatAnnouncementDate(latestAnnouncement.createdAt)
+              }}</span>
+
+              <!-- Auteur si disponible -->
+              <div
+                v-if="latestAnnouncement.createdBy"
+                class="flex items-center ml-2"
+              >
+                <span class="mx-1 text-gray-500">•</span>
+                <img
+                  :src="
+                    latestAnnouncement.createdBy.avatarUrl ||
+                    'https://cdn.discordapp.com/embed/avatars/0.png'
+                  "
+                  alt="Avatar"
+                  class="w-4 h-4 rounded-full mr-1 border border-cyan-500/30 group-hover:border-pink-500/50 transition-all duration-300 p-[1px] bg-black/50"
+                />
+                <span
+                  class="text-cyan-300/70 group-hover:text-pink-300/70 transition-colors duration-300 truncate max-w-[80px]"
+                >
+                  {{ latestAnnouncement.createdBy.username }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Aperçu du contenu avec style terminal rétro -->
+            <div
+              v-if="latestAnnouncement.content"
+              class="mt-2 text-xs text-gray-300 line-clamp-2 font-mono opacity-80"
+              v-html="truncateHTML(latestAnnouncement.content, 100)"
+            ></div>
+
+            <!-- Ligne horizontale décorative -->
+            <div
+              class="mt-2 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"
+            ></div>
+
+            <!-- Lien vers l'annonce complète -->
+            <div class="flex justify-end mt-2">
+              <span class="inline-flex items-center group/button">
+                <span
+                  class="text-xs text-cyan-400 group-hover/button:text-pink-400 group-hover:text-pink-400 transition-colors font-orbitron uppercase tracking-wider"
+                >
+                  Voir l'annonce
+
+                  <!-- Ligne animée -->
+                  <span
+                    class="block h-[1px] w-full bg-gradient-to-r from-cyan-400/30 via-cyan-400 to-cyan-400/30 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  ></span>
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 ml-1 text-cyan-400 group-hover:text-pink-400 transform group-hover:translate-x-1 transition-all duration-300"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -668,6 +768,30 @@ const fetchTournaments = async () => {
   } catch (err) {
     error.value = "Impossible de charger les tournois";
   }
+};
+
+/**
+ * Tronque le contenu HTML pour l'aperçu
+ */
+const truncateHTML = (html: string, maxLength: number): string => {
+  if (!html) return "";
+
+  // Créer un élément div temporaire pour parser le HTML
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  // Obtenir le texte brut
+  const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+  // Tronquer le texte
+  let truncated = textContent.substring(0, maxLength);
+
+  // Ajouter des points de suspension si nécessaire
+  if (textContent.length > maxLength) {
+    truncated += "...";
+  }
+
+  return truncated;
 };
 
 /**

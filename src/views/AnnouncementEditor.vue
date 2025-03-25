@@ -88,7 +88,7 @@
           <div class="mb-8">
             <label
               for="title"
-              class="block mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
+              class="mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +137,7 @@
           <div class="mb-8">
             <label
               for="youtubeUrl"
-              class="block mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
+              class="mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +262,7 @@
           <div class="mb-10">
             <label
               for="content"
-              class="block mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
+              class="mb-2 text-cyan-400 font-orbitron flex items-center tracking-wide text-sm uppercase"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -540,7 +540,7 @@ const youtubeEmbedUrl = computed(() => {
 onMounted(async () => {
   // Initialize TipTap editor with style synthwave
   editor.value = new Editor({
-    element: document.querySelector("#content-editor"),
+    element: document.querySelector("#content-editor") || undefined,
     extensions: [
       StarterKit,
       Link.configure({
@@ -572,9 +572,9 @@ onMounted(async () => {
         class:
           "prose prose-invert prose-cyan focus:outline-none p-6 min-h-[300px] max-w-none bg-black/30 font-mono",
       },
-      handleClick: (view, pos, event) => {
+      handleClick: ({ dom: event }) => {
         // Si le clic est sur un lien, ouvrir dans un nouvel onglet
-        const clickedDOM = event.target as HTMLElement;
+        const clickedDOM = event as HTMLElement;
         if (clickedDOM.tagName === "A") {
           const href = clickedDOM.getAttribute("href");
           if (href) {
@@ -785,3 +785,4 @@ const saveAnnouncement = async () => {
   background: rgba(139, 92, 246, 0.8);
 }
 </style>
+-
