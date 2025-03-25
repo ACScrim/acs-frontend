@@ -622,34 +622,22 @@ const handleVote = (voteType: number) => {
     props.proposal.status === "pending" ||
     props.proposal.status === "rejected"
   ) {
-    console.log(
-      "Vote non autorisé: utilisateur non authentifié ou proposition non approuvée"
-    );
     return;
   }
 
   // Récupère la valeur actuelle du vote (0 si undefined)
   const currentVote = props.proposal.userVote ?? 0;
 
-  console.log(
-    `État actuel - Vote courant: ${currentVote}, Vote demandé: ${voteType}`
-  );
-
   // Cas 1: L'utilisateur clique sur le même bouton que son vote actuel
   if (currentVote === voteType) {
-    console.log("Annulation du vote (même bouton cliqué)");
     emit("vote", props.proposal._id, 0);
   }
   // Cas 2: L'utilisateur a déjà voté mais dans l'autre sens
   else if (currentVote !== 0 && currentVote !== voteType) {
-    console.log(
-      `Changement de direction de vote: ${currentVote} → 0 (annulation d'abord)`
-    );
     emit("vote", props.proposal._id, 0);
   }
   // Cas 3: L'utilisateur n'a pas encore voté (currentVote === 0)
   else {
-    console.log(`Application du nouveau vote: ${voteType}`);
     emit("vote", props.proposal._id, voteType);
   }
 };

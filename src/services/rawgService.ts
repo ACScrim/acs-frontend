@@ -15,7 +15,6 @@ const searchGames = async (query: string): Promise<RawgGame[]> => {
   try {
     // Validation de la requête
     if (!query || query.trim().length < 3) {
-      console.log("Requête trop courte, retour tableau vide");
       return [];
     }
 
