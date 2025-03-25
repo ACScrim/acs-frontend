@@ -59,7 +59,7 @@ const routes = [
     component: GestionBadges,
   },
   {
-    path: "/profil/:id", // Ajout de la route pour le profil
+    path: "/profil/:id",
     name: "Profil",
     component: Profil,
   },
@@ -67,6 +67,12 @@ const routes = [
     path: "/auth-error",
     name: "AuthError",
     component: () => import("../views/AuthError.vue"),
+  },
+  {
+    path: "/propositions-jeux",
+    name: "GameProposals",
+    component: () => import("../views/GameProposal.vue"),
+    meta: { requiresAuth: false },
   },
 ];
 
