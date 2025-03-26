@@ -36,13 +36,13 @@
 
       <!-- Navigation principale -->
       <div class="hidden md:flex flex-grow justify-center space-x-16">
-        <router-link
+        <!-- <router-link
           to="/annonces"
           class="nav-link font-orbitron"
           :class="{ 'nav-link-active': isActive('/annonces') }"
         >
           Annonces
-        </router-link>
+        </router-link> -->
         <router-link
           to="/classement"
           class="nav-link font-orbitron"
@@ -174,7 +174,7 @@
         <!-- Menu déroulant mobile -->
         <transition name="slide-fade">
           <div v-if="mobileMenuOpen" class="mobile-dropdown">
-            <router-link
+            <!-- <router-link
               to="/annonces"
               @click="closeAllMenus"
               class="mobile-dropdown-item"
@@ -193,7 +193,7 @@
                 />
               </svg>
               Annonces
-            </router-link>
+            </router-link> -->
             <router-link
               to="/classement"
               @click="closeAllMenus"
