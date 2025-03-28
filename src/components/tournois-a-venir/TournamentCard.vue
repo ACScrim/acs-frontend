@@ -86,31 +86,60 @@
             />
           </svg>
         </button>
-        <button
-          v-else-if="isWithin24Hours"
-          @click="$emit('check-in', tournament._id, !isCheckedIn)"
-          :class="{
-            'cyberpunk-btn-green': isCheckedIn,
-            'cyberpunk-btn-amber': !isCheckedIn,
-          }"
-          class="px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+
+        <!-- Groupe de boutons pour check-in + désinscription -->
+        <div
+          v-else-if="isWithin24Hours && !tournament.finished"
+          class="flex flex-wrap gap-2"
         >
-          <span class="mr-2">
-            {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+          <!-- Bouton de check-in -->
+          <button
+            @click="$emit('check-in', tournament._id, !isCheckedIn)"
+            :class="{
+              'cyberpunk-btn-green': isCheckedIn,
+              'cyberpunk-btn-amber': !isCheckedIn,
+            }"
+            class="px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
           >
-            <path
-              fill-rule="evenodd"
-              d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
+            <span class="mr-2">
+              {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+
+          <!-- Bouton de désinscription -->
+          <button
+            @click="$emit('open-registration', tournament, 'unregister')"
+            class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <span class="mr-2">Se désinscrire</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bouton de désinscription standard (cas non-check-in) -->
         <button
           v-else
           @click="$emit('open-registration', tournament, 'unregister')"
@@ -475,143 +504,6 @@ const formatDescription = (description: string) => {
 </script>
 
 <style scoped>
-/* Boutons cyberpunk améliorés */
-.cyberpunk-btn-pink {
-  background: linear-gradient(135deg, #9d174d, #ec4899);
-  color: white;
-  border: 1px solid #f472b6;
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.4),
-    inset 0 0 5px rgba(236, 72, 153, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.cyberpunk-btn-pink:hover {
-  background: linear-gradient(135deg, #ec4899, #f472b6);
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.7),
-    inset 0 0 10px rgba(236, 72, 153, 0.7);
-}
-
-.cyberpunk-btn-pink::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: rotate(45deg);
-  animation: shimmer 2s infinite;
-  z-index: 1;
-}
-
-.cyberpunk-btn-amber {
-  background: linear-gradient(135deg, #92400e, #f59e0b);
-  color: white;
-  border: 1px solid #fbbf24;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4),
-    inset 0 0 5px rgba(245, 158, 11, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.cyberpunk-btn-amber:hover {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.7),
-    inset 0 0 10px rgba(245, 158, 11, 0.7);
-}
-
-.cyberpunk-btn-amber::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: rotate(45deg);
-  animation: shimmer 2s infinite;
-  z-index: 1;
-}
-
-.cyberpunk-btn-green {
-  background: linear-gradient(135deg, #064e3b, #10b981);
-  color: white;
-  border: 1px solid #34d399;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4),
-    inset 0 0 5px rgba(16, 185, 129, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.cyberpunk-btn-green:hover {
-  background: linear-gradient(135deg, #10b981, #34d399);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.7),
-    inset 0 0 10px rgba(16, 185, 129, 0.7);
-}
-
-.cyberpunk-btn-green::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: rotate(45deg);
-  animation: shimmer 2s infinite;
-  z-index: 1;
-}
-
-.cyberpunk-btn-gray {
-  background: linear-gradient(135deg, #374151, #4b5563);
-  color: white;
-  border: 1px solid #6b7280;
-  box-shadow: 0 0 10px rgba(107, 114, 128, 0.4),
-    inset 0 0 5px rgba(107, 114, 128, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.cyberpunk-btn-gray:hover {
-  background: linear-gradient(135deg, #4b5563, #6b7280);
-  box-shadow: 0 0 15px rgba(107, 114, 128, 0.7),
-    inset 0 0 10px rgba(107, 114, 128, 0.7);
-}
-
-.cyberpunk-btn-gray::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transform: rotate(45deg);
-  animation: shimmer 3s infinite;
-  z-index: 1;
-}
-
 /* Style d'onglets */
 .tab-button {
   position: relative;

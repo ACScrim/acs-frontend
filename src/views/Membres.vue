@@ -98,7 +98,7 @@
       <p class="text-red-300 font-orbitron">{{ error }}</p>
       <button
         @click="fetchUsers"
-        class="mt-4 px-4 py-2 bg-red-900/40 border border-red-500 text-red-300 rounded-md font-orbitron hover:bg-red-900/60 transition-colors"
+        class="cyberpunk-btn-pink mt-4 px-4 py-2 rounded-md font-orbitron text-sm"
       >
         Réessayer
       </button>
@@ -187,7 +187,7 @@
               <router-link
                 v-if="user.playerId"
                 :to="{ name: 'Profil', params: { id: user.playerId } }"
-                class="px-3 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm neon-button-cyan font-orbitron"
+                class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron"
               >
                 Voir profil
               </router-link>
@@ -211,7 +211,8 @@
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
-        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+        class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
       >
         &laquo; Précédent
       </button>
@@ -225,7 +226,8 @@
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages"
-        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
+        class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
       >
         Suivant &raquo;
       </button>

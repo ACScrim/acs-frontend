@@ -13,6 +13,7 @@ import CreationTournoi from "../views/admin/CreationTournoi.vue";
 import AnnouncementList from "../views/AnnouncementList.vue";
 import AnnouncementDetail from "../views/AnnouncementDetail.vue";
 import AnnouncementEditor from "../views/AnnouncementEditor.vue";
+import Calendar from "../views/Calendar.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -98,6 +99,12 @@ const routes = [
     name: "EditAnnouncement",
     component: AnnouncementEditor,
     meta: { requiresAdmin: true },
+  },
+  {
+    path: "/calendar",
+    name: "Calendar",
+    component: Calendar,
+    meta: { title: "Calendrier des Tournois" },
   },
 ];
 

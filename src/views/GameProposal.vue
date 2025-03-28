@@ -41,9 +41,15 @@
                   currentPage = 1;
                 "
                 :class="[
-                  'cyber-button',
-                  activeFilter === filter.value ? 'active' : '',
+                  activeFilter === filter.value
+                    ? filter.value === 'approved'
+                      ? 'cyberpunk-btn-green'
+                      : filter.value === 'pending'
+                      ? 'cyberpunk-btn-amber'
+                      : 'cyberpunk-btn-purple'
+                    : 'cyberpunk-btn-gray',
                 ]"
+                class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-orbitron transition-all duration-300"
               >
                 {{ filter.label }}
               </button>
@@ -102,7 +108,7 @@
             <div class="w-full sm:w-auto">
               <button
                 @click="showProposalForm = true"
-                class="cyber-button-add w-full sm:w-auto"
+                class="cyberpunk-btn-pink px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 text-sm w-full sm:w-auto"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,8 +188,8 @@
             <button
               @click="currentPage > 1 ? currentPage-- : null"
               :disabled="currentPage === 1"
-              class="pagination-button"
-              :class="{ disabled: currentPage === 1 }"
+              class="pagination-button cyberpunk-btn-cyan w-10 h-10 rounded-md flex items-center justify-center"
+              :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
               aria-label="Page précédente"
             >
               <svg
@@ -209,8 +215,10 @@
             <button
               @click="currentPage < totalPages ? currentPage++ : null"
               :disabled="currentPage === totalPages"
-              class="pagination-button"
-              :class="{ disabled: currentPage === totalPages }"
+              class="pagination-button cyberpunk-btn-cyan w-10 h-10 rounded-md flex items-center justify-center"
+              :class="{
+                'opacity-50 cursor-not-allowed': currentPage === totalPages,
+              }"
               aria-label="Page suivante"
             >
               <svg
@@ -353,7 +361,7 @@
         <div class="flex justify-end">
           <button
             @click="showProposalForm = false"
-            class="px-4 py-2 mr-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg font-orbitron text-sm transition-colors"
+            class="cyberpunk-btn-gray px-4 py-2 mr-2 rounded-lg font-orbitron text-sm"
           >
             Annuler
           </button>
@@ -361,10 +369,10 @@
             @click="submitProposal"
             :disabled="!isProposalValid || submitting"
             :class="[
-              'px-4 py-2 rounded-lg font-medium flex items-center text-sm font-orbitron transition-all',
+              'px-4 py-2 rounded-lg flex items-center justify-center font-orbitron text-sm',
               isProposalValid && !submitting
-                ? 'bg-gradient-to-r from-purple-600 to-pink-500 hover:shadow-glow text-white'
-                : 'bg-purple-600/30 text-white/70 cursor-not-allowed',
+                ? 'cyberpunk-btn-purple'
+                : 'opacity-50 bg-gray-700 text-gray-300 cursor-not-allowed',
             ]"
           >
             <span
@@ -432,13 +440,13 @@
         <div class="flex justify-end">
           <button
             @click="showRejectDialog = false"
-            class="px-4 py-2 mr-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg font-orbitron text-sm"
+            class="cyberpunk-btn-gray px-4 py-2 mr-2 rounded-lg font-orbitron text-sm"
           >
             Annuler
           </button>
           <button
             @click="rejectProposal"
-            class="px-4 py-2 bg-gradient-to-r from-red-700 to-red-500 text-white rounded-lg font-medium font-orbitron text-sm hover:shadow-glow-red transform hover:-translate-y-1 transition-all duration-300"
+            class="cyberpunk-btn-pink px-4 py-2 rounded-lg font-orbitron text-sm"
           >
             Rejeter la proposition
           </button>
@@ -1007,63 +1015,6 @@ onMounted(() => {
   border-right: 0;
 }
 
-/* Boutons cyberpunk */
-.cyber-button {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-family: "Orbitron", sans-serif;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-  background-color: rgba(31, 41, 55, 0.7);
-  color: rgb(209, 213, 219);
-  border: 1px solid rgba(139, 92, 246, 0.4);
-}
-
-.cyber-button:hover {
-  background-color: rgb(55, 65, 81);
-  color: white;
-  border-color: rgb(139, 92, 246);
-}
-
-.cyber-button.active {
-  background-image: linear-gradient(
-    to right,
-    rgb(124, 58, 237),
-    rgb(236, 72, 153)
-  );
-  color: white;
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-}
-
-.cyber-button-add {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-family: "Orbitron", sans-serif;
-  background-image: linear-gradient(
-    to right,
-    rgb(124, 58, 237),
-    rgb(236, 72, 153)
-  );
-  color: white;
-  border: 1px solid rgb(244, 114, 182);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-  transform: translateY(0);
-}
-
-.cyber-button-add:hover {
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-  transform: translateY(-2px);
-}
-
 /* Loader cyberpunk synthwave */
 .cyberpunk-loader {
   width: 50px;
@@ -1142,19 +1093,6 @@ onMounted(() => {
   vertical-align: middle;
 }
 
-.cyberpunk-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgb(139, 92, 246, 0.5);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-}
-
 .pagination-button {
   display: flex;
   align-items: center;
@@ -1180,15 +1118,5 @@ onMounted(() => {
   opacity: 0.5;
   cursor: not-allowed;
   color: rgb(75, 85, 99);
-}
-
-.pagination-info {
-  display: flex;
-  align-items: center;
-  font-family: "Orbitron", sans-serif;
-  gap: 0.5rem;
-  min-width: 4rem;
-  justify-content: center;
-  font-size: 1.1rem;
 }
 </style>

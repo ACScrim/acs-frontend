@@ -94,3 +94,222 @@ button {
 .font-orbitron {
   font-family: "Orbitron", sans-serif; /* Police pour les données et chiffres */
 }
+/* Boutons cyberpunk améliorés */
+.cyberpunk-btn-pink {
+  background: linear-gradient(135deg, #9d174d, #ec4899);
+  color: white;
+  border: 1px solid #f472b6;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.4),
+    inset 0 0 5px rgba(236, 72, 153, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-pink:hover {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.7),
+    inset 0 0 10px rgba(236, 72, 153, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-pink::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
+.cyberpunk-btn-amber {
+  background: linear-gradient(135deg, #92400e, #f59e0b);
+  color: white;
+  border: 1px solid #fbbf24;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4),
+    inset 0 0 5px rgba(245, 158, 11, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-amber:hover {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.7),
+    inset 0 0 10px rgba(245, 158, 11, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-amber::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
+.cyberpunk-btn-green {
+  background: linear-gradient(135deg, #064e3b, #10b981);
+  color: white;
+  border: 1px solid #34d399;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4),
+    inset 0 0 5px rgba(16, 185, 129, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-green:hover {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.7),
+    inset 0 0 10px rgba(16, 185, 129, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-green::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
+.cyberpunk-btn-gray {
+  background: linear-gradient(135deg, #374151, #4b5563);
+  color: white;
+  border: 1px solid #6b7280;
+  box-shadow: 0 0 10px rgba(107, 114, 128, 0.4),
+    inset 0 0 5px rgba(107, 114, 128, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-gray:hover {
+  background: linear-gradient(135deg, #4b5563, #6b7280);
+  box-shadow: 0 0 15px rgba(107, 114, 128, 0.7),
+    inset 0 0 10px rgba(107, 114, 128, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-gray::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+  z-index: 1;
+}
+
+.cyberpunk-btn-cyan {
+  background: linear-gradient(135deg, #155e75, #06b6d4);
+  color: white;
+  border: 1px solid #22d3ee;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.4),
+    inset 0 0 5px rgba(6, 182, 212, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-cyan:hover {
+  background: linear-gradient(135deg, #06b6d4, #22d3ee);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7),
+    inset 0 0 10px rgba(6, 182, 212, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-cyan::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
+.cyberpunk-btn-purple {
+  background: linear-gradient(135deg, #5b21b6, #8b5cf6);
+  color: white;
+  border: 1px solid #a78bfa;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4),
+    inset 0 0 5px rgba(139, 92, 246, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-purple:hover {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.7),
+    inset 0 0 10px rgba(139, 92, 246, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-purple::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translate(-50%, -50%) rotate(45deg) translateX(-100%);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(45deg) translateX(100%);
+  }
+}
