@@ -163,16 +163,17 @@
     </div>
 
     <!-- Navigation d'onglets -->
-    <div class="tournament-tabs flex justify-start border-b border-gray-700">
+    <div
+      class="tournament-tabs flex justify-start border-b border-gray-700/50 bg-gray-900/50"
+    >
+      <!-- Onglet Participants -->
       <button
         @click="$emit('toggle-tab', tournament._id, 'participants')"
         :class="{
-          'text-pink-500 border-b-2 border-pink-500 bg-pink-500/10':
-            showParticipants,
-          'text-gray-400 border-b-2 border-transparent hover:text-gray-300 hover:bg-gray-500/10':
-            !showParticipants,
+          'active-tab': showParticipants,
+          'inactive-tab': !showParticipants,
         }"
-        class="tab-button flex items-center px-6 py-3 font-orbitron transition-colors"
+        class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -189,15 +190,15 @@
           ({{ getParticipantsCount() }})
         </span>
       </button>
+
+      <!-- Onglet Description -->
       <button
         @click="$emit('toggle-tab', tournament._id, 'description')"
         :class="{
-          'text-pink-500 border-b-2 border-pink-500 bg-pink-500/10':
-            showDescription,
-          'text-gray-400 border-b-2 border-transparent hover:text-gray-300 hover:bg-gray-500/10':
-            !showDescription,
+          'active-tab': showDescription,
+          'inactive-tab': !showDescription,
         }"
-        class="tab-button flex items-center px-6 py-3 font-orbitron transition-colors"
+        class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -213,16 +214,16 @@
         </svg>
         Description
       </button>
+
+      <!-- Onglet Résultats (pour les tournois terminés) -->
       <button
         v-if="tournament.finished"
-        @click="togglePodium"
+        @click="$emit('toggle-tab', tournament._id, 'podium')"
         :class="{
-          'text-green-400 border-b-2 border-green-500 bg-green-900/20':
-            showPodium,
-          'text-gray-400 border-b-2 border-transparent hover:text-green-400 hover:bg-green-900/10':
-            !showPodium,
+          'active-tab-green': showPodium,
+          'inactive-tab-green': !showPodium,
         }"
-        class="tab-button flex items-center px-6 py-3 font-orbitron transition-colors"
+        class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -236,21 +237,11 @@
           <rect x="3" y="13" width="5" height="6" rx="1" stroke-width="1.5" />
         </svg>
         Résultats
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 ml-1 transition-transform"
-          :class="showPodium ? 'rotate-180' : ''"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
-        </svg>
       </button>
+
       <div class="flex-grow"></div>
+
+      <!-- Badge "Terminé" -->
       <div
         v-if="tournament.finished"
         class="px-4 py-2 text-green-400 font-orbitron flex items-center bg-green-900/20 border-b-2 border-green-500"
@@ -380,7 +371,7 @@
           Description
         </h3>
         <div
-          class="bg-gray-800/80 p-4 rounded-lg border border-cyan-900/50 shadow-lg shadow-cyan-900/20"
+          class="cyber-panel bg-gray-800/80 p-4 rounded-lg border border-cyan-900/50 shadow-lg shadow-cyan-900/20"
         >
           <p
             v-if="tournament.description"
@@ -394,22 +385,39 @@
       </div>
 
       <!-- Résultats (si tournoi terminé) -->
-      <tournament-podium
+      <div
         v-if="tournament.finished && showPodium"
-        :tournament="tournament"
-        :is-other-rankings-expanded="showOtherRankings"
-        @toggle-other-rankings="$emit('toggle-other-rankings', $event)"
-      />
+        class="min-h-[150px] animate__animated animate__fadeIn"
+      >
+        <h3 class="text-xl text-white font-audiowide mb-4 flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 mr-2 text-green-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Résultats du tournoi
+        </h3>
+        <tournament-podium
+          :tournament="tournament"
+          :is-other-rankings-expanded="showOtherRankings"
+          @toggle-other-rankings="$emit('toggle-other-rankings', $event)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed, ref } from "vue";
+import { computed } from "vue";
 import type { Tournament } from "../../types";
 import TournamentPodium from "./TournamentPodium.vue";
-
-const showPodium = ref(false);
 
 // Dans la partie script, ajoutez la propriété showOtherRankings
 const props = defineProps({
@@ -437,6 +445,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showPodium: {
+    // Ajouter cette propriété
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Mettez à jour la liste des événements émis pour inclure toggle-other-rankings
@@ -446,10 +459,6 @@ const emit = defineEmits([
   "check-in",
   "toggle-other-rankings",
 ]);
-
-const togglePodium = () => {
-  showPodium.value = !showPodium.value;
-};
 
 const isUserRegistered = computed(() => {
   return props.user
@@ -602,5 +611,233 @@ const formatDescription = (description: string) => {
   display: block;
   content: "";
   margin-top: 0.5rem;
+}
+
+.cyber-panel {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background-color: rgba(15, 23, 42, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), transparent 80%);
+  pointer-events: none;
+}
+
+/* Styles pour les onglets */
+.tournament-tabs {
+  position: relative;
+  overflow: hidden;
+}
+
+.tournament-tabs::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(236, 72, 153, 0.5),
+    transparent
+  );
+}
+
+.cyber-tab {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cyber-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+.active-tab {
+  color: #ec4899; /* Pink-500 */
+  background-color: rgba(236, 72, 153, 0.1);
+  border-bottom: 2px solid #ec4899;
+}
+
+.inactive-tab {
+  color: #9ca3af; /* Gray-400 */
+  border-bottom: 2px solid transparent;
+}
+
+.inactive-tab:hover {
+  color: #d1d5db; /* Gray-300 */
+  background-color: rgba(156, 163, 175, 0.1);
+}
+
+.active-tab-green {
+  color: #4ade80; /* Green-400 */
+  background-color: rgba(74, 222, 128, 0.1);
+  border-bottom: 2px solid #4ade80;
+}
+
+.inactive-tab-green {
+  color: #9ca3af; /* Gray-400 */
+  border-bottom: 2px solid transparent;
+}
+
+.inactive-tab-green:hover {
+  color: #4ade80; /* Green-400 */
+  background-color: rgba(74, 222, 128, 0.1);
+}
+
+/* Animation pour déplacer une lueur en arrière-plan des onglets actifs */
+@keyframes tab-glow {
+  0%,
+  100% {
+    background-position: -100% 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+}
+
+.active-tab,
+.active-tab-green {
+  position: relative;
+}
+
+.active-tab::before,
+.active-tab-green::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(236, 72, 153, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  z-index: -1;
+  animation: tab-glow 3s linear infinite;
+}
+
+.active-tab-green::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(74, 222, 128, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+}
+
+/* Améliorer l'animation pour les transitions */
+.animate__fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Styles pour le contenu de la description */
+.description-text {
+  font-family: "Roboto", "Arial", sans-serif;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  font-size: 0.95rem;
+  font-weight: 300;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.description-text::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(6, 182, 212, 0.3),
+    transparent
+  );
+}
+
+/* Animation subtile pour le texte */
+@keyframes gentle-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 4px rgba(6, 182, 212, 0.2);
+  }
+}
+
+.description-text {
+  animation: gentle-glow 4s infinite;
+}
+
+/* Style pour les sauts de ligne */
+.description-text br {
+  display: block;
+  content: "";
+  margin-top: 0.5rem;
+}
+
+/* Ajout d'effets aux coins du panel */
+.cyber-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 10px;
+  width: 1px;
+  height: 10px;
+  background-color: rgba(6, 182, 212, 0.7);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.7);
+}
+
+.cyber-panel::before {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 10px;
+  height: 1px;
+  background-color: rgba(6, 182, 212, 0.7);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.7);
 }
 </style>

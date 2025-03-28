@@ -541,7 +541,7 @@
 // ================================================
 // IMPORTS ET DÉFINITIONS
 // ================================================
-import { defineProps, defineEmits, ref, computed } from "vue";
+import { ref, computed } from "vue";
 
 import type { GameProposal } from "../types";
 

@@ -16,10 +16,10 @@
         <!-- Remplacer la section du titre avec effet de glitch -->
         <div class="title-container">
           <h1 class="cyber-main-title">
-            <span class="neon-text-title"
-              >Alors, <br />
-              ça scrim ?</span
-            >
+            <span class="neon-text-title">
+              Alors, <br />
+              ça scrim ?
+            </span>
           </h1>
           <div class="cyber-line-h pink"></div>
         </div>
@@ -530,11 +530,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Fond animé -->
-    <div class="cyber-grid"></div>
-    <div class="cyber-stars"></div>
-    <div class="cyber-noise"></div>
   </div>
 </template>
 
@@ -1239,79 +1234,14 @@ onUnmounted(() => {
   }
 }
 
-/* Effets de fond animés */
-.cyber-grid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(
-    circle at 1px 1px,
-    rgba(139, 92, 246, 0.15) 1px,
-    transparent 0
-  );
-  background-size: 30px 30px;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 20%,
-    black 80%,
-    transparent
-  );
-  z-index: -2;
-}
-
-.cyber-stars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(
-      1px 1px at 25px 5px,
-      #ffffff 1%,
-      transparent 15%
-    ),
-    radial-gradient(1px 1px at 50px 25px, #ffffff 1%, transparent 15%),
-    radial-gradient(1px 1px at 125px 20px, #ffffff 1%, transparent 15%),
-    radial-gradient(1.5px 1.5px at 50px 75px, #ffffff 1%, transparent 15%),
-    radial-gradient(1.5px 1.5px at 100px 50px, #ffffff 1%, transparent 15%);
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  animation: cyber-stars 300s linear infinite;
-  z-index: -3;
-  opacity: 0.4;
-}
-
-@keyframes cyber-stars {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 1000px 1000px;
-  }
-}
-
-.cyber-noise {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noisy' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noisy)' opacity='0.05'/%3E%3C/svg%3E");
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.4;
-}
-
 /* Style du compteur */
 .countdown-timer > div {
   position: relative;
   padding: 6px 8px;
-  background: rgba(17, 24, 39, 0.6);
-  border: 1px solid rgba(236, 72, 153, 0.3);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(236, 72, 153, 0.5);
   border-radius: 4px;
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.3) inset;
   overflow: hidden;
 }
 
@@ -1338,6 +1268,49 @@ onUnmounted(() => {
   }
   100% {
     transform: rotate(45deg) translate(100%, 100%);
+  }
+}
+
+/* Améliorer le bouton Discord */
+button[class*="discord"] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1;
+  backdrop-filter: blur(5px);
+}
+
+button[class*="discord"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, #5865f2, #eb459e, #5865f2);
+  background-size: 200% 200%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: discord-gradient 3s ease infinite;
+}
+
+button[class*="discord"]:hover {
+  border-color: transparent;
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(88, 101, 242, 0.5);
+}
+
+button[class*="discord"]:hover::before {
+  opacity: 1;
+}
+
+@keyframes discord-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
@@ -1414,26 +1387,13 @@ h2:hover .neon-text-pink {
   white-space: nowrap; /* Empêche le retour à la ligne */
 }
 
-/* Effet néon pour le titre principal */
+/* Remplacer l'animation actuelle du titre par un effet de glitch plus élaboré */
 .neon-text-title {
   color: #ffffff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff,
     0 0 20px #ff00ff;
-  animation: neon-pulse 2s infinite alternate;
   position: relative;
   display: inline-block;
-}
-
-/* Animation de pulsation néon */
-@keyframes neon-pulse {
-  from {
-    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff,
-      0 0 20px #ff00ff;
-  }
-  to {
-    text-shadow: 0 0 5px #ff00ff, 0 0 15px #ff00ff, 0 0 25px #ff00ff,
-      0 0 35px #ff00ff;
-  }
 }
 
 /* Ligne horizontale décorative avec gradient */
@@ -1450,26 +1410,6 @@ h2:hover .neon-text-pink {
 /* Animation de survol pour le titre */
 .cyber-main-title:hover .neon-text-title {
   animation: title-glitch 0.3s ease-in-out;
-}
-
-@keyframes title-glitch {
-  0%,
-  100% {
-    transform: translate(0);
-    text-shadow: 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
-  }
-  25% {
-    transform: translate(-2px, -2px);
-    text-shadow: -2px 0 #ec4899, 2px 2px #ff00ff;
-  }
-  50% {
-    transform: translate(2px, 2px);
-    text-shadow: 2px -2px #ec4899, -2px 0 #ff00ff;
-  }
-  75% {
-    transform: translate(-2px, 2px);
-    text-shadow: 0 -2px #ec4899, -2px 2px #ff00ff;
-  }
 }
 
 /* Ajouter un effet de scanline au titre */
@@ -1512,5 +1452,33 @@ h2:hover .neon-text-pink {
   .title-container {
     margin-top: 3.5rem; /* Plus d'espace sur mobile */
   }
+}
+
+/* Ajouter à votre section <style> pour animer l'entrée des éléments */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title-container {
+  animation: fade-up 0.8s ease-out forwards;
+}
+
+.cyberpunk-card:nth-child(1) {
+  animation: fade-up 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.cyberpunk-card:nth-child(2) {
+  animation: fade-up 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>

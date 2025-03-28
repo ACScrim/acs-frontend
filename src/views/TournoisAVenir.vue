@@ -6,83 +6,201 @@
 
     <!-- Filtres -->
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-black bg-opacity-60 p-6 rounded-lg border border-pink-500 shadow-lg shadow-pink-500/20"
+      class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500/70 shadow-lg shadow-pink-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
     >
-      <div>
-        <label for="game" class="block text-lg text-white mb-2 font-orbitron">
-          <span class="flex items-center">
+      <!-- Sélecteur de jeux -->
+      <div class="mb-6">
+        <label
+          for="game"
+          class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-pink-400 mb-3 cyberpunk-label-pink"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+            />
+          </svg>
+          <span>FILTRER PAR JEU</span>
+          <div
+            class="h-px flex-grow bg-gradient-to-r from-pink-500 to-transparent mx-2 opacity-70"
+          ></div>
+        </label>
+        <div class="relative group">
+          <select
+            id="game"
+            v-model="selectedGame"
+            @change="fetchTournaments"
+            class="cyberpunk-select-pink w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all appearance-none cursor-pointer"
+          >
+            <option value="">Tous les jeux</option>
+            <option v-for="game in games" :key="game._id" :value="game._id">
+              {{ game.name }}
+            </option>
+          </select>
+
+          <!-- Effet de contour néon sur hover -->
+          <div
+            class="cyberpunk-select-glow-pink absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+          ></div>
+
+          <!-- Icône personnalisée -->
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-pink-500"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+              class="h-5 w-5 text-pink-400 cyberpunk-icon-pink"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
               <path
-                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
               />
             </svg>
-            Filtrer par jeu
-          </span>
-        </label>
-        <select
-          id="game"
-          v-model="selectedGame"
-          @change="fetchTournaments"
-          class="w-full p-3 text-white bg-gray-900 border border-pink-500 rounded focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent font-orbitron"
-        >
-          <option value="">Tous les jeux</option>
-          <option v-for="game in games" :key="game._id" :value="game._id">
-            {{ game.name }}
-          </option>
-        </select>
-      </div>
-      <div class="flex items-center">
-        <label class="cyberpunk-checkbox-container">
-          <input
-            type="checkbox"
-            v-model="showFinished"
-            @change="fetchTournaments"
-            class="hidden"
-          />
-          <div class="cyberpunk-checkbox flex items-center">
-            <div
-              class="checkbox-visual relative w-6 h-6 bg-gray-800 border border-pink-500 mr-3"
-            >
-              <div
-                v-if="showFinished"
-                class="absolute inset-1 bg-pink-500"
-              ></div>
-            </div>
-            <span class="text-white font-orbitron"
-              >Afficher les tournois passés</span
-            >
           </div>
-        </label>
+        </div>
       </div>
-      <!-- Ordre de tri -->
-      <div class="flex items-center">
-        <label class="cyberpunk-checkbox-container">
-          <input type="checkbox" v-model="sortAscending" class="hidden" />
-          <div class="cyberpunk-checkbox flex items-center">
-            <div
-              class="checkbox-visual relative w-6 h-6 bg-gray-800 border border-pink-500 mr-3"
-            >
-              <div
-                v-if="sortAscending"
-                class="absolute inset-1 bg-pink-500"
-              ></div>
+
+      <!-- Options de filtrage -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Option 1: Afficher les tournois passés -->
+        <div class="cyberpunk-toggle-container">
+          <label class="cyberpunk-toggle">
+            <input
+              type="checkbox"
+              v-model="showFinished"
+              @change="fetchTournaments"
+              class="hidden"
+            />
+            <div class="cyberpunk-toggle-slider">
+              <div class="cyberpunk-toggle-knob">
+                <div class="cyberpunk-toggle-knob-highlight"></div>
+              </div>
             </div>
-            <span class="text-white font-orbitron">
+            <span class="cyberpunk-toggle-label font-orbitron text-white ml-3">
+              Afficher les tournois passés
+            </span>
+          </label>
+        </div>
+
+        <!-- Option 2: Ordre chronologique -->
+        <div class="cyberpunk-toggle-container">
+          <label class="cyberpunk-toggle">
+            <input type="checkbox" v-model="sortAscending" class="hidden" />
+            <div class="cyberpunk-toggle-slider">
+              <div class="cyberpunk-toggle-knob">
+                <div class="cyberpunk-toggle-knob-highlight"></div>
+              </div>
+            </div>
+            <span class="cyberpunk-toggle-label font-orbitron text-white ml-3">
               Ordre chronologique
-              <span class="ml-1 text-sm text-gray-400">
+              <span class="text-xs text-gray-400 ml-1">
                 ({{ sortAscending ? "ancien → récent" : "récent → ancien" }})
               </span>
             </span>
-          </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="mt-6 space-y-4">
+        <label
+          class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-pink-400 mb-3 cyberpunk-label-pink"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>FILTRER PAR DATE</span>
+          <div
+            class="h-px flex-grow bg-gradient-to-r from-pink-500 to-transparent mx-2 opacity-70"
+          ></div>
         </label>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Date de début -->
+          <div class="cyberpunk-date-container">
+            <label
+              class="block text-sm font-medium text-pink-400 mb-1 font-orbitron"
+            >
+              Du
+            </label>
+            <div class="relative group">
+              <input
+                type="date"
+                v-model="startDate"
+                class="cyberpunk-date-input w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all cursor-pointer"
+                :max="endDate || undefined"
+                @change="filterByDate"
+              />
+              <div
+                class="cyberpunk-date-glow-pink absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Date de fin -->
+          <div class="cyberpunk-date-container">
+            <label
+              class="block text-sm font-medium text-pink-400 mb-1 font-orbitron"
+            >
+              Au
+            </label>
+            <div class="relative group">
+              <input
+                type="date"
+                v-model="endDate"
+                class="cyberpunk-date-input w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all cursor-pointer"
+                :min="startDate || undefined"
+                @change="filterByDate"
+              />
+              <div
+                class="cyberpunk-date-glow-pink absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bouton pour effacer les dates -->
+        <div class="flex justify-end" v-if="startDate || endDate">
+          <button
+            @click="clearDates"
+            class="cyberpunk-btn-pink text-xs px-3 py-1.5 font-orbitron rounded-md"
+          >
+            <span class="relative z-10 flex items-center gap-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>Effacer les dates</span>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
-
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
@@ -117,7 +235,7 @@
     <!-- Liste des tournois -->
     <div v-if="filteredTournaments.length > 0">
       <tournament-card
-        v-for="tournament in filteredTournaments"
+        v-for="tournament in paginatedTournaments"
         :key="tournament._id"
         :tournament="tournament"
         :user="user"
@@ -127,6 +245,7 @@
         :show-description="
           tournament._id ? showDescription[tournament._id] : false
         "
+        :show-podium="tournament._id ? showPodium[tournament._id] : false"
         :is-checked-in="
           tournament._id ? checkedInPlayers[tournament._id] : false
         "
@@ -137,6 +256,19 @@
         @open-registration="openRegistrationPopup"
         @check-in="checkIn"
         @toggle-other-rankings="toggleOtherRankings"
+      />
+      <CyberpunkPagination
+        v-if="filteredTournaments.length > itemsPerPage"
+        class="mt-8"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        prev-label="&laquo; Précédent"
+        next-label="Suivant &raquo;"
+        color="pink"
+        :show-dots="totalPages > 5"
+        @prev-page="prevPage"
+        @next-page="nextPage"
+        @page-select="goToPage"
       />
     </div>
 
@@ -178,7 +310,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import gameService from "../services/gameService";
 import tournamentService from "../services/tournamentService";
 import playerService from "../services/playerService";
@@ -188,7 +320,7 @@ import type { Game, Tournament } from "../types";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentCard from "@/components/tournois-a-venir/TournamentCard.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
-
+import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------
@@ -200,6 +332,10 @@ const success = ref<string | null>(null);
 const error = ref<string | null>(null);
 const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
 
+// État de filtrage par date
+const startDate = ref<string>("");
+const endDate = ref<string>("");
+
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
 const showFinished = ref<boolean>(false);
@@ -209,12 +345,17 @@ const sortAscending = ref<boolean>(false);
 const showParticipants = ref<{ [key: string]: boolean }>({});
 const showDescription = ref<{ [key: string]: boolean }>({});
 const showOtherRankings = ref<{ [key: string]: boolean }>({});
+const showPodium = ref<{ [key: string]: boolean }>({});
 const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
 // États du modal de confirmation
 const showPopup = ref<boolean>(false);
 const selectedTournament = ref<Tournament | null>(null);
 const actionType = ref<string>("register"); // "register" ou "unregister"
+
+// États de pagination
+const currentPage = ref<number>(1);
+const itemsPerPage = ref<number>(5); // Nombre de tournois par page
 
 //-------------------------------------------------------
 // SECTION: Store et propriétés calculées
@@ -226,9 +367,6 @@ const user = computed(() => userStore.user);
 
 /**
  * Filtre et trie les tournois selon les critères sélectionnés
- * - Filtre par jeu sélectionné
- * - Filtre par statut (terminé ou à venir)
- * - Trie par date (ascendant ou descendant)
  */
 const filteredTournaments = computed(() => {
   // Appliquer d'abord les filtres pour réduire le nombre d'éléments à trier
@@ -244,6 +382,30 @@ const filteredTournaments = computed(() => {
     filtered = filtered.filter((t) => !t.finished);
   }
 
+  // Filtre par plage de dates
+  if (startDate.value || endDate.value) {
+    filtered = filtered.filter((t) => {
+      const tournamentDate = new Date(t.date);
+      tournamentDate.setHours(0, 0, 0, 0); // Normaliser à minuit
+
+      // Vérifier la date de début si définie
+      if (startDate.value) {
+        const start = new Date(startDate.value);
+        start.setHours(0, 0, 0, 0);
+        if (tournamentDate < start) return false;
+      }
+
+      // Vérifier la date de fin si définie
+      if (endDate.value) {
+        const end = new Date(endDate.value);
+        end.setHours(23, 59, 59, 999); // Fin de journée
+        if (tournamentDate > end) return false;
+      }
+
+      return true;
+    });
+  }
+
   // Tri chronologique configurable
   const sortMultiplier = sortAscending.value ? 1 : -1;
 
@@ -253,6 +415,24 @@ const filteredTournaments = computed(() => {
     return (dateA - dateB) * sortMultiplier;
   });
 });
+
+/**
+ * Filtre les tournois par date
+ */
+const filterByDate = () => {
+  // Réinitialiser la pagination quand les dates changent
+  currentPage.value = 1;
+  // Le filtrage s'effectue via la propriété calculée filteredTournaments
+};
+
+/**
+ * Efface les filtres de date
+ */
+const clearDates = () => {
+  startDate.value = "";
+  endDate.value = "";
+  currentPage.value = 1;
+};
 
 //-------------------------------------------------------
 // SECTION: Récupération des données
@@ -306,19 +486,47 @@ const fetchTournaments = async () => {
 /**
  * Gère la bascule entre les différents onglets d'un tournoi
  * @param tournamentId - ID du tournoi
- * @param tab - Nom de l'onglet ('participants' ou 'description')
+ * @param tab - Nom de l'onglet ('participants', 'description' ou 'podium')
  */
 const toggleTab = (tournamentId: string, tab: string) => {
+  // S'assurer que tous les objets existent
+  if (!showParticipants.value[tournamentId]) {
+    showParticipants.value[tournamentId] = false;
+  }
+  if (!showDescription.value[tournamentId]) {
+    showDescription.value[tournamentId] = false;
+  }
+  if (!showPodium.value[tournamentId]) {
+    showPodium.value[tournamentId] = false;
+  }
+
   if (tab === "participants") {
+    // Basculer l'état de l'onglet participants
     showParticipants.value[tournamentId] =
       !showParticipants.value[tournamentId];
+
+    // Si on active l'onglet, fermer les autres
     if (showParticipants.value[tournamentId]) {
       showDescription.value[tournamentId] = false;
+      showPodium.value[tournamentId] = false;
     }
   } else if (tab === "description") {
+    // Basculer l'état de l'onglet description
     showDescription.value[tournamentId] = !showDescription.value[tournamentId];
+
+    // Si on active l'onglet, fermer les autres
     if (showDescription.value[tournamentId]) {
       showParticipants.value[tournamentId] = false;
+      showPodium.value[tournamentId] = false;
+    }
+  } else if (tab === "podium") {
+    // Basculer l'état de l'onglet podium
+    showPodium.value[tournamentId] = !showPodium.value[tournamentId];
+
+    // Si on active l'onglet, fermer les autres
+    if (showPodium.value[tournamentId]) {
+      showParticipants.value[tournamentId] = false;
+      showDescription.value[tournamentId] = false;
     }
   }
 };
@@ -439,6 +647,50 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
 };
 
 //-------------------------------------------------------
+// SECTION: Pagination
+//-------------------------------------------------------
+
+/**
+ * Calcule le nombre total de pages pour la pagination
+ */
+const totalPages = computed(() => {
+  return Math.ceil(filteredTournaments.value.length / itemsPerPage.value);
+});
+
+/**
+ * Retourne les tournois pour la page courante
+ */
+const paginatedTournaments = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredTournaments.value.slice(start, end);
+});
+
+/**
+ * Fonctions de navigation pour la pagination
+ */
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+//-------------------------------------------------------
 // SECTION: Utilitaires et formatage
 //-------------------------------------------------------
 
@@ -519,6 +771,12 @@ const initializeUIStates = () => {
 };
 
 /**
+ * Réinitialise la pagination quand les filtres changent
+ */
+watch([selectedGame, showFinished, sortAscending, startDate, endDate], () => {
+  currentPage.value = 1;
+});
+/**
  * Initialisation du composant au montage
  */
 onMounted(async () => {
@@ -555,21 +813,237 @@ onMounted(async () => {
   margin: 0 auto;
 }
 
-/* Styles pour le checkbox cyberpunk */
-.cyberpunk-checkbox-container {
+/* Panel cyberpunk avec esthétique rose */
+.cyberpunk-panel-pink {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+  background: radial-gradient(
+      circle at top right,
+      rgba(236, 72, 153, 0.2),
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(15, 23, 42, 0.9));
+  position: relative;
+}
+
+.cyberpunk-panel-pink::before {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+  width: 30px;
+  height: 2px;
+  background: rgba(236, 72, 153, 0.7);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+}
+
+.cyberpunk-panel-pink::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  width: 2px;
+  height: 30px;
+  background: rgba(236, 72, 153, 0.7);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+}
+
+/* Label avec teinte rose */
+.cyberpunk-label-pink {
+  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
+  letter-spacing: 1px;
+}
+
+.cyberpunk-label-pink svg {
+  filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.7));
+}
+
+/* Select avec style rose */
+.cyberpunk-select-pink {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.95),
+    rgba(14, 23, 36, 0.95)
+  );
+  box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.3),
+    0 0 5px rgba(236, 72, 153, 0.3);
+  text-shadow: 0 0 3px rgba(236, 72, 153, 0.7);
+  caret-color: #ec4899;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  padding-right: 2.5rem !important;
+  color: #ec4899;
+  border: 2px solid rgba(236, 72, 153, 0.7);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Style au focus */
+.cyberpunk-select-pink:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
+  animation: pulse-glow-pink 2s infinite;
+}
+
+/* Effet de lueur rose sur survol */
+.cyberpunk-select-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.7);
+  border: 2px solid rgba(236, 72, 153, 0.8);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transform: scale(1.01);
+  z-index: 0;
+}
+
+/* Icône avec effet rose */
+.cyberpunk-icon-pink {
+  filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.7));
+  transition: transform 0.3s ease;
+}
+
+.cyberpunk-select-pink:focus
+  + .cyberpunk-select-glow-pink
+  + div
+  .cyberpunk-icon-pink,
+.group:hover .cyberpunk-icon-pink {
+  transform: translateY(2px);
+  filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.9));
+}
+
+/* Styles pour les options du select */
+.cyberpunk-select-pink option {
+  background-color: #0f172a;
+  color: #fbcfe8;
+  font-family: "Orbitron", sans-serif;
+}
+
+/* Animation de pulsation rose */
+@keyframes pulse-glow-pink {
+  0% {
+    box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.3),
+      0 0 5px rgba(236, 72, 153, 0.3);
+  }
+  50% {
+    box-shadow: inset 0 0 15px rgba(236, 72, 153, 0.4),
+      0 0 10px rgba(236, 72, 153, 0.4);
+  }
+  100% {
+    box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.3),
+      0 0 5px rgba(236, 72, 153, 0.3);
+  }
+}
+
+/* Nouveaux styles pour le toggle cyberpunk */
+.cyberpunk-toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.cyberpunk-toggle {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.checkbox-visual {
+.cyberpunk-toggle-slider {
   position: relative;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 2px #ec4899;
+  width: 44px;
+  height: 24px;
+  background-color: rgba(31, 41, 55, 0.8);
+  border-radius: 12px;
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.cyberpunk-checkbox:hover .checkbox-visual {
-  box-shadow: 0 0 8px #ec4899;
+.cyberpunk-toggle-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background-color: #0f172a;
+  border-radius: 50%;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.cyberpunk-toggle input:checked + .cyberpunk-toggle-slider {
+  background-color: rgba(236, 72, 153, 0.3);
+  border-color: rgba(236, 72, 153, 0.8);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.4);
+}
+
+.cyberpunk-toggle input:checked + .cyberpunk-toggle-slider::before {
+  transform: translateX(20px);
+  background-color: #ec4899;
+}
+
+.cyberpunk-toggle-label {
+  user-select: none;
+}
+
+.cyberpunk-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #334155;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.cyberpunk-toggle
+  input:checked
+  + .cyberpunk-toggle-slider
+  .cyberpunk-toggle-knob {
+  transform: translateX(20px);
+  background-color: #ec4899;
+}
+
+.cyberpunk-toggle-knob-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.8), transparent);
+  transition: opacity 0.3s ease;
+}
+
+.cyberpunk-toggle
+  input:checked
+  + .cyberpunk-toggle-slider
+  .cyberpunk-toggle-knob-highlight {
+  opacity: 1;
 }
 
 /* Animation pour le fade in */
@@ -584,5 +1058,83 @@ onMounted(async () => {
   to {
     opacity: 1;
   }
+}
+
+/* Animation des transitions de page */
+.page-transition-enter-active,
+.page-transition-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-transition-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.cyber-transition-container {
+  min-height: 200px;
+  position: relative;
+}
+
+.cyberpunk-date-input {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.95),
+    rgba(14, 23, 36, 0.95)
+  );
+  box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.3),
+    0 0 5px rgba(236, 72, 153, 0.3);
+  color: #ec4899;
+  border: 2px solid rgba(236, 72, 153, 0.7);
+  padding-right: 10px !important;
+}
+
+/* Personnaliser l'icône du calendrier */
+.cyberpunk-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(300deg); /* Teinte rose */
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.cyberpunk-date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Effet de lueur rose sur survol */
+.cyberpunk-date-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.7);
+  border: 2px solid rgba(236, 72, 153, 0.8);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transform: scale(1.01);
+  z-index: 0;
+}
+
+/* Style au focus */
+.cyberpunk-date-input:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
+  animation: pulse-glow-pink 2s infinite;
 }
 </style>

@@ -204,34 +204,17 @@
     </div>
 
     <!-- Pagination -->
-    <div
-      v-if="totalPages > 1"
-      class="flex justify-center mt-6 sm:mt-8 space-x-1 sm:space-x-2"
-    >
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron disabled:opacity-50 disabled:cursor-not-allowed"
-        :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
-      >
-        &laquo; Précédent
-      </button>
-
-      <div
-        class="flex items-center px-2 sm:px-4 font-orbitron text-white text-xs sm:text-sm"
-      >
-        Page {{ currentPage }} / {{ totalPages }}
-      </div>
-
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron disabled:opacity-50 disabled:cursor-not-allowed"
-        :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
-      >
-        Suivant &raquo;
-      </button>
-    </div>
+    <CyberpunkPagination
+      :current-page="currentPage"
+      :total-pages="totalPages"
+      prev-label="&laquo; Précédent"
+      next-label="Suivant &raquo;"
+      color="cyan"
+      :show-dots="totalPages > 5"
+      @prev-page="prevPage"
+      @next-page="nextPage"
+      @page-select="currentPage = $event"
+    />
 
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
@@ -244,6 +227,7 @@ import userService from "../services/userService";
 import playerService from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
+import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
 
 //-------------------------------------------------------
 // SECTION: Définition des types

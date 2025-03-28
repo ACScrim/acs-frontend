@@ -180,62 +180,19 @@
         />
 
         <!-- Pagination -->
-        <div
+        <CyberpunkPagination
           v-if="filteredProposals.length > itemsPerPage"
-          class="mt-8 flex justify-center"
-        >
-          <div class="cyberpunk-pagination">
-            <button
-              @click="currentPage > 1 ? currentPage-- : null"
-              :disabled="currentPage === 1"
-              class="pagination-button cyberpunk-btn-cyan w-10 h-10 rounded-md flex items-center justify-center"
-              :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
-              aria-label="Page précédente"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-
-            <div class="pagination-info">
-              <span class="text-cyan-500 font-orbitron">{{ currentPage }}</span>
-              <span class="text-gray-400">/</span>
-              <span class="text-gray-400">{{ totalPages }}</span>
-            </div>
-
-            <button
-              @click="currentPage < totalPages ? currentPage++ : null"
-              :disabled="currentPage === totalPages"
-              class="pagination-button cyberpunk-btn-cyan w-10 h-10 rounded-md flex items-center justify-center"
-              :class="{
-                'opacity-50 cursor-not-allowed': currentPage === totalPages,
-              }"
-              aria-label="Page suivante"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+          class="mt-8"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          prev-label="Précédent"
+          next-label="Suivant"
+          color="pink"
+          :show-dots="totalPages > 5"
+          @prev-page="prevPage"
+          @next-page="nextPage"
+          @page-select="goToPage"
+        />
       </div>
     </div>
 
@@ -481,7 +438,7 @@ import type { GameProposal, RawgGame } from "../types";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
-
+import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 // ===================================
 // ÉTAT ET RÉFÉRENCES
 // ===================================
@@ -547,6 +504,24 @@ const toastInfo = ref({
 // Pagination
 const itemsPerPage = 10;
 const currentPage = ref(1);
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
 
 // Recherche
 const searchTerm = ref("");
@@ -1091,32 +1066,5 @@ onMounted(() => {
   color: rgba(139, 92, 246, 0.6);
   font-size: 1.1em;
   vertical-align: middle;
-}
-
-.pagination-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 6px;
-  background-color: rgba(31, 41, 55, 0.7);
-  color: rgb(209, 213, 219);
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  transition: all 0.3s ease;
-}
-
-.pagination-button:not(.disabled):hover {
-  background-color: rgba(55, 65, 81, 0.8);
-  color: white;
-  border-color: rgb(124, 58, 237);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-  transform: translateY(-2px);
-}
-
-.pagination-button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: rgb(75, 85, 99);
 }
 </style>

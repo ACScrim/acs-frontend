@@ -1,32 +1,98 @@
 <template>
-  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
-    <h1
-      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
-    >
-      Classement des joueurs
-    </h1>
+  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+    <div class="relative mb-6">
+      <h1
+        class="text-3xl sm:text-4xl neon-text text-white font-audiowide text-center"
+      >
+        Classement des joueurs
+      </h1>
+
+      <!-- Bouton d'export repositionné -->
+      <button
+        @click="exportCSV"
+        class="cyberpunk-btn-purple absolute top-0 right-0 transform translate-y-1 px-3 py-1.5 text-xs font-orbitron rounded-md"
+      >
+        <span class="relative z-10 flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>CSV</span>
+        </span>
+      </button>
+    </div>
 
     <!-- Sélecteur de jeux -->
     <div
-      class="bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500 shadow-lg shadow-pink-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
+      class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500/70 shadow-lg shadow-purple-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
     >
       <label
         for="game"
-        class="block text-base sm:text-lg text-white mb-2 font-orbitron"
+        class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-purple-400 mb-3 cyberpunk-label-purple"
       >
-        Filtrer par jeu
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span>FILTRER PAR JEU</span>
+        <div
+          class="h-px flex-grow bg-gradient-to-r from-purple-500 to-transparent mx-2 opacity-70"
+        ></div>
       </label>
-      <select
-        id="game"
-        v-model="selectedGame"
-        @change="fetchRankingsByGame"
-        class="w-full p-2 sm:p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded font-orbitron focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/50 transition-all"
-      >
-        <option value="">Tous les jeux</option>
-        <option v-for="game in games" :key="game._id" :value="game._id">
-          {{ game.name }}
-        </option>
-      </select>
+      <div class="relative group">
+        <select
+          id="game"
+          v-model="selectedGame"
+          @change="fetchRankingsByGame"
+          class="cyberpunk-select-purple w-full p-2.5 sm:p-3 text-purple-300 bg-gray-900/80 border-2 border-purple-500/70 rounded-md font-orbitron focus:outline-none focus:border-purple-400 transition-all appearance-none cursor-pointer"
+        >
+          <option value="">Tous les jeux</option>
+          <option v-for="game in games" :key="game._id" :value="game._id">
+            {{ game.name }}
+          </option>
+        </select>
+
+        <!-- Effet de contour néon sur hover -->
+        <div
+          class="cyberpunk-select-glow-purple absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+        ></div>
+
+        <!-- Icône personnalisée -->
+        <div
+          class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-purple-400 cyberpunk-icon-purple"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- État de chargement avec CyberpunkLoader -->
@@ -39,28 +105,26 @@
       <CyberpunkLoader />
     </div>
 
-    <!-- Message "Aucun classement" -->
+    <!-- Remplacer l'état vide actuel -->
     <div
       v-else-if="sortedRankings.length === 0"
-      class="flex flex-col items-center justify-center p-6 sm:p-12 bg-black/50 border border-pink-500/30 rounded-lg"
+      class="cyber-terminal bg-black/70 p-6 rounded-lg border border-cyan-500 my-8"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-12 w-12 sm:h-16 sm:w-16 text-pink-500 mb-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <p class="text-white font-orbitron text-center">
-        Aucun classement disponible pour le moment.
-      </p>
+      <div class="cyber-terminal-header">SYSTÈME D'INFORMATION · ACS</div>
+      <div class="cyber-terminal-content">
+        <div class="mb-4">
+          <span class="text-green-400">system@acs:~$</span>
+          <span class="text-cyan-400"
+            >search_players -g
+            {{ selectedGame ? "game_id:" + selectedGame : "all" }}</span
+          >
+        </div>
+        <div class="text-red-400 mb-2">ERROR CODE: 404_NO_DATA</div>
+        <div class="text-cyan-300">
+          Aucun joueur n'a été trouvé pour cette recherche.
+          <span class="blink">_</span>
+        </div>
+      </div>
     </div>
 
     <!-- Tableau pour écrans moyens et grands -->
@@ -76,60 +140,83 @@
               Rang
             </th>
             <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              Joueur
-              <button @click="sortBy('username')" class="sort-button">
-                <span
-                  v-if="sortKey === 'username' && sortOrder === 'asc'"
-                  class="text-cyan-400"
-                  >▲</span
+              <div class="flex items-center justify-center">
+                <span>Joueur</span>
+                <button
+                  @click="sortBy('username')"
+                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
+                  :class="
+                    sortKey === 'username' ? 'cyberpunk-btn-cyan' : 'opacity-60'
+                  "
                 >
-                <span
-                  v-else-if="sortKey === 'username' && sortOrder === 'desc'"
-                  class="text-cyan-400"
-                  >▼</span
-                >
-                <span v-else class="text-gray-500">▼</span>
-              </button>
+                  <span v-if="sortKey === 'username' && sortOrder === 'asc'"
+                    >▲</span
+                  >
+                  <span
+                    v-else-if="sortKey === 'username' && sortOrder === 'desc'"
+                    >▼</span
+                  >
+                  <span v-else>▼</span>
+                </button>
+              </div>
             </th>
 
             <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              Tournois
-              <button @click="sortBy('totalTournaments')" class="sort-button">
-                <span
-                  v-if="sortKey === 'totalTournaments' && sortOrder === 'asc'"
-                  class="text-cyan-400"
-                  >▲</span
-                >
-                <span
-                  v-else-if="
-                    sortKey === 'totalTournaments' && sortOrder === 'desc'
+              <div class="flex items-center justify-center">
+                <span>Tournois</span>
+                <button
+                  @click="sortBy('totalTournaments')"
+                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
+                  :class="
+                    sortKey === 'totalTournaments'
+                      ? 'cyberpunk-btn-cyan'
+                      : 'opacity-60'
                   "
-                  class="text-cyan-400"
-                  >▼</span
                 >
-                <span v-else class="text-gray-500">▼</span>
-              </button>
+                  <span
+                    v-if="sortKey === 'totalTournaments' && sortOrder === 'asc'"
+                    >▲</span
+                  >
+                  <span
+                    v-else-if="
+                      sortKey === 'totalTournaments' && sortOrder === 'desc'
+                    "
+                    >▼</span
+                  >
+                  <span v-else>▼</span>
+                </button>
+              </div>
             </th>
+
             <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              Victoires
-              <button @click="sortBy('totalVictories')" class="sort-button">
-                <span
-                  v-if="sortKey === 'totalVictories' && sortOrder === 'asc'"
-                  class="text-cyan-400"
-                  >▲</span
-                >
-                <span
-                  v-else-if="
-                    sortKey === 'totalVictories' && sortOrder === 'desc'
+              <div class="flex items-center justify-center">
+                <span>Victoires</span>
+                <button
+                  @click="sortBy('totalVictories')"
+                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
+                  :class="
+                    sortKey === 'totalVictories'
+                      ? 'cyberpunk-btn-cyan'
+                      : 'opacity-60'
                   "
-                  class="text-cyan-400"
-                  >▼</span
                 >
-                <span v-else class="text-gray-500">▼</span>
-              </button>
+                  <span
+                    v-if="sortKey === 'totalVictories' && sortOrder === 'asc'"
+                    >▲</span
+                  >
+                  <span
+                    v-else-if="
+                      sortKey === 'totalVictories' && sortOrder === 'desc'
+                    "
+                    >▼</span
+                  >
+                  <span v-else>▼</span>
+                </button>
+              </div>
             </th>
           </tr>
         </thead>
+
         <tbody>
           <tr
             v-for="(ranking, index) in paginatedRankings"
@@ -177,11 +264,11 @@
             <!-- Inverser l'ordre des filtres: Nom d'abord, puis Victoires -->
             <button
               @click="sortBy('username')"
-              class="px-2 py-1 text-xs font-orbitron rounded border"
+              class="px-2 py-1 text-xs font-orbitron rounded"
               :class="
                 sortKey === 'username'
-                  ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300'
-                  : 'border-gray-600 text-gray-400'
+                  ? 'cyberpunk-btn-cyan'
+                  : 'cyberpunk-btn-gray opacity-70'
               "
             >
               Nom
@@ -191,11 +278,11 @@
             </button>
             <button
               @click="sortBy('totalVictories')"
-              class="px-2 py-1 text-xs font-orbitron rounded border"
+              class="px-2 py-1 text-xs font-orbitron rounded"
               :class="
                 sortKey === 'totalVictories'
-                  ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300'
-                  : 'border-gray-600 text-gray-400'
+                  ? 'cyberpunk-btn-cyan'
+                  : 'cyberpunk-btn-gray opacity-70'
               "
             >
               Victoires
@@ -254,32 +341,17 @@
     </div>
 
     <!-- Pagination -->
-    <div
-      v-if="totalPages > 1"
-      class="flex justify-center mt-6 sm:mt-8 space-x-1 sm:space-x-2"
-    >
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
-      >
-        &laquo; Précédent
-      </button>
-
-      <div
-        class="flex items-center px-2 sm:px-4 font-orbitron text-white text-xs sm:text-sm"
-      >
-        Page {{ currentPage }} / {{ totalPages }}
-      </div>
-
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="px-3 py-1 sm:px-4 sm:py-2 bg-black/70 border border-cyan-500/50 text-cyan-400 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed font-orbitron transition-all hover:bg-black/90 hover:border-cyan-500 hover:shadow-glow"
-      >
-        Suivant &raquo;
-      </button>
-    </div>
+    <CyberpunkPagination
+      :current-page="currentPage"
+      :total-pages="totalPages"
+      prev-label="&laquo; Précédent"
+      next-label="Suivant &raquo;"
+      color="cyan"
+      :show-dots="totalPages > 5"
+      @prev-page="prevPage"
+      @next-page="nextPage"
+      @page-select="currentPage = $event"
+    />
   </div>
 </template>
 
@@ -299,6 +371,7 @@ import type { PlayerRanking, Game } from "../types";
 
 // Composants
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
+import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
 
 //-------------------------------------------------------
 // SECTION: Constantes et configuration
@@ -508,6 +581,39 @@ const calculateGlobalRank = (index: number): number => {
   return (currentPage.value - 1) * itemsPerPage + index + 1;
 };
 
+// Ajouter cette méthode dans la section des fonctions
+const exportCSV = () => {
+  // Créer l'en-tête CSV
+  let csvContent = "Rang,Joueur,Tournois,Victoires\n";
+
+  // Ajouter chaque ligne
+  sortedRankings.value.forEach((player, index) => {
+    csvContent += `${index + 1},${player.username},${player.totalTournaments},${
+      player.totalVictories
+    }\n`;
+  });
+
+  // Créer un blob et télécharger
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  // Générer un nom de fichier avec date
+  const date = new Date().toISOString().split("T")[0];
+  const gameName = selectedGame.value
+    ? games.value.find((g) => g._id === selectedGame.value)?.name ||
+      "jeu-specifique"
+    : "tous-les-jeux";
+
+  link.setAttribute("href", url);
+  link.setAttribute("download", `classement-${gameName}-${date}.csv`);
+  link.style.display = "none";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 //-------------------------------------------------------
 // SECTION: Cycle de vie
 //-------------------------------------------------------
@@ -528,22 +634,6 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-.sort-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-left: 5px;
-  transition: all 0.2s ease;
-}
-
-.sort-button:focus {
-  outline: none;
-}
-
-.sort-button:hover span {
-  color: #ec4899;
-}
-
 .rank-top {
   font-weight: bold;
   background: linear-gradient(to right, #4a0072, #9900ff);
@@ -551,68 +641,282 @@ onMounted(() => {
   text-shadow: 0 0 5px #fff;
 }
 
-.player-link {
-  position: relative;
-  display: inline-block;
-}
-
-.player-link::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-image: linear-gradient(to right, #ec4899, #8b5cf6);
-  transition: width 0.3s ease-in-out;
-}
-
-.player-link:hover::after {
-  width: 100%;
-}
-
-/* Animation pour le spinner */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Animation pour les transitions de couleur */
 .transition-colors {
   transition: background-color 0.3s ease;
 }
 
-select {
-  background-image: linear-gradient(45deg, transparent 50%, #ec4899 50%),
-    linear-gradient(135deg, #ec4899 50%, transparent 50%);
-  background-position: calc(100% - 20px) center, calc(100% - 15px) center;
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
+.cyberpunk-select {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.95),
+    rgba(14, 23, 36, 0.95)
+  );
+  box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
+    0 0 5px rgba(6, 182, 212, 0.3);
+  text-shadow: 0 0 3px rgba(6, 182, 212, 0.7);
+  caret-color: #06b6d4;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  padding-right: 2.5rem !important;
+  color: #06b6d4; /* Ajout de la couleur du texte */
+  border: 2px solid rgba(6, 182, 212, 0.7); /* Bordure cyan */
+}
+
+/* Styles pour les options du select */
+.cyberpunk-select option {
+  background-color: #0f172a; /* Fond sombre */
+  color: #67e8f9; /* Texte cyan clair */
+  font-family: "Orbitron", sans-serif;
+}
+
+/* Style au focus */
+.cyberpunk-select:focus {
+  outline: none;
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.5);
+}
+
+.cyberpunk-select-glow {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
+  border: 2px solid rgba(6, 182, 212, 0.8);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transform: scale(1.01);
+  z-index: 0;
+}
+
+.cyberpunk-icon {
+  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
+  transition: transform 0.3s ease;
+}
+
+.cyberpunk-select:focus + .cyberpunk-select-glow + div .cyberpunk-icon,
+.group:hover .cyberpunk-icon {
+  transform: translateY(2px);
+  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.9));
+}
+
+.cyberpunk-label {
+  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
+  letter-spacing: 1px;
+}
+
+.cyberpunk-label svg {
+  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
+}
+
+.cyberpunk-panel-purple {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+  background: radial-gradient(
+      circle at top right,
+      rgba(126, 34, 206, 0.2),
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(15, 23, 42, 0.9));
+  position: relative;
+}
+
+.cyberpunk-panel-purple::before {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+  width: 30px;
+  height: 2px;
+  background: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+}
+
+.cyberpunk-panel-purple::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  width: 2px;
+  height: 30px;
+  background: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+}
+
+/* Label avec teinte violette */
+.cyberpunk-label-purple {
+  text-shadow: 0 0 5px rgba(139, 92, 246, 0.7);
+  letter-spacing: 1px;
+}
+
+.cyberpunk-label-purple svg {
+  filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.7));
+}
+
+/* Select avec style violet */
+.cyberpunk-select-purple {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.95),
+    rgba(14, 23, 36, 0.95)
+  );
+  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
+    0 0 5px rgba(139, 92, 246, 0.3);
+  text-shadow: 0 0 3px rgba(139, 92, 246, 0.7);
+  caret-color: #a855f7;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  padding-right: 2.5rem !important;
+  color: #a855f7; /* Couleur du texte violette */
+  border: 2px solid rgba(139, 92, 246, 0.7); /* Bordure violette */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
 }
 
-select:focus {
-  background-image: linear-gradient(45deg, transparent 50%, #06b6d4 50%),
-    linear-gradient(135deg, #06b6d4 50%, transparent 50%);
+/* Style au focus */
+.cyberpunk-select-purple:focus {
+  outline: none;
+  border-color: #a855f7;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+  animation: pulse-glow-purple 2s infinite;
 }
 
-/* Ajout pour les rangs sur mobile */
+/* Effet de lueur violet sur survol */
+.cyberpunk-select-glow-purple {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+  border: 2px solid rgba(139, 92, 246, 0.8);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transform: scale(1.01);
+  z-index: 0;
+}
+
+/* Icône avec effet violet */
+.cyberpunk-icon-purple {
+  filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.7));
+  transition: transform 0.3s ease;
+}
+
+.cyberpunk-select-purple:focus
+  + .cyberpunk-select-glow-purple
+  + div
+  .cyberpunk-icon-purple,
+.group:hover .cyberpunk-icon-purple {
+  transform: translateY(2px);
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.9));
+}
+
+/* Styles pour les options du select */
+.cyberpunk-select-purple option {
+  background-color: #0f172a; /* Fond sombre */
+  color: #c4b5fd; /* Texte violet clair */
+  font-family: "Orbitron", sans-serif;
+}
+
+/* Animation de pulsation violette */
+@keyframes pulse-glow-purple {
+  0% {
+    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
+      0 0 5px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.4),
+      0 0 10px rgba(139, 92, 246, 0.4);
+  }
+  100% {
+    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
+      0 0 5px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.cyber-terminal {
+  font-family: "Courier New", monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-terminal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(6, 182, 212, 0.5) 25%,
+    rgba(6, 182, 212, 0.5) 75%,
+    transparent 100%
+  );
+}
+
+.cyber-terminal-header {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  letter-spacing: 1px;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+  text-align: center;
+}
+
+.cyber-terminal-content {
+  line-height: 1.6;
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .rank-top {
     background: linear-gradient(to right, #4a0072, #9900ff);
     box-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
-    color: white !important; /* Force la couleur du texte en blanc */
-    border-color: rgba(236, 72, 153, 0.7) !important; /* Bordure plus visible */
+    color: white !important;
+    border-color: rgba(236, 72, 153, 0.7) !important;
   }
 }
 </style>
