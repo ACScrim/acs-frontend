@@ -879,7 +879,13 @@ const fetchTournamentDetails = async () => {
       teams.value = selectedTournamentDetails.value.teams;
       // Initialiser en mode vue d'ensemble
       viewMode.value = "overview";
+    } else {
+      // Si pas d'équipes, initialiser avec un tableau vide
+      teams.value = [];
     }
+
+    // Mettre à jour la liste des joueurs non assignés
+    updateUnassignedPlayers();
   }
 };
 
@@ -901,6 +907,7 @@ const generateTeams = async () => {
     // Initialiser en mode vue d'ensemble
     viewMode.value = "overview";
 
+    // Mettre à jour la liste des joueurs non assignés
     updateUnassignedPlayers();
   }
 };
@@ -941,14 +948,15 @@ const assignPlayerToTeam = (playerIndex: number, teamIndex: string) => {
 };
 
 /**
- * Met à jour la liste des joueurs non assignés
+ * Met à jour la liste des joueurs non assignés en se basant sur les joueurs du tournoi
+ * qui ne sont dans aucune équipe
  */
 const updateUnassignedPlayers = () => {
   if (
     selectedTournamentDetails.value &&
     selectedTournamentDetails.value.players
   ) {
-    // Créer un ensemble des IDs des joueurs déjà assignés
+    // Créer un ensemble des IDs des joueurs déjà assignés à une équipe
     const assignedPlayerIds = new Set();
     teams.value.forEach((team) => {
       team.players.forEach((player) => {
@@ -956,7 +964,7 @@ const updateUnassignedPlayers = () => {
       });
     });
 
-    // Filtrer les joueurs non assignés
+    // Filtrer les joueurs du tournoi qui ne sont pas dans cet ensemble d'IDs assignés
     unassignedPlayers.value = selectedTournamentDetails.value.players.filter(
       (player) => !assignedPlayerIds.has(player._id)
     );
