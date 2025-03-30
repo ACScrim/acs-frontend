@@ -1,12 +1,20 @@
 <template>
-  <div class="team-management-container">
+  <div
+    class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
+  >
     <!-- En-tête -->
-    <h1 class="cyber-title">Gestion des Équipes</h1>
-
+    <h1 class="text-4xl font-['Audiowide'] text-white text-center mb-8">
+      Gestion des Équipes
+    </h1>
     <!-- Sélection du jeu et du tournoi -->
-    <div class="selection-container">
-      <div class="form-group">
-        <label for="game" class="form-label">
+    <div
+      class="flex flex-col gap-6 mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
+    >
+      <div class="w-full mb-4">
+        <label
+          for="game"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -19,23 +27,29 @@
           </svg>
           Sélectionner un jeu
         </label>
-        <div class="select-wrapper">
+        <div class="relative w-full">
           <select
             id="game"
             v-model="selectedGame"
             @change="fetchTournamentsByGame"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
           >
             <option value="" disabled selected>Choisissez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
           </select>
-          <div class="select-arrow"></div>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
         </div>
       </div>
 
-      <div class="form-group" v-if="tournaments.length > 0">
-        <label for="tournament" class="form-label">
+      <div class="w-full mb-4" v-if="tournaments.length > 0">
+        <label
+          for="tournament"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -50,11 +64,12 @@
           </svg>
           Sélectionner un tournoi
         </label>
-        <div class="select-wrapper">
+        <div class="relative w-full">
           <select
             id="tournament"
             v-model="selectedTournament"
             @change="fetchTournamentDetails"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
           >
             <option value="" disabled selected>Choisissez un tournoi</option>
             <option
@@ -65,72 +80,41 @@
               {{ tournament.name }}
             </option>
           </select>
-          <div class="select-arrow"></div>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
         </div>
       </div>
       <div
         v-else-if="selectedGame && tournaments.length === 0"
-        class="empty-state"
+        class="flex flex-col items-center justify-center p-6 bg-gray-800/80 border border-red-500/30 rounded-xl shadow-md text-center gap-3"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-8 w-8"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+        <div class="text-center">
+          <h3 class="text-xl font-['Orbitron'] font-semibold text-red-400 mb-1">
+            Aucun tournoi disponible
+          </h3>
+          <p class="text-white/70 font-['Orbitron'] text-sm">
+            Il n'existe pas de tournoi non finalisé pour ce jeu
+          </p>
+        </div>
+        <button
+          @click="selectedGame = ''"
+          class="cyberpunk-btn-gray mt-3 py-2 px-4 text-sm font-['Orbitron'] rounded-lg"
         >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <p>Aucun tournoi disponible pour ce jeu</p>
+          <span class="relative z-10">Choisir un autre jeu</span>
+        </button>
       </div>
     </div>
 
     <!-- Détails du tournoi -->
-    <div v-if="selectedTournamentDetails" class="tournament-details">
-      <div class="details-header">
+    <div
+      v-if="selectedTournamentDetails"
+      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-purple-500/30 shadow-md shadow-purple-500/20"
+    >
+      <div class="flex items-center gap-3 mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <h2>Détails du tournoi</h2>
-      </div>
-      <div class="details-grid">
-        <div class="detail-item">
-          <span class="detail-label">Nom:</span>
-          <span class="detail-value">{{ selectedTournamentDetails.name }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Date:</span>
-          <span class="detail-value">{{
-            new Date(selectedTournamentDetails.date).toLocaleString()
-          }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Discord Channel:</span>
-          <span class="detail-value">{{
-            selectedTournamentDetails.discordChannelName
-          }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Génération des équipes -->
-    <div v-if="selectedTournamentDetails" class="teams-generator">
-      <div class="generator-header">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
+          class="h-6 w-6 text-purple-500"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -138,11 +122,16 @@
             d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
           />
         </svg>
-        <h2>Génération des équipes</h2>
+        <h2 class="font-['Orbitron'] font-bold text-2xl text-purple-400">
+          Génération des équipes
+        </h2>
       </div>
-      <div class="generator-form">
-        <div class="form-group">
-          <label for="numTeams" class="form-label">
+      <div class="flex flex-col md:flex-row items-start gap-4">
+        <div class="w-full md:w-1/2">
+          <label
+            for="numTeams"
+            class="flex items-center text-lg text-purple-500 mb-2 font-['Orbitron'] font-semibold"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2"
@@ -157,21 +146,24 @@
             </svg>
             Nombre d'équipes
           </label>
-          <div class="input-wrapper">
+          <div class="relative w-full">
             <input
               type="number"
               id="numTeams"
               v-model="numTeams"
               min="2"
               max="20"
+              class="w-full py-3 px-4 bg-gray-900/80 text-white border border-purple-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-purple-500/30 transition-all duration-300 focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/50"
             />
-            <div class="input-glow"></div>
           </div>
         </div>
-        <button @click="generateTeams" class="neon-button-purple">
+        <button
+          @click="generateTeams"
+          class="cyberpunk-btn-purple flex items-center justify-center py-3 px-6 font-['Orbitron'] font-semibold mt-6 md:mt-8 rounded-lg"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
+            class="h-5 w-5 mr-2 relative z-10"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -181,14 +173,17 @@
               clip-rule="evenodd"
             />
           </svg>
-          Générer les équipes
+          <span class="relative z-10">Générer les équipes</span>
         </button>
       </div>
     </div>
 
     <!-- Affichage des équipes avec drag and drop -->
-    <div v-if="teams.length > 0" class="teams-display">
-      <div class="teams-header">
+    <div
+      v-if="teams.length > 0"
+      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-emerald-500/30 shadow-md shadow-emerald-500/20"
+    >
+      <div class="flex items-center gap-3 mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
@@ -202,71 +197,559 @@
             clip-rule="evenodd"
           />
         </svg>
-        <h2>Composition des équipes</h2>
+        <h2 class="font-['Orbitron'] font-bold text-2xl text-emerald-400">
+          Composition des équipes
+        </h2>
+      </div>
+      <div class="relative mb-6">
+        <div
+          class="flex items-center py-3 px-4 bg-gray-800/70 border border-emerald-500/30 rounded-lg shadow-md shadow-emerald-500/20 transition-all duration-300 sticky top-0 z-20"
+          :class="{
+            'bg-gray-800/90 border-emerald-500/70 shadow-lg shadow-emerald-500/40':
+              searchQuery,
+          }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-emerald-500/70 mr-3"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Rechercher un joueur par nom..."
+            @input="searchPlayers"
+            @focus="searchFocused = true"
+            class="flex-1 bg-transparent border-none text-white font-['Orbitron'] text-sm focus:outline-none placeholder:text-white/50"
+          />
+          <button
+            v-if="searchQuery"
+            @click="
+              searchQuery = '';
+              searchResults = [];
+            "
+            class="cyberpunk-btn-gray flex items-center justify-center w-6 h-6 rounded-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 relative z-10"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div
+          v-if="searchQuery && searchResults.length === 0 && searchFocused"
+          class="absolute top-full left-0 right-0 flex items-center gap-2 py-3 px-4 mt-2 bg-gray-900/95 border border-red-500/30 rounded-lg shadow-lg text-white/70 text-sm"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-red-500/70"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Aucun joueur trouvé</span>
+        </div>
+
+        <div
+          v-else-if="searchResults.length > 0 && searchFocused"
+          class="absolute top-full left-0 right-0 bg-gray-900/95 border border-emerald-500/30 rounded-lg mt-2 max-h-[300px] overflow-y-auto z-10 shadow-lg shadow-black/50"
+        >
+          <div
+            v-for="result in searchResults"
+            :key="result.player._id"
+            @click="navigateToPlayerTeam(result)"
+            class="flex justify-between items-center p-3 border-b border-emerald-500/10 transition-all duration-200 hover:bg-emerald-500/20 hover:translate-x-1 cursor-pointer"
+          >
+            <span class="font-medium text-white">{{
+              result.player.username
+            }}</span>
+            <span
+              class="text-xs text-white bg-emerald-500/40 py-1 px-3 rounded-full shadow-sm shadow-emerald-500/20"
+            >
+              {{ result.teamName }}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div class="teams-grid">
-        <div v-for="(team, index) in teams" :key="index" class="team-card">
-          <div class="team-name">
-            <input
-              type="text"
-              v-model="team.name"
-              placeholder="Nom de l'équipe"
-            />
-            <div class="input-glow"></div>
-          </div>
-          <vue-draggable-next
-            v-model="team.players"
-            group="players"
-            @end="onDragEnd"
-            class="player-list"
+      <!-- Dans la section teams-display, remplacer la grid par : -->
+      <div class="flex flex-col gap-6">
+        <!-- Onglets d'équipe avec meilleure visibilité pour l'actif -->
+        <div
+          class="flex flex-wrap gap-2 border-b border-emerald-500/30 pb-2 mb-4 overflow-x-auto"
+        >
+          <button
+            @click="viewMode = 'overview'"
+            :class="[
+              'flex items-center py-3 px-5 font-[\'Orbitron\'] font-medium transition-all duration-300 whitespace-nowrap',
+              viewMode === 'overview'
+                ? 'bg-emerald-500/40 text-white border-2 border-emerald-500 rounded-t-lg shadow-[0_0_15px_rgba(16,185,129,0.6)] translate-y-1'
+                : 'bg-gray-800/70 text-white/80 border border-emerald-500/30 rounded-t-lg hover:bg-gray-800/90 hover:border-emerald-500/50',
+            ]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+              />
+            </svg>
+            Vue d'ensemble
+          </button>
+          <button
+            v-for="(team, index) in teams"
+            :key="index"
+            @click="selectTeam(index)"
+            :class="[
+              'py-3 px-5 font-[\'Orbitron\'] font-medium transition-all duration-300 whitespace-nowrap',
+              viewMode === 'team' && activeTeamTab === index
+                ? 'bg-emerald-500/40 text-white border-2 border-emerald-500 rounded-t-lg shadow-[0_0_15px_rgba(16,185,129,0.6)] translate-y-1'
+                : 'bg-gray-800/70 text-white/80 border border-emerald-500/30 rounded-t-lg hover:bg-gray-800/90 hover:border-emerald-500/50',
+            ]"
+          >
+            {{ team.name || `Équipe ${index + 1}` }}
+          </button>
+        </div>
+
+        <transition name="fade" mode="out-in">
+          <!-- Vue d'ensemble -->
+          <div
+            v-if="viewMode === 'overview'"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
           >
             <div
-              v-for="player in team.players"
-              :key="player._id"
-              class="player-item"
+              v-for="(team, index) in teams"
+              :key="index"
+              class="p-6 bg-gray-800/70 rounded-xl border border-emerald-500/20 shadow-md shadow-emerald-500/10 transition-all duration-300 flex flex-col gap-4 hover:shadow-lg hover:shadow-emerald-500/30 hover:border-emerald-500/40"
             >
-              <span class="player-name">{{ player.username }}</span>
-              <div class="player-grip">
+              <div
+                class="flex justify-between items-center pb-2 border-b border-emerald-500/30"
+              >
+                <div class="flex flex-col gap-1">
+                  <h3
+                    class="font-['Orbitron'] font-semibold text-xl text-emerald-500 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]"
+                  >
+                    {{ team.name || `Équipe ${index + 1}` }}
+                  </h3>
+                  <div class="flex gap-2 items-center">
+                    <span
+                      :class="[
+                        'text-xs py-1 px-2 rounded-full',
+                        getTeamBalanceClass(team) === 'empty'
+                          ? 'bg-red-500/20 text-red-500/90'
+                          : getTeamBalanceClass(team) === 'unbalanced-low'
+                          ? 'bg-amber-500/20 text-amber-500/90'
+                          : getTeamBalanceClass(team) === 'unbalanced-high'
+                          ? 'bg-blue-500/20 text-blue-500/90'
+                          : 'bg-emerald-500/20 text-emerald-500/90',
+                      ]"
+                    >
+                      {{ team.players.length }} joueur{{
+                        team.players.length > 1 ? "s" : ""
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button
+                    @click="unassignAllPlayers(index)"
+                    class="cyberpunk-btn-red flex items-center justify-center w-8 h-8 rounded-md"
+                    title="Désassigner tous les joueurs"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 relative z-10"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    @click="selectTeam(index)"
+                    class="cyberpunk-btn-green flex items-center justify-center w-8 h-8 rounded-md"
+                    title="Éditer l'équipe"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 relative z-10"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Drag and drop area -->
+              <vue-draggable-next
+                v-model="team.players"
+                group="players"
+                @start="isDragging = true"
+                @end="
+                  onDragEnd();
+                  isDragging = false;
+                "
+                class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-gray-900/50 border-2 border-dashed border-emerald-500/30 rounded-lg transition-all duration-300"
+                :class="{
+                  'bg-gray-900/80 border-emerald-500/60 shadow-md shadow-emerald-500/30':
+                    isDragging,
+                }"
+              >
+                <div
+                  v-for="player in team.players"
+                  :key="player._id"
+                  :data-player-id="player._id"
+                  class="flex justify-between items-center p-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-emerald-500/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-emerald-500/50 hover:-translate-y-0.5 relative overflow-hidden"
+                >
+                  <span class="text-white">{{ player.username }}</span>
+                  <div
+                    class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Placeholder when empty -->
+                <div
+                  v-if="team.players.length === 0"
+                  class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-emerald-500/70 font-['Orbitron'] transition-all duration-300 bg-emerald-500/5 border-2 border-dashed border-emerald-500/30 rounded-lg"
+                >
+                  <p class="mt-2 text-center">Équipe vide</p>
+                </div>
+              </vue-draggable-next>
+            </div>
+          </div>
+
+          <!-- Vue équipe spécifique -->
+          <!-- Vue équipe spécifique - Correction pour afficher les joueurs -->
+          <div
+            v-else-if="viewMode === 'team'"
+            class="bg-gray-800/70 p-6 rounded-xl border border-emerald-500/20 shadow-md shadow-emerald-500/10"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-2 border-b border-emerald-500/30 gap-4"
+            >
+              <div class="flex flex-col gap-3 w-full">
+                <div class="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-emerald-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <h3
+                    class="font-['Orbitron'] font-bold text-xl text-emerald-400"
+                  >
+                    Équipe {{ activeTeamTab + 1 }}
+                  </h3>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-white text-sm font-['Orbitron']"
+                    >Nom de l'équipe:</span
+                  >
+                  <input
+                    type="text"
+                    v-model="teams[activeTeamTab].name"
+                    placeholder="Entrez un nom pour cette équipe"
+                    class="flex-1 py-2 px-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg transition-all duration-300 focus:outline-none focus:border-emerald-500 focus:shadow-md focus:shadow-emerald-500/30 font-['Orbitron']"
+                  />
+                </div>
+              </div>
+
+              <button
+                @click="viewMode = 'overview'"
+                class="cyberpunk-btn-gray flex items-center justify-center px-3 py-1.5 text-sm font-['Orbitron'] rounded-lg self-start sm:self-start"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4"
+                  class="h-4 w-4 mr-1 relative z-10"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
                     clip-rule="evenodd"
                   />
                 </svg>
+                <span class="relative z-10">Retour</span>
+              </button>
+            </div>
+
+            <div
+              class="p-3 bg-gray-900/50 rounded-lg border border-emerald-500/30"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <h4 class="text-lg text-emerald-300 font-['Orbitron']">
+                  Joueurs de l'équipe
+                </h4>
+
+                <button
+                  @click="unassignAllPlayers(activeTeamTab)"
+                  class="cyberpunk-btn-red flex items-center justify-center px-3 py-1.5 text-sm font-['Orbitron'] rounded-lg"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1 relative z-10"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="relative z-10">Désassigner tous</span>
+                </button>
+              </div>
+
+              <vue-draggable-next
+                v-model="teams[activeTeamTab].players"
+                group="players"
+                @start="isDragging = true"
+                @end="
+                  onDragEnd();
+                  isDragging = false;
+                "
+                class="flex flex-col gap-2 min-h-[150px] max-h-[400px] overflow-y-auto p-3 bg-gray-900/50 border-2 border-dashed border-emerald-500/30 rounded-lg transition-all duration-300"
+                :class="{
+                  'bg-gray-900/80 border-emerald-500/60 shadow-md shadow-emerald-500/30':
+                    isDragging,
+                }"
+              >
+                <div
+                  v-for="player in teams[activeTeamTab].players"
+                  :key="player._id"
+                  :data-player-id="player._id"
+                  class="flex justify-between items-center p-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-emerald-500/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-emerald-500/50 hover:-translate-y-0.5 relative overflow-hidden"
+                >
+                  <span class="text-white">{{ player.username }}</span>
+                  <div
+                    class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Placeholder when empty -->
+                <div
+                  v-if="teams[activeTeamTab].players.length === 0"
+                  class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-emerald-500/70 font-['Orbitron'] transition-all duration-300 bg-emerald-500/5 border-2 border-dashed border-emerald-500/30 rounded-lg"
+                >
+                  <p class="mt-2 text-center">Cette équipe est vide</p>
+                  <p class="text-sm text-center mt-2">
+                    Glissez-déposez des joueurs ici
+                  </p>
+                </div>
+              </vue-draggable-next>
+            </div>
+          </div>
+        </transition>
+
+        <!-- Liste des joueurs non assignés -->
+        <div
+          class="unassigned-players mb-8 p-6 bg-gray-800/70 rounded-xl border border-red-500/30 shadow-md shadow-red-500/20"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-red-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+              />
+            </svg>
+            <h2 class="font-['Orbitron'] font-bold text-2xl text-red-400">
+              Joueurs non assignés
+              <span class="text-base font-normal ml-2 text-white/70"
+                >({{ unassignedPlayers.length }})</span
+              >
+            </h2>
+          </div>
+
+          <!-- Zone de drop pour les joueurs non assignés -->
+          <vue-draggable-next
+            v-model="unassignedPlayers"
+            group="players"
+            @start="isDragging = true"
+            @end="
+              onDragEnd();
+              isDragging = false;
+            "
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px]"
+          >
+            <div
+              v-for="(player, index) in unassignedPlayers"
+              :key="player._id"
+              :data-player-id="player._id"
+              class="flex flex-col p-3 bg-gray-900/80 border border-red-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-red-500/30 transition-all duration-300 hover:shadow-md hover:shadow-red-500/50 hover:-translate-y-0.5 relative overflow-hidden"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-white">{{ player.username }}</span>
+                <div
+                  class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded cursor-move"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Liste déroulante pour assigner à une équipe -->
+              <div class="relative w-full mt-2">
+                <select
+                  :id="`assign-player-${player._id}`"
+                  class="w-full py-1.5 px-2 text-xs bg-gray-900/70 text-white border border-red-500/40 rounded-md font-['Orbitron'] appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:border-red-500/70 focus:shadow-sm focus:shadow-red-500/30"
+                  @change="
+                    assignPlayerToTeam(
+                      index,
+                      ($event.target as HTMLSelectElement)?.value
+                    );
+                    ($event.target as HTMLSelectElement).value = '';
+                  "
+                >
+                  <option value="" selected disabled>
+                    Assigner à une équipe
+                  </option>
+                  <option
+                    v-for="(team, teamIndex) in teams"
+                    :key="teamIndex"
+                    :value="teamIndex"
+                  >
+                    {{ team.name || `Équipe ${teamIndex + 1}` }}
+                  </option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
+                >
+                  <svg
+                    class="h-4 w-4 text-red-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-            <!-- Placeholder when empty -->
-            <div v-if="team.players.length === 0" class="empty-team">
+
+            <!-- Message lorsqu'il n'y a aucun joueur non assigné -->
+            <div
+              v-if="unassignedPlayers.length === 0"
+              class="col-span-full flex flex-col items-center justify-center p-6 text-red-500/70 bg-red-500/5 border-2 border-dashed border-red-500/30 rounded-lg min-h-[150px]"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+                class="h-10 w-10"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
-                  d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <p>Déposez un joueur ici</p>
+              <p class="mt-4 text-center font-['Orbitron']">
+                Tous les joueurs sont assignés à des équipes
+              </p>
             </div>
           </vue-draggable-next>
         </div>
       </div>
 
-      <div class="button-group">
-        <button @click="saveTeams" class="neon-button-green">
+      <div class="flex flex-wrap gap-4 mt-6">
+        <button
+          @click="saveTeams"
+          class="cyberpunk-btn-green flex items-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
+            class="h-5 w-5 mr-2 relative z-10"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -276,12 +759,15 @@
               clip-rule="evenodd"
             />
           </svg>
-          Valider les équipes
+          <span class="relative z-10">Valider les équipes</span>
         </button>
-        <button @click="saveTeamDefinitive" class="neon-button-pink">
+        <button
+          @click="saveTeamDefinitive"
+          class="cyberpunk-btn-pink flex items-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
+            class="h-5 w-5 mr-2 relative z-10"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -291,7 +777,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          Valider les équipes définitives
+          <span class="relative z-10">Valider les équipes définitives</span>
         </button>
       </div>
     </div>
@@ -316,57 +802,94 @@ import { ref, onMounted } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, Team, Player } from "../../types";
-import { VueDraggableNext } from "vue-draggable-next"; // Importer vue-draggable-next
+import { VueDraggableNext } from "vue-draggable-next";
 import Toast from "@/shared/Toast.vue";
-import ConfirmationDialog from "@/shared/ConfirmationDialog.vue"; // Importer le composant ConfirmationDialog
+import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 
+//------------------------------------------------------
+// ÉTATS PRINCIPAUX
+//------------------------------------------------------
+
+// Données de base
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
+const teams = ref<Team[]>([]);
+const unassignedPlayers = ref<Player[]>([]);
+
+// Sélections et filtres
 const selectedGame = ref("");
 const selectedTournament = ref("");
-const error = ref<string | null>(null);
-const success = ref<string | null>(null);
-
-const showConfirmationDialog = ref(false); // Ajouter cette ligne
-
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
 >(null);
+
+// État de l'interface
+const viewMode = ref("overview"); // 'overview' ou 'team'
+const activeTeamTab = ref(0);
 const numTeams = ref(2);
+const isDragging = ref(false);
+const searchFocused = ref(false);
+const searchQuery = ref("");
+const searchResults = ref<
+  { player: Player; teamName: string; teamIndex?: number }[]
+>([]);
 
-const teams = ref<Team[]>([]);
+// Messages et dialogues
+const error = ref<string | null>(null);
+const success = ref<string | null>(null);
+const showConfirmationDialog = ref(false);
 
-// Récupérer la liste des jeux
+//------------------------------------------------------
+// CHARGEMENT INITIAL DES DONNÉES
+//------------------------------------------------------
+
+/**
+ * Charge la liste des jeux disponibles depuis l'API
+ */
 const fetchGames = async () => {
   games.value = await gameService.getGames();
 };
 
-// Récupérer les tournois pour un jeu sélectionné
+/**
+ * Charge la liste des tournois pour le jeu sélectionné
+ */
 const fetchTournamentsByGame = async () => {
   if (selectedGame.value) {
     const allTournaments = await tournamentService.getTournamentsByGame(
       selectedGame.value
     );
+    // Ne garder que les tournois non terminés
     tournaments.value = allTournaments.filter(
       (tournament) => !tournament.finished
     );
   }
 };
 
-// Récupérer les détails d'un tournoi sélectionné
+/**
+ * Charge les détails du tournoi sélectionné et ses équipes si existantes
+ */
 const fetchTournamentDetails = async () => {
   if (selectedTournament.value) {
     selectedTournamentDetails.value = await tournamentService.getTournamentById(
       selectedTournament.value
     );
+
     // Si des équipes existent déjà, les afficher
     if (selectedTournamentDetails.value.teams) {
       teams.value = selectedTournamentDetails.value.teams;
+      // Initialiser en mode vue d'ensemble
+      viewMode.value = "overview";
     }
   }
 };
 
-// Générer les équipes
+//------------------------------------------------------
+// GESTION DES ÉQUIPES
+//------------------------------------------------------
+
+/**
+ * Génère les équipes automatiquement selon le nombre spécifié
+ */
 const generateTeams = async () => {
   if (selectedTournament.value && numTeams.value > 0) {
     const response = await tournamentService.generateTeams(
@@ -374,19 +897,112 @@ const generateTeams = async () => {
       numTeams.value
     );
     teams.value = response.teams ?? [];
+
+    // Initialiser en mode vue d'ensemble
+    viewMode.value = "overview";
+
+    updateUnassignedPlayers();
+  }
+};
+/**
+ * Assigne un joueur non assigné à une équipe spécifique
+ */
+const assignPlayerToTeam = (playerIndex: number, teamIndex: string) => {
+  // Convertir l'index d'équipe en nombre, car il vient d'un select HTML
+  const teamIdxNum = parseInt(teamIndex, 10);
+
+  // Vérifier que les indices sont valides
+  if (
+    playerIndex >= 0 &&
+    playerIndex < unassignedPlayers.value.length &&
+    teamIdxNum >= 0 &&
+    teamIdxNum < teams.value.length
+  ) {
+    // Obtenir le joueur à déplacer
+    const playerToMove = unassignedPlayers.value[playerIndex];
+
+    // Ajouter le joueur à l'équipe cible
+    teams.value[teamIdxNum].players.push(playerToMove);
+
+    // Supprimer le joueur de la liste des non assignés
+    unassignedPlayers.value.splice(playerIndex, 1);
+
+    // Mettre à jour les joueurs non assignés
+    updateUnassignedPlayers();
+
+    // Afficher un message de confirmation
+    showMessage(
+      "success",
+      `${playerToMove.username} a été assigné à l'équipe ${
+        teams.value[teamIdxNum].name || `Équipe ${teamIdxNum + 1}`
+      }`
+    );
   }
 };
 
-// Gérer la fin d'un drag and drop
-const onDragEnd = () => {
-  // Ne rien faire pour l'instant
+/**
+ * Met à jour la liste des joueurs non assignés
+ */
+const updateUnassignedPlayers = () => {
+  if (
+    selectedTournamentDetails.value &&
+    selectedTournamentDetails.value.players
+  ) {
+    // Créer un ensemble des IDs des joueurs déjà assignés
+    const assignedPlayerIds = new Set();
+    teams.value.forEach((team) => {
+      team.players.forEach((player) => {
+        assignedPlayerIds.add(player._id);
+      });
+    });
+
+    // Filtrer les joueurs non assignés
+    unassignedPlayers.value = selectedTournamentDetails.value.players.filter(
+      (player) => !assignedPlayerIds.has(player._id)
+    );
+  }
 };
 
-// Enregistrer les équipes en base de données
+/**
+ * Gère la fin d'un événement de drag and drop
+ */
+const onDragEnd = () => {
+  updateUnassignedPlayers();
+};
+
+/**
+ * Sélectionne une équipe spécifique pour l'édition détaillée
+ */
+const selectTeam = (index: number) => {
+  viewMode.value = "team";
+  activeTeamTab.value = index;
+};
+
+/**
+ * Calcule la classe CSS à appliquer selon l'équilibre de l'équipe
+ */
+const getTeamBalanceClass = (team: Team): string => {
+  // Calculer l'équilibre des équipes
+  const avgPlayers =
+    teams.value.reduce((acc: number, t: Team) => acc + t.players.length, 0) /
+    teams.value.length;
+
+  if (team.players.length === 0) return "empty";
+  if (team.players.length < avgPlayers * 0.8) return "unbalanced-low";
+  if (team.players.length > avgPlayers * 1.2) return "unbalanced-high";
+  return "balanced";
+};
+
+//------------------------------------------------------
+// SAUVEGARDE & FINALISATION DES ÉQUIPES
+//------------------------------------------------------
+
+/**
+ * Sauvegarde les équipes sans les finaliser
+ */
 const saveTeams = async () => {
   if (selectedTournament.value && teams.value.length > 0) {
     try {
-      // Utiliser le nouvel endpoint dédié plutôt que updateTournament
       await tournamentService.updateTournamentTeams(
         selectedTournament.value,
         teams.value
@@ -407,22 +1023,28 @@ const saveTeams = async () => {
   }
 };
 
+/**
+ * Affiche le dialogue de confirmation pour finaliser les équipes
+ */
 const saveTeamDefinitive = async () => {
   showConfirmationDialog.value = true;
 };
 
+/**
+ * Finalise les équipes après confirmation
+ */
 const confirmTeamDefinitive = async () => {
   showConfirmationDialog.value = false;
 
   if (selectedTournament.value && selectedTournamentDetails.value) {
     try {
-      // D'abord, mettre à jour les équipes avec l'endpoint dédié
+      // 1. Mettre à jour les équipes
       await tournamentService.updateTournamentTeams(
         selectedTournament.value,
         teams.value
       );
 
-      // Ensuite, marquer le tournoi comme terminé (cette opération doit rester avec updateTournament)
+      // 2. Marquer le tournoi comme terminé
       if (selectedTournamentDetails.value) {
         await tournamentService.updateTournament(selectedTournament.value, {
           ...selectedTournamentDetails.value,
@@ -431,16 +1053,13 @@ const confirmTeamDefinitive = async () => {
         });
       }
 
-      // Créer les canaux Discord
+      // 3. Créer les canaux Discord
       await tournamentService.createDiscordChannels(teams.value);
 
       showMessage(
         "success",
         "Équipes définitives enregistrées avec succès et canaux Discord créés !"
       );
-
-      // Réinitialiser les champs si nécessaire ou rediriger l'utilisateur
-      // fetchTournamentDetails(); // Actualiser les détails du tournoi
     } catch (err) {
       showMessage(
         "error",
@@ -456,10 +1075,128 @@ const confirmTeamDefinitive = async () => {
   }
 };
 
+/**
+ * Ferme le dialogue de confirmation sans action
+ */
 const cancelConfirmation = () => {
   showConfirmationDialog.value = false;
 };
 
+//------------------------------------------------------
+// RECHERCHE DE JOUEURS
+//------------------------------------------------------
+
+/**
+ * Effectue une recherche parmi tous les joueurs (équipes + non assignés)
+ */
+const searchPlayers = () => {
+  if (!searchQuery.value.trim()) {
+    searchResults.value = [];
+    return;
+  }
+
+  const query = searchQuery.value.toLowerCase();
+  const results: { player: Player; teamName: string; teamIndex?: number }[] =
+    [];
+
+  // Chercher dans toutes les équipes
+  teams.value.forEach((team, index) => {
+    team.players.forEach((player) => {
+      if (player.username.toLowerCase().includes(query)) {
+        results.push({
+          player,
+          teamName: team.name || `Équipe ${index + 1}`,
+          teamIndex: index,
+        });
+      }
+    });
+  });
+
+  // Chercher également dans les joueurs non assignés
+  unassignedPlayers.value.forEach((player) => {
+    if (player.username.toLowerCase().includes(query)) {
+      results.push({
+        player,
+        teamName: "Non assigné",
+      });
+    }
+  });
+
+  searchResults.value = results.slice(0, 10); // Limiter à 10 résultats
+};
+
+/**
+ * Désassigne tous les joueurs d'une équipe spécifique
+ */
+const unassignAllPlayers = (teamIndex: number) => {
+  const team = teams.value[teamIndex];
+
+  // Déplacer tous les joueurs vers unassignedPlayers
+  unassignedPlayers.value = [...unassignedPlayers.value, ...team.players];
+
+  // Vider l'équipe
+  team.players = [];
+
+  // Mettre à jour pour refléter les changements
+  updateUnassignedPlayers();
+
+  // Afficher un message de confirmation
+  showMessage(
+    "success",
+    `Tous les joueurs de l'équipe ${
+      team.name || `Équipe ${teamIndex + 1}`
+    } ont été désassignés`
+  );
+};
+
+/**
+ * Navigue vers l'équipe d'un joueur trouvé dans la recherche
+ */
+const navigateToPlayerTeam = (result: {
+  player: Player;
+  teamName: string;
+  teamIndex?: number;
+}) => {
+  // Fermer la liste déroulante en effaçant la recherche
+  searchQuery.value = "";
+  searchResults.value = [];
+
+  // Si le joueur est non assigné
+  if (result.teamName === "Non assigné") {
+    // Scroll jusqu'à la section des joueurs non assignés
+    const unassignedSection = document.querySelector(".unassigned-players");
+    if (unassignedSection) {
+      unassignedSection.scrollIntoView({ behavior: "smooth" });
+    }
+    return;
+  }
+
+  // Si le joueur est dans une équipe
+  if (result.teamIndex !== undefined) {
+    selectTeam(result.teamIndex);
+
+    // Mettre en évidence brièvement le joueur
+    setTimeout(() => {
+      const playerElement = document.querySelector(
+        `[data-player-id="${result.player._id}"]`
+      );
+      if (playerElement) {
+        playerElement.classList.add("highlighted");
+        setTimeout(() => {
+          playerElement.classList.remove("highlighted");
+        }, 2000);
+      }
+    }, 300);
+  }
+};
+
+//------------------------------------------------------
+// UTILITAIRES
+//------------------------------------------------------
+
+/**
+ * Affiche un message de succès ou d'erreur temporaire
+ */
 const showMessage = (type: "success" | "error", message: string) => {
   if (type === "success") {
     success.value = message;
@@ -468,6 +1205,8 @@ const showMessage = (type: "success" | "error", message: string) => {
     error.value = message;
     success.value = null;
   }
+
+  // Effacer le message après 5 secondes
   setTimeout(() => {
     success.value = null;
     error.value = null;
@@ -481,19 +1220,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Container principal */
-.team-management-container {
-  padding: 2rem;
-  background: rgba(13, 6, 23, 0.7);
-  border-radius: 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Animation de grille en fond (lignes horizontales et verticales) */
+/* Effet grille en fond (non remplaçable facilement en Tailwind) */
 .team-management-container::before {
   content: "";
   position: absolute;
@@ -527,85 +1254,12 @@ onMounted(() => {
   z-index: -1;
 }
 
-/* Titre principal avec effet néon */
-.cyber-title {
-  font-family: "Audiowide", cursive;
-  font-size: 2.5rem;
-  color: #ffffff;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-  letter-spacing: 2px;
-  margin-bottom: 2rem;
-  text-align: center;
-  animation: pulsate 2s infinite alternate;
-}
-
-@keyframes pulsate {
-  0% {
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-  }
-  100% {
-    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
-  }
-}
-
-/* Container de sélection */
-.selection-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(23, 25, 35, 0.7);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-}
-
-/* Groupe de formulaire */
-.form-group {
-  margin-bottom: 1rem;
-  width: 100%;
-}
-
-/* Label du formulaire */
-.form-label {
-  display: flex;
-  align-items: center;
-  font-size: 1.125rem;
-  color: #06b6d4;
-  margin-bottom: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
-}
-
-/* Container pour le select */
+/* Style pour le select et son arrow */
 .select-wrapper {
   position: relative;
   width: 100%;
 }
 
-/* Select stylisé */
-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(17, 24, 39, 0.8);
-  color: white;
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  appearance: none;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
-  transition: all 0.3s ease;
-}
-
-select:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-/* Flèche personnalisée pour le select */
 .select-arrow {
   position: absolute;
   top: 50%;
@@ -619,32 +1273,7 @@ select:focus {
   pointer-events: none;
 }
 
-/* Container d'input */
-.input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-/* Input stylisé */
-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(17, 24, 39, 0.8);
-  color: white;
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
-  transition: all 0.3s ease;
-}
-
-input:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-/* Effet de lueur pour les inputs */
+/* Input glow effect - difficile à faire en Tailwind */
 .input-glow {
   position: absolute;
   top: 0;
@@ -660,314 +1289,58 @@ input:focus + .input-glow {
   box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
 }
 
-/* Détails du tournoi */
-.tournament-details {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(23, 25, 35, 0.7);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
-}
-
-.details-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.details-header svg {
-  color: #ec4899;
-}
-
-.details-header h2 {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #f0abfc;
-  text-shadow: 0 0 5px rgba(240, 171, 252, 0.7);
-}
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-}
-
-.detail-item {
-  padding: 0.75rem;
-  background: rgba(31, 41, 55, 0.7);
-  border-radius: 0.5rem;
-  border: 1px solid rgba(236, 72, 153, 0.2);
-}
-
-.detail-label {
-  display: block;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.875rem;
-  color: #ec4899;
-  margin-bottom: 0.25rem;
-}
-
-.detail-value {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  color: #f9fafb;
-}
-
-/* Générateur d'équipes */
-.teams-generator {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(23, 25, 35, 0.7);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
-}
-
-.generator-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.generator-header svg {
-  color: #8b5cf6;
-}
-
-.generator-header h2 {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #a78bfa;
-  text-shadow: 0 0 5px rgba(167, 139, 250, 0.7);
-}
-
-.generator-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Affichage des équipes */
-.teams-display {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(23, 25, 35, 0.7);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-}
-
-.teams-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.teams-header svg {
-  color: #10b981;
-}
-
-.teams-header h2 {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #34d399;
-  text-shadow: 0 0 5px rgba(52, 211, 153, 0.7);
-}
-
-.teams-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Carte d'équipe */
-.team-card {
-  padding: 1.5rem;
-  background: rgba(31, 41, 55, 0.7);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.team-card:hover {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-  border-color: rgba(16, 185, 129, 0.4);
-}
-
-.team-name {
+/* Effet de mise en évidence */
+.highlighted {
+  animation: highlight 1.5s ease;
   position: relative;
-  margin-bottom: 0.5rem;
+  z-index: 2;
 }
 
-.team-name input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(17, 24, 39, 0.8);
-  color: white;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
-  transition: all 0.3s ease;
+@keyframes highlight {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.9);
+    transform: scale(1.05);
+  }
 }
 
-.team-name input:focus {
-  outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+/* Styles pour le drag-and-drop */
+.sortable-ghost {
+  opacity: 0.5;
+  background: rgba(16, 185, 129, 0.2) !important;
+  border: 2px dashed rgba(16, 185, 129, 0.6) !important;
 }
 
-.team-name .input-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 0.5rem;
-  pointer-events: none;
-  transition: box-shadow 0.3s ease;
+.sortable-chosen {
+  opacity: 0.8;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  z-index: 10;
 }
 
-.team-name input:focus + .input-glow {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.7);
+/* Animation d'apparition simple */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Liste des joueurs */
-.player-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-.player-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: rgba(17, 24, 39, 0.8);
-  color: white;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
-  transition: all 0.3s ease;
-}
-
-.player-item:hover {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
-}
-
-.player-grip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  background: rgba(31, 41, 55, 0.7);
-  border-radius: 0.25rem;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
-}
-
-.empty-team {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1rem;
-  background: rgba(17, 24, 39, 0.8);
-  color: rgba(16, 185, 129, 0.5);
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
-  transition: all 0.3s ease;
-}
-
-.empty-team p {
-  margin-left: 0.5rem;
-}
-
-.neon-button-purple {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: rgba(139, 92, 246, 0.7);
-  color: white;
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(139, 92, 246, 0.7);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-  transition: all 0.3s ease;
-}
-
-.neon-button-purple:hover {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-}
-
-.neon-button-green {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: rgba(16, 185, 129, 0.7);
-  color: white;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(16, 185, 129, 0.7);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-  transition: all 0.3s ease;
-}
-
-.neon-button-green:hover {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-}
-
-.button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap; /* Pour qu'ils passent à la ligne sur mobile */
-}
-
-/* Style pour le bouton définitif rose */
-.neon-button-pink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: rgba(236, 72, 153, 0.7);
-  color: white;
-  border: 1px solid rgba(236, 72, 153, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
-  transition: all 0.3s ease;
-}
-
-.neon-button-pink:hover {
-  background: rgba(236, 72, 153, 0.8);
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
-  transform: translateY(-2px);
-}
-
-.neon-button-pink:active {
-  transform: translateY(1px);
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -130,6 +130,41 @@ button {
   z-index: 1;
 }
 
+.cyberpunk-btn-red {
+  background: linear-gradient(135deg, #7f1d1d, #ef4444);
+  color: white;
+  border: 1px solid #f87171;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4),
+    inset 0 0 5px rgba(239, 68, 68, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-red:hover {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.7),
+    inset 0 0 10px rgba(239, 68, 68, 0.7);
+  transform: translateY(-3px);
+}
+
+.cyberpunk-btn-red::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite;
+  z-index: 1;
+}
+
 .cyberpunk-btn-amber {
   background: linear-gradient(135deg, #92400e, #f59e0b);
   color: white;
