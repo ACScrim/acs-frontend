@@ -135,35 +135,27 @@
 
       <!-- État de chargement -->
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="cyberpunk-loader"></div>
+        <CyberpunkLoader />
       </div>
 
       <!-- Message si aucune proposition -->
-      <div
+      <CyberTerminal
         v-else-if="proposals.length === 0"
-        class="text-center py-12 bg-black/75 backdrop-blur-sm rounded-xl border border-pink-500 shadow-lg shadow-pink-500/30"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 mx-auto text-gray-600 mb-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9.663 17h4.673M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-5.657l-.707-.707m12.728 0l-.707.707m-9.9 9.9l-.707.707m12.728 0l-.707-.707"
-          />
-        </svg>
-        <p class="text-xl text-pink-400 font-orbitron">
-          Aucune proposition pour le moment
-        </p>
-        <p class="text-cyan-400 mt-2 font-orbitron">
-          Soyez le premier à proposer un jeu!
-        </p>
-      </div>
+        :command="`list_proposals --filter=${activeFilter} ${
+          searchTerm ? '--search=\'' + searchTerm + '\'' : ''
+        }`"
+        errorCode="404_NO_PROPOSALS"
+        :message="emptyStateMessage"
+        class="my-8"
+      />
+
+      <CyberTerminal
+        v-else-if="filteredProposals.length === 0"
+        :command="`search_proposals --query='${searchTerm}' --filter=${activeFilter}`"
+        errorCode="404_NO_RESULTS"
+        :message="emptyStateMessage"
+        class="my-8"
+      />
 
       <!-- Liste des propositions -->
       <div v-else class="space-y-4">
@@ -439,6 +431,9 @@ import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
 import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
+import CyberTerminal from "../shared/CyberTerminal.vue";
+import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
+
 // ===================================
 // ÉTAT ET RÉFÉRENCES
 // ===================================
@@ -613,6 +608,23 @@ const loadProposals = async () => {
     loading.value = false;
   }
 };
+
+/**
+ * Message à afficher quand aucune proposition n'est trouvée
+ */
+const emptyStateMessage = computed(() => {
+  if (searchTerm.value) {
+    return `Aucune proposition ne correspond à votre recherche "${searchTerm.value}".`;
+  }
+
+  if (activeFilter.value === "pending") {
+    return "Aucune proposition en attente de modération.";
+  } else if (activeFilter.value === "approved") {
+    return "Aucune proposition approuvée. Soyez le premier à proposer un jeu!";
+  }
+
+  return "Aucune proposition trouvée. Soyez le premier à proposer un jeu!";
+});
 
 // ===================================
 // GESTION DES VOTES
@@ -988,49 +1000,6 @@ onMounted(() => {
   left: 0;
   border-top: 0;
   border-right: 0;
-}
-
-/* Loader cyberpunk synthwave */
-.cyberpunk-loader {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(225deg, #8b5cf6 0%, #ec4899 50%, #06b6d4 100%);
-  animation: spin 1.5s linear infinite;
-  position: relative;
-}
-
-.cyberpunk-loader::after {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  background: #000;
-  border-radius: 50%;
-}
-
-.cyberpunk-loader::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(225deg, #8b5cf6 0%, #ec4899 50%, #06b6d4 100%);
-  border-radius: 50%;
-  filter: blur(10px);
-  opacity: 0.7;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 /* Effet de scanlines */

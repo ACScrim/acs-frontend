@@ -2,32 +2,14 @@
 <template>
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <!-- État d'erreur -->
-    <div
+    <CyberTerminal
       v-if="error"
-      class="max-w-4xl mx-auto bg-red-900/20 border border-red-500 rounded-lg p-8 text-center"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-12 w-12 mx-auto text-red-500 mb-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <h2 class="text-xl text-red-300 mb-4">{{ error }}</h2>
-      <button
-        @click="fetchPlayerProfile"
-        class="px-4 py-2 bg-red-900/40 border border-red-500 text-red-300 rounded-md font-orbitron hover:bg-red-900/60 transition-colors"
-      >
-        Réessayer
-      </button>
-    </div>
+      command="get_player_profile --id=${route.params.id}"
+      errorCode="ERROR_404_PLAYER_NOT_FOUND"
+      :message="error"
+      title="SYSTÈME DE PROFIL · ACS"
+      class="max-w-4xl mx-auto my-8"
+    />
 
     <!-- Profil du joueur -->
     <div v-else-if="player" class="max-w-4xl mx-auto">
@@ -379,7 +361,7 @@ import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
 import type { Player, PlayerRanking, Badge, User } from "../types";
-
+import CyberTerminal from "../shared/CyberTerminal.vue";
 //-------------------------------------------------------
 // SECTION: Définition des états
 //-------------------------------------------------------

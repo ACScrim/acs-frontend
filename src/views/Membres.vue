@@ -105,10 +105,15 @@
     </div>
 
     <!-- Liste vide -->
-    <div v-else-if="sortedUsers.length === 0" class="text-center my-8 sm:my-12">
-      <p class="text-white font-orbitron">Aucun membre trouvé</p>
-    </div>
-
+    <CyberTerminal
+      v-else-if="sortedUsers.length === 0"
+      :command="`find_users ${
+        searchTerm ? '--search=\'' + searchTerm + '\'' : '--all'
+      }`"
+      errorCode="404_NO_USERS_FOUND"
+      :message="emptyStateMessage"
+      class="my-8 sm:my-12"
+    />
     <!-- Liste des membres -->
     <div
       v-else
@@ -228,6 +233,7 @@ import playerService from "../services/playerService";
 import Toast from "@/shared/Toast.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
+import CyberTerminal from "@/shared/CyberTerminal.vue";
 
 //-------------------------------------------------------
 // SECTION: Définition des types
@@ -307,6 +313,16 @@ const handleImageError = (e: Event) => {
 const resetPagination = () => {
   currentPage.value = 1;
 };
+
+/**
+ * Message à afficher quand aucun utilisateur n'est trouvé
+ */
+const emptyStateMessage = computed(() => {
+  if (searchTerm.value) {
+    return `Aucun membre ne correspond à votre recherche "${searchTerm.value}".`;
+  }
+  return "Aucun membre trouvé dans la base de données.";
+});
 
 //-------------------------------------------------------
 // SECTION: Propriétés calculées

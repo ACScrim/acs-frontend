@@ -273,28 +273,12 @@
     </div>
 
     <!-- Message pas de tournois -->
-    <div
-      v-else
-      class="flex flex-col items-center justify-center p-12 bg-black bg-opacity-60 rounded-lg border border-pink-500"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16 text-pink-500 mb-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <p class="text-white text-center text-xl font-orbitron">
-        Pas de tournois trouvés.
-      </p>
-    </div>
+    <CyberTerminal
+      v-if="tournaments.length === 0"
+      command="list_tournaments --all"
+      errorCode="404_NO_TOURNAMENTS"
+      message="Aucun tournoi n'a été trouvé."
+    />
 
     <!-- Modal de confirmation -->
     <ConfirmationDialog
@@ -321,6 +305,7 @@ import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentCard from "@/components/tournois-a-venir/TournamentCard.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
+import CyberTerminal from "@/shared/CyberTerminal.vue";
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------

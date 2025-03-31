@@ -105,27 +105,15 @@
       <CyberpunkLoader />
     </div>
 
-    <!-- Remplacer l'état vide actuel -->
-    <div
+    <CyberTerminal
       v-else-if="sortedRankings.length === 0"
-      class="cyber-terminal bg-black/70 p-6 rounded-lg border border-cyan-500 my-8"
-    >
-      <div class="cyber-terminal-header">SYSTÈME D'INFORMATION · ACS</div>
-      <div class="cyber-terminal-content">
-        <div class="mb-4">
-          <span class="text-green-400">system@acs:~$</span>
-          <span class="text-cyan-400"
-            >search_players -g
-            {{ selectedGame ? "game_id:" + selectedGame : "all" }}</span
-          >
-        </div>
-        <div class="text-red-400 mb-2">ERROR CODE: 404_NO_DATA</div>
-        <div class="text-cyan-300">
-          Aucun joueur n'a été trouvé pour cette recherche.
-          <span class="blink">_</span>
-        </div>
-      </div>
-    </div>
+      :command="`search_players -g ${
+        selectedGame ? 'game_id:' + selectedGame : 'all'
+      }`"
+      errorCode="404_NO_DATA"
+      message="Aucun joueur n'a été trouvé pour cette recherche."
+      class="my-8"
+    />
 
     <!-- Tableau pour écrans moyens et grands -->
     <div
@@ -372,7 +360,7 @@ import type { PlayerRanking, Game } from "../types";
 // Composants
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
-
+import CyberTerminal from "@/shared/CyberTerminal.vue";
 //-------------------------------------------------------
 // SECTION: Constantes et configuration
 //-------------------------------------------------------
