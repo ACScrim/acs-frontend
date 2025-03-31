@@ -505,13 +505,8 @@ const formatLocalDate = (dateString: string) => {
 
 // Fonction pour compter le nombre de participants
 const getParticipantsCount = () => {
-  if (props.tournament.teams && props.tournament.teams.length > 0) {
-    // Si le tournoi est en équipes, compter le nombre total de joueurs dans toutes les équipes
-    return props.tournament.teams.reduce((total, team) => {
-      return total + (team.players ? team.players.length : 0);
-    }, 0);
-  } else if (props.tournament.players) {
-    // Sinon, renvoyer le nombre de joueurs inscrits individuellement
+  // Toujours retourner le nombre total de joueurs inscrits
+  if (props.tournament.players) {
     return props.tournament.players.length;
   }
   return 0;

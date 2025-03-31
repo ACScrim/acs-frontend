@@ -353,18 +353,9 @@
               Score de l'équipe:
             </label>
 
+            <!-- Remplacer la section problématique par celle-ci -->
             <div class="relative">
-              <!-- Arrière-plan avec effet glowing pour le score actuel -->
-              <div
-                v-if="team.score > 0"
-                class="absolute inset-y-0 left-0 flex items-center pointer-events-none px-3"
-              >
-                <span
-                  class="text-sm text-emerald-400 font-['Orbitron'] drop-shadow-[0_0_3px_rgba(16,185,129,0.7)]"
-                >
-                  Score actuel:
-                </span>
-              </div>
+              <!-- Badge indiquant le score actuel (au-dessus de l'input au lieu d'être superposé) -->
 
               <div class="flex items-center">
                 <input
@@ -374,7 +365,7 @@
                   :class="[
                     'w-20 bg-gray-900/80 border rounded-l-lg px-3 py-2 text-white text-center font-bold',
                     team.score > 0
-                      ? 'border-emerald-500/70 pl-24'
+                      ? 'border-emerald-500/70' // Supprimé le pl-24 qui décalait le texte
                       : 'border-emerald-500/40',
                     !selectedTournamentDetails?.finished
                       ? 'focus:outline-none focus:ring-1 focus:ring-emerald-500'
@@ -400,12 +391,12 @@
                     />
                   </svg>
                   <span class="relative z-10 text-xs font-['Orbitron'] ml-1"
-                    >Mettre à jour</span
+                    >OK</span
                   >
                 </button>
               </div>
 
-              <!-- Badge avec score actuel -->
+              <!-- Badge avec score actuel en haut à droite (conservé pour l'aspect visuel) -->
               <div
                 v-if="team.score > 0"
                 class="absolute right-0 -top-3 bg-emerald-900/80 text-emerald-400 px-2 py-0.5 text-xs font-bold rounded border border-emerald-500 shadow-sm shadow-emerald-500/50"
@@ -593,12 +584,15 @@ const updateScore = async (teamId: string, score: number) => {
       const teamToUpdate = teams.value.find((t) => t._id === teamId);
       if (teamToUpdate) {
         teamToUpdate.score = score;
-        // Mettre à jour le nom dans l'interface (optionnel, car le backend le fait déjà)
-        const baseName = teamToUpdate.name.replace(/ \(\d+\)$/, "");
-        teamToUpdate.name = `${baseName} (${score})`;
+        // Mettre à jour le nom dans l'interface avec "Pts" pour correspondre au backend
+        const baseName = teamToUpdate.name.replace(/ \(\d+ Pts\)$/, "");
+        teamToUpdate.name = `${baseName} (${score} Pts)`;
+
+        // S'assurer que le score reste modifiable dans l'input
+        teamScores.value[teamId] = score;
       }
 
-      showMessage("success", `Score de l'équipe mis à jour : ${score}`);
+      showMessage("success", `Score de l'équipe mis à jour : ${score} Pts`);
     } catch (error) {
       console.error("Erreur lors de la mise à jour du score:", error);
       showMessage("error", "Erreur lors de la mise à jour du score");

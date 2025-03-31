@@ -271,6 +271,21 @@ const unmarkTournamentAsFinished = async (
   return response.data;
 };
 
+/**
+ * Supprime toutes les équipes d'un tournoi
+ * @param tournamentId - ID du tournoi dont on veut supprimer les équipes
+ * @returns Tournoi avec les équipes supprimées
+ */
+const deleteAllTeams = async (tournamentId: string): Promise<Tournament> => {
+  const response = await axios.delete(
+    `${API_URL}/${tournamentId}/delete-teams`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data.tournament;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -288,4 +303,5 @@ export default {
   updateTournamentTeams,
   markTournamentAsFinished,
   unmarkTournamentAsFinished,
+  deleteAllTeams,
 };
