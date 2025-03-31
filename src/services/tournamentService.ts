@@ -255,6 +255,22 @@ const markTournamentAsFinished = async (
   return response.data;
 };
 
+/**
+ * Annule la finalisation d'un tournoi (le remettre en état "non terminé")
+ * @param tournamentId - ID du tournoi
+ * @returns Tournoi mis à jour
+ */
+const unmarkTournamentAsFinished = async (
+  tournamentId: string
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/unmark-finished`,
+    {},
+    { withCredentials: true }
+  );
+  return response.data;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -271,4 +287,5 @@ export default {
   createDiscordChannels,
   updateTournamentTeams,
   markTournamentAsFinished,
+  unmarkTournamentAsFinished,
 };

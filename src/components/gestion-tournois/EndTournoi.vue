@@ -1,96 +1,207 @@
 <template>
-  <div class="container mx-auto p-4 bg-neon-gradient min-h-screen">
+  <div
+    class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
+  >
     <!-- Sélection du jeu et du tournoi - inchangé -->
     <h1 class="text-4xl text-white mb-8 neon-text">Terminer un Tournoi</h1>
-    <div class="mb-4">
-      <label for="game" class="block text-lg text-white mb-2 neon-label">
-        Sélectionner un jeu
-      </label>
-      <select
-        id="game"
-        v-model="selectedGame"
-        @change="fetchTournamentsByGame"
-        class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        <option v-for="game in games" :key="game._id" :value="game._id">
-          {{ game.name }}
-        </option>
-      </select>
-    </div>
-    <div class="mb-4" v-if="tournaments.length > 0">
-      <label for="tournament" class="block text-lg text-white mb-2 neon-label">
-        Sélectionner un tournoi
-      </label>
-      <select
-        id="tournament"
-        v-model="selectedTournament"
-        @change="fetchTournamentDetails"
-        class="w-full p-3 text-white bg-gray-800 border-none rounded shadow neon-input focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        <option
-          v-for="tournament in tournaments"
-          :key="tournament._id"
-          :value="tournament._id"
+
+    <!-- Sélection du jeu et du tournoi -->
+    <div
+      class="flex flex-col gap-6 mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
+    >
+      <div class="w-full mb-4">
+        <label
+          for="game"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
         >
-          {{ tournament.name }}
-        </option>
-      </select>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+            />
+          </svg>
+          Sélectionner un jeu
+        </label>
+        <div class="relative w-full">
+          <select
+            id="game"
+            v-model="selectedGame"
+            @change="fetchTournamentsByGame"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+          >
+            <option value="" disabled selected>Choisissez un jeu</option>
+            <option v-for="game in games" :key="game._id" :value="game._id">
+              {{ game.name }}
+            </option>
+          </select>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
+        </div>
+      </div>
+
+      <div class="w-full mb-4" v-if="tournaments.length > 0">
+        <label
+          for="tournament"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Sélectionner un tournoi
+        </label>
+        <div class="relative w-full">
+          <select
+            id="tournament"
+            v-model="selectedTournament"
+            @change="fetchTournamentDetails"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+          >
+            <option value="" disabled selected>Choisissez un tournoi</option>
+            <option
+              v-for="tournament in tournaments"
+              :key="tournament._id"
+              :value="tournament._id"
+            >
+              {{ tournament.name }}
+            </option>
+          </select>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        v-else-if="selectedGame && tournaments.length === 0"
+        class="flex flex-col items-center justify-center p-6 bg-gray-800/80 border border-red-500/30 rounded-xl shadow-md text-center gap-3"
+      >
+        <div class="text-center">
+          <h3 class="text-xl font-['Orbitron'] font-semibold text-red-400 mb-1">
+            Aucun tournoi disponible
+          </h3>
+          <p class="text-white/70 font-['Orbitron'] text-sm">
+            Il n'existe pas de tournoi non finalisé pour ce jeu
+          </p>
+        </div>
+        <button
+          @click="selectedGame = ''"
+          class="cyberpunk-btn-gray mt-3 py-2 px-4 text-sm font-['Orbitron'] rounded-lg"
+        >
+          <span class="relative z-10">Choisir un autre jeu</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Détails du tournoi - inchangé -->
-    <div v-if="selectedTournamentDetails">
-      <h2 class="text-xl font-bold mb-4 text-white">Détails du tournoi</h2>
-      <p class="text-white">
-        <strong>Nom:</strong> {{ selectedTournamentDetails.name }}
-      </p>
-      <p class="text-white">
-        <strong>Date:</strong>
-        {{ formatLocalDate(selectedTournamentDetails.date) }}
-      </p>
-      <p class="text-white">
-        <strong>Discord Channel:</strong>
-        {{ selectedTournamentDetails.discordChannelName }}
-      </p>
-
-      <!-- Statut du tournoi -->
-      <div
-        v-if="selectedTournamentDetails.finished"
-        class="mt-4 p-4 bg-green-500/20 text-green-300 border border-green-500 rounded-lg flex items-center"
-      >
+    <!-- Détails du tournoi -->
+    <div
+      v-if="selectedTournamentDetails"
+      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-purple-500/30 shadow-md shadow-purple-500/20"
+    >
+      <div class="flex items-center gap-3 mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 mr-2"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+          class="h-6 w-6 text-purple-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
           />
         </svg>
-        Ce tournoi est déjà terminé
+        <h2 class="font-['Orbitron'] font-bold text-2xl text-purple-400">
+          Détails du tournoi
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div class="bg-gray-900/60 p-4 rounded-lg border border-purple-500/30">
+          <p class="text-white mb-2 flex items-center gap-2">
+            <span class="text-purple-400 font-['Orbitron'] font-semibold"
+              >Nom:</span
+            >
+            <span>{{ selectedTournamentDetails.name }}</span>
+          </p>
+          <p class="text-white mb-2 flex items-center gap-2">
+            <span class="text-purple-400 font-['Orbitron'] font-semibold"
+              >Date:</span
+            >
+            <span>{{ formatLocalDate(selectedTournamentDetails.date) }}</span>
+          </p>
+          <p class="text-white flex items-center gap-2">
+            <span class="text-purple-400 font-['Orbitron'] font-semibold"
+              >Discord:</span
+            >
+            <span>{{ selectedTournamentDetails.discordChannelName }}</span>
+          </p>
+        </div>
+
+        <!-- Statut du tournoi -->
+        <div
+          v-if="selectedTournamentDetails.finished"
+          class="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg shadow-md shadow-emerald-500/20"
+        >
+          <div
+            class="flex flex-col md:flex-row items-center justify-between gap-4"
+          >
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span class="font-['Orbitron'] font-semibold text-emerald-300">
+                Ce tournoi est déjà terminé
+              </span>
+            </div>
+
+            <button
+              @click="confirmUnfinishTournament()"
+              class="cyberpunk-btn-amber flex items-center justify-center py-2 px-4 font-['Orbitron'] text-sm rounded-lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-1.5 relative z-10"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="relative z-10">Annuler la finalisation</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
     <div v-if="teams.length > 0">
-      <h2 class="text-xl font-bold mb-4 text-white">Équipes et Classements</h2>
-
-      <!-- Instructions -->
-      <div
-        class="mb-6 p-4 bg-gray-900 bg-opacity-70 rounded-lg border border-purple-500"
-      >
-        <p class="text-white">
-          Attribuez un rang à chaque équipe : 1 pour la première place, 2 pour
-          la deuxième, etc. Plusieurs équipes peuvent avoir le même rang (ex:
-          deux équipes à la 1ère place). Les équipes classées en 1ère position
-          seront considérées comme gagnantes.
-        </p>
-      </div>
-
       <!-- Bouton pour terminer le tournoi -->
       <div
         v-if="
@@ -98,81 +209,208 @@
           !selectedTournamentDetails.finished &&
           hasRankings()
         "
-        class="mb-6 p-4 bg-gradient-to-r from-purple-900/70 to-pink-900/70 rounded-lg border border-pink-500"
+        class="mb-6 p-6 bg-gray-900/70 rounded-lg border border-purple-500/30 shadow-lg shadow-purple-500/20"
       >
-        <div class="flex flex-col md:flex-row md:items-center justify-between">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
           <div>
-            <h3 class="text-lg font-bold text-white mb-2">
+            <h3
+              class="text-lg font-['Orbitron'] font-bold text-purple-400 mb-2"
+            >
               Finaliser le tournoi
             </h3>
-            <p class="text-cyan-300 text-sm mb-4 md:mb-0">
+            <p class="text-white/70 text-sm">
               Une fois le tournoi terminé, les rankings seront verrouillés et
               les résultats comptabilisés dans le classement des joueurs.
             </p>
           </div>
           <button
             @click="confirmFinishTournament()"
-            class="mt-2 md:mt-0 px-6 py-3 text-lg font-bold text-white bg-gradient-to-r from-green-600 to-cyan-600 rounded-lg shadow neon-button hover:from-green-500 hover:to-cyan-500 focus:outline-none focus:ring-2 focus:ring-green-500 transform transition-all hover:-translate-y-1"
+            class="cyberpunk-btn-green flex items-center justify-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg self-end"
           >
-            Terminer le tournoi
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 relative z-10"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span class="relative z-10">Terminer le tournoi</span>
           </button>
         </div>
       </div>
 
-      <!-- Cards des équipes - Grid layout inchangé -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Cards des équipes - Grid layout -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="(team, index) in teams"
           :key="index"
           :class="[
-            'mb-4 p-4 rounded shadow team-card',
-            getRankingClass(team.ranking),
+            'p-6 bg-gray-800/70 rounded-xl border shadow-md transition-all duration-300',
+            getRankingBorderClass(team.ranking),
           ]"
         >
-          <div class="flex items-center mb-2">
-            <h3 class="text-xl font-bold text-white">{{ team.name }}</h3>
-          </div>
-          <ul>
-            <li
-              v-for="player in team.players"
-              :key="player._id"
-              class="p-2 bg-gray-700 rounded mb-2 text-white"
+          <div
+            class="flex items-center mb-4 pb-2 border-b border-opacity-30"
+            :class="getRankingBorderBottomClass(team.ranking)"
+          >
+            <h3
+              class="text-xl font-['Orbitron'] font-semibold"
+              :class="getRankingTextClass(team.ranking)"
             >
-              {{ player.username }}
-            </li>
-          </ul>
-          <div class="flex items-center mt-4">
-            <div class="w-full bg-gray-800 p-3 rounded-lg">
-              <label class="block text-white mb-2"
-                >Position dans le classement:</label
+              {{ team.name || `Équipe ${index + 1}` }}
+            </h3>
+          </div>
+
+          <!-- Liste des joueurs -->
+          <div class="mb-4">
+            <h4 class="text-sm font-['Orbitron'] text-white/70 mb-2">
+              Membres de l'équipe:
+            </h4>
+            <ul class="space-y-2 max-h-40 overflow-y-auto pr-2">
+              <li
+                v-for="player in team.players"
+                :key="player._id"
+                class="p-3 bg-gray-900/80 text-white border rounded-lg font-['Orbitron'] text-sm flex items-center gap-2"
+                :class="getRankingBorderClass(team.ranking, 'opacity-40')"
               >
-              <div class="flex flex-wrap gap-2">
-                <button
-                  v-for="rank in maxRanking"
-                  :key="rank"
-                  @click="setRanking(team._id, rank)"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  :class="getRankingTextClass(team.ranking)"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                {{ player.username }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Rang de l'équipe -->
+          <div class="mt-4">
+            <label class="block text-white/80 font-['Orbitron'] text-sm mb-2"
+              >Position dans le classement:</label
+            >
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="rank in maxRanking"
+                :key="rank"
+                @click="setRanking(team._id, rank)"
+                :class="[
+                  'cyberpunk-btn px-4 py-2 rounded-lg font-bold transition-all text-sm relative z-10',
+                  getRankingButtonClass(rank, team.ranking === rank),
+                ]"
+                :disabled="selectedTournamentDetails?.finished"
+              >
+                {{ getRankingLabel(rank) }}
+              </button>
+              <button
+                @click="setRanking(team._id, 0)"
+                :class="[
+                  'px-4 py-2 rounded-lg font-bold transition-all text-sm',
+                  team.ranking === 0
+                    ? 'bg-gray-500/90 text-white'
+                    : 'bg-gray-700/70 text-white hover:bg-gray-600/90',
+                ]"
+                :disabled="selectedTournamentDetails?.finished"
+              >
+                Non classé
+              </button>
+            </div>
+          </div>
+          <div class="mt-6 border-t border-emerald-500/30 pt-4">
+            <label
+              class="flex items-center gap-2 text-white/80 font-['Orbitron'] text-sm mb-3"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 text-emerald-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
+              </svg>
+              Score de l'équipe:
+            </label>
+
+            <div class="relative">
+              <!-- Arrière-plan avec effet glowing pour le score actuel -->
+              <div
+                v-if="team.score > 0"
+                class="absolute inset-y-0 left-0 flex items-center pointer-events-none px-3"
+              >
+                <span
+                  class="text-sm text-emerald-400 font-['Orbitron'] drop-shadow-[0_0_3px_rgba(16,185,129,0.7)]"
+                >
+                  Score actuel:
+                </span>
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  v-model.number="teamScores[team._id]"
+                  type="number"
+                  min="0"
                   :class="[
-                    'px-4 py-2 rounded-lg font-bold transition-all',
-                    team.ranking === rank
-                      ? getRankingButtonActiveClass(rank)
-                      : 'bg-gray-700 text-white hover:bg-gray-600',
+                    'w-20 bg-gray-900/80 border rounded-l-lg px-3 py-2 text-white text-center font-bold',
+                    team.score > 0
+                      ? 'border-emerald-500/70 pl-24'
+                      : 'border-emerald-500/40',
+                    !selectedTournamentDetails?.finished
+                      ? 'focus:outline-none focus:ring-1 focus:ring-emerald-500'
+                      : '',
                   ]"
                   :disabled="selectedTournamentDetails?.finished"
-                >
-                  {{ getRankingLabel(rank) }}
-                </button>
+                />
                 <button
-                  @click="setRanking(team._id, 0)"
-                  :class="[
-                    'px-4 py-2 rounded-lg font-bold transition-all',
-                    team.ranking === 0
-                      ? 'bg-gray-500 text-white'
-                      : 'bg-gray-700 text-white hover:bg-gray-600',
-                  ]"
+                  @click="updateScore(team._id, teamScores[team._id])"
+                  class="cyberpunk-btn-emerald h-[38px] px-3 rounded-r-lg relative overflow-hidden border-l-0 flex items-center"
                   :disabled="selectedTournamentDetails?.finished"
                 >
-                  Non classé
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 relative z-10"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="relative z-10 text-xs font-['Orbitron'] ml-1"
+                    >Mettre à jour</span
+                  >
                 </button>
+              </div>
+
+              <!-- Badge avec score actuel -->
+              <div
+                v-if="team.score > 0"
+                class="absolute right-0 -top-3 bg-emerald-900/80 text-emerald-400 px-2 py-0.5 text-xs font-bold rounded border border-emerald-500 shadow-sm shadow-emerald-500/50"
+              >
+                {{ team.score }} pts
               </div>
             </div>
           </div>
@@ -188,9 +426,17 @@
     <ConfirmationDialog
       v-if="showConfirmationDialog"
       :title="'Confirmer la fin du tournoi'"
-      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Cette action est irréversible et les résultats seront comptabilisés dans le classement des joueurs.'"
+      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Les résultats seront comptabilisés dans le classement des joueurs.'"
       @confirm="finishTournament"
       @cancel="showConfirmationDialog = false"
+    />
+    <!-- Confirmation Dialog pour annuler la finalisation -->
+    <ConfirmationDialog
+      v-if="showUnfinishConfirmationDialog"
+      title="Confirmer l'annulation de la finalisation"
+      message="Êtes-vous sûr de vouloir annuler la finalisation de ce tournoi ? Les points attribués aux joueurs seront recalculés lors de la prochaine finalisation."
+      @confirm="unfinishTournament"
+      @cancel="showUnfinishConfirmationDialog = false"
     />
   </div>
 </template>
@@ -228,6 +474,11 @@ const selectedTournamentDetails = ref<
 
 /** Liste des équipes du tournoi */
 const teams = ref<Team[]>([]);
+
+const teamScores = ref<Record<string, number>>({});
+
+// Variable pour la boîte de dialogue de confirmation d'annulation
+const showUnfinishConfirmationDialog = ref(false);
 
 /** Contrôle l'affichage de la boîte de dialogue de confirmation */
 const showConfirmationDialog = ref(false);
@@ -275,7 +526,17 @@ const fetchTournamentDetails = async () => {
     // Si des équipes existent déjà, les afficher
     if (selectedTournamentDetails.value.teams) {
       teams.value = selectedTournamentDetails.value.teams || [];
+      initTeamScores(); // Initialiser les scores
     }
+  }
+};
+
+// Initialiser les scores pour chaque équipe
+const initTeamScores = () => {
+  if (teams.value.length > 0) {
+    teams.value.forEach((team) => {
+      teamScores.value[team._id] = team.score || 0;
+    });
   }
 };
 
@@ -317,6 +578,72 @@ const setRanking = async (teamId: string, ranking: number) => {
     }
   }
 };
+// Méthode pour mettre à jour le score
+const updateScore = async (teamId: string, score: number) => {
+  if (selectedTournament.value) {
+    try {
+      // Appel à l'API
+      await tournamentService.updateTeamScore(
+        selectedTournament.value,
+        teamId,
+        score
+      );
+
+      // Mettre à jour localement
+      const teamToUpdate = teams.value.find((t) => t._id === teamId);
+      if (teamToUpdate) {
+        teamToUpdate.score = score;
+        // Mettre à jour le nom dans l'interface (optionnel, car le backend le fait déjà)
+        const baseName = teamToUpdate.name.replace(/ \(\d+\)$/, "");
+        teamToUpdate.name = `${baseName} (${score})`;
+      }
+
+      showMessage("success", `Score de l'équipe mis à jour : ${score}`);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du score:", error);
+      showMessage("error", "Erreur lors de la mise à jour du score");
+    }
+  }
+};
+
+/**
+ * Affiche la boîte de dialogue de confirmation avant d'annuler la finalisation du tournoi
+ */
+const confirmUnfinishTournament = () => {
+  showUnfinishConfirmationDialog.value = true;
+};
+
+/**
+ * Annule la finalisation d'un tournoi
+ * Appelée après confirmation par l'utilisateur
+ */
+const unfinishTournament = async () => {
+  if (selectedTournament.value) {
+    try {
+      // Utiliser la fonction pour annuler la finalisation du tournoi
+      await tournamentService.unmarkTournamentAsFinished(
+        selectedTournament.value
+      );
+
+      // Fermer la boîte de dialogue et rafraîchir les détails
+      showUnfinishConfirmationDialog.value = false;
+
+      // Rafraîchir les détails du tournoi
+      await fetchTournamentDetails();
+
+      showMessage(
+        "success",
+        "La finalisation du tournoi a été annulée. Vous pouvez maintenant modifier à nouveau les classements."
+      );
+    } catch (error) {
+      console.error("Erreur lors de l'annulation de finalisation:", error);
+      showMessage(
+        "error",
+        "Erreur lors de l'annulation de la finalisation du tournoi"
+      );
+    }
+  }
+};
 
 /**
  * Calcule le nombre maximum de rangs possibles
@@ -345,46 +672,77 @@ const getRankingLabel = (rank: number): string => {
   }
 };
 
-/**
- * Détermine la classe CSS à appliquer en fonction du classement
- * pour styliser les cartes d'équipe
- *
- * @param rank - Rang de l'équipe
- * @returns Nom de classe CSS pour l'apparence de la carte
- */
-const getRankingClass = (rank: number): string => {
+const getRankingBorderClass = (
+  rank: number,
+  opacityClass = "opacity-70"
+): string => {
   switch (rank) {
     case 1:
-      return "gold-team";
+      return `border-yellow-400 shadow-yellow-400/20 ${opacityClass}`;
     case 2:
-      return "silver-team";
+      return `border-gray-300 shadow-gray-300/20 ${opacityClass}`;
     case 3:
-      return "bronze-team";
+      return `border-amber-600 shadow-amber-600/20 ${opacityClass}`;
     case 4:
-      return "fourth-team";
+      return `border-blue-500 shadow-blue-500/20 ${opacityClass}`;
+    case 0:
+      return "border-gray-600 shadow-gray-600/20";
     default:
-      return rank > 0 ? `rank-${rank}-team` : "unranked-team";
+      return `border-purple-500 shadow-purple-500/20 ${opacityClass}`;
+  }
+};
+
+const getRankingBorderBottomClass = (rank: number): string => {
+  switch (rank) {
+    case 1:
+      return "border-yellow-400";
+    case 2:
+      return "border-gray-300";
+    case 3:
+      return "border-amber-600";
+    case 4:
+      return "border-blue-500";
+    case 0:
+      return "border-gray-600";
+    default:
+      return "border-purple-500";
+  }
+};
+
+const getRankingTextClass = (rank: number): string => {
+  switch (rank) {
+    case 1:
+      return "text-yellow-400";
+    case 2:
+      return "text-gray-300";
+    case 3:
+      return "text-amber-600";
+    case 4:
+      return "text-blue-500";
+    case 0:
+      return "text-white";
+    default:
+      return "text-purple-500";
   }
 };
 
 /**
- * Détermine la classe CSS pour les boutons de classement actifs
- *
- * @param rank - Rang correspondant au bouton
- * @returns Nom de classe CSS pour l'apparence du bouton actif
+ * Détermine la classe CSS pour les boutons de classement
  */
-const getRankingButtonActiveClass = (rank: number): string => {
+const getRankingButtonClass = (rank: number, isActive: boolean): string => {
+  if (!isActive) return "bg-gray-700/70 text-white hover:bg-gray-600/90";
+
   switch (rank) {
     case 1:
-      return "bg-yellow-500 text-black";
+      return "cyberpunk-btn-gold"; // À ajouter dans votre CSS
     case 2:
-      return "bg-gray-300 text-black";
+      return "cyberpunk-btn-silver"; // À ajouter dans votre CSS
     case 3:
-      return "bg-yellow-700 text-white";
+      return "cyberpunk-btn-bronze"; // À ajouter dans votre CSS
     case 4:
-      return "bg-blue-500 text-white";
+      return "cyberpunk-btn-blue";
     default:
-      return "bg-purple-500 text-white";
+      return "cyberpunk-btn-purple";
   }
 };
 
@@ -502,319 +860,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-/* Container principal */
-.container {
-  padding: 2rem;
-  background: linear-gradient(
-    135deg,
-    rgba(13, 6, 23, 0.9) 0%,
-    rgba(29, 7, 66, 0.8) 100%
-  );
-  border-radius: 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-/* Titre principal avec effet néon */
-.neon-text {
-  font-family: "Audiowide", cursive;
-  color: #ffffff;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-  letter-spacing: 2px;
-  margin-bottom: 2rem;
-  text-align: center;
-  animation: pulsate 2s infinite alternate;
-}
-
-@keyframes pulsate {
-  0% {
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-  }
-  100% {
-    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
-      0 0 50px #ff00ff;
-  }
-}
-
-/* Label avec effet néon */
-.neon-label {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  color: #22d3ee;
-  text-shadow: 0 0 5px rgba(34, 211, 238, 0.7);
-  margin-bottom: 0.5rem;
-  display: block;
-  letter-spacing: 1px;
-}
-
-/* Select stylisé */
-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(17, 24, 39, 0.8);
-  color: white;
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2306b6d4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.5em;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
-  transition: all 0.3s ease;
-}
-
-select:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-/* Grille des équipes */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* Carte d'équipe */
-.team-card {
-  position: relative;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  background: rgba(31, 41, 55, 0.7);
-  border: 2px solid rgba(139, 92, 246, 0.5);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4),
-    inset 0 0 10px rgba(139, 92, 246, 0.2);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.team-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, #ec4899, #8b5cf6);
-}
-
-.team-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5),
-    inset 0 0 15px rgba(236, 72, 153, 0.3);
-}
-
-/* Styles spécifiques aux équipes selon leur classement */
-.gold-team {
-  background: linear-gradient(
-    135deg,
-    rgba(234, 179, 8, 0.2),
-    rgba(161, 98, 7, 0.3)
-  );
-  border: 2px solid rgba(234, 179, 8, 0.7);
-  box-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
-}
-.gold-team::before {
-  background: linear-gradient(90deg, #eab308, #ca8a04);
-}
-
-.silver-team {
-  background: linear-gradient(
-    135deg,
-    rgba(203, 213, 225, 0.2),
-    rgba(148, 163, 184, 0.3)
-  );
-  border: 2px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 0 20px rgba(203, 213, 225, 0.6);
-}
-.silver-team::before {
-  background: linear-gradient(90deg, #cbd5e1, #94a3b8);
-}
-
-.bronze-team {
-  background: linear-gradient(
-    135deg,
-    rgba(180, 83, 9, 0.2),
-    rgba(146, 64, 14, 0.3)
-  );
-  border: 2px solid rgba(180, 83, 9, 0.7);
-  box-shadow: 0 0 20px rgba(180, 83, 9, 0.6);
-}
-.bronze-team::before {
-  background: linear-gradient(90deg, #b45309, #92400e);
-}
-
-.fourth-team {
-  background: linear-gradient(
-    135deg,
-    rgba(37, 99, 235, 0.2),
-    rgba(29, 78, 216, 0.3)
-  );
-  border: 2px solid rgba(37, 99, 235, 0.7);
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
-}
-.fourth-team::before {
-  background: linear-gradient(90deg, #2563eb, #1d4ed8);
-}
-
-.unranked-team {
-  background: linear-gradient(
-    135deg,
-    rgba(31, 41, 55, 0.2),
-    rgba(17, 24, 39, 0.3)
-  );
-  border: 2px solid rgba(75, 85, 99, 0.7);
-  box-shadow: 0 0 10px rgba(75, 85, 99, 0.4);
-}
-.unranked-team::before {
-  background: linear-gradient(90deg, #4b5563, #374151);
-}
-
-/* Ajouter des styles pour les équipes au-delà du 4ème rang */
-[class*="rank-"] {
-  background: linear-gradient(
-    135deg,
-    rgba(109, 40, 217, 0.2),
-    rgba(79, 70, 229, 0.3)
-  );
-  border: 2px solid rgba(109, 40, 217, 0.7);
-  box-shadow: 0 0 20px rgba(109, 40, 217, 0.4);
-}
-
-[class*="rank-"]::before {
-  background: linear-gradient(90deg, #6d28d9, #4f46e5);
-}
-
-/* Liste de joueurs */
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-li {
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  background-color: rgba(55, 65, 81, 0.8);
-  border-radius: 0.375rem;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-li:hover {
-  background-color: rgba(75, 85, 99, 0.8);
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
-}
-
-li::before {
-  content: "▶";
-  color: #a78bfa;
-  margin-right: 0.5rem;
-  font-size: 0.75rem;
-}
-
-/* Boutons */
-button {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Bouton de mise à jour */
-.bg-blue-500 {
-  background: linear-gradient(45deg, #2563eb, #3b82f6);
-  color: white;
-  border: 1px solid rgba(59, 130, 246, 0.5);
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-}
-
-.bg-blue-500:hover {
-  background: linear-gradient(45deg, #3b82f6, #60a5fa);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
-  transform: translateY(-2px);
-}
-
-.bg-blue-500:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Bouton déclarer vainqueur */
-.bg-green-500 {
-  background: linear-gradient(45deg, #10b981, #34d399);
-  color: white;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 0.375rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-  width: 100%;
-  margin-top: 1rem;
-  text-transform: uppercase;
-}
-
-.bg-green-500:hover {
-  background: linear-gradient(45deg, #34d399, #6ee7b7);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
-  transform: translateY(-2px);
-}
-
-.bg-green-500:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Effet de brillance qui balaie le bouton */
-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: all 0.6s ease;
-}
-
-button:hover::before {
-  left: 100%;
-}
-</style>
+<style scoped></style>

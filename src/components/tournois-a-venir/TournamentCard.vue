@@ -283,8 +283,11 @@
           Participants
         </h3>
 
+        <!-- Vue des équipes si toutes ont au moins un joueur -->
         <div
-          v-if="tournament.teams && tournament.teams.length > 0"
+          v-if="
+            tournament.teams && tournament.teams.length > 0 && !hasEmptyTeams
+          "
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <div
@@ -321,6 +324,7 @@
           </div>
         </div>
 
+        <!-- Vue des joueurs individuels (quand pas d'équipes ou équipes avec joueurs vides) -->
         <ul
           v-else-if="tournament.players && tournament.players.length > 0"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
@@ -346,7 +350,7 @@
           </li>
         </ul>
         <p v-else class="text-gray-400 italic py-4 text-center font-orbitron">
-          Aucune équipe inscrite pour ce tournoi.
+          Aucun participant inscrit pour ce tournoi.
         </p>
       </div>
 
@@ -459,6 +463,18 @@ const emit = defineEmits([
   "check-in",
   "toggle-other-rankings",
 ]);
+
+// Propriété qui vérifie si une équipe est vide
+const hasEmptyTeams = computed(() => {
+  if (!props.tournament.teams || props.tournament.teams.length === 0) {
+    return true;
+  }
+
+  // Vérifier si au moins une équipe n'a pas de joueurs ou est vide
+  return props.tournament.teams.some(
+    (team) => !team.players || team.players.length === 0
+  );
+});
 
 const isUserRegistered = computed(() => {
   return props.user

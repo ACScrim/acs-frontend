@@ -1,14 +1,19 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\CreationTournoi.vue -->
 <template>
-  <div class="tournament-creation-container">
-    <h1 class="text-4xl text-white mb-8 neon-text font-audiowide text-center">
+  <div
+    class="p-8 bg-gray-900/70 border border-pink-500/30 rounded-xl shadow-lg shadow-pink-500/20 backdrop-blur-md"
+  >
+    <h1 class="text-4xl text-center mb-8 text-white neon-text font-audiowide">
       Création d'un Tournoi
     </h1>
 
-    <form @submit.prevent="createTournament" class="w-full max-w-2xl">
+    <form @submit.prevent="createTournament" class="w-full max-w-2xl mx-auto">
       <!-- Nom du Tournoi -->
-      <div class="form-group">
-        <label for="name" class="form-label">
+      <div class="mb-6">
+        <label
+          for="name"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -23,22 +28,24 @@
           </svg>
           Nom du Tournoi <span class="text-pink-500">*</span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="text"
             id="name"
             v-model="name"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
             placeholder="Ex: Tournoi Mario Kart 8"
           />
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Sélection du Jeu -->
-      <div class="form-group">
-        <label for="game" class="form-label">
+      <div class="mb-6">
+        <label
+          for="game"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -51,21 +58,30 @@
           </svg>
           Jeu <span class="text-pink-500">*</span>
         </label>
-        <div class="select-wrapper">
-          <select id="game" v-model="game" class="form-select" required>
+        <div class="relative">
+          <select
+            id="game"
+            v-model="game"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            required
+          >
             <option value="" disabled selected>Sélectionnez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
           </select>
-          <div class="select-arrow"></div>
-          <div class="input-glow"></div>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
         </div>
       </div>
 
       <!-- Date du tournoi -->
-      <div class="form-group">
-        <label for="date" class="form-label">
+      <div class="mb-6">
+        <label
+          for="date"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -80,21 +96,23 @@
           </svg>
           Date <span class="text-pink-500">*</span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="datetime-local"
             id="date"
             v-model="date"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
           />
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Nom du channel Discord -->
-      <div class="form-group">
-        <label for="discordChannelName" class="form-label flex items-center">
+      <div class="mb-6">
+        <label
+          for="discordChannelName"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -108,7 +126,7 @@
             />
           </svg>
           Nom du Channel Discord <span class="text-pink-500">*</span>
-          <span class="tooltip-icon ml-2 relative group">
+          <span class="group relative ml-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -123,27 +141,31 @@
                 d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
               />
             </svg>
-            <div class="tooltip-content">
+            <div
+              class="absolute left-1/2 -translate-x-1/2 -top-[60px] w-48 p-2 bg-gray-900 text-cyan-400 text-xs border border-cyan-500/30 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 text-center font-['Orbitron']"
+            >
               Ne pas inclure le symbole "#" dans le nom du canal
             </div>
           </span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="text"
             id="discordChannelName"
             v-model="discordChannelName"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
             placeholder="Ex: tournoi-mario-kart"
           />
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Description -->
-      <div class="form-group">
-        <label for="description" class="form-label">
+      <div class="mb-6">
+        <label
+          for="description"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -158,21 +180,23 @@
           </svg>
           Description <span class="text-pink-500">*</span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <textarea
             id="description"
             v-model="description"
-            class="form-textarea"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50 min-h-[120px] resize-y"
             required
             placeholder="Décrivez les détails du tournoi..."
           ></textarea>
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Sélection des joueurs -->
-      <div class="form-group">
-        <label for="players" class="form-label">
+      <div class="mb-6">
+        <label
+          for="players"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -185,7 +209,7 @@
           </svg>
           Ajouter des Joueurs
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="text"
             id="players"
@@ -194,40 +218,45 @@
             @focus="showPlayerList = true"
             @blur="hidePlayerList"
             @input="searchPlayers"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             placeholder="Rechercher un joueur..."
           />
-          <div class="input-glow"></div>
         </div>
 
         <!-- Liste des résultats de recherche -->
-        <div v-if="showPlayerList" class="player-search-results">
-          <ul>
+        <div
+          v-if="showPlayerList"
+          class="mt-2 bg-gray-900/95 border border-purple-500/50 rounded-lg max-h-[200px] overflow-y-auto shadow-lg shadow-purple-500/30 z-10"
+        >
+          <ul class="py-1">
             <li
               v-for="player in filteredPlayers"
               :key="player._id"
               @mousedown.prevent="addPlayer(player)"
-              class="player-search-item"
+              class="px-4 py-3 cursor-pointer transition-colors hover:bg-purple-500/20 text-white font-['Orbitron'] text-sm"
             >
               {{ player.username }}
             </li>
-            <li v-if="filteredPlayers.length === 0" class="player-search-empty">
+            <li
+              v-if="filteredPlayers.length === 0"
+              class="px-4 py-3 text-purple-400 italic text-center text-sm"
+            >
               Aucun joueur trouvé
             </li>
           </ul>
         </div>
 
         <!-- Liste des joueurs sélectionnés -->
-        <div class="selected-players-container">
+        <div class="flex flex-wrap gap-2 mt-4">
           <div
             v-for="player in selectedPlayers"
             :key="player._id"
-            class="selected-player"
+            class="flex items-center bg-purple-500/20 text-white px-3 py-2 rounded-full text-sm border border-purple-500/50 transition-all hover:bg-purple-500/30 hover:border-purple-500/70 hover:shadow-md hover:shadow-purple-500/40 font-['Orbitron']"
           >
             {{ player.username }}
             <button
               @click.prevent="removePlayer(player)"
-              class="remove-player-btn"
+              class="ml-2 text-white/70 hover:text-pink-500 transition-colors"
               aria-label="Retirer le joueur"
             >
               <svg
@@ -248,9 +277,13 @@
       </div>
 
       <!-- Bouton de soumission -->
-      <div class="form-group flex justify-center">
-        <button type="submit" class="neon-button" :disabled="isLoading">
-          <span v-if="isLoading" class="flex items-center">
+      <div class="flex justify-center mt-8">
+        <button
+          type="submit"
+          class="cyberpunk-btn-purple py-3 px-6 rounded-lg text-lg font-['Orbitron'] font-semibold uppercase"
+          :disabled="isLoading"
+        >
+          <span v-if="isLoading" class="flex items-center relative z-10">
             <svg
               class="animate-spin -ml-1 mr-2 h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -271,9 +304,9 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Création en cours...
+            <span class="relative z-10">Création en cours...</span>
           </span>
-          <span v-else>Créer le Tournoi</span>
+          <span v-else class="relative z-10">Créer le Tournoi</span>
         </button>
       </div>
     </form>

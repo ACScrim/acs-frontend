@@ -3,7 +3,7 @@
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
     <!-- En-tête -->
-    <h1 class="text-4xl font-['Audiowide'] text-white text-center mb-8">
+    <h1 class="text-4xl text-white mb-8 text-center neon-text">
       Gestion des Équipes
     </h1>
     <!-- Sélection du jeu et du tournoi -->

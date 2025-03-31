@@ -1,13 +1,18 @@
 <template>
-  <div class="edit-tournament-container">
-    <h1 class="text-4xl text-center mb-8 neon-text font-audiowide">
+  <div
+    class="p-8 bg-gray-900/70 border border-pink-500/30 rounded-xl shadow-lg shadow-pink-500/20 backdrop-blur-md"
+  >
+    <h1 class="text-4xl text-white text-center mb-8 neon-text font-audiowide">
       Modification d'un Tournoi
     </h1>
 
-    <form @submit.prevent="editTournament" class="tournament-form">
+    <form @submit.prevent="editTournament" class="w-full max-w-2xl mx-auto">
       <!-- Sélection du tournoi -->
-      <div class="form-group">
-        <label for="tournament" class="form-label">
+      <div class="mb-6">
+        <label
+          for="tournament"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -20,12 +25,12 @@
           </svg>
           Sélectionner un Tournoi <span class="text-pink-500">*</span>
         </label>
-        <div class="select-wrapper">
+        <div class="relative">
           <select
             id="tournament"
             v-model="selectedTournament"
             @change="loadTournamentDetails"
-            class="form-select"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
           >
             <option value="" disabled selected>Choisir un tournoi</option>
@@ -37,8 +42,9 @@
               {{ tournament.name }}
             </option>
           </select>
-          <div class="select-arrow"></div>
-          <div class="input-glow"></div>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
         </div>
       </div>
 
@@ -73,8 +79,12 @@
       </div>
 
       <!-- Sélection du jeu -->
-      <div class="form-group">
-        <label for="game" class="form-label">
+
+      <div class="mb-6">
+        <label
+          for="game"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -87,21 +97,30 @@
           </svg>
           Jeu <span class="text-pink-500">*</span>
         </label>
-        <div class="select-wrapper">
-          <select id="game" v-model="game" class="form-select" required>
-            <option value="" disabled>Sélectionnez un jeu</option>
+        <div class="relative">
+          <select
+            id="game"
+            v-model="game"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            required
+          >
+            <option value="" disabled selected>Sélectionnez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
           </select>
-          <div class="select-arrow"></div>
-          <div class="input-glow"></div>
+          <div
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+          ></div>
         </div>
       </div>
 
       <!-- Date et heure -->
-      <div class="form-group">
-        <label for="date" class="form-label">
+      <div class="mb-6">
+        <label
+          for="date"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -114,23 +133,25 @@
               clip-rule="evenodd"
             />
           </svg>
-          Date et heure <span class="text-pink-500">*</span>
+          Date <span class="text-pink-500">*</span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="datetime-local"
             id="date"
             v-model="date"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
           />
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Nom du channel Discord -->
-      <div class="form-group">
-        <label for="discordChannelName" class="form-label">
+      <div class="mb-6">
+        <label
+          for="discordChannelName"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -144,23 +165,46 @@
             />
           </svg>
           Nom du Channel Discord <span class="text-pink-500">*</span>
+          <span class="group relative ml-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4 text-cyan-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+              />
+            </svg>
+            <div
+              class="absolute left-1/2 -translate-x-1/2 -top-[60px] w-48 p-2 bg-gray-900 text-cyan-400 text-xs border border-cyan-500/30 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 text-center font-['Orbitron']"
+            >
+              Ne pas inclure le symbole "#" dans le nom du canal
+            </div>
+          </span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <input
             type="text"
             id="discordChannelName"
             v-model="discordChannelName"
-            class="form-input"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             required
             placeholder="Ex: tournoi-mario-kart"
           />
-          <div class="input-glow"></div>
         </div>
       </div>
 
       <!-- Description -->
-      <div class="form-group">
-        <label for="description" class="form-label">
+      <div class="mb-6">
+        <label
+          for="description"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -175,15 +219,14 @@
           </svg>
           Description <span class="text-pink-500">*</span>
         </label>
-        <div class="input-wrapper">
+        <div class="relative">
           <textarea
             id="description"
             v-model="description"
-            class="form-textarea"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50 min-h-[120px] resize-y"
             required
             placeholder="Décrivez les détails du tournoi..."
           ></textarea>
-          <div class="input-glow"></div>
         </div>
       </div>
 
@@ -265,11 +308,14 @@
       </div>
 
       <!-- Boutons d'action -->
-      <div class="button-group">
-        <button type="submit" class="neon-button-edit">
+      <div class="flex flex-wrap gap-4 mt-8 justify-center">
+        <button
+          type="submit"
+          class="cyberpunk-btn-cyan py-3 px-6 rounded-lg flex items-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
+            class="h-5 w-5 mr-2 relative z-10"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -277,18 +323,20 @@
               d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
             />
           </svg>
-          Modifier le Tournoi
+          <span class="relative z-10 font-['Orbitron'] font-semibold uppercase"
+            >Modifier le Tournoi</span
+          >
         </button>
 
         <button
           v-if="selectedTournament"
           type="button"
           @click="confirmDeleteTournament"
-          class="neon-button-delete"
+          class="cyberpunk-btn-red py-3 px-6 rounded-lg flex items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
+            class="h-5 w-5 mr-2 relative z-10"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -298,7 +346,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          Supprimer le Tournoi
+          <span class="relative z-10 font-['Orbitron'] font-semibold uppercase"
+            >Supprimer le Tournoi</span
+          >
         </button>
       </div>
     </form>
@@ -540,39 +590,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Conteneur principal */
-.edit-tournament-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 1rem;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
-  backdrop-filter: blur(5px);
-}
-
-/* Titre principal avec effet néon */
-.neon-text {
-  color: white;
-  font-family: "Audiowide", cursive;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-  letter-spacing: 1px;
-  animation: pulsate 2s infinite alternate;
-}
-
-@keyframes pulsate {
-  0% {
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-  }
-  100% {
-    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
-      0 0 50px #ff00ff;
-  }
-}
-
 /* Formulaire */
 .tournament-form {
   display: flex;
