@@ -32,6 +32,9 @@ export interface ProposalVote {
   createdAt: string;
 }
 
+/**
+ * Interface pour les jeux RAWG (résultats de recherche)
+ */
 export interface RawgGame {
   id: number;
   name: string;
@@ -39,6 +42,9 @@ export interface RawgGame {
   description?: string;
   released?: string;
   metacritic?: number;
-  genres: { id: number; name: string }[];
-  platforms: { platform: { id: number; name: string } }[];
+  genres?: Array<{ id: number; name: string }>;
+  platforms?: Array<{ platform: { id: number; name: string } }>;
+  description_raw?: string; // Ajouté du RawgGameDetails
+  website?: string; // Ajouté du RawgGameDetails
+  developers?: Array<{ name: string }>; // Ajouté du RawgGameDetails
 }

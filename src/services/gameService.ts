@@ -47,12 +47,15 @@ const deleteGame = async (id: string): Promise<void> => {
 
 /**
  * Met à jour un jeu existant
- * @param id - ID du jeu à mettre à jour
- * @param game - Nouvelles données du jeu
+ * @param game - Le jeu à mettre à jour (doit contenir un _id)
  * @returns Jeu mis à jour
  */
-const updateGame = async (id: string, game: Game): Promise<Game> => {
-  const response = await axios.put(`${API_URL}/${id}`, game, {
+const updateGame = async (game: Game): Promise<Game> => {
+  if (!game._id) {
+    throw new Error("L'ID du jeu est requis pour la mise à jour");
+  }
+
+  const response = await axios.put(`${API_URL}/${game._id}`, game, {
     withCredentials: true,
   });
   return response.data;

@@ -65,14 +65,6 @@ export const useMemberStore = defineStore("members", () => {
 
       lastFetchTime.value = Date.now();
       saveToLocalStorage();
-
-      // Message de succès
-      success.value = "Liste des membres mise à jour avec succès";
-
-      // Effacer automatiquement le message après 5 secondes
-      setTimeout(() => {
-        success.value = null;
-      }, 5000);
     } catch (err) {
       console.error("Erreur lors de la récupération des membres:", err);
       error.value = "Erreur lors de la récupération des membres.";

@@ -215,7 +215,7 @@
               :key="tournament._id"
               class="bg-gray-800/70 p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between transform transition-all hover:bg-gray-700/90 duration-300"
             >
-              <div class="flex items-center mb-2 sm:mb-0">
+              <div class="flex items-center mb-2 sm:mb-0 flex-1">
                 <div
                   class="h-8 w-8 rounded-full bg-pink-500/20 flex items-center justify-center mr-3 border border-pink-500/50"
                 >
@@ -248,6 +248,26 @@
                   {{ getRankingLabel(tournament.rank ?? 0) }} /
                   {{ tournament.numberOfTeams }}
                 </span>
+                <!-- Bouton détails du tournoi -->
+                <router-link
+                  :to="`/tournois/${tournament._id}`"
+                  class="cyberpunk-btn-mini-pink px-3 py-1 rounded text-xs font-orbitron flex items-center"
+                  title="Voir les détails du tournoi"
+                >
+                  <span>Détails</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </router-link>
               </div>
             </li>
           </ul>
@@ -749,5 +769,24 @@ h2 {
 
 .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
+}
+
+.cyberpunk-btn-mini-pink {
+  background: rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  color: rgba(236, 72, 153, 0.9);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.cyberpunk-btn-mini-pink:hover {
+  background: rgba(236, 72, 153, 0.3);
+  border-color: rgba(236, 72, 153, 0.8);
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.5);
+  transform: translateY(-1px);
+}
+
+.cyberpunk-btn-mini-pink:active {
+  transform: translateY(1px);
 }
 </style>

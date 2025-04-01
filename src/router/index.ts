@@ -1,71 +1,66 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import CreateGame from "../views/admin/CreateGame.vue";
-import GestionAdministrations from "../views/admin/GestionAdministrations.vue";
-import SynchronizePlayers from "../views/admin/SynchronizePlayers.vue";
-import TournoisAVenir from "../views/TournoisAVenir.vue";
-import Classement from "../views/Classement.vue";
-import Membres from "../views/Membres.vue";
-import GestionBadges from "../views/admin/GestionBadges.vue";
-import Profil from "../views/Profil.vue"; // Import du composant Profil
-import AjoutJoueurs from "../views/admin/AjoutJoueurs.vue";
-import CreationTournoi from "../views/admin/CreationTournoi.vue";
-import AnnouncementList from "../views/AnnouncementList.vue";
-import AnnouncementDetail from "../views/AnnouncementDetail.vue";
-import AnnouncementEditor from "../views/AnnouncementEditor.vue";
-import Calendar from "../views/Calendar.vue";
 
 const routes = [
-  { path: "/", component: Home },
+  {
+    path: "/",
+    name: "Home",
+    component: () => import("../views/Home.vue"),
+  },
   {
     path: "/creation-jeu",
     name: "CreateGame",
-    component: CreateGame,
+    component: () => import("../views/admin/CreateGame.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/ajout-joueurs",
     name: "AjoutJoueurs",
-    component: AjoutJoueurs,
+    component: () => import("../views/admin/AjoutJoueurs.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/gestion-administrations",
     name: "GestionAdministrations",
-    component: GestionAdministrations,
+    component: () => import("../views/admin/GestionAdministrations.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/creation-tournoi",
     name: "CreationTournoi",
-    component: CreationTournoi,
+    component: () => import("../views/admin/CreationTournoi.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/synchronisation-joueurs",
     name: "SynchronizePlayers",
-    component: SynchronizePlayers,
+    component: () => import("../views/admin/SynchronizePlayers.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/tournois-a-venir",
     name: "TournoisAVenir",
-    component: TournoisAVenir,
+    component: () => import("../views/TournoisAVenir.vue"),
   },
   {
     path: "/classement",
     name: "Classement",
-    component: Classement,
+    component: () => import("../views/Classement.vue"),
   },
   {
     path: "/membres",
     name: "Membres",
-    component: Membres,
+    component: () => import("../views/Membres.vue"),
   },
   {
     path: "/gestion-badges",
     name: "GestionBadges",
-    component: GestionBadges,
+    component: () => import("../views/admin/GestionBadges.vue"),
+    meta: { requiresAdmin: true },
   },
   {
     path: "/profil/:id",
     name: "Profil",
-    component: Profil,
+    component: () => import("../views/Profil.vue"),
   },
   {
     path: "/auth-error",
@@ -81,30 +76,39 @@ const routes = [
   {
     path: "/annonces",
     name: "AnnouncementList",
-    component: AnnouncementList,
+    component: () => import("../views/AnnouncementList.vue"),
   },
   {
     path: "/annonces/nouveau",
     name: "NewAnnouncement",
-    component: AnnouncementEditor,
+    component: () => import("../views/AnnouncementEditor.vue"),
     meta: { requiresAdmin: true },
   },
   {
     path: "/annonces/:id",
     name: "AnnouncementDetail",
-    component: AnnouncementDetail,
+    component: () => import("../views/AnnouncementDetail.vue"),
   },
   {
     path: "/annonces/:id/edit",
     name: "EditAnnouncement",
-    component: AnnouncementEditor,
+    component: () => import("../views/AnnouncementEditor.vue"),
     meta: { requiresAdmin: true },
   },
   {
     path: "/calendar",
     name: "Calendar",
-    component: Calendar,
+    component: () => import("../views/Calendar.vue"),
     meta: { title: "Calendrier des Tournois" },
+  },
+  {
+    path: "/tournois/:id",
+    name: "tournament-details",
+    component: () => import("../views/Tournament.vue"),
+    meta: {
+      requiresAuth: false,
+      title: "Détails du tournoi",
+    },
   },
 ];
 

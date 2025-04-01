@@ -344,10 +344,14 @@
               </div>
 
               <router-link
-                :to="{ name: 'TournoisAVenir' }"
+                :to="
+                  nextTournament
+                    ? `/tournois/${nextTournament._id}`
+                    : { name: 'TournoisAVenir' }
+                "
                 class="px-4 py-1 bg-pink-600 hover:bg-pink-700 text-white rounded-md font-orbitron text-sm transition-all duration-300 hover:shadow-glow-pink flex items-center"
               >
-                <span>Voir</span>
+                <span>{{ nextTournament ? "Voir" : "Tous les tournois" }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4 ml-2"
@@ -472,10 +476,16 @@
 
             <div class="flex justify-end">
               <router-link
-                :to="{ name: 'TournoisAVenir' }"
+                :to="
+                  lastFinishedTournament
+                    ? `/tournois/${lastFinishedTournament._id}`
+                    : { name: 'TournoisAVenir' }
+                "
                 class="px-4 py-1 bg-pink-600 hover:bg-pink-700 text-white rounded-md font-orbitron text-sm transition-all duration-300 hover:shadow-glow-pink flex items-center"
               >
-                <span>Détails</span>
+                <span>{{
+                  lastFinishedTournament ? "Détails" : "Tous les tournois"
+                }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4 ml-2"

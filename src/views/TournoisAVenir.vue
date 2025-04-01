@@ -86,7 +86,7 @@
               </div>
             </div>
             <span class="cyberpunk-toggle-label font-orbitron text-white ml-3">
-              Afficher les tournois passés
+              Afficher uniquement les tournois terminés
             </span>
           </label>
         </div>
@@ -107,97 +107,6 @@
               </span>
             </span>
           </label>
-        </div>
-      </div>
-
-      <div class="mt-6 space-y-4">
-        <label
-          class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-pink-400 mb-3 cyberpunk-label-pink"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>FILTRER PAR DATE</span>
-          <div
-            class="h-px flex-grow bg-gradient-to-r from-pink-500 to-transparent mx-2 opacity-70"
-          ></div>
-        </label>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Date de début -->
-          <div class="cyberpunk-date-container">
-            <label
-              class="block text-sm font-medium text-pink-400 mb-1 font-orbitron"
-            >
-              Du
-            </label>
-            <div class="relative group">
-              <input
-                type="date"
-                v-model="startDate"
-                class="cyberpunk-date-input w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all cursor-pointer"
-                :max="endDate || undefined"
-                @change="filterByDate"
-              />
-              <div
-                class="cyberpunk-date-glow-pink absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-              ></div>
-            </div>
-          </div>
-
-          <!-- Date de fin -->
-          <div class="cyberpunk-date-container">
-            <label
-              class="block text-sm font-medium text-pink-400 mb-1 font-orbitron"
-            >
-              Au
-            </label>
-            <div class="relative group">
-              <input
-                type="date"
-                v-model="endDate"
-                class="cyberpunk-date-input w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all cursor-pointer"
-                :min="startDate || undefined"
-                @change="filterByDate"
-              />
-              <div
-                class="cyberpunk-date-glow-pink absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bouton pour effacer les dates -->
-        <div class="flex justify-end" v-if="startDate || endDate">
-          <button
-            @click="clearDates"
-            class="cyberpunk-btn-pink text-xs px-3 py-1.5 font-orbitron rounded-md"
-          >
-            <span class="relative z-10 flex items-center gap-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>Effacer les dates</span>
-            </span>
-          </button>
         </div>
       </div>
     </div>
@@ -234,29 +143,21 @@
 
     <!-- Liste des tournois -->
     <div v-if="filteredTournaments.length > 0">
-      <tournament-card
-        v-for="tournament in paginatedTournaments"
-        :key="tournament._id"
-        :tournament="tournament"
-        :user="user"
-        :show-participants="
-          tournament._id ? showParticipants[tournament._id] : false
-        "
-        :show-description="
-          tournament._id ? showDescription[tournament._id] : false
-        "
-        :show-podium="tournament._id ? showPodium[tournament._id] : false"
-        :is-checked-in="
-          tournament._id ? checkedInPlayers[tournament._id] : false
-        "
-        :show-other-rankings="
-          tournament._id ? showOtherRankings[tournament._id] : false
-        "
-        @toggle-tab="toggleTab"
-        @open-registration="openRegistrationPopup"
-        @check-in="checkIn"
-        @toggle-other-rankings="toggleOtherRankings"
-      />
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <tournament-grid-card
+          v-for="tournament in paginatedTournaments"
+          :key="tournament._id"
+          :tournament="tournament"
+          :user="user"
+          :is-checked-in="
+            tournament._id ? checkedInPlayers[tournament._id] : false
+          "
+          @open-registration="openRegistrationPopup"
+          @check-in="checkIn"
+        />
+      </div>
+
+      <!-- Pagination (inchangée) -->
       <CyberpunkPagination
         v-if="filteredTournaments.length > itemsPerPage"
         class="mt-8"
@@ -274,7 +175,7 @@
 
     <!-- Message pas de tournois -->
     <CyberTerminal
-      v-if="tournaments.length === 0"
+      v-if="filteredTournaments.length === 0"
       command="list_tournaments --all"
       errorCode="404_NO_TOURNAMENTS"
       message="Aucun tournoi n'a été trouvé."
@@ -296,30 +197,25 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import gameService from "../services/gameService";
-import tournamentService from "../services/tournamentService";
-import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
 import type { Game, Tournament } from "../types";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
-import TournamentCard from "@/components/tournois-a-venir/TournamentCard.vue";
+import TournamentGridCard from "@/components/tournois-a-venir/TournamentGridCard.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
+import { useTournamentStore } from "../stores/tournamentStore";
+
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------
 
 // États globaux
 const games = ref<Game[]>([]);
-const tournaments = ref<Tournament[]>([]);
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
 const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
-
-// État de filtrage par date
-const startDate = ref<string>("");
-const endDate = ref<string>("");
 
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
@@ -327,11 +223,7 @@ const showFinished = ref<boolean>(false);
 const sortAscending = ref<boolean>(true);
 
 // États d'interface et d'interaction
-const showParticipants = ref<{ [key: string]: boolean }>({});
-const showDescription = ref<{ [key: string]: boolean }>({});
-const showOtherRankings = ref<{ [key: string]: boolean }>({});
-const showPodium = ref<{ [key: string]: boolean }>({});
-const checkedInPlayers = ref<{ [key: string]: boolean }>({});
+const checkedInPlayers = computed(() => tournamentStore.checkedInPlayers);
 
 // États du modal de confirmation
 const showPopup = ref<boolean>(false);
@@ -340,7 +232,9 @@ const actionType = ref<string>("register"); // "register" ou "unregister"
 
 // États de pagination
 const currentPage = ref<number>(1);
-const itemsPerPage = ref<number>(5); // Nombre de tournois par page
+const itemsPerPage = ref<number>(6); // Nombre de tournois par page
+
+const tournamentStore = useTournamentStore();
 
 //-------------------------------------------------------
 // SECTION: Store et propriétés calculées
@@ -351,11 +245,11 @@ const userStore = useUserStore();
 const user = computed(() => userStore.user);
 
 /**
- * Filtre et trie les tournois selon les critères sélectionnés
+ * Récupère tous les tournois et applique les filtres
  */
 const filteredTournaments = computed(() => {
-  // Appliquer d'abord les filtres pour réduire le nombre d'éléments à trier
-  let filtered = tournaments.value;
+  // Récupérer les tournois du store
+  let filtered = tournamentStore.tournaments;
 
   // Filtre par jeu si un jeu est sélectionné
   if (selectedGame.value) {
@@ -363,32 +257,12 @@ const filteredTournaments = computed(() => {
   }
 
   // Filtre par statut (terminé/à venir)
-  if (!showFinished.value) {
-    filtered = filtered.filter((t) => !t.finished);
-  }
-
-  // Filtre par plage de dates
-  if (startDate.value || endDate.value) {
-    filtered = filtered.filter((t) => {
-      const tournamentDate = new Date(t.date);
-      tournamentDate.setHours(0, 0, 0, 0); // Normaliser à minuit
-
-      // Vérifier la date de début si définie
-      if (startDate.value) {
-        const start = new Date(startDate.value);
-        start.setHours(0, 0, 0, 0);
-        if (tournamentDate < start) return false;
-      }
-
-      // Vérifier la date de fin si définie
-      if (endDate.value) {
-        const end = new Date(endDate.value);
-        end.setHours(23, 59, 59, 999); // Fin de journée
-        if (tournamentDate > end) return false;
-      }
-
-      return true;
-    });
+  if (showFinished.value) {
+    // Si la case est cochée, afficher UNIQUEMENT les tournois terminés
+    filtered = filtered.filter((t) => t.finished === true);
+  } else {
+    // Sinon, afficher UNIQUEMENT les tournois à venir (non terminés)
+    filtered = filtered.filter((t) => t.finished !== true);
   }
 
   // Tri chronologique configurable
@@ -401,136 +275,17 @@ const filteredTournaments = computed(() => {
   });
 });
 
-/**
- * Filtre les tournois par date
- */
-const filterByDate = () => {
-  // Réinitialiser la pagination quand les dates changent
-  currentPage.value = 1;
-  // Le filtrage s'effectue via la propriété calculée filteredTournaments
-};
-
-/**
- * Efface les filtres de date
- */
-const clearDates = () => {
-  startDate.value = "";
-  endDate.value = "";
-  currentPage.value = 1;
-};
-
 //-------------------------------------------------------
 // SECTION: Récupération des données
 //-------------------------------------------------------
 
 /**
- * Récupère la liste des tournois depuis l'API
- * et vérifie les check-ins de l'utilisateur
+ * Récupère les tournois depuis le store (avec mise en cache)
  */
 const fetchTournaments = async () => {
-  // Activer l'état de chargement
-  isLoading.value = true;
-
-  try {
-    // Réinitialiser les états de check-in
-    checkedInPlayers.value = {};
-
-    // Récupérer tous les tournois
-    tournaments.value = await tournamentService.getTournaments();
-
-    // Vérifier l'état de check-in du joueur pour chaque tournoi
-    if (user.value) {
-      const player = await playerService.getPlayerByIdUser(user.value._id);
-      if (player && player._id) {
-        tournaments.value.forEach((tournament) => {
-          if (tournament._id) {
-            checkedInPlayers.value[tournament._id] =
-              (tournament.checkIns &&
-                player._id &&
-                tournament.checkIns[player._id]) ||
-              false;
-          }
-        });
-      }
-    }
-  } catch (error) {
-    console.error("Erreur lors du chargement des tournois:", error);
-    showMessage("error", "Impossible de charger les tournois");
-  } finally {
-    // Désactiver l'état de chargement, qu'il y ait eu une erreur ou non
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 100); // Légère temporisation pour une meilleure UX
-  }
+  await tournamentStore.fetchTournaments(user.value?._id);
 };
 
-//-------------------------------------------------------
-// SECTION: Gestion des onglets des tournois
-//-------------------------------------------------------
-
-/**
- * Gère la bascule entre les différents onglets d'un tournoi
- * @param tournamentId - ID du tournoi
- * @param tab - Nom de l'onglet ('participants', 'description' ou 'podium')
- */
-const toggleTab = (tournamentId: string, tab: string) => {
-  // S'assurer que tous les objets existent
-  if (!showParticipants.value[tournamentId]) {
-    showParticipants.value[tournamentId] = false;
-  }
-  if (!showDescription.value[tournamentId]) {
-    showDescription.value[tournamentId] = false;
-  }
-  if (!showPodium.value[tournamentId]) {
-    showPodium.value[tournamentId] = false;
-  }
-
-  if (tab === "participants") {
-    // Basculer l'état de l'onglet participants
-    showParticipants.value[tournamentId] =
-      !showParticipants.value[tournamentId];
-
-    // Si on active l'onglet, fermer les autres
-    if (showParticipants.value[tournamentId]) {
-      showDescription.value[tournamentId] = false;
-      showPodium.value[tournamentId] = false;
-    }
-  } else if (tab === "description") {
-    // Basculer l'état de l'onglet description
-    showDescription.value[tournamentId] = !showDescription.value[tournamentId];
-
-    // Si on active l'onglet, fermer les autres
-    if (showDescription.value[tournamentId]) {
-      showParticipants.value[tournamentId] = false;
-      showPodium.value[tournamentId] = false;
-    }
-  } else if (tab === "podium") {
-    // Basculer l'état de l'onglet podium
-    showPodium.value[tournamentId] = !showPodium.value[tournamentId];
-
-    // Si on active l'onglet, fermer les autres
-    if (showPodium.value[tournamentId]) {
-      showParticipants.value[tournamentId] = false;
-      showDescription.value[tournamentId] = false;
-    }
-  }
-};
-
-/**
- * Bascule l'affichage des autres classements pour un tournoi
- * @param tournamentId - ID du tournoi
- */
-const toggleOtherRankings = (tournamentId: string) => {
-  // S'assurer que l'objet existe
-  if (!showOtherRankings.value) {
-    showOtherRankings.value = {};
-  }
-
-  // Créer un nouvel objet pour forcer la réactivité
-  const updatedState = { ...showOtherRankings.value };
-  updatedState[tournamentId] = !updatedState[tournamentId];
-  showOtherRankings.value = updatedState;
-};
 //-------------------------------------------------------
 // SECTION: Gestion des inscriptions aux tournois
 //-------------------------------------------------------
@@ -564,30 +319,37 @@ const closePopup = () => {
 const confirmAction = async () => {
   if (selectedTournament.value && user.value) {
     try {
+      let success = false;
+
       if (actionType.value === "register" && selectedTournament.value._id) {
-        // Inscription au tournoi
-        await tournamentService.registerPlayer(
+        // Utiliser la méthode du store pour l'inscription
+        success = await tournamentStore.registerPlayer(
           selectedTournament.value._id,
           user.value._id
         );
-        showMessage(
-          "success",
-          "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
-        );
-      } else {
-        if (selectedTournament.value._id) {
-          // Désinscription du tournoi
-          await tournamentService.unregisterPlayer(
-            selectedTournament.value._id,
-            user.value._id
+
+        if (success) {
+          showMessage(
+            "success",
+            "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
           );
         }
-        showMessage(
-          "success",
-          "Désinscription réussie ! Triste de te voir partir :("
+      } else if (selectedTournament.value._id) {
+        // Utiliser la méthode du store pour la désinscription
+        success = await tournamentStore.unregisterPlayer(
+          selectedTournament.value._id,
+          user.value._id
         );
+
+        if (success) {
+          showMessage(
+            "success",
+            "Désinscription réussie ! Triste de te voir partir :("
+          );
+        }
       }
-      fetchTournaments();
+
+      // Pas besoin de refetch ici car le cache est déjà mis à jour dans les méthodes du store
       closePopup();
     } catch (error) {
       console.error("Erreur lors de l'action:", error);
@@ -602,32 +364,27 @@ const confirmAction = async () => {
  * @param checkedIn - Nouvel état de check-in
  */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
-  // Optimistic UI: mettre à jour l'interface avant que la requête soit terminée
-  checkedInPlayers.value[tournamentId] = checkedIn;
+  if (user.value) {
+    // Utiliser la méthode du store pour le check-in
+    const success = await tournamentStore.checkInPlayer(
+      tournamentId,
+      user.value._id,
+      checkedIn
+    );
 
-  try {
-    if (user.value) {
-      await tournamentService.checkInPlayer(
-        tournamentId,
-        user.value._id,
-        checkedIn
-      );
-
+    if (success) {
       showMessage(
         "success",
         checkedIn ? "Check-in confirmé !" : "Check-in annulé."
       );
+    } else {
+      showMessage(
+        "error",
+        `Erreur: Impossible de ${
+          checkedIn ? "confirmer" : "annuler"
+        } le check-in.`
+      );
     }
-  } catch (error) {
-    // En cas d'erreur, remettre l'état précédent
-    checkedInPlayers.value[tournamentId] = !checkedIn;
-    console.error("Erreur lors du check-in:", error);
-    showMessage(
-      "error",
-      `Erreur: Impossible de ${
-        checkedIn ? "confirmer" : "annuler"
-      } le check-in.`
-    );
   }
 };
 
@@ -716,77 +473,28 @@ const showMessage = (
 //-------------------------------------------------------
 
 /**
- * Initialise les états de check-in pour l'utilisateur connecté
- */
-const initializeCheckInStates = async () => {
-  checkedInPlayers.value = {};
-
-  if (!user.value) return;
-
-  try {
-    const player = await playerService.getPlayerByIdUser(user.value._id);
-    if (!player?._id) return;
-
-    tournaments.value.forEach((tournament) => {
-      if (tournament._id) {
-        checkedInPlayers.value[tournament._id] = !!(
-          tournament.checkIns &&
-          player._id &&
-          tournament.checkIns[player._id]
-        );
-      }
-    });
-  } catch (error) {
-    console.error("Erreur lors de l'initialisation des check-ins:", error);
-  }
-};
-
-/**
- * Initialise les états d'interface pour les accordéons et onglets
- */
-const initializeUIStates = () => {
-  // Initialiser tous les accordéons comme fermés par défaut
-  tournaments.value.forEach((tournament) => {
-    if (tournament._id) {
-      showOtherRankings.value[tournament._id] = false;
-      showParticipants.value[tournament._id] = false;
-      showDescription.value[tournament._id] = false;
-    }
-  });
-};
-
-/**
  * Réinitialise la pagination quand les filtres changent
  */
-watch([selectedGame, showFinished, sortAscending, startDate, endDate], () => {
+watch([selectedGame, showFinished, sortAscending], async () => {
   currentPage.value = 1;
-});
-/**
- * Initialisation du composant au montage
- */
-onMounted(async () => {
-  // Activer l'état de chargement
-  isLoading.value = true;
 
+  // Si l'utilisateur est connecté, vérifier les états de check-in
+  if (user.value) {
+    await tournamentStore.checkUserCheckIns(user.value._id);
+  }
+});
+onMounted(async () => {
   try {
     // Chargement parallèle des jeux et tournois pour plus de rapidité
-    const [gamesResult, tournamentsResult] = await Promise.all([
+    const [gamesResult] = await Promise.all([
       gameService.getGames(),
-      tournamentService.getTournaments(),
+      fetchTournaments(), // Utilise le store avec cache
     ]);
 
     games.value = gamesResult;
-    tournaments.value = tournamentsResult;
-
-    // Initialisation des états d'interface
-    await initializeCheckInStates();
-    initializeUIStates();
   } catch (error) {
     console.error("Erreur lors de l'initialisation:", error);
-    showMessage("error", "Erreur lors du chargement des données");
-  } finally {
-    // Désactiver l'état de chargement
-    isLoading.value = false;
+    // Gérer l'erreur...
   }
 });
 </script>
