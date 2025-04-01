@@ -282,154 +282,6 @@
         </div>
       </div>
 
-      <!-- Section des derniers gagnants (si disponible) - Style optimisé -->
-      <div
-        v-if="
-          lastFinishedTournament &&
-          lastFinishedTournament.teams &&
-          !tournament.finished
-        "
-        class="mb-8 bg-black/60 backdrop-blur-sm rounded-lg overflow-hidden border border-purple-500 shadow-lg shadow-purple-500/30"
-      >
-        <!-- En-tête avec style cyberpunk -->
-        <div
-          class="bg-gradient-to-r from-purple-900/70 to-pink-900/50 px-5 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-purple-500/70"
-        >
-          <h3
-            class="text-lg text-white font-audiowide flex items-center neon-text-purple mb-2 sm:mb-0"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-purple-300"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-              />
-            </svg>
-            <span>Gagnants du tournoi</span>
-            <span
-              class="ml-2 px-2 py-0.5 bg-purple-900/50 rounded-md text-purple-200 text-sm border border-purple-500/50 truncate max-w-[180px] sm:max-w-xs"
-            >
-              {{ lastFinishedTournament.name }}
-            </span>
-          </h3>
-
-          <!-- Date du tournoi précédent -->
-          <div class="text-purple-200 text-sm font-orbitron flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            {{ formatLocalDate(lastFinishedTournament.date) }}
-          </div>
-        </div>
-
-        <!-- Contenu principal -->
-        <div class="p-4">
-          <!-- Gagnants -->
-          <div class="flex flex-wrap gap-3">
-            <!-- Équipes gagnantes (1er rang) -->
-            <div
-              v-for="team in getWinningTeams(lastFinishedTournament)"
-              :key="team._id"
-              class="flex-1 min-w-[250px] bg-black/80 rounded border border-purple-500/70 shadow-md shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300"
-            >
-              <!-- En-tête de l'équipe avec badge cyberpunk -->
-              <div
-                class="bg-gradient-to-r from-purple-900/50 to-pink-900/50 px-3 py-2 flex items-center justify-between border-b border-purple-500/50"
-              >
-                <div class="flex items-center">
-                  <span
-                    class="flex items-center justify-center bg-yellow-500/30 text-yellow-300 w-6 h-6 rounded-md text-xs mr-2 border border-yellow-500/70 shadow-sm shadow-yellow-500/30 font-bold"
-                    >1</span
-                  >
-                  <h5 class="text-white font-orbitron text-sm">
-                    {{ team.name }}
-                  </h5>
-                </div>
-                <div class="flex">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-yellow-500 filter drop-shadow-md"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Liste des joueurs avec style cyberpunk -->
-              <div class="p-3">
-                <div class="flex flex-wrap gap-2">
-                  <div
-                    v-for="player in team.players"
-                    :key="player._id"
-                    class="text-white text-xs flex items-center py-1 px-2 bg-purple-900/30 rounded border border-purple-500/30 hover:border-purple-500/50 transition-all duration-300"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3.5 w-3.5 mr-1.5 text-purple-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    {{ player.username }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Message si pas d'équipe gagnante -->
-            <div
-              v-if="!getWinningTeams(lastFinishedTournament).length"
-              class="text-gray-400 italic py-3 px-4 bg-gray-800/50 rounded-lg text-sm w-full border border-purple-500/30"
-            >
-              Aucun gagnant désigné pour ce tournoi.
-            </div>
-          </div>
-
-          <!-- Bouton cyberpunk pour voir le détail -->
-          <div class="mt-4 text-center">
-            <router-link
-              :to="`/tournois/${lastFinishedTournament._id}`"
-              class="cyberpunk-btn-purple inline-flex items-center justify-center px-5 py-2 font-orbitron rounded-md text-sm shadow-md shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <span>Voir le détail du tournoi</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 ml-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </router-link>
-          </div>
-        </div>
-      </div>
-
       <!-- Contenu principal du tournoi en onglets -->
       <div
         class="bg-black/75 backdrop-blur-sm rounded-lg overflow-hidden border border-pink-500 shadow-lg shadow-pink-500/30"
@@ -678,6 +530,224 @@
               :is-other-rankings-expanded="showOtherRankings"
               @toggle-other-rankings="toggleOtherRankings"
             />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section des derniers gagnants (si disponible) - Style optimisé -->
+      <div
+        v-if="
+          lastFinishedTournament &&
+          lastFinishedTournament.teams &&
+          !tournament.finished
+        "
+        class="mt-8 overflow-hidden"
+      >
+        <!-- En-tête stylisé avec angle coupé -->
+        <div class="cyber-header-container relative mb-1">
+          <div
+            class="cyber-header bg-gradient-to-r from-purple-900/80 via-fuchsia-900/70 to-pink-900/80 text-white py-3 pl-5 pr-8"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+            >
+              <h3
+                class="text-lg font-audiowide flex items-center text-purple-200 mb-2 sm:mb-0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-2 text-purple-300"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                  />
+                </svg>
+                <span class="cyber-glitch-1"
+                  >Gagnants du tournoi précédent</span
+                >
+              </h3>
+
+              <!-- Date du tournoi précédent avec style amélioré -->
+              <div
+                class="cyber-date-badge flex items-center bg-purple-900/70 px-3 py-1 rounded-sm border-l-2 border-purple-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1 text-purple-300"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="text-purple-200 text-sm font-orbitron">
+                  {{ formatLocalDate(lastFinishedTournament.date) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Petit badge/pill avec le nom du tournoi -->
+            <div class="mt-2 sm:mt-0">
+              <span
+                class="inline-block bg-purple-500/20 text-purple-200 text-xs font-orbitron px-2 py-1 rounded-sm border border-purple-500/40"
+              >
+                {{ lastFinishedTournament.name }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Corps avec fond translucide et bordure -->
+        <div
+          class="cyber-panel-container p-5 bg-black/75 backdrop-blur-sm border border-purple-500/50 rounded-sm shadow-lg shadow-purple-500/20"
+        >
+          <!-- Gagnants avec style amélioré -->
+          <div
+            class="winners-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            :class="{
+              'justify-items-center':
+                getWinningTeams(lastFinishedTournament).length === 1,
+            }"
+          >
+            <!-- Équipes gagnantes (1er rang) -->
+            <div
+              v-for="team in getWinningTeams(lastFinishedTournament)"
+              :key="team._id"
+              class="winner-card relative overflow-hidden"
+              :class="{
+                'sm:col-span-2 lg:col-span-1':
+                  getWinningTeams(lastFinishedTournament).length === 1,
+              }"
+            >
+              <!-- Ligne verticale décorative -->
+              <div
+                class="absolute top-0 left-4 h-full w-1 bg-gradient-to-b from-yellow-500/0 via-yellow-500/70 to-yellow-500/0"
+              ></div>
+
+              <!-- En-tête de l'équipe avec effet coupé -->
+              <div
+                class="cyber-winner-header bg-gradient-to-r from-purple-900/80 to-fuchsia-900/70 px-6 py-3 flex items-center justify-between"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="rank-badge w-8 h-8 flex items-center justify-center bg-yellow-500/20 text-yellow-300 rounded-sm border border-yellow-500/60 font-bold mr-3 relative overflow-hidden"
+                  >
+                    <div
+                      class="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
+                    ></div>
+                    <span class="relative z-10">1</span>
+                  </div>
+                  <h5
+                    class="text-white font-orbitron text-sm cyber-text-shadow"
+                  >
+                    {{ team.name }}
+                  </h5>
+                </div>
+                <div class="trophy-icon">
+                  <!-- Nouveau trophée plus stylisé -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="h-7 w-7 text-yellow-500 animate-pulse-slow"
+                  >
+                    <path d="M11.25 1.5V8.25H12.75V1.5H11.25Z" />
+                    <path
+                      d="M13.5 11.25C13.5 11.6642 13.1642 12 12.75 12H11.25C10.8358 12 10.5 11.6642 10.5 11.25V9.75H7.5V10.3153C7.5 11.3824 8.06058 12.3647 8.99977 12.8478L13.4998 15.125V20.25H14.9998V21.75H8.99977V20.25H10.4998V16.375L7.48314 14.8438C5.94165 14.0578 5 12.4774 5 10.7775V9.75H3C2.58579 9.75 2.25 9.41421 2.25 9V4.5C2.25 4.08579 2.58579 3.75 3 3.75H7.5V3H3C1.75736 3 0.75 4.00736 0.75 5.25V8.25C0.75 9.49264 1.75736 10.5 3 10.5H3.75V10.7775C3.75 13.0108 4.9791 15.0528 6.9829 16.0437L9.74977 17.3738V21.75H6.75C6.33579 21.75 6 22.0858 6 22.5C6 22.9142 6.33579 23.25 6.75 23.25H17.25C17.6642 23.25 18 22.9142 18 22.5C18 22.0858 17.6642 21.75 17.25 21.75H14.25V17.3738L17.0166 16.0437C19.0204 15.0528 20.25 13.0108 20.25 10.7775V10.5H21C22.2426 10.5 23.25 9.49264 23.25 8.25V5.25C23.25 4.00736 22.2426 3 21 3H16.5V3.75H21C21.4142 3.75 21.75 4.08579 21.75 4.5V9C21.75 9.41421 21.4142 9.75 21 9.75H19V10.7775C19 12.4774 18.0584 14.0578 16.5169 14.8438L13.5 16.375V11.25Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Liste des joueurs avec style amélioré -->
+              <div
+                class="cyber-winner-body p-4 bg-gray-900/80 border-l border-r border-b border-purple-500/30"
+              >
+                <div class="players-list space-y-2">
+                  <div
+                    v-for="(player, playerIndex) in team.players"
+                    :key="player._id"
+                    class="player-item flex items-center p-2 bg-purple-900/20 hover:bg-purple-900/30 transition-colors duration-300 border-l-2 border-purple-500/40"
+                  >
+                    <div
+                      class="player-number w-5 h-5 flex items-center justify-center text-xs text-purple-300 bg-purple-900/40 rounded-full mr-2 font-mono"
+                    >
+                      {{ playerIndex + 1 }}
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 text-purple-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="text-purple-100 text-sm font-orbitron">{{
+                      player.username
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message si pas d'équipe gagnante avec style amélioré -->
+            <div
+              v-if="!getWinningTeams(lastFinishedTournament).length"
+              class="cyber-no-winner col-span-full py-6 px-4 bg-gray-900/50 border border-purple-500/30"
+            >
+              <div
+                class="flex flex-col items-center justify-center text-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-10 w-10 text-purple-400/50 mb-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p class="text-purple-200 font-orbitron text-sm">
+                  Aucun gagnant désigné pour ce tournoi.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton pour voir le détail avec style amélioré -->
+          <div class="mt-5 text-center">
+            <router-link
+              :to="`/tournois/${lastFinishedTournament._id}`"
+              class="cyber-link-button inline-flex items-center justify-center px-5 py-2 bg-gradient-to-r from-purple-900/70 to-fuchsia-800/70 text-white font-orbitron text-sm border border-purple-500/50 hover:border-purple-400 shadow-md hover:shadow-purple-500/40 transition-all duration-300"
+            >
+              <span>Voir le détail du tournoi</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 ml-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </router-link>
           </div>
         </div>
       </div>
@@ -1361,5 +1431,286 @@ onMounted(() => {
     transform: scale(1.05);
     opacity: 0.9;
   }
+}
+/* Styles pour la section des gagnants du dernier tournoi */
+.cyber-header-container {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+  border-left: 2px solid rgba(168, 85, 247, 0.5);
+  border-top: 2px solid rgba(168, 85, 247, 0.5);
+  position: relative;
+}
+
+.cyber-header {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes cyber-header-shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+.cyber-panel-container {
+  clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);
+  position: relative;
+}
+
+.cyber-panel-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.7),
+    transparent
+  );
+}
+
+.cyber-panel-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.7),
+    transparent
+  );
+}
+
+.winner-card {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.winner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.cyber-winner-body {
+  position: relative;
+  min-height: 120px;
+}
+
+.cyber-text-shadow {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+.cyber-glitch-1 {
+  position: relative;
+  animation: cyber-glitch 5s infinite;
+}
+
+@keyframes cyber-glitch {
+  0%,
+  90%,
+  100% {
+    transform: translate(0, 0);
+    text-shadow: 0 0 4px rgba(168, 85, 247, 0.7);
+  }
+  92% {
+    transform: translate(-2px, 1px);
+    text-shadow: -1px 0 #a855f7, 1px 0 #ec4899;
+  }
+  94% {
+    transform: translate(2px, -1px);
+    text-shadow: 1px 0 #a855f7, -1px 0 #ec4899;
+  }
+  96% {
+    transform: translate(-1px, -1px);
+    text-shadow: 0 -1px #a855f7, 0 1px #ec4899;
+  }
+  98% {
+    transform: translate(1px, 1px);
+    text-shadow: 0 0 8px rgba(236, 72, 153, 0.7);
+  }
+}
+
+.cyber-link-button {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%,
+    0 10px
+  );
+}
+
+.cyber-link-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.2) 50%,
+    transparent 100%
+  );
+  transition: all 0.5s ease;
+}
+
+.cyber-link-button:hover::before {
+  left: 100%;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s infinite;
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+.cyber-date-badge {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  position: relative;
+}
+
+.rank-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.rank-badge::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(251, 191, 36, 0.3) 50%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  animation: badge-shine 2s linear infinite;
+}
+
+@keyframes badge-shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+.player-item {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.player-item:hover {
+  transform: translateX(3px);
+}
+
+.player-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.3),
+    transparent
+  );
+}
+
+.player-item:last-child::after {
+  display: none;
+}
+.winners-grid.justify-items-center {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.winners-grid.justify-items-center .winner-card {
+  max-width: 450px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .winners-grid.justify-items-center {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .winners-grid.justify-items-center .winner-card {
+    grid-column: 1 / span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .winners-grid.justify-items-center {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .winners-grid.justify-items-center .winner-card {
+    grid-column: 2 / span 1;
+  }
+}
+
+/* Styles améliorés pour le trophée */
+.trophy-icon {
+  position: relative;
+}
+
+.cyber-winner-header {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.cyber-winner-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: rgba(236, 72, 153, 0.3);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 </style>
