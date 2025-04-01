@@ -324,7 +324,7 @@ const endDate = ref<string>("");
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
 const showFinished = ref<boolean>(false);
-const sortAscending = ref<boolean>(false);
+const sortAscending = ref<boolean>(true);
 
 // États d'interface et d'interaction
 const showParticipants = ref<{ [key: string]: boolean }>({});
