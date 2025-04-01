@@ -70,7 +70,7 @@
 
     <!-- État de chargement avec CyberpunkLoader -->
     <div
-      v-if="loading"
+      v-if="memberStore.loading"
       class="text-center my-8 sm:my-12"
       role="status"
       aria-live="polite"
@@ -80,7 +80,7 @@
 
     <!-- État d'erreur -->
     <div
-      v-else-if="error"
+      v-else-if="memberStore.error"
       class="text-center my-8 sm:my-12 p-4 sm:p-6 border border-red-500 bg-red-900/20 rounded-lg"
     >
       <svg
@@ -95,9 +95,9 @@
           clip-rule="evenodd"
         />
       </svg>
-      <p class="text-red-300 font-orbitron">{{ error }}</p>
+      <p class="text-red-300 font-orbitron">{{ memberStore.error }}</p>
       <button
-        @click="fetchUsers"
+        @click="memberStore.fetchMembers(true)"
         class="cyberpunk-btn-pink mt-4 px-4 py-2 rounded-md font-orbitron text-sm"
       >
         Réessayer
@@ -221,132 +221,52 @@
       @page-select="currentPage = $event"
     />
 
-    <Toast v-if="error" type="error" :message="error" />
-    <Toast v-if="success" type="success" :message="success" />
+    <Toast v-if="memberStore.error" type="error" :message="memberStore.error" />
+    <Toast
+      v-if="memberStore.success"
+      type="success"
+      :message="memberStore.success"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
-import userService from "../services/userService";
-import playerService from "../services/playerService";
+import { useMemberStore } from "../stores/memberStore";
 import Toast from "@/shared/Toast.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
 
-//-------------------------------------------------------
-// SECTION: Définition des types
-//-------------------------------------------------------
+// Utilisation du store
+const memberStore = useMemberStore();
 
-/**
- * Structure d'un utilisateur avec son profil joueur associé
- */
-interface User {
-  _id?: string; // ID unique de l'utilisateur
-  username: string; // Nom d'utilisateur
-  email: string; // Email
-  role: "user" | "admin" | "superadmin"; // Rôle dans l'application
-  avatarUrl?: string; // URL de l'avatar (optionnel)
-  playerId?: string; // ID du profil joueur associé (optionnel)
-}
+// États pour la recherche et la pagination
+const searchTerm = ref("");
+const currentPage = ref(1);
+const itemsPerPage = 10;
 
-//-------------------------------------------------------
-// SECTION: États du composant
-//-------------------------------------------------------
-
-/**
- * États principaux
- */
-const users = ref<User[]>([]); // Liste des utilisateurs
-const error = ref<string | null>(null); // Message d'erreur
-const success = ref<string | null>(null); // Message de succès
-const loading = ref(true); // État de chargement
-
-/**
- * États pour la recherche et la pagination
- */
-const searchTerm = ref(""); // Terme de recherche
-const currentPage = ref(1); // Page actuelle
-const itemsPerPage = 10; // Nombre d'éléments par page
-
-/**
- * Options de tri
- */
+// Options de tri
 const sortOptions = [
   { id: "username-asc", label: "Nom (A-Z)" },
   { id: "username-desc", label: "Nom (Z-A)" },
   { id: "role-asc", label: "Rôle (croissant)" },
   { id: "role-desc", label: "Rôle (décroissant)" },
 ];
-const currentSort = ref("username-asc"); // Option de tri sélectionnée
+const currentSort = ref("username-asc");
 
-//-------------------------------------------------------
-// SECTION: Fonctions utilitaires
-//-------------------------------------------------------
-
-/**
- * Extrait les initiales d'un nom d'utilisateur
- * @param username - Nom d'utilisateur
- * @returns Les initiales du nom (1 ou 2 lettres)
- */
-const getUserInitials = (username: string) => {
-  if (!username) return "?";
-  const nameParts = username.split(" ");
-  if (nameParts.length === 1) return username.charAt(0).toUpperCase();
-  return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
-};
-
-/**
- * Gère les erreurs de chargement d'image
- * @param e - Événement d'erreur
- */
-const handleImageError = (e: Event) => {
-  if (e.target instanceof HTMLImageElement) {
-    e.target.src = "https://via.placeholder.com/50?text=?";
-  }
-};
-
-/**
- * Réinitialise la pagination à la première page
- */
-const resetPagination = () => {
-  currentPage.value = 1;
-};
-
-/**
- * Message à afficher quand aucun utilisateur n'est trouvé
- */
-const emptyStateMessage = computed(() => {
-  if (searchTerm.value) {
-    return `Aucun membre ne correspond à votre recherche "${searchTerm.value}".`;
-  }
-  return "Aucun membre trouvé dans la base de données.";
-});
-
-//-------------------------------------------------------
-// SECTION: Propriétés calculées
-//-------------------------------------------------------
-
-/**
- * Filtre les utilisateurs selon le terme de recherche
- * @returns Liste filtrée des utilisateurs
- */
+// Propriétés calculées
 const searchResults = computed(() => {
-  if (!searchTerm.value.trim()) return users.value;
+  if (!searchTerm.value.trim()) return memberStore.members;
 
   const term = searchTerm.value.toLowerCase();
-  return users.value.filter(
+  return memberStore.members.filter(
     (user) =>
       user.username.toLowerCase().includes(term) ||
       user.role.toLowerCase().includes(term)
   );
 });
 
-/**
- * Trie les utilisateurs selon le critère sélectionné
- * @returns Liste triée des utilisateurs
- */
 const sortedUsers = computed(() => {
   const usersToSort = [...searchResults.value];
 
@@ -356,7 +276,6 @@ const sortedUsers = computed(() => {
     case "username-desc":
       return usersToSort.sort((a, b) => b.username.localeCompare(a.username));
     case "role-asc": {
-      // Ordre personnalisé des rôles: user < admin < superadmin
       const roleOrder = { user: 1, admin: 2, superadmin: 3 };
       return usersToSort.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
     }
@@ -369,117 +288,63 @@ const sortedUsers = computed(() => {
   }
 });
 
-/**
- * Calcule le nombre total de pages pour la pagination
- * @returns Nombre total de pages
- */
 const totalPages = computed(() =>
   Math.ceil(sortedUsers.value.length / itemsPerPage)
 );
 
-/**
- * Extrait les utilisateurs à afficher sur la page courante
- * @returns Liste paginée des utilisateurs
- */
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return sortedUsers.value.slice(start, end);
 });
 
-//-------------------------------------------------------
-// SECTION: Navigation entre pages
-//-------------------------------------------------------
+const emptyStateMessage = computed(() => {
+  if (searchTerm.value) {
+    return `Aucun membre ne correspond à votre recherche "${searchTerm.value}".`;
+  }
+  return "Aucun membre trouvé dans la base de données.";
+});
 
-/**
- * Passe à la page suivante
- */
+// Fonctions utilitaires
+const getUserInitials = (username: string) => {
+  if (!username) return "?";
+  const nameParts = username.split(" ");
+  if (nameParts.length === 1) return username.charAt(0).toUpperCase();
+  return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
+};
+
+const handleImageError = (e: Event) => {
+  if (e.target instanceof HTMLImageElement) {
+    e.target.src = "https://via.placeholder.com/50?text=?";
+  }
+};
+
+const resetPagination = () => {
+  currentPage.value = 1;
+};
+
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
 
-/**
- * Revient à la page précédente
- */
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-//-------------------------------------------------------
-// SECTION: Appels API et récupération des données
-//-------------------------------------------------------
-
-/**
- * Récupère les utilisateurs et leurs profils joueur associés
- * Établit les relations entre utilisateurs et joueurs pour la navigation
- */
-const fetchUsers = async () => {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    // Récupération de tous les utilisateurs
-    const fetchedUsers = await userService.fetchAllUsers();
-
-    // Récupérer tous les joueurs en parallèle
-    const playerPromises = fetchedUsers.map((user: { _id: string }) =>
-      playerService
-        .getPlayerByIdUser(user._id!)
-        .then((player) => ({ userId: user._id, playerId: player._id }))
-        .catch((err) => {
-          console.error(`Erreur pour l'utilisateur ${user._id}:`, err);
-          return { userId: user._id, playerId: null };
-        })
-    );
-
-    const playerResults = await Promise.all(playerPromises);
-
-    // Créer un dictionnaire pour un accès O(1)
-    const playerIdMap = playerResults.reduce((acc, curr) => {
-      if (curr.playerId) {
-        acc[curr.userId] = curr.playerId;
-      }
-      return acc;
-    }, {} as Record<string, string>);
-
-    // Mettre à jour les utilisateurs avec leurs IDs de joueur
-    users.value = fetchedUsers.map((user: { _id: string }) => ({
-      ...user,
-      playerId: playerIdMap[user._id as string],
-    }));
-  } catch (err) {
-    console.error("Erreur lors de la récupération des utilisateurs:", err);
-    error.value = "Erreur lors de la récupération des utilisateurs.";
-  } finally {
-    loading.value = false;
-  }
-};
-
-//-------------------------------------------------------
-// SECTION: Cycle de vie et réactivité
-//-------------------------------------------------------
-
-/**
- * Initialisation du composant au montage
- */
+// Cycle de vie
 onMounted(() => {
-  fetchUsers();
+  memberStore.fetchMembers();
 });
 
-/**
- * Réinitialiser la pagination lorsque le terme de recherche change
- */
+// Watchers
 watch(searchTerm, () => {
   resetPagination();
 });
 
-/**
- * Réinitialiser la pagination lorsque le critère de tri change
- */
 watch(currentSort, () => {
   resetPagination();
 });

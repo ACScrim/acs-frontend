@@ -63,7 +63,11 @@
           class="cyberpunk-select-purple w-full p-2.5 sm:p-3 text-purple-300 bg-gray-900/80 border-2 border-purple-500/70 rounded-md font-orbitron focus:outline-none focus:border-purple-400 transition-all appearance-none cursor-pointer"
         >
           <option value="">Tous les jeux</option>
-          <option v-for="game in games" :key="game._id" :value="game._id">
+          <option
+            v-for="game in rankingStore.games"
+            :key="game._id"
+            :value="game._id"
+          >
             {{ game.name }}
           </option>
         </select>
@@ -344,23 +348,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 //-------------------------------------------------------
 // SECTION: Imports et services
 //-------------------------------------------------------
 
-// Services pour l'accès aux données
-import playerService from "../services/playerService";
-import gameService from "../services/gameService";
+// Store pour la gestion des données
+import { useRankingStore } from "../stores/rankingStore";
 
 // Types pour le typage fort
-import type { PlayerRanking, Game } from "../types";
+import type { PlayerRanking } from "../types";
 
 // Composants
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
+
 //-------------------------------------------------------
 // SECTION: Constantes et configuration
 //-------------------------------------------------------
@@ -375,12 +379,8 @@ const DEFAULT_SORT_ORDER = "desc";
 // SECTION: État du composant
 //-------------------------------------------------------
 
-/**
- * Données principales
- */
-const rankings = ref<PlayerRanking[]>([]); // Liste des classements de joueurs
-const games = ref<Game[]>([]); // Liste des jeux disponibles
-const selectedGame = ref<string>(""); // Jeu sélectionné pour le filtrage
+// Initialisation du store
+const rankingStore = useRankingStore();
 
 /**
  * État du tri
@@ -389,79 +389,61 @@ const sortKey = ref<keyof PlayerRanking>(DEFAULT_SORT_KEY);
 const sortOrder = ref<string>(DEFAULT_SORT_ORDER);
 
 /**
- * État de l'interface
- */
-const isLoading = ref<boolean>(true); // Indicateur de chargement
-
-/**
- * État de pagination
+ * État de la pagination
  */
 const currentPage = ref(1);
 const itemsPerPage = 10; // Nombre d'éléments par page
 
-//-------------------------------------------------------
-// SECTION: Récupération des données
-//-------------------------------------------------------
-
 /**
- * Récupère le classement général des joueurs
- * Gère l'état de chargement et les erreurs
+ * Jeu sélectionné pour le filtrage
  */
-const fetchRankings = async () => {
-  isLoading.value = true;
-  currentPage.value = 1; // Réinitialiser à la première page
+const selectedGame = ref<string>("");
 
-  try {
-    const response = await playerService.getPlayerRankings();
-    rankings.value = response;
-  } catch (error) {
-    console.error("Erreur lors de la récupération du classement:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
+//-------------------------------------------------------
+// SECTION: Récupération des données et actions
+//-------------------------------------------------------
 
 /**
- * Récupère le classement des joueurs filtré par jeu
- * Si aucun jeu n'est sélectionné, récupère le classement général
+ * Met à jour le classement selon le jeu sélectionné
  */
 const fetchRankingsByGame = async () => {
-  isLoading.value = true;
   currentPage.value = 1; // Réinitialiser à la première page
-
-  try {
-    if (selectedGame.value) {
-      const response = await playerService.getPlayerRankingsByGame(
-        selectedGame.value
-      );
-      rankings.value = response;
-    } else {
-      await fetchRankings();
-    }
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération du classement par jeu:",
-      error
-    );
-  } finally {
-    // Ne pas mettre isLoading à false si on appelle fetchRankings
-    // car fetchRankings gère déjà cela
-    if (selectedGame.value) {
-      isLoading.value = false;
-    }
-  }
+  await rankingStore.fetchRankingsByGame(selectedGame.value);
 };
 
 /**
- * Récupère la liste des jeux pour le filtre
+ * Exporte les données en CSV
  */
-const fetchGames = async () => {
-  try {
-    const response = await gameService.getGames();
-    games.value = response;
-  } catch (error) {
-    console.error("Erreur lors de la récupération des jeux:", error);
-  }
+const exportCSV = () => {
+  // Créer l'en-tête CSV
+  let csvContent = "Rang,Joueur,Tournois,Victoires\n";
+
+  // Ajouter chaque ligne
+  sortedRankings.value.forEach((player, index) => {
+    csvContent += `${index + 1},${player.username},${player.totalTournaments},${
+      player.totalVictories
+    }\n`;
+  });
+
+  // Créer un blob et télécharger
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  // Générer un nom de fichier avec date
+  const date = new Date().toISOString().split("T")[0];
+  const gameName = selectedGame.value
+    ? rankingStore.games.find((g) => g._id === selectedGame.value)?.name ||
+      "jeu-specifique"
+    : "tous-les-jeux";
+
+  link.setAttribute("href", url);
+  link.setAttribute("download", `classement-${gameName}-${date}.csv`);
+  link.style.display = "none";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 //-------------------------------------------------------
@@ -500,12 +482,15 @@ const sortBy = (key: string) => {
   currentPage.value = 1;
 };
 
+//-------------------------------------------------------
+// SECTION: Propriétés calculées
+//-------------------------------------------------------
+
 /**
  * Propriété calculée qui retourne le classement trié selon les critères actuels
- * Gère le tri des données numériques et textuelles
  */
 const sortedRankings = computed(() => {
-  return [...rankings.value].sort((a, b) => {
+  return [...rankingStore.rankings].sort((a, b) => {
     const valueA = a[sortKey.value];
     const valueB = b[sortKey.value];
 
@@ -524,10 +509,6 @@ const sortedRankings = computed(() => {
   });
 });
 
-//-------------------------------------------------------
-// SECTION: Pagination
-//-------------------------------------------------------
-
 /**
  * Calcule le nombre total de pages pour la pagination
  */
@@ -543,6 +524,15 @@ const paginatedRankings = computed(() => {
   const end = Math.min(start + itemsPerPage, sortedRankings.value.length);
   return sortedRankings.value.slice(start, end);
 });
+
+/**
+ * Propriété d'état pour savoir si on est en train de charger
+ */
+const isLoading = computed(() => rankingStore.loading);
+
+//-------------------------------------------------------
+// SECTION: Méthodes de pagination
+//-------------------------------------------------------
 
 /**
  * Passe à la page suivante
@@ -569,50 +559,44 @@ const calculateGlobalRank = (index: number): number => {
   return (currentPage.value - 1) * itemsPerPage + index + 1;
 };
 
-// Ajouter cette méthode dans la section des fonctions
-const exportCSV = () => {
-  // Créer l'en-tête CSV
-  let csvContent = "Rang,Joueur,Tournois,Victoires\n";
-
-  // Ajouter chaque ligne
-  sortedRankings.value.forEach((player, index) => {
-    csvContent += `${index + 1},${player.username},${player.totalTournaments},${
-      player.totalVictories
-    }\n`;
-  });
-
-  // Créer un blob et télécharger
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  // Générer un nom de fichier avec date
-  const date = new Date().toISOString().split("T")[0];
-  const gameName = selectedGame.value
-    ? games.value.find((g) => g._id === selectedGame.value)?.name ||
-      "jeu-specifique"
-    : "tous-les-jeux";
-
-  link.setAttribute("href", url);
-  link.setAttribute("download", `classement-${gameName}-${date}.csv`);
-  link.style.display = "none";
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
 //-------------------------------------------------------
-// SECTION: Cycle de vie
+// SECTION: Cycle de vie et watchers
 //-------------------------------------------------------
+
+// Synchroniser avec la valeur du gameId dans le store
+watch(
+  () => rankingStore.currentGameId,
+  (newGameId) => {
+    selectedGame.value = newGameId;
+  }
+);
+
+// Observer les changements de selectedGame
+watch(
+  () => selectedGame.value,
+  (newGameId) => {
+    if (newGameId !== rankingStore.currentGameId) {
+      fetchRankingsByGame();
+    }
+  }
+);
 
 /**
  * Initialisation du composant au montage
- * Charge les données nécessaires pour l'affichage
  */
-onMounted(() => {
-  fetchRankings();
-  fetchGames();
+onMounted(async () => {
+  // Initialiser le jeu sélectionné avec la valeur stockée dans le store
+  selectedGame.value = rankingStore.currentGameId;
+
+  // Charger les jeux
+  await rankingStore.fetchGames();
+
+  // Charger le classement en fonction du jeu sélectionné
+  if (selectedGame.value) {
+    await rankingStore.fetchRankingsByGame(selectedGame.value);
+  } else {
+    await rankingStore.fetchRankings();
+  }
 });
 </script>
 
