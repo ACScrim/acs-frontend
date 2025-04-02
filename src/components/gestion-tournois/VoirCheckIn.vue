@@ -114,6 +114,7 @@
       </div>
 
       <div class="players-grid">
+        <!-- Carte de joueur dans players-grid -->
         <div
           v-for="player in selectedTournamentDetails.players"
           :key="player._id"
@@ -141,6 +142,30 @@
           </div>
           <div class="player-info">
             <div class="player-name">{{ player.username }}</div>
+
+            <!-- Ajout de la date d'inscription -->
+            <div
+              v-if="
+                player._id &&
+                selectedTournamentDetails?.registrationDates?.[player._id]
+              "
+              class="registration-date"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>Inscrit le {{ formatRegistrationDate(player._id) }}</span>
+            </div>
+
             <div
               :class="[
                 'check-in-status',
@@ -336,6 +361,26 @@ const getCheckedInCount = () => {
 
   return Object.values(selectedTournamentDetails.value.checkIns).filter(Boolean)
     .length;
+};
+
+// Fonction pour formater la date d'inscription
+const formatRegistrationDate = (playerId: string) => {
+  if (!selectedTournamentDetails.value?.registrationDates?.[playerId]) {
+    return "N/A";
+  }
+
+  const date = new Date(
+    selectedTournamentDetails.value.registrationDates[playerId]
+  );
+
+  // Format: "DD/MM/YYYY à HH:MM"
+  return date.toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 // Calculer le pourcentage de check-ins
@@ -564,7 +609,7 @@ onMounted(() => {
 /* Carte de joueur */
 .player-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
   background: rgba(31, 41, 55, 0.5);
@@ -609,14 +654,16 @@ onMounted(() => {
 
 /* Informations du joueur */
 .player-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .player-name {
   font-family: "Orbitron", sans-serif;
   font-weight: 600;
   color: white;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
 }
 
 /* Statut de check-in */
@@ -744,5 +791,23 @@ onMounted(() => {
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+.registration-date {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #a78bfa;
+  margin-bottom: 0.4rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 0.25rem;
+  width: fit-content;
+  border-left: 2px solid rgba(139, 92, 246, 0.5);
+}
+
+.registration-date svg {
+  color: #c4b5fd; /* Violet plus clair */
+  min-width: 16px;
 }
 </style>

@@ -31,6 +31,7 @@ export interface Tournament {
   teams?: Team[];
   description?: string;
   checkIns?: { [key: string]: boolean };
+  registrationDates?: { [key: string]: string }; // Date d'inscription des joueurs
 }
 
 /**
