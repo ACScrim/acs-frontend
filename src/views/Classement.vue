@@ -451,8 +451,10 @@ const exportCSV = () => {
 //-------------------------------------------------------
 
 /**
- * Gère le tri du tableau de classement
- * Implémente une logique cyclique: ascendant → descendant → défaut
+ * Gère le tri du tableau de classement avec un comportement plus prévisible:
+ * - Premier clic: tri ascendant
+ * - Deuxième clic sur la même colonne: tri descendant
+ * - Troisième clic: retour au tri par défaut (mais uniquement si c'est une colonne différente de la colonne par défaut)
  * @param key - Clé de colonne sur laquelle effectuer le tri
  */
 const sortBy = (key: string) => {
@@ -464,13 +466,18 @@ const sortBy = (key: string) => {
     if (sortOrder.value === "asc") {
       sortOrder.value = "desc";
     }
-    // Si on est en ordre descendant et pas sur la colonne par défaut
-    else if (typedKey !== DEFAULT_SORT_KEY) {
-      // Revenir au tri par défaut
-      sortKey.value = DEFAULT_SORT_KEY;
-      sortOrder.value = DEFAULT_SORT_ORDER;
+    // Si on est en ordre descendant...
+    else {
+      // Si c'est la colonne par défaut (totalVictories), on alterne simplement entre asc/desc
+      if (typedKey === DEFAULT_SORT_KEY) {
+        sortOrder.value = "asc";
+      }
+      // Sinon, on revient au tri par défaut
+      else {
+        sortKey.value = DEFAULT_SORT_KEY;
+        sortOrder.value = DEFAULT_SORT_ORDER;
+      }
     }
-    // Si on est déjà en tri descendant sur la colonne par défaut, ne rien faire
   }
   // Si on clique sur une nouvelle colonne
   else {
@@ -481,13 +488,13 @@ const sortBy = (key: string) => {
   // Revenir à la première page après un tri
   currentPage.value = 1;
 };
-
 //-------------------------------------------------------
 // SECTION: Propriétés calculées
 //-------------------------------------------------------
 
 /**
  * Propriété calculée qui retourne le classement trié selon les critères actuels
+ * avec un tri secondaire par tournois en cas d'égalité des victoires
  */
 const sortedRankings = computed(() => {
   return [...rankingStore.rankings].sort((a, b) => {
@@ -502,6 +509,13 @@ const sortedRankings = computed(() => {
     // Tri pour les autres types de données (nombres, etc.)
     else {
       result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+    }
+
+    // Si on trie par victoires et qu'il y a égalité, départager par le nombre de tournois
+    if (sortKey.value === "totalVictories" && result === 0) {
+      return sortOrder.value === "asc"
+        ? a.totalTournaments - b.totalTournaments
+        : b.totalTournaments - a.totalTournaments;
     }
 
     // Inverser le résultat si l'ordre est descendant
