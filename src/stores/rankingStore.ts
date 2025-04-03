@@ -17,7 +17,7 @@ export const useRankingStore = defineStore("rankings", () => {
   // --- Getters ---
   const shouldRefreshData = computed(() => {
     if (!lastFetchTime.value) return true;
-    return Date.now() - lastFetchTime.value > 1800000; // 30 minutes
+    return Date.now() - lastFetchTime.value > 300000; // 30 minutes
   });
 
   const shouldRefreshGames = computed(() => {
