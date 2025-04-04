@@ -268,7 +268,11 @@
                   isTournamentFull ? 'waitlist' : 'register'
                 )
               "
-              class="cyberpunk-btn-amber px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              :class="{
+                'cyberpunk-btn-amber': isTournamentFull,
+                'cyberpunk-btn-pink': !isTournamentFull,
+              }"
+              class="px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
               <span v-if="isTournamentFull" class="mr-2 font-orbitron"
                 >Rejoindre la liste d'attente</span
@@ -309,7 +313,10 @@
             </button>
 
             <!-- Groupe de boutons pour check-in + désinscription -->
-            <div v-else-if="isWithin24Hours" class="flex flex-col space-y-3">
+            <div
+              v-else-if="isUserRegistered && isWithin24Hours"
+              class="flex flex-col space-y-3"
+            >
               <!-- Bouton de check-in -->
               <button
                 @click="checkIn(tournament._id ?? '', !isCheckedIn)"
@@ -359,7 +366,7 @@
 
             <!-- Bouton de désinscription standard (cas non-check-in) -->
             <button
-              v-else-if="isUserRegistered"
+              v-else-if="isUserRegistered && !isWithin24Hours"
               @click="openRegistrationPopup(tournament, 'unregister')"
               class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >

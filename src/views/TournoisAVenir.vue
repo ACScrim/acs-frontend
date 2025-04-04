@@ -103,7 +103,7 @@
             <span class="cyberpunk-toggle-label font-orbitron text-white ml-3">
               Ordre chronologique
               <span class="text-xs text-gray-400 ml-1">
-                ({{ sortAscending ? "ancien → récent" : "récent → ancien" }})
+                ({{ sortAscending ? "ancien → nouveau" : "nouveau → ancien" }})
               </span>
             </span>
           </label>
