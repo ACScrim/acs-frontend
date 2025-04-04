@@ -121,13 +121,21 @@
         class="flex flex-col space-y-2 mt-4"
         @click.stop
       >
-        <!-- Bouton inscription / désinscription -->
+        <!-- Bouton inscription / liste d'attente  -->
         <button
-          v-if="!isUserRegistered"
+          v-if="!isUserRegistered && !isUserInWaitlist"
           @click="$emit('open-registration', tournament, 'register')"
-          class="cyberpunk-btn-pink px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+          :class="{
+            'cyberpunk-btn-amber': isTournamentFull, // Utiliser amber pour liste d'attente
+            'cyberpunk-btn-pink': !isTournamentFull, // Conserver pink pour inscription normale
+          }"
+          class="px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
         >
-          <span class="mr-2 font-orbitron">S'inscrire</span>
+          <span class="mr-2 font-orbitron">
+            {{
+              isTournamentFull ? "Rejoindre la liste d'attente" : "S'inscrire"
+            }}
+          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4"
@@ -137,6 +145,27 @@
             <path
               fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3H6a1 1 0 100 2h3v3a1 1 0 102 0v-3h3a1 1 0 100-2h-3V7z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+
+        <!-- Bouton quitter la liste d'attente -->
+        <button
+          v-else-if="isUserInWaitlist"
+          @click="$emit('open-registration', tournament, 'unregister-waitlist')"
+          class="cyberpunk-btn-gray px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+        >
+          <span class="mr-2">Quitter la liste d'attente</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
               clip-rule="evenodd"
             />
           </svg>
@@ -214,11 +243,35 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  currentPlayerId: {
+    // Nouvelle prop pour l'ID du joueur
+    type: String,
+    default: null,
+  },
 });
 
 const emit = defineEmits(["open-registration", "check-in"]);
 const router = useRouter();
 const imageError = ref(false); // Pour suivre l'état de l'erreur d'image
+
+// Ajouter les propriétés calculées pour la liste d'attente
+const isTournamentFull = computed(() => {
+  return (
+    props.tournament.playerCap > 0 &&
+    props.tournament.players.length >= props.tournament.playerCap
+  );
+});
+
+const isUserInWaitlist = computed(() => {
+  if (!props.currentPlayerId || !props.tournament.waitlistPlayers) return false;
+
+  return props.tournament.waitlistPlayers.some((waitlistId) => {
+    if (typeof waitlistId === "object") {
+      return waitlistId._id === props.currentPlayerId;
+    }
+    return waitlistId === props.currentPlayerId;
+  });
+});
 
 // Vérifier si l'utilisateur est inscrit
 const isUserRegistered = computed(() => {

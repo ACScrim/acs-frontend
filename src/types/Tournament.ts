@@ -27,11 +27,14 @@ export interface Tournament {
   date: string;
   discordChannelName: string;
   players: Player[];
-  finished: boolean;
+  waitlistPlayers?: Player[]; // Nouvelle propriété
+  playerCap: number; // Nouvelle propriété
   teams?: Team[];
+  finished: boolean;
   description?: string;
   checkIns?: { [key: string]: boolean };
-  registrationDates?: { [key: string]: string }; // Date d'inscription des joueurs
+  registrationDates?: { [key: string]: string };
+  waitlistRegistrationDates?: { [key: string]: string }; // Nouvelle propriété
 }
 
 /**

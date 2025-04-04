@@ -152,6 +152,7 @@
           :is-checked-in="
             tournament._id ? checkedInPlayers[tournament._id] : false
           "
+          :current-player-id="currentPlayerId"
           @open-registration="openRegistrationPopup"
           @check-in="checkIn"
         />
@@ -205,8 +206,7 @@ import TournamentGridCard from "@/components/tournois-a-venir/TournamentGridCard
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
-import { useTournamentStore } from "../stores/tournamentStore";
-
+import playerService from "../services/playerService";
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------
@@ -216,6 +216,7 @@ const games = ref<Game[]>([]);
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
 const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
+const currentPlayerId = ref<string | null>(null);
 
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
@@ -223,7 +224,7 @@ const showFinished = ref<boolean>(false);
 const sortAscending = ref<boolean>(true);
 
 // États d'interface et d'interaction
-const checkedInPlayers = computed(() => tournamentStore.checkedInPlayers);
+const checkedInPlayers = ref<{ [key: string]: boolean }>({});
 
 // États du modal de confirmation
 const showPopup = ref<boolean>(false);
@@ -234,7 +235,8 @@ const actionType = ref<string>("register"); // "register" ou "unregister"
 const currentPage = ref<number>(1);
 const itemsPerPage = ref<number>(6); // Nombre de tournois par page
 
-const tournamentStore = useTournamentStore();
+import tournamentService from "../services/tournamentService";
+const tournaments = ref<Tournament[]>([]);
 
 //-------------------------------------------------------
 // SECTION: Store et propriétés calculées
@@ -248,8 +250,8 @@ const user = computed(() => userStore.user);
  * Récupère tous les tournois et applique les filtres
  */
 const filteredTournaments = computed(() => {
-  // Récupérer les tournois du store
-  let filtered = tournamentStore.tournaments;
+  // Utiliser les tournois stockés localement au lieu du store
+  let filtered = tournaments.value;
 
   // Filtre par jeu si un jeu est sélectionné
   if (selectedGame.value) {
@@ -275,15 +277,85 @@ const filteredTournaments = computed(() => {
   });
 });
 
+/**
+ * Vérifie si un tournoi est plein (cap atteint)
+ */
+const isTournamentFull = (tournament: Tournament) => {
+  return (
+    tournament.playerCap > 0 &&
+    tournament.players.length >= tournament.playerCap
+  );
+};
+
+/**
+ * Vérifie si l'utilisateur est en liste d'attente pour un tournoi donné
+ */
+const isUserInWaitlist = (tournament: Tournament) => {
+  if (!currentPlayerId.value || !tournament.waitlistPlayers) return false;
+
+  return tournament.waitlistPlayers.some((waitlistId) => {
+    if (typeof waitlistId === "object") {
+      return waitlistId._id === currentPlayerId.value;
+    } else {
+      return waitlistId === currentPlayerId.value;
+    }
+  });
+};
 //-------------------------------------------------------
 // SECTION: Récupération des données
 //-------------------------------------------------------
 
 /**
- * Récupère les tournois depuis le store (avec mise en cache)
+ * Récupère les tournois directement depuis le service sans mise en cache
  */
 const fetchTournaments = async () => {
-  await tournamentStore.fetchTournaments(user.value?._id);
+  isLoading.value = true;
+  try {
+    // Appel direct au service sans passer par le store
+    tournaments.value = await tournamentService.getTournaments();
+
+    // Vérifier les check-ins si un utilisateur est connecté
+    if (user.value) {
+      // Récupérer l'ID du joueur correspondant à l'utilisateur connecté
+      try {
+        const player = await playerService.getPlayerByIdUser(user.value._id);
+        if (player && player._id) {
+          currentPlayerId.value = player._id;
+          console.log("ID du joueur actuel:", currentPlayerId.value);
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération de l'ID du joueur:", err);
+      }
+
+      await checkUserCheckIns(user.value._id);
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement des tournois:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/**
+ * Vérifie les check-ins d'un utilisateur
+ */
+const checkUserCheckIns = async (userId: string) => {
+  try {
+    const player = await playerService.getPlayerByIdUser(userId);
+    if (player && player._id) {
+      tournaments.value.forEach((tournament) => {
+        if (tournament._id) {
+          checkedInPlayers.value[tournament._id] =
+            (tournament.checkIns &&
+              player._id &&
+              tournament.checkIns[player._id]) ||
+            false;
+        }
+      });
+    }
+  } catch (err) {
+    console.error("Erreur lors de la vérification des check-ins:", err);
+  }
 };
 
 //-------------------------------------------------------
@@ -297,7 +369,27 @@ const fetchTournaments = async () => {
  */
 const openRegistrationPopup = (tournament: Tournament, type: string) => {
   selectedTournament.value = tournament;
-  actionType.value = type;
+
+  // Déterminer le type d'action en fonction de l'état du joueur
+  if (type === "register") {
+    // Si le tournoi est plein et l'utilisateur n'est pas déjà en liste d'attente, proposer la liste d'attente
+    if (isTournamentFull(tournament) && !isUserInWaitlist(tournament)) {
+      actionType.value = "waitlist";
+    } else {
+      actionType.value = "register";
+    }
+  } else if (type === "unregister") {
+    // Si l'utilisateur est en liste d'attente, c'est une désinscription de la liste d'attente
+    if (isUserInWaitlist(tournament)) {
+      actionType.value = "unregister-waitlist";
+    } else {
+      actionType.value = "unregister";
+    }
+  } else {
+    // Cas explicites pour waitlist et unregister-waitlist
+    actionType.value = type;
+  }
+
   showPopup.value = true;
 };
 
@@ -321,35 +413,52 @@ const confirmAction = async () => {
     try {
       let success = false;
 
-      if (actionType.value === "register" && selectedTournament.value._id) {
-        // Utiliser la méthode du store pour l'inscription
-        success = await tournamentStore.registerPlayer(
+      if (
+        (actionType.value === "register" || actionType.value === "waitlist") &&
+        selectedTournament.value._id
+      ) {
+        // Même endpoint pour l'inscription normale et la liste d'attente
+        await tournamentService.registerPlayer(
           selectedTournament.value._id,
           user.value._id
         );
+        success = true;
 
         if (success) {
           showMessage(
             "success",
-            "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+            actionType.value === "register"
+              ? "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+              : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent."
           );
         }
-      } else if (selectedTournament.value._id) {
-        // Utiliser la méthode du store pour la désinscription
-        success = await tournamentStore.unregisterPlayer(
+      } else if (
+        (actionType.value === "unregister" ||
+          actionType.value === "unregister-waitlist") &&
+        selectedTournament.value._id
+      ) {
+        // Même endpoint pour la désinscription normale et de la liste d'attente
+        await tournamentService.unregisterPlayer(
           selectedTournament.value._id,
           user.value._id
         );
+        success = true;
 
         if (success) {
           showMessage(
             "success",
-            "Désinscription réussie ! Triste de te voir partir :("
+            actionType.value === "unregister"
+              ? "Désinscription réussie ! Triste de te voir partir :("
+              : "Vous avez été retiré de la liste d'attente."
           );
         }
       }
 
-      // Pas besoin de refetch ici car le cache est déjà mis à jour dans les méthodes du store
+      // Recharger les données pour voir les changements
+      if (success) {
+        await fetchTournaments();
+      }
+
       closePopup();
     } catch (error) {
       console.error("Erreur lors de l'action:", error);
@@ -360,24 +469,36 @@ const confirmAction = async () => {
 
 /**
  * Change l'état de check-in d'un joueur pour un tournoi avec retour visuel immédiat
- * @param tournamentId - ID du tournoi
- * @param checkedIn - Nouvel état de check-in
  */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   if (user.value) {
-    // Utiliser la méthode du store pour le check-in
-    const success = await tournamentStore.checkInPlayer(
-      tournamentId,
-      user.value._id,
-      checkedIn
-    );
+    // Update optimiste de l'interface
+    if (tournamentId in checkedInPlayers.value) {
+      checkedInPlayers.value[tournamentId] = checkedIn;
+    }
 
-    if (success) {
+    try {
+      // Appel direct au service
+      await tournamentService.checkInPlayer(
+        tournamentId,
+        user.value._id,
+        checkedIn
+      );
+
       showMessage(
         "success",
         checkedIn ? "Check-in confirmé !" : "Check-in annulé."
       );
-    } else {
+
+      // Recharger les données pour refléter le changement
+      await fetchTournaments();
+    } catch (err) {
+      // En cas d'erreur, remettre l'état précédent
+      if (tournamentId in checkedInPlayers.value) {
+        checkedInPlayers.value[tournamentId] = !checkedIn;
+      }
+
+      console.error("Erreur lors du check-in:", err);
       showMessage(
         "error",
         `Erreur: Impossible de ${
@@ -480,7 +601,7 @@ watch([selectedGame, showFinished, sortAscending], async () => {
 
   // Si l'utilisateur est connecté, vérifier les états de check-in
   if (user.value) {
-    await tournamentStore.checkUserCheckIns(user.value._id);
+    await checkUserCheckIns(user.value._id);
   }
 });
 onMounted(async () => {

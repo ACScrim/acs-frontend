@@ -230,6 +230,100 @@
         </div>
       </div>
 
+      <div class="mb-6">
+        <label
+          for="playerCap"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Limite de Joueurs
+          <span class="group relative ml-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4 text-cyan-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+              />
+            </svg>
+            <div
+              class="absolute left-1/2 -translate-x-1/2 -top-[60px] w-60 p-2 bg-gray-900 text-cyan-400 text-xs border border-cyan-500/30 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 text-center font-['Orbitron']"
+            >
+              0 = Pas de limite | Sinon, définit le nombre maximum de joueurs.
+              Les joueurs supplémentaires seront mis en liste d'attente.
+            </div>
+          </span>
+        </label>
+        <div class="relative">
+          <input
+            type="number"
+            id="playerCap"
+            v-model="playerCap"
+            min="0"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            placeholder="0 = Pas de limite"
+          />
+        </div>
+      </div>
+
+      <!-- Affichage des joueurs en liste d'attente s'il y en a -->
+      <div v-if="waitlistPlayers.length > 0" class="mt-6">
+        <h3 class="text-lg text-pink-500 mb-3 font-['Orbitron'] font-semibold">
+          Liste d'attente ({{ waitlistPlayers.length }} joueurs)
+        </h3>
+        <div
+          class="overflow-y-auto max-h-60 bg-gray-900/50 rounded-lg border border-pink-500/30 p-3"
+        >
+          <div
+            v-for="player in waitlistPlayers"
+            :key="player._id"
+            class="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0"
+          >
+            <span class="text-white">{{ player.username }}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">
+                {{ formatWaitingTime(player._id ?? "") }}
+              </span>
+              <button
+                @click="promotePlayer(player)"
+                class="text-xs px-2 py-1 bg-green-800/50 hover:bg-green-700/70 text-green-300 rounded-md transition-colors"
+                title="Ajouter à la liste principale"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Sélection des joueurs -->
       <div class="form-group">
         <label for="players" class="form-label">
@@ -393,6 +487,8 @@ const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const showConfirmationDialog = ref<boolean>(false);
 const description = ref<string>("");
+const playerCap = ref<number>(0);
+const waitlistPlayers = ref<PlayerCheckedIn[]>([]);
 
 const games = ref<Game[]>([]);
 
@@ -434,13 +530,12 @@ const loadTournamentDetails = async () => {
 
     name.value = tournament.name;
     game.value = (tournament.game as any)._id;
-
-    // Formater la date pour l'affichage dans le champ date
     date.value = formatDateForInput(tournament.date);
-
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || "";
+    playerCap.value = tournament.playerCap || 0; // Charger playerCap
 
+    // Charger les joueurs de la liste principale
     selectedPlayers.value = tournament.players.map((player: any) => ({
       _id: player._id,
       username: player.username,
@@ -449,6 +544,42 @@ const loadTournamentDetails = async () => {
         ? tournament.checkIns[player._id] || false
         : false,
     }));
+
+    // Charger les joueurs de la liste d'attente si présents
+    waitlistPlayers.value = tournament.waitlistPlayers
+      ? tournament.waitlistPlayers.map((player: any) => ({
+          _id: player._id,
+          username: player.username,
+          userId: player.userId,
+          checkedIn: false,
+        }))
+      : [];
+  }
+};
+
+// Ajouter une fonction pour formater le temps d'attente
+const formatWaitingTime = (playerId: string) => {
+  if (!selectedTournament.value) return "";
+
+  // Vous devrez récupérer la date d'inscription en liste d'attente depuis waitlistRegistrationDates
+  const tournament = tournaments.value.find(
+    (t) => t._id === selectedTournament.value
+  );
+  if (!tournament || !tournament.waitlistRegistrationDates) return "";
+
+  const waitDate = tournament.waitlistRegistrationDates[playerId];
+  if (!waitDate) return "";
+
+  const waitTimeMs = Date.now() - new Date(waitDate).getTime();
+  const days = Math.floor(waitTimeMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (waitTimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+
+  if (days > 0) {
+    return `En attente depuis ${days} jour${days > 1 ? "s" : ""} et ${hours}h`;
+  } else {
+    return `En attente depuis ${hours}h`;
   }
 };
 
@@ -504,17 +635,19 @@ const removePlayer = (player: PlayerCheckedIn) => {
 
 const editTournament = async () => {
   try {
-    // Créer un objet Date à partir de l'entrée du formulaire
     const selectedDate = new Date(date.value);
+
+    const allPlayers = [...selectedPlayers.value, ...waitlistPlayers.value];
 
     const tournament: Tournament = {
       _id: selectedTournament.value,
       name: name.value,
       game: games.value.find((g) => g._id === game.value) as Game,
-      date: selectedDate.toISOString(), // Convertir automatiquement en UTC
+      date: selectedDate.toISOString(),
       discordChannelName: discordChannelName.value,
       description: description.value,
-      players: selectedPlayers.value,
+      players: allPlayers, // Envoyer tous les joueurs (actifs + liste d'attente)
+      playerCap: playerCap.value,
       finished: false,
     };
 
@@ -524,6 +657,9 @@ const editTournament = async () => {
     );
 
     showMessage("success", "Tournoi modifié avec succès !");
+
+    // Recharger les données du tournoi pour voir les changements
+    await loadTournamentDetails();
   } catch (err) {
     console.error("Erreur lors de la modification du tournoi:", err);
     showMessage(
@@ -532,9 +668,33 @@ const editTournament = async () => {
     );
   }
 };
-
 const confirmDeleteTournament = () => {
   showConfirmationDialog.value = true;
+};
+
+const promotePlayer = (player: PlayerCheckedIn) => {
+  // Vérifier si l'ajout de ce joueur dépasserait la limite actuelle
+  if (playerCap.value > 0 && selectedPlayers.value.length >= playerCap.value) {
+    // Deux options: augmenter automatiquement la limite ou demander confirmation
+
+    // Option 1: Augmenter automatiquement la limite
+    playerCap.value = selectedPlayers.value.length + 1;
+    showMessage(
+      "success",
+      `La limite de joueurs a été augmentée à ${playerCap.value} pour permettre l'ajout de ${player.username}.`
+    );
+  }
+
+  // Supprimer le joueur de la liste d'attente
+  waitlistPlayers.value = waitlistPlayers.value.filter(
+    (p) => p._id !== player._id
+  );
+
+  // Ajouter le joueur à la liste principale
+  selectedPlayers.value.push(player);
+
+  // Message de confirmation temporaire
+  showMessage("success", `${player.username} ajouté à la liste principale !`);
 };
 
 const deleteTournament = async () => {

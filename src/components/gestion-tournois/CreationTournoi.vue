@@ -191,6 +191,58 @@
         </div>
       </div>
 
+      <div class="mb-6">
+        <label
+          for="playerCap"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Limite de Joueurs
+          <span class="group relative ml-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4 text-cyan-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+              />
+            </svg>
+            <div
+              class="absolute left-1/2 -translate-x-1/2 -top-[60px] w-48 p-2 bg-gray-900 text-cyan-400 text-xs border border-cyan-500/30 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 text-center font-['Orbitron']"
+            >
+              0 = Pas de limite | Sinon, nombre maximum de joueurs
+            </div>
+          </span>
+        </label>
+        <div class="relative">
+          <input
+            type="number"
+            id="playerCap"
+            v-model="playerCap"
+            min="0"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            placeholder="0 = Pas de limite"
+          />
+        </div>
+      </div>
+
       <!-- Sélection des joueurs -->
       <div class="mb-6">
         <label
@@ -337,6 +389,7 @@ const allPlayers = ref<Player[]>([]);
 const showPlayerList = ref<boolean>(false);
 const games = ref<Game[]>([]);
 const isLoading = ref<boolean>(false);
+const playerCap = ref<number>(0);
 
 const fetchGames = async () => {
   games.value = await gameService.getGames();
@@ -407,6 +460,7 @@ const createTournament = async () => {
       discordChannelName: discordChannelName.value,
       description: description.value,
       players: selectedPlayers.value,
+      playerCap: playerCap.value,
       finished: false,
       checkIns,
     };
@@ -432,6 +486,7 @@ const resetForm = () => {
   discordChannelName.value = "";
   description.value = "";
   selectedPlayers.value = [];
+  playerCap.value = 0; // Réinitialiser playerCap
 };
 
 const error = ref<string | null>(null);

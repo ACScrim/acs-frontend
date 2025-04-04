@@ -147,6 +147,75 @@
               <span class="font-semibold">Jeu:</span>
               <span class="ml-2">{{ tournament.game.name }}</span>
             </p>
+            <p
+              v-if="tournament.playerCap > 0"
+              class="text-white flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 text-cyan-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="font-semibold">Limite:</span>
+              <span class="ml-2">
+                {{ tournament.players.length }} /
+                {{ tournament.playerCap }} joueurs
+              </span>
+            </p>
+
+            <!-- Barre de progression pour les places -->
+            <div
+              v-if="tournament.playerCap > 0"
+              class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden"
+              title="Taux de remplissage du tournoi"
+            >
+              <div
+                class="bg-cyan-500 h-2.5 rounded-full transition-all duration-500"
+                :style="`width: ${Math.min(
+                  100,
+                  (tournament.players.length / tournament.playerCap) * 100
+                )}%`"
+              ></div>
+            </div>
+
+            <!-- Liste d'attente si applicable -->
+            <div
+              v-if="hasWaitlist"
+              class="mt-3 pt-2 border-t border-gray-700/50"
+            >
+              <p class="text-white flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-2 text-pink-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="font-semibold">Liste d'attente:</span>
+                <span class="ml-2">{{ waitlistCount }} joueurs</span>
+              </p>
+
+              <p
+                v-if="isUserInWaitlist"
+                class="text-sm text-pink-300 mt-1 font-orbitron"
+              >
+                Vous êtes en position
+                <span class="font-bold">{{ getUserWaitlistPosition }}</span>
+                dans la liste d'attente
+              </p>
+            </div>
           </div>
 
           <!-- Colonne 2: Participants et Discord -->
@@ -190,11 +259,21 @@
             class="flex flex-col space-y-3"
           >
             <button
-              v-if="!isUserRegistered"
-              @click="openRegistrationPopup(tournament, 'register')"
-              class="cyberpunk-btn-pink px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              v-if="
+                !isUserRegistered && !isUserInWaitlist && !tournament.finished
+              "
+              @click="
+                openRegistrationPopup(
+                  tournament,
+                  isTournamentFull ? 'waitlist' : 'register'
+                )
+              "
+              class="cyberpunk-btn-amber px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
-              <span class="mr-2 font-orbitron">S'inscrire</span>
+              <span v-if="isTournamentFull" class="mr-2 font-orbitron"
+                >Rejoindre la liste d'attente</span
+              >
+              <span v-else class="mr-2 font-orbitron">S'inscrire</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -204,6 +283,26 @@
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3H6a1 1 0 100 2h3v3a1 1 0 102 0v-3h3a1 1 0 100-2h-3V7z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+
+            <button
+              v-if="isUserInWaitlist && !tournament.finished"
+              @click="openRegistrationPopup(tournament, 'unregister-waitlist')"
+              class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <span class="mr-2">Quitter la liste d'attente</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
                   clip-rule="evenodd"
                 />
               </svg>
@@ -518,6 +617,105 @@
             >
               Aucun participant inscrit pour ce tournoi.
             </p>
+
+            <!-- Section Liste d'attente -->
+            <div
+              v-if="hasWaitlist"
+              class="mt-8 animate__animated animate__fadeIn"
+            >
+              <h3
+                class="text-xl text-pink-400 font-audiowide mb-4 flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-2 text-pink-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Liste d'attente
+                <span
+                  class="ml-2 text-base bg-pink-900/50 px-2 py-0.5 rounded-full border border-pink-500/30"
+                >
+                  {{ waitlistCount }} joueurs
+                </span>
+              </h3>
+
+              <div
+                class="bg-gray-800/80 p-4 rounded-lg border border-pink-500/30 shadow-lg shadow-pink-500/10"
+              >
+                <!-- En-tête du tableau -->
+                <div
+                  class="grid grid-cols-3 gap-4 mb-3 text-sm font-orbitron text-pink-200 border-b border-pink-500/20 pb-2"
+                >
+                  <div class="font-semibold">Position</div>
+                  <div class="font-semibold">Joueur</div>
+                  <div class="font-semibold">En attente depuis</div>
+                </div>
+
+                <!-- Liste des joueurs en attente -->
+                <ul v-if="waitlistPlayers.length > 0" class="space-y-2">
+                  <li
+                    v-for="(player, index) in waitlistPlayers"
+                    :key="player._id"
+                    :class="{
+                      'bg-pink-900/20': index === getUserWaitlistPosition - 1,
+                    }"
+                    class="grid grid-cols-3 gap-4 p-2 rounded-md text-white transition-colors hover:bg-gray-700/50"
+                  >
+                    <div class="flex items-center">
+                      <span
+                        class="w-6 h-6 flex items-center justify-center bg-pink-900/50 text-pink-300 rounded-full mr-2 text-xs font-semibold"
+                      >
+                        {{ index + 1 }}
+                      </span>
+                    </div>
+                    <div class="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-2 text-pink-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      <!-- Correction ici pour afficher le nom du joueur correctement -->
+                      {{
+                        typeof player === "object"
+                          ? player.username
+                          : "Joueur inconnu"
+                      }}
+                      <span
+                        v-if="
+                          typeof player === 'object' &&
+                          player.userId === user?._id
+                        "
+                        class="ml-2 text-xs font-semibold bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
+                      >
+                        Vous
+                      </span>
+                    </div>
+                    <div class="text-sm text-pink-200">
+                      {{ formatWaitingTime(player._id) }}
+                    </div>
+                  </li>
+                </ul>
+
+                <!-- Message si la liste est vide (cas qui ne devrait pas arriver) -->
+                <p v-else class="text-gray-400 italic text-center py-4">
+                  Liste d'attente vide
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Onglet Résultats (si tournoi terminé) -->
@@ -797,13 +995,13 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
-import { useTournamentStore } from "../stores/tournamentStore"; // Importer le store
 import Toast from "@/shared/Toast.vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentPodium from "@/components/tournois-a-venir/TournamentPodium.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
 import type { Tournament } from "../types";
+import tournamentService from "../services/tournamentService";
 
 //------------------------------------------------------
 // 1. ÉTAT ET CONFIGURATION DU COMPOSANT
@@ -816,11 +1014,10 @@ const tournamentId = computed(() => route.params.id as string);
 
 // Initialisation des stores
 const userStore = useUserStore();
-const tournamentStore = useTournamentStore(); // Utiliser le store des tournois
 
 // États principaux du composant
 const tournament = ref<Tournament | null>(null);
-const isLoading = computed(() => tournamentStore.loading); // Utiliser l'état de chargement du store
+const isLoading = ref(false); // Gérer l'état de chargement localement au lieu d'utiliser computed
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const activeTab = ref("participants");
@@ -839,6 +1036,7 @@ const loadingLastTournament = ref(false);
 
 // Récupérer l'utilisateur connecté depuis le store
 const user = computed(() => userStore.user);
+const currentPlayerId = ref<string | null>(null);
 
 //------------------------------------------------------
 // 2. PROPRIÉTÉS CALCULÉES
@@ -884,6 +1082,42 @@ const hasEmptyTeams = computed(() => {
   );
 });
 
+/**
+ * Liste des joueurs en attente triée par date d'inscription
+ */
+const waitlistPlayers = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return [];
+
+  // Créer une copie de la liste d'attente avec des dates
+  const playersWithDates = tournament.value.waitlistPlayers.map((player) => {
+    const playerId = typeof player === "object" ? player._id : player;
+    // Récupérer la date d'inscription depuis waitlistRegistrationDates s'il elle existe
+    let registrationDate;
+
+    if (tournament.value?.waitlistRegistrationDates && playerId) {
+      registrationDate = tournament.value.waitlistRegistrationDates[playerId];
+    }
+
+    // Utiliser une date par défaut si aucune date d'inscription n'est trouvée
+    if (!registrationDate) {
+      registrationDate = new Date();
+    }
+
+    return {
+      ...player,
+      registrationDate,
+    };
+  });
+
+  // Trier par date d'inscription (plus anciens en premier)
+  return playersWithDates.sort((a, b) => {
+    return (
+      new Date(a.registrationDate).getTime() -
+      new Date(b.registrationDate).getTime()
+    );
+  });
+});
+
 //------------------------------------------------------
 // 3. RÉCUPÉRATION DES DONNÉES
 //------------------------------------------------------
@@ -894,7 +1128,7 @@ const hasEmptyTeams = computed(() => {
 const fetchTournament = async () => {
   try {
     // Utiliser le store pour récupérer les détails du tournoi avec mise en cache
-    const data = await tournamentStore.fetchTournamentById(tournamentId.value);
+    const data = await tournamentService.getTournamentById(tournamentId.value);
 
     if (!data) {
       error.value = "Impossible de charger les données du tournoi";
@@ -913,6 +1147,19 @@ const fetchTournament = async () => {
     // Vérifier l'état de check-in du joueur si l'utilisateur est connecté
     if (user.value) {
       await checkPlayerCheckIn();
+    }
+
+    // Récupérer l'ID du joueur correspondant à l'utilisateur connecté
+    if (user.value) {
+      try {
+        const player = await playerService.getPlayerByIdUser(user.value._id);
+        if (player && player._id) {
+          currentPlayerId.value = player._id;
+          console.log("ID du joueur actuel:", currentPlayerId.value);
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération de l'ID du joueur:", err);
+      }
     }
 
     // Récupérer le dernier tournoi terminé pour ce jeu
@@ -935,7 +1182,7 @@ const fetchLastFinishedTournament = async () => {
 
   try {
     // Utiliser le store pour récupérer les tournois par jeu
-    const tournaments = await tournamentStore.fetchTournamentsByGame(
+    const tournaments = await tournamentService.getTournamentsByGame(
       tournament.value.game._id
     );
 
@@ -1018,43 +1265,50 @@ const confirmAction = async () => {
   try {
     let success = false;
 
-    if (actionType.value === "register" && selectedTournament.value._id) {
-      // Utiliser le store pour l'inscription
-      success = await tournamentStore.registerPlayer(
+    if (
+      (actionType.value === "register" || actionType.value === "waitlist") &&
+      selectedTournament.value._id
+    ) {
+      // Appel direct au service au lieu du store
+      await tournamentService.registerPlayer(
         selectedTournament.value._id,
         user.value._id
       );
+      success = true;
 
       if (success) {
         showMessage(
           "success",
-          "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+          actionType.value === "register"
+            ? "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+            : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent."
         );
       }
-    } else if (selectedTournament.value._id) {
-      // Utiliser le store pour la désinscription
-      success = await tournamentStore.unregisterPlayer(
+    } else if (
+      (actionType.value === "unregister" ||
+        actionType.value === "unregister-waitlist") &&
+      selectedTournament.value._id
+    ) {
+      // Appel direct au service au lieu du store
+      await tournamentService.unregisterPlayer(
         selectedTournament.value._id,
         user.value._id
       );
+      success = true;
 
       if (success) {
         showMessage(
           "success",
-          "Désinscription réussie ! Triste de te voir partir :("
+          actionType.value === "unregister"
+            ? "Désinscription réussie ! Triste de te voir partir :("
+            : "Vous avez été retiré de la liste d'attente."
         );
       }
     }
 
-    // Mettre à jour l'état local avec les données du store
+    // Mettre à jour l'état local en rechargeant les données
     if (success && selectedTournament.value._id) {
-      const updatedTournament = await tournamentStore.fetchTournamentById(
-        selectedTournament.value._id,
-        true // forcer le rafraîchissement pour avoir les données à jour
-      );
-      if (updatedTournament) {
-        tournament.value = updatedTournament;
-      }
+      await fetchTournament(); // Recharger le tournoi pour avoir les données à jour
     }
 
     closePopup();
@@ -1074,37 +1328,20 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   isCheckedIn.value = checkedIn;
 
   try {
-    // Utiliser le store pour le check-in
-    const success = await tournamentStore.checkInPlayer(
+    // Appel direct au service au lieu du store
+    await tournamentService.checkInPlayer(
       tournamentId,
       user.value._id,
       checkedIn
     );
 
-    if (success) {
-      showMessage(
-        "success",
-        checkedIn ? "Check-in confirmé !" : "Check-in annulé."
-      );
+    showMessage(
+      "success",
+      checkedIn ? "Check-in confirmé !" : "Check-in annulé."
+    );
 
-      // Mettre à jour les données locales après un check-in réussi
-      const updatedTournament = await tournamentStore.fetchTournamentById(
-        tournamentId,
-        true // forcer le rafraîchissement
-      );
-      if (updatedTournament) {
-        tournament.value = updatedTournament;
-      }
-    } else {
-      // En cas d'échec, remettre l'état précédent
-      isCheckedIn.value = !checkedIn;
-      showMessage(
-        "error",
-        `Erreur: Impossible de ${
-          checkedIn ? "confirmer" : "annuler"
-        } le check-in.`
-      );
-    }
+    // Mettre à jour les données locales après un check-in réussi
+    await fetchTournament(); // Recharger le tournoi
   } catch (err) {
     // En cas d'erreur, remettre l'état précédent
     isCheckedIn.value = !checkedIn;
@@ -1131,6 +1368,111 @@ const toggleOtherRankings = () => {
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
+
+/**
+ * Vérifie si le tournoi a une liste d'attente avec des joueurs
+ */
+const hasWaitlist = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return false;
+  return tournament.value.waitlistPlayers.length > 0;
+});
+
+/**
+ * Nombre de joueurs en liste d'attente
+ */
+const waitlistCount = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return 0;
+  return tournament.value.waitlistPlayers.length;
+});
+
+/**
+ * Vérifie si l'utilisateur connecté est en liste d'attente
+ */
+const isUserInWaitlist = computed(() => {
+  if (
+    !currentPlayerId.value ||
+    !tournament.value ||
+    !tournament.value.waitlistPlayers
+  )
+    return false;
+
+  return tournament.value.waitlistPlayers.some((waitlistId) => {
+    // Vérifier le type du waitlistId pour traiter correctement la comparaison
+    if (typeof waitlistId === "object") {
+      // Si waitlistId est un objet (Player)
+      return waitlistId._id === currentPlayerId.value;
+    } else {
+      // Si waitlistId est une chaîne (ID simple)
+      return waitlistId === currentPlayerId.value;
+    }
+  });
+});
+
+/**
+ * Détermine la position de l'utilisateur dans la liste d'attente
+ */
+const getUserWaitlistPosition = computed(() => {
+  if (
+    !user.value ||
+    !tournament.value ||
+    !tournament.value.waitlistPlayers ||
+    !isUserInWaitlist.value
+  ) {
+    return 0;
+  }
+
+  // Si waitlistRegistrationDates est disponible, trier par date d'inscription
+  if (tournament.value.waitlistRegistrationDates) {
+    const waitlistWithDates = tournament.value.waitlistPlayers.map((player) => {
+      const playerId = typeof player === "object" ? player._id : player;
+      const registrationDate = playerId
+        ? tournament.value?.waitlistRegistrationDates?.[playerId]
+        : new Date();
+      return { player, registrationDate };
+    });
+
+    // Trier par date d'inscription (plus anciens en premier)
+    waitlistWithDates.sort((a, b) => {
+      return (
+        new Date(a.registrationDate ?? new Date()).getTime() -
+        new Date(b.registrationDate ?? new Date()).getTime()
+      );
+    });
+
+    // Trouver la position de l'utilisateur
+    for (let i = 0; i < waitlistWithDates.length; i++) {
+      const playerId =
+        typeof waitlistWithDates[i].player === "object"
+          ? waitlistWithDates[i].player.userId
+          : waitlistWithDates[i].player;
+
+      if (playerId === user.value._id) {
+        return i + 1; // Position (1-indexed)
+      }
+    }
+  }
+
+  // Si pas de dates disponibles, juste retourner la position brute
+  const index = tournament.value.waitlistPlayers.findIndex((player) => {
+    if (typeof player === "object" && player.userId) {
+      return user.value && player.userId === user.value._id;
+    }
+    return typeof player === "object" && player.userId === user.value?._id;
+  });
+
+  return index + 1; // 1-indexed
+});
+
+/**
+ * Vérifie si le tournoi est plein (cap atteint)
+ */
+const isTournamentFull = computed(() => {
+  if (!tournament.value) return false;
+  return (
+    tournament.value.playerCap > 0 &&
+    tournament.value.players.length >= tournament.value.playerCap
+  );
+});
 
 //------------------------------------------------------
 // 5. UTILITAIRES ET FORMATAGE
@@ -1163,6 +1505,56 @@ const showMessage = (
       error.value = null;
     }
   }, duration);
+};
+
+/**
+ * Formate le temps d'attente d'un joueur dans la liste d'attente
+ */
+const formatWaitingTime = (playerId) => {
+  if (
+    !tournament.value ||
+    !tournament.value.waitlistRegistrationDates ||
+    !playerId
+  ) {
+    return "Date inconnue";
+  }
+
+  // Problème : Accès direct à la HashMap
+  // Nous devons vérifier la structure des données
+
+  let waitDate = null;
+
+  // Vérifier si waitlistRegistrationDates est un objet simple (JSON)
+  if (
+    typeof tournament.value.waitlistRegistrationDates === "object" &&
+    !Array.isArray(tournament.value.waitlistRegistrationDates)
+  ) {
+    // C'est un objet, on peut accéder à la propriété directement
+    waitDate = tournament.value.waitlistRegistrationDates[playerId];
+  }
+  // Ou si c'est une instance de Map (moins probable côté frontend)
+  else if (tournament.value.waitlistRegistrationDates instanceof Map) {
+    waitDate = tournament.value.waitlistRegistrationDates.get(playerId);
+  }
+
+  if (!waitDate) return "Date inconnue";
+
+  const waitTimeMs = Date.now() - new Date(waitDate).getTime();
+
+  // Conversion en jours/heures/minutes
+  const days = Math.floor(waitTimeMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (waitTimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((waitTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+
+  if (days > 0) {
+    return `${days} jour${days > 1 ? "s" : ""} et ${hours}h`;
+  } else if (hours > 0) {
+    return `${hours}h et ${minutes}min`;
+  } else {
+    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+  }
 };
 
 /**
@@ -1222,6 +1614,26 @@ watch(
 // Récupérer les données au chargement du composant
 onMounted(() => {
   fetchTournament();
+  setTimeout(() => {
+    if (tournament.value && tournament.value.waitlistPlayers) {
+      console.log(
+        "Structure des joueurs en liste d'attente:",
+        tournament.value.waitlistPlayers
+      );
+      console.log("User connecté:", user.value);
+      console.log("isUserInWaitlist:", isUserInWaitlist.value);
+
+      // Vérifier chaque joueur
+      tournament.value.waitlistPlayers.forEach((player, index) => {
+        console.log(`Joueur ${index}:`, player);
+        console.log(`Type de player:`, typeof player);
+        if (typeof player === "object") {
+          console.log("player.userId:", player.userId);
+          console.log("player._id:", player._id);
+        }
+      });
+    }
+  }, 2000);
 });
 </script>
 
