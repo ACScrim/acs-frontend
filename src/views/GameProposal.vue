@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
+  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24 pb-16 relative">
     <div class="max-w-5xl mx-auto">
       <!-- En-tête -->
       <div class="mb-8 text-center relative">
@@ -861,6 +861,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.container {
+  min-height: calc(
+    100vh - 200px
+  ); /* Ajuster selon la hauteur de votre navbar + footer */
+  position: relative;
+  z-index: 20;
+  overflow: visible;
+}
 /* Titre Cyberpunk Synthwave avec glitch */
 .cyber-glitch-title {
   font-family: "Audiowide", cursive;
@@ -932,7 +940,7 @@ onMounted(() => {
 
 /* Effet de grille cyberpunk */
 .cyber-grid {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;

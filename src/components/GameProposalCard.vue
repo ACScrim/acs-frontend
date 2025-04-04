@@ -200,11 +200,11 @@
           <Teleport to="body">
             <div
               v-if="showVoteInfo"
-              class="fixed inset-0 flex items-center justify-center z-[9999] bg-black/40 backdrop-blur-md"
+              class="fixed inset-0 flex items-center justify-center z-[9999] bg-black/40 backdrop-blur-md overflow-hidden"
               @click.self="closeVoteModal"
             >
               <div
-                class="w-full max-w-md mx-4 transform transition-all duration-300"
+                class="w-full max-w-md mx-4 max-h-[80vh] overflow-hidden transform transition-all duration-300"
                 :class="{
                   'vote-modal-enter': voteModalEnter,
                   'vote-modal-active': !voteModalEnter,
@@ -218,7 +218,7 @@
 
                 <!-- Corps de la modale -->
                 <div
-                  class="bg-gradient-to-br from-gray-900 to-black border border-cyan-500/60 rounded-lg shadow-[0_0_20px_rgba(8,145,178,0.4)] overflow-hidden"
+                  class="bg-gradient-to-br from-gray-900 to-black border border-cyan-500/60 rounded-lg shadow-[0_0_20px_rgba(8,145,178,0.4)] overflow-hidden flex flex-col"
                 >
                   <!-- En-tête avec titre -->
                   <div class="relative p-5 border-b border-cyan-600/30">
@@ -355,7 +355,7 @@
 
                   <!-- Liste des votants -->
                   <div
-                    class="h-60 overflow-y-auto cyber-scrollbar p-4 bg-gray-950/60"
+                    class="h-60 overflow-y-auto cyber-scrollbar p-4 bg-gray-950/60 flex-shrink-0"
                   >
                     <div
                       v-if="currentVotesList.length === 0"
@@ -541,7 +541,7 @@
 // ================================================
 // IMPORTS ET DÉFINITIONS
 // ================================================
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeUnmount, watch } from "vue";
 
 import type { GameProposal } from "../types";
 
@@ -704,7 +704,7 @@ const toggleVoteInfo = () => {
       voteModalEnter.value = false;
     }, 10);
   } else {
-    showVoteInfo.value = false;
+    closeVoteModal();
   }
 };
 
@@ -716,6 +716,16 @@ const closeVoteModal = () => {
   setTimeout(() => {
     showVoteInfo.value = false;
   }, 100);
+};
+
+// Fonction pour empêcher le défilement du body quand la modale est ouverte
+const lockBodyScroll = () => {
+  document.body.style.overflow = "hidden";
+};
+
+// Fonction pour réactiver le défilement du body
+const unlockBodyScroll = () => {
+  document.body.style.overflow = "";
 };
 
 /**
@@ -783,6 +793,20 @@ const getInitials = (name: string): string => {
 
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
+
+// Surveiller les changements de showVoteInfo pour verrouiller/déverrouiller le body
+watch(showVoteInfo, (newVal) => {
+  if (newVal) {
+    lockBodyScroll();
+  } else {
+    unlockBodyScroll();
+  }
+});
+
+// S'assurer que le défilement est réactivé quand le composant est détruit
+onBeforeUnmount(() => {
+  unlockBodyScroll();
+});
 </script>
 
 <style scoped>

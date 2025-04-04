@@ -1612,26 +1612,6 @@ watch(
 // Récupérer les données au chargement du composant
 onMounted(() => {
   fetchTournament();
-  setTimeout(() => {
-    if (tournament.value && tournament.value.waitlistPlayers) {
-      console.log(
-        "Structure des joueurs en liste d'attente:",
-        tournament.value.waitlistPlayers
-      );
-      console.log("User connecté:", user.value);
-      console.log("isUserInWaitlist:", isUserInWaitlist.value);
-
-      // Vérifier chaque joueur
-      tournament.value.waitlistPlayers.forEach((player, index) => {
-        console.log(`Joueur ${index}:`, player);
-        console.log(`Type de player:`, typeof player);
-        if (typeof player === "object") {
-          console.log("player.userId:", player.userId);
-          console.log("player._id:", player._id);
-        }
-      });
-    }
-  }, 2000);
 });
 </script>
 
