@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", {
   }),
   getters: {
     isSuperAdmin: (state) => state.user?.role === "superadmin",
+    playerId: (state) => state.player?._id || null,
   },
   actions: {
     async fetchUser() {

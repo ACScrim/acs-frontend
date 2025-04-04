@@ -100,7 +100,7 @@
         </p>
 
         <!-- Participants -->
-        <p class="text-white flex items-center">
+        <p class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4 mr-2 text-purple-500"
@@ -111,7 +111,14 @@
               d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
             />
           </svg>
-          {{ getParticipantsCount() }} participants
+          <!-- Appliquer la classe uniquement au texte -->
+          <span :class="participantsTextClass">{{ formatParticipants() }}</span>
+          <span
+            v-if="isTournamentFull"
+            class="ml-2 text-xs bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
+          >
+            COMPLET
+          </span>
         </p>
       </div>
 
@@ -302,13 +309,37 @@ const formatLocalDate = (dateString: string) => {
   });
 };
 
-// Fonction pour compter le nombre de participants
-const getParticipantsCount = () => {
-  if (props.tournament.players) {
-    return props.tournament.players.length;
+// Version alternative avec couleur conditionnelle
+const formatParticipants = () => {
+  const playerCount = props.tournament.players
+    ? props.tournament.players.length
+    : 0;
+
+  // Si un cap est défini (supérieur à 0), on l'affiche
+  if (props.tournament.playerCap && props.tournament.playerCap > 0) {
+    return `${playerCount}/${props.tournament.playerCap} joueurs`;
   }
-  return 0;
+
+  // Sinon, on affiche simplement le nombre de joueurs
+  return `${playerCount} participants`;
 };
+
+// Classe CSS conditionnelle pour le texte du nombre de participants
+const participantsTextClass = computed(() => {
+  if (!props.tournament.playerCap || props.tournament.playerCap <= 0) {
+    return "text-white";
+  }
+
+  const playerCount = props.tournament.players
+    ? props.tournament.players.length
+    : 0;
+  const ratio = playerCount / props.tournament.playerCap;
+
+  if (ratio >= 1) return "text-pink-300 font-semibold"; // Complet
+  if (ratio >= 0.75) return "text-amber-300 font-semibold"; // Presque plein
+  if (ratio >= 0.5) return "text-lime-300"; // À moitié plein
+  return "text-gray-200"; // Peu rempli
+});
 
 // Gestion des erreurs d'image
 const handleImageError = () => {

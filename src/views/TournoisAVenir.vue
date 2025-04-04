@@ -216,7 +216,7 @@ const games = ref<Game[]>([]);
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
 const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
-const currentPlayerId = ref<string | null>(null);
+const currentPlayerId = computed(() => userStore.playerId);
 
 // États de filtrage et d'affichage
 const selectedGame = ref<string>("");
@@ -291,13 +291,13 @@ const isTournamentFull = (tournament: Tournament) => {
  * Vérifie si l'utilisateur est en liste d'attente pour un tournoi donné
  */
 const isUserInWaitlist = (tournament: Tournament) => {
-  if (!currentPlayerId.value || !tournament.waitlistPlayers) return false;
+  if (!userStore.playerId || !tournament.waitlistPlayers) return false;
 
   return tournament.waitlistPlayers.some((waitlistId) => {
     if (typeof waitlistId === "object") {
-      return waitlistId._id === currentPlayerId.value;
+      return waitlistId._id === userStore.playerId;
     } else {
-      return waitlistId === currentPlayerId.value;
+      return waitlistId === userStore.playerId;
     }
   });
 };
@@ -316,17 +316,6 @@ const fetchTournaments = async () => {
 
     // Vérifier les check-ins si un utilisateur est connecté
     if (user.value) {
-      // Récupérer l'ID du joueur correspondant à l'utilisateur connecté
-      try {
-        const player = await playerService.getPlayerByIdUser(user.value._id);
-        if (player && player._id) {
-          currentPlayerId.value = player._id;
-          console.log("ID du joueur actuel:", currentPlayerId.value);
-        }
-      } catch (err) {
-        console.error("Erreur lors de la récupération de l'ID du joueur:", err);
-      }
-
       await checkUserCheckIns(user.value._id);
     }
   } catch (error) {
@@ -341,17 +330,31 @@ const fetchTournaments = async () => {
  */
 const checkUserCheckIns = async (userId: string) => {
   try {
-    const player = await playerService.getPlayerByIdUser(userId);
-    if (player && player._id) {
+    // Ici, nous pouvons utiliser directement userStore.playerId
+    // si nous sommes sûrs qu'il est déjà chargé
+    const playerId = userStore.playerId;
+
+    if (playerId) {
       tournaments.value.forEach((tournament) => {
         if (tournament._id) {
           checkedInPlayers.value[tournament._id] =
-            (tournament.checkIns &&
-              player._id &&
-              tournament.checkIns[player._id]) ||
-            false;
+            (tournament.checkIns && tournament.checkIns[playerId]) || false;
         }
       });
+    } else {
+      // Fallback au cas où le playerId n'est pas encore disponible dans le store
+      const player = await playerService.getPlayerByIdUser(userId);
+      if (player && player._id) {
+        tournaments.value.forEach((tournament) => {
+          if (tournament._id) {
+            checkedInPlayers.value[tournament._id] =
+              (tournament.checkIns &&
+                player._id &&
+                tournament.checkIns[player._id]) ||
+              false;
+          }
+        });
+      }
     }
   } catch (err) {
     console.error("Erreur lors de la vérification des check-ins:", err);

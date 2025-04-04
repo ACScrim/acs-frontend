@@ -705,7 +705,11 @@
                       </span>
                     </div>
                     <div class="text-sm text-pink-200">
-                      {{ formatWaitingTime(player._id) }}
+                      {{
+                        player._id
+                          ? formatWaitingTime(player._id)
+                          : "ID inconnu"
+                      }}
                     </div>
                   </li>
                 </ul>
@@ -1036,7 +1040,7 @@ const loadingLastTournament = ref(false);
 
 // Récupérer l'utilisateur connecté depuis le store
 const user = computed(() => userStore.user);
-const currentPlayerId = ref<string | null>(null);
+const currentPlayerId = computed(() => userStore.playerId);
 
 //------------------------------------------------------
 // 2. PROPRIÉTÉS CALCULÉES
@@ -1147,19 +1151,6 @@ const fetchTournament = async () => {
     // Vérifier l'état de check-in du joueur si l'utilisateur est connecté
     if (user.value) {
       await checkPlayerCheckIn();
-    }
-
-    // Récupérer l'ID du joueur correspondant à l'utilisateur connecté
-    if (user.value) {
-      try {
-        const player = await playerService.getPlayerByIdUser(user.value._id);
-        if (player && player._id) {
-          currentPlayerId.value = player._id;
-          console.log("ID du joueur actuel:", currentPlayerId.value);
-        }
-      } catch (err) {
-        console.error("Erreur lors de la récupération de l'ID du joueur:", err);
-      }
     }
 
     // Récupérer le dernier tournoi terminé pour ce jeu
@@ -1510,7 +1501,7 @@ const showMessage = (
 /**
  * Formate le temps d'attente d'un joueur dans la liste d'attente
  */
-const formatWaitingTime = (playerId) => {
+const formatWaitingTime = (playerId: string) => {
   if (
     !tournament.value ||
     !tournament.value.waitlistRegistrationDates ||
