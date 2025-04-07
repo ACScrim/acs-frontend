@@ -1,18 +1,20 @@
 <template>
-  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
-    <h1 class="text-4xl text-white mb-8 neon-text font-audiowide text-center">
+  <div class="container mx-auto p-4 sm:p-8 pt-16 sm:pt-24">
+    <h1
+      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
+    >
       Tournois à venir
     </h1>
 
     <!-- Filtres -->
     <div
-      class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500/70 shadow-lg shadow-pink-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
+      class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500/70 shadow-lg shadow-pink-500/30 p-3 sm:p-6 mb-4 sm:mb-8"
     >
       <!-- Sélecteur de jeux -->
-      <div class="mb-6">
+      <div class="mb-4 sm:mb-6">
         <label
           for="game"
-          class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-pink-400 mb-3 cyberpunk-label-pink"
+          class="relative flex items-center gap-1 sm:gap-2 font-orbitron text-sm sm:text-base text-pink-400 mb-2 sm:mb-3 cyberpunk-label-pink"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +26,11 @@
               d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
             />
           </svg>
-          <span>FILTRER PAR JEU</span>
+          <span class="text-xs sm:text-base tracking-wider"
+            >FILTRER PAR JEU</span
+          >
           <div
-            class="h-px flex-grow bg-gradient-to-r from-pink-500 to-transparent mx-2 opacity-70"
+            class="h-px flex-grow bg-gradient-to-r from-pink-500 to-transparent mx-2 opacity-70 hidden sm:block"
           ></div>
         </label>
         <div class="relative group">
@@ -34,7 +38,7 @@
             id="game"
             v-model="selectedGame"
             @change="fetchTournaments"
-            class="cyberpunk-select-pink w-full p-2.5 sm:p-3 text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all appearance-none cursor-pointer"
+            class="cyberpunk-select-pink w-full p-2 sm:p-2.5 text-xs sm:text-sm text-pink-300 bg-gray-900/80 border-2 border-pink-500/70 rounded-md font-orbitron focus:outline-none focus:border-pink-400 transition-all appearance-none cursor-pointer"
           >
             <option value="">Tous les jeux</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
@@ -70,7 +74,7 @@
       </div>
 
       <!-- Options de filtrage -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <!-- Option 1: Afficher les tournois passés -->
         <div class="cyberpunk-toggle-container">
           <label class="cyberpunk-toggle">
@@ -85,7 +89,9 @@
                 <div class="cyberpunk-toggle-knob-highlight"></div>
               </div>
             </div>
-            <span class="cyberpunk-toggle-label font-orbitron text-white ml-3">
+            <span
+              class="cyberpunk-toggle-label font-orbitron text-white text-xs sm:text-sm ml-2 sm:ml-3"
+            >
               Afficher uniquement les tournois terminés
             </span>
           </label>
@@ -117,7 +123,7 @@
     <!-- Avertissement connexion -->
     <div
       v-if="!user"
-      class="mb-8 p-4 bg-red-900 text-white rounded border border-red-600 shadow-md flex items-center"
+      class="mb-4 sm:mb-8 p-3 sm:p-4 bg-red-900 text-white rounded border border-red-600 shadow-md flex items-center text-xs sm:text-sm"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -137,13 +143,15 @@
     </div>
 
     <!-- Affichage du loader pendant le chargement -->
-    <div v-if="isLoading" class="my-12">
+    <div v-if="isLoading" class="my-8 sm:my-12">
       <CyberpunkLoader />
     </div>
 
     <!-- Liste des tournois -->
     <div v-if="filteredTournaments.length > 0">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
+      >
         <tournament-grid-card
           v-for="tournament in paginatedTournaments"
           :key="tournament._id"
@@ -161,7 +169,7 @@
       <!-- Pagination (inchangée) -->
       <CyberpunkPagination
         v-if="filteredTournaments.length > itemsPerPage"
-        class="mt-8"
+        class="mt-6 sm:mt-8"
         :current-page="currentPage"
         :total-pages="totalPages"
         prev-label="&laquo; Précédent"
@@ -953,5 +961,93 @@ onMounted(async () => {
   border-color: #ec4899;
   box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
   animation: pulse-glow-pink 2s infinite;
+}
+
+/* Styles responsives supplémentaires */
+@media (max-width: 640px) {
+  .cyberpunk-panel-purple {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      0 100%
+    );
+  }
+
+  .cyberpunk-toggle-label {
+    letter-spacing: 0;
+  }
+
+  .cyberpunk-toggle-slider {
+    width: 36px;
+    height: 20px;
+  }
+
+  .cyberpunk-toggle-knob {
+    width: 14px;
+    height: 14px;
+  }
+
+  .cyberpunk-toggle
+    input:checked
+    + .cyberpunk-toggle-slider
+    .cyberpunk-toggle-knob {
+    transform: translateX(16px);
+  }
+
+  .cyberpunk-select-pink {
+    clip-path: polygon(
+      0 0,
+      calc(100% - 8px) 0,
+      100% 8px,
+      100% 100%,
+      8px 100%,
+      0 calc(100% - 8px)
+    );
+  }
+
+  .neon-text {
+    font-size: 1.875rem; /* text-3xl */
+  }
+}
+
+/* Optimisations pour les écrans très petits (< 370px) */
+@media (max-width: 370px) {
+  .cyberpunk-toggle-label {
+    font-size: 0.7rem;
+  }
+
+  .neon-text {
+    font-size: 1.5rem;
+  }
+
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Ajout d'une transition plus fluide pour les éléments */
+.cyberpunk-panel-purple,
+.cyberpunk-select-pink,
+.cyberpunk-toggle-slider,
+.cyberpunk-toggle-knob {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ajuster l'animation de pulsation sur mobile pour des performances optimales */
+@media (max-width: 640px) {
+  @keyframes pulse-glow-pink {
+    0%,
+    100% {
+      box-shadow: inset 0 0 5px rgba(236, 72, 153, 0.3),
+        0 0 3px rgba(236, 72, 153, 0.3);
+    }
+    50% {
+      box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.4),
+        0 0 8px rgba(236, 72, 153, 0.4);
+    }
+  }
 }
 </style>
