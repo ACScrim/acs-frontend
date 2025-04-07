@@ -55,6 +55,21 @@
               </button>
             </div>
 
+            <!-- Menu de tri ajouté -->
+            <div class="relative w-auto">
+              <select
+                v-model="sortOption"
+                class="w-full bg-gray-900 border border-cyan-500/50 rounded-lg px-4 py-2 pr-10 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow font-orbitron text-xs"
+              >
+                <option value="default">Tri par défaut</option>
+                <option value="votesDesc">Votes (+)</option>
+                <option value="votesAsc">Votes (-)</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              ></div>
+            </div>
+
             <!-- Champ de recherche -->
             <div
               class="relative w-full sm:w-auto flex-grow sm:flex-grow-0 sm:max-w-xs"
@@ -454,8 +469,8 @@ const activeFilter = ref("approved");
 const filters = [
   { label: "Approuvés", value: "approved" },
   { label: "En attente", value: "pending" },
-  { label: "Tous", value: "all" },
 ];
+const sortOption = ref("default");
 
 // Modal de nouvelle proposition
 const showProposalForm = ref(false);
@@ -549,18 +564,26 @@ const clearSearch = () => {
 
 // Propositions filtrées selon la recherche
 const filteredProposals = computed(() => {
-  if (!searchTerm.value.trim()) {
-    return proposals.value;
+  let result = proposals.value;
+
+  if (searchTerm.value.trim()) {
+    const searchTermLower = searchTerm.value.toLowerCase();
+    result = result.filter(
+      (proposal) =>
+        proposal.name.toLowerCase().includes(searchTermLower) ||
+        (proposal.description &&
+          proposal.description.toLowerCase().includes(searchTermLower))
+    );
   }
 
-  const searchTermLower = searchTerm.value.toLowerCase();
+  // Appliquer le tri selon l'option sélectionnée
+  if (sortOption.value === "votesDesc") {
+    result = [...result].sort((a, b) => b.totalVotes - a.totalVotes);
+  } else if (sortOption.value === "votesAsc") {
+    result = [...result].sort((a, b) => a.totalVotes - b.totalVotes);
+  }
 
-  return proposals.value.filter(
-    (proposal) =>
-      proposal.name.toLowerCase().includes(searchTermLower) ||
-      (proposal.description &&
-        proposal.description.toLowerCase().includes(searchTermLower))
-  );
+  return result;
 });
 
 // Propositions paginées
@@ -587,6 +610,11 @@ watch(filteredProposals, () => {
   }
 });
 
+watch(sortOption, () => {
+  // Rester à la page 1 quand on change de tri
+  currentPage.value = 1;
+});
+
 // ===================================
 // CHARGEMENT DES DONNÉES
 // ===================================
@@ -597,8 +625,7 @@ watch(filteredProposals, () => {
 const loadProposals = async () => {
   try {
     loading.value = true;
-    const status =
-      activeFilter.value === "all" ? undefined : activeFilter.value;
+    const status = activeFilter.value; // Suppression de la condition pour "all"
     const result = await gameProposalService.getProposals(status);
     proposals.value = result;
   } catch (error) {
