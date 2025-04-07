@@ -565,7 +565,8 @@
                 class="bg-gray-800/80 p-4 rounded-lg border border-purple-500/50 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all"
               >
                 <h4
-                  class="text-lg text-white font-orbitron border-b border-purple-500/50 pb-2 mb-2"
+                  class="text-lg text-white font-orbitron border-b border-purple-500/50 pb-2 mb-2 truncate"
+                  :title="team.name"
                 >
                   {{ team.name }}
                 </h4>
@@ -577,7 +578,7 @@
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-purple-400"
+                      class="h-4 w-4 mr-2 flex-shrink-0 text-purple-400"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -587,7 +588,9 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                    {{ player.username }}
+                    <span class="truncate" :title="player.username">{{
+                      player.username
+                    }}</span>
                   </li>
                 </ul>
               </div>
@@ -605,7 +608,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-2 text-pink-400"
+                  class="h-4 w-4 mr-2 flex-shrink-0 text-pink-400"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -615,7 +618,9 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ player.username }}
+                <span class="truncate" :title="player.username">{{
+                  player.username
+                }}</span>
               </li>
             </ul>
             <p
