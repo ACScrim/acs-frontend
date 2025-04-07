@@ -41,7 +41,7 @@
         class="bg-black/75 backdrop-blur-sm rounded-lg overflow-hidden border border-pink-500 shadow-lg shadow-pink-500/30 mb-8"
       >
         <!-- Image de bannière du jeu -->
-        <div class="relative h-56 md:h-72 overflow-hidden">
+        <div class="relative h-40 sm:h-56 md:h-72 overflow-hidden">
           <!-- Image du jeu si elle existe -->
           <template v-if="tournament.game.imageUrl && !imageError">
             <img
@@ -110,11 +110,13 @@
 
         <!-- Informations détaillées -->
         <div
-          class="p-6 bg-gray-900/50 font-orbitron grid grid-cols-1 md:grid-cols-3 gap-6"
+          class="p-4 sm:p-6 bg-gray-900/50 font-orbitron grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
         >
           <!-- Colonne 1: Date et jeu -->
-          <div class="space-y-4">
-            <p class="text-white flex items-center">
+          <div class="space-y-3 sm:space-y-4">
+            <p
+              class="text-white flex items-start sm:items-center flex-wrap text-sm sm:text-base"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 mr-2 text-pink-500"
@@ -272,7 +274,7 @@
                 'cyberpunk-btn-amber': isTournamentFull,
                 'cyberpunk-btn-pink': !isTournamentFull,
               }"
-              class="px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-md flex items-center justify-center font-orbitron text-xs sm:text-sm shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
               <span v-if="isTournamentFull" class="mr-2 font-orbitron"
                 >Rejoindre la liste d'attente</span
@@ -394,7 +396,7 @@
       >
         <!-- Navigation des onglets -->
         <div
-          class="tournament-tabs flex justify-start border-b border-gray-700/50 bg-gray-900/50"
+          class="tournament-tabs flex flex-wrap justify-start border-b border-gray-700/50 bg-gray-900/50"
         >
           <!-- Onglet Description -->
           <button
@@ -403,7 +405,7 @@
               'active-tab': activeTab === 'description',
               'inactive-tab': activeTab !== 'description',
             }"
-            class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
+            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -427,7 +429,7 @@
               'active-tab': activeTab === 'participants',
               'inactive-tab': activeTab !== 'participants',
             }"
-            class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
+            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -453,7 +455,7 @@
               'active-tab-green': activeTab === 'results',
               'inactive-tab-green': activeTab !== 'results',
             }"
-            class="cyber-tab flex items-center px-6 py-3 font-orbitron transition-all"
+            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -557,15 +559,15 @@
                 tournament.teams.length > 0 &&
                 !hasEmptyTeams
               "
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
             >
               <div
                 v-for="team in tournament.teams"
                 :key="team._id"
-                class="bg-gray-800/80 p-4 rounded-lg border border-purple-500/50 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all"
+                class="bg-gray-800/80 p-3 sm:p-4 rounded-lg border border-purple-500/50 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all"
               >
                 <h4
-                  class="text-lg text-white font-orbitron border-b border-purple-500/50 pb-2 mb-2 truncate"
+                  class="text-base sm:text-lg text-white font-orbitron border-b border-purple-500/50 pb-2 mb-2 truncate"
                   :title="team.name"
                 >
                   {{ team.name }}
@@ -574,7 +576,7 @@
                   <li
                     v-for="player in team.players"
                     :key="player._id"
-                    class="text-white flex items-center p-2 bg-gray-900/50 rounded-md border-l-2 border-purple-400/50"
+                    class="text-white flex items-center p-1.5 sm:p-2 bg-gray-900/50 rounded-md border-l-2 border-purple-400/50 text-xs sm:text-sm"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -599,12 +601,12 @@
             <!-- Vue des joueurs individuels (quand pas d'équipes ou équipes avec joueurs vides) -->
             <ul
               v-else-if="tournament.players && tournament.players.length > 0"
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
             >
               <li
                 v-for="player in tournament.players"
                 :key="player._id"
-                class="text-white bg-gray-800/80 p-3 rounded-lg flex items-center border-l-2 border-pink-400/50 hover:bg-gray-700/80 transition-all"
+                class="text-white bg-gray-800/80 p-2 sm:p-3 rounded-lg flex items-center border-l-2 border-pink-400/50 hover:bg-gray-700/80 transition-all text-xs sm:text-sm"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -633,10 +635,10 @@
             <!-- Section Liste d'attente -->
             <div
               v-if="hasWaitlist"
-              class="mt-8 animate__animated animate__fadeIn"
+              class="mt-6 sm:mt-8 animate__animated animate__fadeIn"
             >
               <h3
-                class="text-xl text-pink-400 font-audiowide mb-4 flex items-center"
+                class="text-lg sm:text-xl text-pink-400 font-audiowide mb-3 sm:mb-4 flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -659,11 +661,11 @@
               </h3>
 
               <div
-                class="bg-gray-800/80 p-4 rounded-lg border border-pink-500/30 shadow-lg shadow-pink-500/10"
+                class="bg-gray-800/80 p-3 sm:p-4 rounded-lg border border-pink-500/30 shadow-lg shadow-pink-500/10"
               >
                 <!-- En-tête du tableau -->
                 <div
-                  class="grid grid-cols-3 gap-4 mb-3 text-sm font-orbitron text-pink-200 border-b border-pink-500/20 pb-2"
+                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-sm font-orbitron text-pink-200 border-b border-pink-500/20 pb-2"
                 >
                   <div class="font-semibold">Position</div>
                   <div class="font-semibold">Joueur</div>
@@ -678,13 +680,27 @@
                     :class="{
                       'bg-pink-900/20': index === getUserWaitlistPosition - 1,
                     }"
-                    class="grid grid-cols-3 gap-4 p-2 rounded-md text-white transition-colors hover:bg-gray-700/50"
+                    class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-2 rounded-md text-white transition-colors hover:bg-gray-700/50"
                   >
-                    <div class="flex items-center">
-                      <span
-                        class="w-6 h-6 flex items-center justify-center bg-pink-900/50 text-pink-300 rounded-full mr-2 text-xs font-semibold"
-                      >
-                        {{ index + 1 }}
+                    <div
+                      class="flex items-center justify-between sm:justify-start"
+                    >
+                      <div class="flex items-center">
+                        <span
+                          class="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center bg-pink-900/50 text-pink-300 rounded-full mr-2 text-xs font-semibold"
+                        >
+                          {{ index + 1 }}
+                        </span>
+                        <span class="sm:hidden text-xs text-pink-200"
+                          >Position</span
+                        >
+                      </div>
+                      <span class="text-xs text-pink-200 sm:hidden">
+                        {{
+                          player._id
+                            ? formatWaitingTime(player._id)
+                            : "ID inconnu"
+                        }}
                       </span>
                     </div>
                     <div class="flex items-center">
@@ -716,7 +732,7 @@
                         Vous
                       </span>
                     </div>
-                    <div class="text-sm text-pink-200">
+                    <div class="hidden sm:block text-sm text-pink-200">
                       {{
                         player._id
                           ? formatWaitingTime(player._id)
@@ -969,7 +985,7 @@
       <!-- Bouton de retour en haut de page (fixe) -->
       <button
         @click="scrollToTop"
-        class="cyberpunk-btn-pink fixed bottom-6 right-6 text-white rounded-full p-3 shadow-lg shadow-pink-500/30 z-50 transition-all duration-300 transform hover:scale-110"
+        class="cyberpunk-btn-pink fixed bottom-4 sm:bottom-6 right-4 sm:right-6 text-white rounded-full p-2 sm:p-3 shadow-lg shadow-pink-500/30 z-50 transition-all duration-300 transform hover:scale-110"
         title="Retour en haut de page"
       >
         <svg
@@ -2107,5 +2123,58 @@ onMounted(() => {
   height: 10px;
   background: rgba(236, 72, 153, 0.3);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+@media (max-width: 640px) {
+  .tournament-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .tournament-tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+  }
+
+  .cyber-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .neon-text {
+    font-size: 1.75rem;
+  }
+
+  /* Optimisations pour le podium et les sections de résultats */
+  .cyber-header-container {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      0 100%
+    );
+  }
+
+  .cyber-panel-container {
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  }
+
+  /* Optimiser les espaces sur petit écran */
+  .p-8 {
+    padding: 1rem;
+  }
+
+  .tournament-content {
+    padding: 1rem;
+  }
+}
+
+/* Améliorer la transition entre les tailles d'écran */
+@media (min-width: 641px) and (max-width: 768px) {
+  .neon-text {
+    font-size: 2rem;
+  }
 }
 </style>

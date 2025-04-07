@@ -20,62 +20,62 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
       <!-- Podium -->
       <div class="col-span-1 md:col-span-3 mb-8">
-        <div class="relative mt-24 md:mt-32 mb-12 podium-container">
-          <!-- Le podium physique -->
-          <div class="flex justify-center items-end h-40 md:h-52">
+        <!-- Version desktop du podium (masquée sur mobile) -->
+        <div class="hidden md:block relative mt-32 mb-12 podium-container">
+          <!-- Le podium physique (version desktop) -->
+          <div class="flex justify-center items-end h-52">
             <!-- 2ème place -->
-            <div class="w-1/4 md:w-1/5 relative">
-              <div class="silver-podium h-24 md:h-32 rounded-t-lg"></div>
+            <div class="w-1/5 relative">
+              <div class="silver-podium h-32 rounded-t-lg"></div>
               <div
-                class="absolute top-0 left-0 right-0 transform -translate-y-20 md:-translate-y-24"
+                class="absolute top-0 left-0 right-0 transform -translate-y-24"
               >
                 <div
-                  class="mx-auto w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center border-4 border-gray-200 shadow-xl"
+                  class="mx-auto w-20 h-20 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center border-4 border-gray-200 shadow-xl"
                 >
-                  <span class="text-2xl md:text-3xl">🥈</span>
+                  <span class="text-3xl">🥈</span>
                 </div>
               </div>
             </div>
 
             <!-- 1ère place -->
-            <div class="w-1/4 md:w-1/5 relative mx-1 md:mx-3 z-10">
-              <div class="gold-podium h-32 md:h-40 rounded-t-lg"></div>
+            <div class="w-1/5 relative mx-3 z-10">
+              <div class="gold-podium h-40 rounded-t-lg"></div>
               <div
-                class="absolute top-0 left-0 right-0 transform -translate-y-24 md:-translate-y-28"
+                class="absolute top-0 left-0 right-0 transform -translate-y-28"
               >
                 <div
-                  class="mx-auto w-20 h-20 md:w-24 md:h-24 gold-circle rounded-full flex items-center justify-center border-4 border-amber-400 shadow-xl"
+                  class="mx-auto w-24 h-24 gold-circle rounded-full flex items-center justify-center border-4 border-amber-400 shadow-xl"
                 >
-                  <span class="text-3xl md:text-4xl">🏆</span>
+                  <span class="text-4xl">🏆</span>
                 </div>
               </div>
             </div>
 
             <!-- 3ème place -->
-            <div class="w-1/4 md:w-1/5 relative">
-              <div class="bronze-podium h-16 md:h-24 rounded-t-lg"></div>
+            <div class="w-1/5 relative">
+              <div class="bronze-podium h-24 rounded-t-lg"></div>
               <div
-                class="absolute top-0 left-0 right-0 transform -translate-y-16 md:-translate-y-20"
+                class="absolute top-0 left-0 right-0 transform -translate-y-20"
               >
                 <div
-                  class="mx-auto w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-amber-700 to-amber-800 rounded-full flex items-center justify-center border-4 border-amber-700 shadow-xl"
+                  class="mx-auto w-16 h-16 bg-gradient-to-br from-amber-700 to-amber-800 rounded-full flex items-center justify-center border-4 border-amber-700 shadow-xl"
                 >
-                  <span class="text-xl md:text-2xl">🥉</span>
+                  <span class="text-2xl">🥉</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Les équipes gagnantes sur le podium -->
+          <!-- Les équipes gagnantes sur le podium (version desktop) -->
           <div class="flex justify-center mt-8">
             <!-- 2ème place équipes -->
-            <div class="w-1/3 px-1 md:px-2">
+            <div class="w-1/3 px-2">
               <h4
                 v-if="getTeamsByRank(2).length > 0"
-                class="text-sm md:text-base font-audiowide text-gray-300 mb-2 text-center"
+                class="text-base font-audiowide text-gray-300 mb-2 text-center"
               >
-                🥈
-                {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
+                🥈 {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
               </h4>
               <div class="space-y-2">
                 <div
@@ -84,7 +84,7 @@
                   class="bg-gradient-to-br from-gray-700/70 to-gray-600/70 text-white p-3 rounded-lg border-2 border-gray-400/80 shadow-lg transform transition-transform hover:scale-105 team-card-silver"
                 >
                   <p
-                    class="font-bold text-sm md:text-base font-audiowide truncate text-center"
+                    class="font-bold text-base font-audiowide truncate text-center"
                   >
                     {{ team.name }}
                   </p>
@@ -99,7 +99,7 @@
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 text-indigo-400"
+                        class="h-4 w-4 mr-2 flex-shrink-0 text-indigo-400"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -119,13 +119,12 @@
             </div>
 
             <!-- 1ère place équipes -->
-            <div class="w-1/3 px-1 md:px-2 -mt-4">
+            <div class="w-1/3 px-2 -mt-4">
               <h4
                 v-if="getTeamsByRank(1).length > 0"
-                class="text-sm md:text-lg font-audiowide text-yellow-400 mb-2 text-center glow-gold"
+                class="text-lg font-audiowide text-yellow-400 mb-2 text-center glow-gold"
               >
-                🏆
-                {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
+                🏆 {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
               </h4>
               <div class="space-y-2">
                 <div
@@ -134,7 +133,7 @@
                   class="bg-gradient-to-br from-amber-700/70 to-yellow-600/70 p-3 rounded-lg border-2 border-yellow-500 shadow-lg shadow-yellow-500/30 transform transition-transform hover:scale-105 team-card-gold"
                 >
                   <p
-                    class="font-bold text-sm md:text-base text-white font-audiowide truncate text-center"
+                    class="font-bold text-base text-white font-audiowide truncate text-center"
                   >
                     {{ team.name }}
                   </p>
@@ -149,7 +148,7 @@
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 text-yellow-400"
+                        class="h-4 w-4 mr-2 flex-shrink-0 text-yellow-400"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -169,13 +168,12 @@
             </div>
 
             <!-- 3ème place équipes -->
-            <div class="w-1/3 px-1 md:px-2">
+            <div class="w-1/3 px-2">
               <h4
                 v-if="getTeamsByRank(3).length > 0"
-                class="text-sm md:text-base font-audiowide text-amber-700 mb-2 text-center"
+                class="text-base font-audiowide text-amber-700 mb-2 text-center"
               >
-                🥉
-                {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
+                🥉 {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
               </h4>
               <div class="space-y-2">
                 <div
@@ -184,7 +182,7 @@
                   class="bg-gradient-to-br from-amber-900/70 to-amber-700/70 text-white p-3 rounded-lg border-2 border-amber-700/80 shadow-lg transform transition-transform hover:scale-105 team-card-bronze"
                 >
                   <p
-                    class="font-bold text-sm md:text-base font-audiowide truncate text-center"
+                    class="font-bold text-base font-audiowide truncate text-center"
                   >
                     {{ team.name }}
                   </p>
@@ -199,7 +197,7 @@
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 text-amber-700"
+                        class="h-4 w-4 mr-2 flex-shrink-0 text-amber-700"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -213,6 +211,164 @@
                         player.username
                       }}</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Version mobile du podium (cartes en liste) -->
+        <div class="block md:hidden mt-8">
+          <h4
+            class="text-center text-lg font-audiowide text-yellow-400 mb-4 glow-gold"
+          >
+            🏆 Podium 🏆
+          </h4>
+
+          <!-- Or (1er) -->
+          <div v-if="getTeamsByRank(1).length > 0" class="mb-6">
+            <h5
+              class="text-center text-base font-orbitron text-yellow-400 mb-2"
+            >
+              <span class="text-2xl mr-2">🥇</span>
+              {{
+                getTeamsByRank(1).length > 1
+                  ? "Champions (ex aequo)"
+                  : "Champion"
+              }}
+            </h5>
+            <div class="space-y-2">
+              <div
+                v-for="team in getTeamsByRank(1)"
+                :key="team._id"
+                class="bg-gradient-to-br from-amber-700/70 to-yellow-600/70 p-4 rounded-lg border-2 border-yellow-500 shadow-lg shadow-yellow-500/30 team-card-gold"
+              >
+                <p
+                  class="font-bold text-base text-white font-audiowide text-center"
+                >
+                  {{ team.name }}
+                </p>
+                <div
+                  v-if="team.players && team.players.length > 0"
+                  class="mt-3 space-y-1"
+                >
+                  <div
+                    v-for="player in team.players"
+                    :key="player._id"
+                    class="text-sm bg-gray-800/50 p-2 rounded flex items-center player-card-gold"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 flex-shrink-0 text-yellow-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="truncate">{{ player.username }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Argent (2e) -->
+          <div v-if="getTeamsByRank(2).length > 0" class="mb-6">
+            <h5 class="text-center text-base font-orbitron text-gray-300 mb-2">
+              <span class="text-xl mr-2">🥈</span>
+              {{
+                getTeamsByRank(2).length > 1
+                  ? "Finalistes (ex aequo)"
+                  : "Finaliste"
+              }}
+            </h5>
+            <div class="space-y-2">
+              <div
+                v-for="team in getTeamsByRank(2)"
+                :key="team._id"
+                class="bg-gradient-to-br from-gray-700/70 to-gray-600/70 p-4 rounded-lg border-2 border-gray-400/80 shadow-lg team-card-silver"
+              >
+                <p
+                  class="font-bold text-base text-white font-audiowide text-center"
+                >
+                  {{ team.name }}
+                </p>
+                <div
+                  v-if="team.players && team.players.length > 0"
+                  class="mt-3 space-y-1"
+                >
+                  <div
+                    v-for="player in team.players"
+                    :key="player._id"
+                    class="text-sm bg-gray-800/50 p-2 rounded flex items-center player-card"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 flex-shrink-0 text-indigo-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="truncate">{{ player.username }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bronze (3e) -->
+          <div v-if="getTeamsByRank(3).length > 0" class="mb-4">
+            <h5 class="text-center text-base font-orbitron text-amber-700 mb-2">
+              <span class="text-lg mr-2">🥉</span>
+              {{
+                getTeamsByRank(3).length > 1
+                  ? "Demi-finalistes (ex aequo)"
+                  : "Demi-finaliste"
+              }}
+            </h5>
+            <div class="space-y-2">
+              <div
+                v-for="team in getTeamsByRank(3)"
+                :key="team._id"
+                class="bg-gradient-to-br from-amber-900/70 to-amber-700/70 p-4 rounded-lg border-2 border-amber-700/80 shadow-lg team-card-bronze"
+              >
+                <p
+                  class="font-bold text-base text-white font-audiowide text-center"
+                >
+                  {{ team.name }}
+                </p>
+                <div
+                  v-if="team.players && team.players.length > 0"
+                  class="mt-3 space-y-1"
+                >
+                  <div
+                    v-for="player in team.players"
+                    :key="player._id"
+                    class="text-sm bg-gray-800/50 p-2 rounded flex items-center player-card-bronze"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 flex-shrink-0 text-amber-700"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
               </div>
