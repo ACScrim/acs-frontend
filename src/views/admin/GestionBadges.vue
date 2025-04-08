@@ -39,6 +39,73 @@
               class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron"
               required
             />
+            <label
+              for="categoryType"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Catégorie</label
+            >
+            <div class="flex flex-col space-y-2">
+              <div class="flex items-center">
+                <input
+                  id="categoryTypeAcs"
+                  v-model="newBadge.categoryType"
+                  type="radio"
+                  value="acs"
+                  class="mr-2 h-5 w-5 accent-pink-500"
+                />
+                <label for="categoryTypeAcs" class="text-white font-orbitron">
+                  Badge ACS (général)
+                </label>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="categoryTypeGame"
+                  v-model="newBadge.categoryType"
+                  type="radio"
+                  value="game"
+                  class="mr-2 h-5 w-5 accent-pink-500"
+                />
+                <label for="categoryTypeGame" class="text-white font-orbitron">
+                  Badge spécifique à un jeu
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- Sélecteur de jeu, visible uniquement si catégorie = jeu -->
+          <div v-if="newBadge.categoryType === 'game'">
+            <label
+              for="categoryId"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Jeu associé</label
+            >
+            <div class="relative">
+              <select
+                id="categoryId"
+                v-model="newBadge.categoryId"
+                class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron appearance-none"
+                required
+              >
+                <option value="" disabled>Sélectionner un jeu</option>
+                <option v-for="game in games" :key="game._id" :value="game._id">
+                  {{ game.name }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-cyan-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -391,6 +458,22 @@
             >
               {{ badge.description }}
             </p>
+            <div class="mt-2 flex items-center">
+              <span
+                :class="[
+                  'text-xs px-2 py-1 rounded-full',
+                  badge.categoryType === 'acs'
+                    ? 'bg-pink-500/20 text-pink-300 border border-pink-400/30'
+                    : 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30',
+                ]"
+              >
+                {{
+                  badge.categoryType === "acs"
+                    ? "ACS"
+                    : getGameName(badge.categoryId)
+                }}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -466,6 +549,78 @@
               class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron"
               required
             />
+            <label
+              for="edit-categoryType"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Catégorie</label
+            >
+            <div class="flex flex-col space-y-2">
+              <div class="flex items-center">
+                <input
+                  id="edit-categoryTypeAcs"
+                  v-model="editingBadge.categoryType"
+                  type="radio"
+                  value="acs"
+                  class="mr-2 h-5 w-5 accent-pink-500"
+                />
+                <label
+                  for="edit-categoryTypeAcs"
+                  class="text-white font-orbitron"
+                >
+                  Badge ACS (général)
+                </label>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="edit-categoryTypeGame"
+                  v-model="editingBadge.categoryType"
+                  type="radio"
+                  value="game"
+                  class="mr-2 h-5 w-5 accent-pink-500"
+                />
+                <label
+                  for="edit-categoryTypeGame"
+                  class="text-white font-orbitron"
+                >
+                  Badge spécifique à un jeu
+                </label>
+              </div>
+            </div>
+          </div>
+          <div v-if="editingBadge.categoryType === 'game'">
+            <label
+              for="edit-categoryId"
+              class="block text-lg text-cyan-300 mb-2 font-orbitron"
+              >Jeu associé</label
+            >
+            <div class="relative">
+              <select
+                id="edit-categoryId"
+                v-model="editingBadge.categoryId"
+                class="w-full p-3 text-white bg-gray-800/80 border border-cyan-500/50 rounded-lg shadow-inner shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 transition-all duration-300 font-orbitron appearance-none"
+                required
+              >
+                <option value="" disabled>Sélectionner un jeu</option>
+                <option v-for="game in games" :key="game._id" :value="game._id">
+                  {{ game.name }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-cyan-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -597,9 +752,10 @@ import { ref, onMounted, computed } from "vue";
 // Services
 import badgeService from "../../services/badgeService";
 import playerService from "../../services/playerService";
+import gameService from "../../services/gameService";
 
 // Types
-import type { Badge, Player } from "../../types";
+import type { Badge, Player, Game } from "../../types";
 
 // Components
 import Toast from "@/shared/Toast.vue";
@@ -607,15 +763,25 @@ import Toast from "@/shared/Toast.vue";
 // Variables réactives pour les modales
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
-const editingBadge = ref<Badge>({ title: "", imageUrl: "", description: "" });
+const editingBadge = ref({
+  _id: "", // Add the _id property
+  title: "",
+  imageUrl: "",
+  description: "",
+  categoryType: "acs",
+  categoryId: "",
+});
 const badgeToDelete = ref<Badge | null>(null);
 
 // Variables réactives
-const newBadge = ref<Badge>({
+const newBadge = ref({
   title: "",
   imageUrl: "",
-  description: "", // Ajout du champ description
+  description: "",
+  categoryType: "acs", // Par défaut c'est un badge ACS
+  categoryId: "",
 });
+const games = ref<Game[]>([]);
 
 const playerSearch = ref("");
 const playerSearchResults = ref<Player[]>([]);
@@ -646,6 +812,23 @@ const showMessage = (type: "success" | "error", message: string) => {
   }, 3000);
 };
 
+// Fonction pour charger les jeux
+const fetchGames = async () => {
+  try {
+    games.value = await gameService.getGames();
+  } catch (error) {
+    console.error("Erreur lors de la récupération des jeux:", error);
+    showMessage("error", "Erreur lors de la récupération des jeux.");
+  }
+};
+
+// Dans la partie script
+const getGameName = (gameId: string) => {
+  if (!gameId) return "";
+  const game = games.value.find((g) => g._id === gameId);
+  return game ? game.name : "Jeu inconnu";
+};
+
 /**
  * Crée un badge à partir des données du formulaire
  */
@@ -659,7 +842,14 @@ const createBadge = async () => {
   try {
     const createdBadge = await badgeService.createBadge(newBadge.value);
     badges.value.push(createdBadge);
-    newBadge.value = { title: "", imageUrl: "", description: "" }; // Réinitialiser avec description
+    // Réinitialiser avec toutes les propriétés
+    newBadge.value = {
+      title: "",
+      imageUrl: "",
+      description: "",
+      categoryType: "acs",
+      categoryId: "",
+    };
     showMessage("success", "Badge créé avec succès !");
   } catch (error) {
     console.error("Erreur lors de la création du badge:", error);
@@ -711,7 +901,14 @@ const removeBadge = async (badgeId: string) => {
  * Ouvre la modale de modification avec les données du badge
  */
 const openEditBadgeModal = (badge: Badge) => {
-  editingBadge.value = { ...badge };
+  editingBadge.value = {
+    _id: badge._id || "", // Ensure _id is always defined
+    title: badge.title,
+    imageUrl: badge.imageUrl,
+    description: badge.description || "",
+    categoryType: badge.categoryType || "acs",
+    categoryId: badge.categoryId || "",
+  };
   showEditModal.value = true;
 };
 
@@ -870,6 +1067,10 @@ const validateBadgeForm = (badge: Badge) => {
   } else if (badge.title.length > 50) {
     errors.push("Le titre ne doit pas dépasser 50 caractères");
   }
+  // Validation supplémentaire pour la catégorie
+  if (badge.categoryType === "game" && !badge.categoryId) {
+    errors.push("Veuillez sélectionner un jeu pour ce badge");
+  }
 
   if (!badge.imageUrl.trim()) {
     errors.push("L'URL de l'image est requise");
@@ -889,8 +1090,10 @@ const validateBadgeForm = (badge: Badge) => {
   return errors;
 };
 
+// Ajoutez fetchGames à onMounted
 onMounted(() => {
   fetchBadges();
+  fetchGames(); // Charger les jeux au montage du composant
 });
 </script>
 

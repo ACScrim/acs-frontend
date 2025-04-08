@@ -116,6 +116,14 @@ const routes = [
     component: () => import("../views/admin/GestionSaisons.vue"),
     meta: { requiresAdmin: true },
   },
+  {
+    path: "/badges",
+    name: "badges",
+    component: () => import("../views/Badges.vue"),
+    meta: {
+      title: "Badges - ACS",
+    },
+  },
 ];
 
 const router = createRouter({
