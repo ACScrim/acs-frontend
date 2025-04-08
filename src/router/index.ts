@@ -110,6 +110,12 @@ const routes = [
       title: "Détails du tournoi",
     },
   },
+  {
+    path: "/gestion-saisons",
+    name: "GestionSaisons",
+    component: () => import("../views/admin/GestionSaisons.vue"),
+    meta: { requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({

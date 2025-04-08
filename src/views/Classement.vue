@@ -30,71 +30,144 @@
       </button>
     </div>
 
-    <!-- Sélecteur de jeux -->
+    <!-- Sélecteurs de filtres: Jeu et Saison -->
     <div
       class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500/70 shadow-lg shadow-purple-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
     >
-      <label
-        for="game"
-        class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-purple-400 mb-3 cyberpunk-label-purple"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <span>FILTRER PAR JEU</span>
-        <div
-          class="h-px flex-grow bg-gradient-to-r from-purple-500 to-transparent mx-2 opacity-70"
-        ></div>
-      </label>
-      <div class="relative group">
-        <select
-          id="game"
-          v-model="selectedGame"
-          @change="fetchRankingsByGame"
-          class="cyberpunk-select-purple w-full p-2.5 sm:p-3 text-purple-300 bg-gray-900/80 border-2 border-purple-500/70 rounded-md font-orbitron focus:outline-none focus:border-purple-400 transition-all appearance-none cursor-pointer"
-        >
-          <option value="">Tous les jeux</option>
-          <option
-            v-for="game in rankingStore.games"
-            :key="game._id"
-            :value="game._id"
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Sélecteur de jeux -->
+        <div>
+          <label
+            for="game"
+            class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-purple-400 mb-3 cyberpunk-label-purple"
           >
-            {{ game.name }}
-          </option>
-        </select>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>FILTRER PAR JEU</span>
+            <div
+              class="h-px flex-grow bg-gradient-to-r from-purple-500 to-transparent mx-2 opacity-70"
+            ></div>
+          </label>
+          <div class="relative group">
+            <select
+              id="game"
+              v-model="selectedGame"
+              @change="fetchRankingsByFilter"
+              class="cyberpunk-select-purple w-full p-2.5 sm:p-3 text-purple-300 bg-gray-900/80 border-2 border-purple-500/70 rounded-md font-orbitron focus:outline-none focus:border-purple-400 transition-all appearance-none cursor-pointer"
+            >
+              <option value="">Tous les jeux</option>
+              <option
+                v-for="game in rankingStore.games"
+                :key="game._id"
+                :value="game._id"
+              >
+                {{ game.name }}
+              </option>
+            </select>
 
-        <!-- Effet de contour néon sur hover -->
-        <div
-          class="cyberpunk-select-glow-purple absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-        ></div>
+            <!-- Effet de contour néon sur hover -->
+            <div
+              class="cyberpunk-select-glow-purple absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
 
-        <!-- Icône personnalisée -->
-        <div
-          class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-purple-400 cyberpunk-icon-purple"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            <!-- Icône personnalisée -->
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-purple-400 cyberpunk-icon-purple"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sélecteur de saisons -->
+        <div>
+          <label
+            for="season"
+            class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-cyan-400 mb-3 cyberpunk-label-cyan"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>FILTRER PAR SAISON</span>
+            <div
+              class="h-px flex-grow bg-gradient-to-r from-cyan-500 to-transparent mx-2 opacity-70"
+            ></div>
+          </label>
+          <div class="relative group">
+            <select
+              id="season"
+              v-model="selectedSeason"
+              @change="fetchRankingsByFilter"
+              class="cyberpunk-select-cyan w-full p-2.5 sm:p-3 text-cyan-300 bg-gray-900/80 border-2 border-cyan-500/70 rounded-md font-orbitron focus:outline-none focus:border-cyan-400 transition-all appearance-none cursor-pointer"
+            >
+              <option value="">Classement général</option>
+              <option
+                v-for="season in seasons"
+                :key="season._id"
+                :value="season._id"
+                :selected="season._id === seasons[0]?._id"
+              >
+                Saison {{ season.numero }}
+              </option>
+            </select>
+
+            <!-- Effet de contour néon sur hover -->
+            <div
+              class="cyberpunk-select-glow-cyan absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+
+            <!-- Icône personnalisée -->
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-cyan-400 cyberpunk-icon-cyan"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,9 +184,9 @@
 
     <CyberTerminal
       v-else-if="sortedRankings.length === 0"
-      :command="`search_players -g ${
-        selectedGame ? 'game_id:' + selectedGame : 'all'
-      }`"
+      :command="`search_players ${
+        selectedGame ? '-g game_id:' + selectedGame : ''
+      } ${selectedSeason ? '-s season_id:' + selectedSeason : ''}`"
       errorCode="404_NO_DATA"
       message="Aucun joueur n'a été trouvé pour cette recherche."
       class="my-8"
@@ -358,12 +431,15 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useRankingStore } from "../stores/rankingStore";
 
 // Types pour le typage fort
-import type { PlayerRanking } from "../types";
+import type { PlayerRanking, Season } from "../types";
 
 // Composants
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
+
+// Importation du service pour les saisons
+import seasonService from "../services/seasonService";
 
 //-------------------------------------------------------
 // SECTION: Constantes et configuration
@@ -395,13 +471,49 @@ const currentPage = ref(1);
 const itemsPerPage = 10; // Nombre d'éléments par page
 
 /**
- * Jeu sélectionné pour le filtrage
+ * Filtres
  */
 const selectedGame = ref<string>("");
+const selectedSeason = ref<string>("");
+const seasons = ref<Season[]>([]);
 
 //-------------------------------------------------------
 // SECTION: Récupération des données et actions
 //-------------------------------------------------------
+
+/**
+ * Récupère les saisons disponibles
+ */
+const fetchSeasons = async () => {
+  try {
+    const result = await seasonService.getAllSeasons();
+    seasons.value = result;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des saisons:", error);
+  }
+};
+
+/**
+ * Met à jour le classement selon les filtres sélectionnés (jeu et saison)
+ */
+const fetchRankingsByFilter = async () => {
+  currentPage.value = 1; // Réinitialiser à la première page
+
+  try {
+    if (selectedSeason.value) {
+      // Récupérer le classement par saison
+      await rankingStore.fetchSeasonRankings(
+        selectedSeason.value,
+        selectedGame.value
+      );
+    } else {
+      // Récupérer le classement général (comme avant)
+      await rankingStore.fetchRankingsByGame(selectedGame.value);
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération du classement:", error);
+  }
+};
 
 /**
  * Met à jour le classement selon le jeu sélectionné
@@ -430,15 +542,38 @@ const exportCSV = () => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
 
-  // Générer un nom de fichier avec date
+  // Générer un nom de fichier avec date et filtres
   const date = new Date().toISOString().split("T")[0];
-  const gameName = selectedGame.value
-    ? rankingStore.games.find((g) => g._id === selectedGame.value)?.name ||
-      "jeu-specifique"
-    : "tous-les-jeux";
+
+  let fileName = "classement";
+
+  // Ajouter info sur la saison
+  if (selectedSeason.value) {
+    const season = seasons.value.find((s) => s._id === selectedSeason.value);
+    if (season) {
+      fileName += `-saison-${season.numero}`;
+    } else {
+      fileName += "-saison";
+    }
+  } else {
+    fileName += "-general";
+  }
+
+  // Ajouter info sur le jeu
+  if (selectedGame.value) {
+    const gameName =
+      rankingStore.games.find((g) => g._id === selectedGame.value)?.name ||
+      "jeu-specifique";
+    fileName += `-${gameName}`;
+  } else {
+    fileName += "-tous-jeux";
+  }
+
+  // Ajouter la date
+  fileName += `-${date}`;
 
   link.setAttribute("href", url);
-  link.setAttribute("download", `classement-${gameName}-${date}.csv`);
+  link.setAttribute("download", `${fileName}.csv`);
   link.style.display = "none";
 
   document.body.appendChild(link);
@@ -594,6 +729,18 @@ watch(
     }
   }
 );
+// Observer les changements de selectedGame et selectedSeason
+watch([() => selectedGame.value, () => selectedSeason.value], () => {
+  fetchRankingsByFilter();
+});
+
+// Synchroniser avec la valeur du gameId dans le store
+watch(
+  () => rankingStore.currentGameId,
+  (newGameId) => {
+    selectedGame.value = newGameId;
+  }
+);
 
 /**
  * Initialisation du composant au montage
@@ -602,15 +749,20 @@ onMounted(async () => {
   // Initialiser le jeu sélectionné avec la valeur stockée dans le store
   selectedGame.value = rankingStore.currentGameId;
 
+  // Charger les saisons
+  await fetchSeasons();
+
   // Charger les jeux
   await rankingStore.fetchGames();
 
-  // Charger le classement en fonction du jeu sélectionné
-  if (selectedGame.value) {
-    await rankingStore.fetchRankingsByGame(selectedGame.value);
-  } else {
-    await rankingStore.fetchRankings();
+  // Définir la saison actuelle comme valeur par défaut si elle existe
+  if (seasons.value.length > 0) {
+    // Les saisons sont déjà triées par numéro décroissant, donc la première est la plus récente
+    selectedSeason.value = seasons.value[0]._id;
   }
+
+  // Charger le classement selon le filtre par défaut
+  await fetchRankingsByFilter();
 });
 </script>
 
@@ -903,6 +1055,92 @@ onMounted(async () => {
     box-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
     color: white !important;
     border-color: rgba(236, 72, 153, 0.7) !important;
+  }
+}
+
+.cyberpunk-label-cyan {
+  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
+  letter-spacing: 1px;
+}
+
+.cyberpunk-label-cyan svg {
+  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
+}
+
+.cyberpunk-select-cyan {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.95),
+    rgba(14, 23, 36, 0.95)
+  );
+  box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
+    0 0 5px rgba(6, 182, 212, 0.3);
+  text-shadow: 0 0 3px rgba(6, 182, 212, 0.7);
+  caret-color: #06b6d4;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  padding-right: 2.5rem !important;
+  color: #06b6d4;
+  border: 2px solid rgba(6, 182, 212, 0.7);
+}
+
+.cyberpunk-select-cyan:focus {
+  outline: none;
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.5);
+  animation: pulse-glow-cyan 2s infinite;
+}
+
+.cyberpunk-select-glow-cyan {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
+  border: 2px solid rgba(6, 182, 212, 0.8);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transform: scale(1.01);
+  z-index: 0;
+}
+
+.cyberpunk-icon-cyan {
+  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
+  transition: transform 0.3s ease;
+}
+
+.cyberpunk-select-cyan:focus
+  + .cyberpunk-select-glow-cyan
+  + div
+  .cyberpunk-icon-cyan,
+.group:hover .cyberpunk-icon-cyan {
+  transform: translateY(2px);
+  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.9));
+}
+
+@keyframes pulse-glow-cyan {
+  0% {
+    box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
+      0 0 5px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.4),
+      0 0 10px rgba(6, 182, 212, 0.4);
+  }
+  100% {
+    box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
+      0 0 5px rgba(6, 182, 212, 0.3);
   }
 }
 </style>

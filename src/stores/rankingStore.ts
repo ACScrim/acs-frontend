@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import playerService from "../services/playerService";
 import gameService from "../services/gameService";
+import seasonService from "../services/seasonService";
+
 import type { PlayerRanking, Game } from "../types";
 
 export const useRankingStore = defineStore("rankings", () => {
@@ -13,6 +15,7 @@ export const useRankingStore = defineStore("rankings", () => {
   const lastFetchTime = ref<number | null>(null);
   const lastGameFetchTime = ref<number | null>(null);
   const currentGameId = ref<string>("");
+  const currentSeasonId = ref<string>("");
 
   // --- Getters ---
   const shouldRefreshData = computed(() => {
@@ -35,7 +38,8 @@ export const useRankingStore = defineStore("rankings", () => {
       !forceRefresh &&
       rankings.value.length > 0 &&
       !shouldRefreshData.value &&
-      !currentGameId.value
+      !currentGameId.value &&
+      !currentSeasonId.value
     ) {
       return;
     }
@@ -47,6 +51,7 @@ export const useRankingStore = defineStore("rankings", () => {
       const response = await playerService.getPlayerRankings();
       rankings.value = response;
       currentGameId.value = "";
+      currentSeasonId.value = "";
       lastFetchTime.value = Date.now();
       saveToLocalStorage();
     } catch (err) {
@@ -67,7 +72,8 @@ export const useRankingStore = defineStore("rankings", () => {
       !forceRefresh &&
       rankings.value.length > 0 &&
       !shouldRefreshData.value &&
-      currentGameId.value === gameId
+      currentGameId.value === gameId &&
+      !currentSeasonId.value
     ) {
       return;
     }
@@ -80,6 +86,7 @@ export const useRankingStore = defineStore("rankings", () => {
         const response = await playerService.getPlayerRankingsByGame(gameId);
         rankings.value = response;
         currentGameId.value = gameId;
+        currentSeasonId.value = "";
       } else {
         await fetchRankings(forceRefresh);
       }
@@ -91,6 +98,49 @@ export const useRankingStore = defineStore("rankings", () => {
         err
       );
       error.value = "Erreur lors du chargement du classement par jeu.";
+      loadFromLocalStorage();
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  /**
+   * Récupère le classement par saison
+   * @param seasonId - ID de la saison
+   * @param gameId - ID du jeu (optionnel) pour filtrer par jeu
+   */
+  const fetchSeasonRankings = async (
+    seasonId: string,
+    gameId?: string,
+    forceRefresh = false
+  ) => {
+    // Si les données sont déjà chargées pour cette saison/jeu et qu'on ne force pas le refresh
+    if (
+      !forceRefresh &&
+      rankings.value.length > 0 &&
+      !shouldRefreshData.value &&
+      currentSeasonId.value === seasonId &&
+      currentGameId.value === (gameId || "")
+    ) {
+      return;
+    }
+
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const response = await seasonService.getSeasonRanking(seasonId, gameId);
+      rankings.value = response.rankings;
+      currentSeasonId.value = seasonId;
+      currentGameId.value = gameId || "";
+      lastFetchTime.value = Date.now();
+      saveToLocalStorage();
+    } catch (err) {
+      console.error(
+        "Erreur lors de la récupération du classement par saison:",
+        err
+      );
+      error.value = "Erreur lors du chargement du classement par saison.";
       loadFromLocalStorage();
     } finally {
       loading.value = false;
@@ -126,6 +176,7 @@ export const useRankingStore = defineStore("rankings", () => {
         lastFetchTime: lastFetchTime.value,
         lastGameFetchTime: lastGameFetchTime.value,
         currentGameId: currentGameId.value,
+        currentSeasonId: currentSeasonId.value,
       })
     );
   };
@@ -140,6 +191,7 @@ export const useRankingStore = defineStore("rankings", () => {
         lastFetchTime.value = parsedData.lastFetchTime || null;
         lastGameFetchTime.value = parsedData.lastGameFetchTime || null;
         currentGameId.value = parsedData.currentGameId || "";
+        currentSeasonId.value = parsedData.currentSeasonId || "";
       } catch (e) {
         console.error("Erreur lors du parsing des données sauvegardées", e);
       }
@@ -156,10 +208,12 @@ export const useRankingStore = defineStore("rankings", () => {
     loading,
     error,
     currentGameId,
+    currentSeasonId,
 
     // Actions
     fetchRankings,
     fetchRankingsByGame,
+    fetchSeasonRankings,
     fetchGames,
   };
 });
