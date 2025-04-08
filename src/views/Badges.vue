@@ -687,15 +687,6 @@ watch(selectedBadge, (newValue) => {
   }
 });
 
-// Appliquer le blocage de scroll quand la modale est ouverte
-watch(selectedBadge, (newVal) => {
-  if (newVal) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "";
-  }
-});
-
 onMounted(() => {
   fetchData();
 });
