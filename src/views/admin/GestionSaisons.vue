@@ -686,7 +686,7 @@ const addTournamentToSeason = async (tournamentId: string) => {
   if (!selectedSeason.value) return;
 
   try {
-    await seasonService.addTournamentToSeason(
+    const updatedSeason = await seasonService.addTournamentToSeason(
       selectedSeason.value._id,
       tournamentId
     );
@@ -694,6 +694,14 @@ const addTournamentToSeason = async (tournamentId: string) => {
     // Rafraîchir les listes
     await fetchSeasonTournaments();
     await fetchAvailableTournaments();
+
+    // Mettre à jour la saison dans la liste des saisons
+    const index = seasons.value.findIndex(
+      (s) => s._id === selectedSeason.value!._id
+    );
+    if (index !== -1) {
+      seasons.value[index] = updatedSeason;
+    }
 
     showMessage("success", "Tournoi ajouté à la saison avec succès");
   } catch (err) {
@@ -709,7 +717,7 @@ const removeTournamentFromSeason = async (tournamentId: string) => {
   if (!selectedSeason.value) return;
 
   try {
-    await seasonService.removeTournamentFromSeason(
+    const updatedSeason = await seasonService.removeTournamentFromSeason(
       selectedSeason.value._id,
       tournamentId
     );
@@ -717,6 +725,14 @@ const removeTournamentFromSeason = async (tournamentId: string) => {
     // Rafraîchir les listes
     await fetchSeasonTournaments();
     await fetchAvailableTournaments();
+
+    // Mettre à jour la saison dans la liste des saisons
+    const index = seasons.value.findIndex(
+      (s) => s._id === selectedSeason.value!._id
+    );
+    if (index !== -1) {
+      seasons.value[index] = updatedSeason;
+    }
 
     showMessage("success", "Tournoi retiré de la saison avec succès");
   } catch (err) {
