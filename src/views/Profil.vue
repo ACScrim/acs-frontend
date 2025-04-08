@@ -86,6 +86,192 @@
         </div>
       </div>
 
+      <!-- Section Palmarès avec podium -->
+      <div
+        class="bg-black/75 rounded-lg p-8 mb-8 border border-amber-500 shadow-lg shadow-amber-500/30 transform transition-all hover:scale-[1.02] duration-300"
+      >
+        <h2 class="text-3xl text-white mb-6 neon-text-gold flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 mr-3 text-amber-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Palmarès
+        </h2>
+
+        <!-- Visualisation du podium -->
+        <div class="flex justify-center mb-6 relative py-10">
+          <!-- Podium avec positions -->
+          <div class="flex items-end h-40 space-x-1 sm:space-x-3">
+            <!-- 2ème place (argent) -->
+            <div class="flex flex-col items-center">
+              <div v-if="medalCount.silver > 0" class="relative mb-2">
+                <img
+                  :src="
+                    user?.avatarUrl ||
+                    'https://cdn.discordapp.com/embed/avatars/0.png'
+                  "
+                  alt="Avatar"
+                  class="w-12 h-12 rounded-full object-cover border-2 border-gray-300 shadow-md"
+                />
+                <div
+                  class="absolute -bottom-1 -right-1 bg-gray-300 text-gray-800 rounded-full w-6 h-6 flex items-center justify-center border border-gray-400 font-bold text-xs"
+                >
+                  2
+                </div>
+              </div>
+              <div
+                class="w-16 sm:w-24 bg-gradient-to-t from-gray-600 to-gray-300 rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-gray-300 shadow-inner relative overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-gray-300 opacity-30 scanline"
+                ></div>
+                <span
+                  class="text-xl sm:text-2xl font-bold font-orbitron text-gray-800 z-10"
+                  >{{ medalCount.silver }}</span
+                >
+              </div>
+            </div>
+
+            <!-- 1ère place (or) - plus haute -->
+            <div class="flex flex-col items-center">
+              <div v-if="medalCount.gold > 0" class="relative mb-2">
+                <img
+                  :src="
+                    user?.avatarUrl ||
+                    'https://cdn.discordapp.com/embed/avatars/0.png'
+                  "
+                  alt="Avatar"
+                  class="w-14 h-14 rounded-full object-cover border-2 border-yellow-400 shadow-md shadow-yellow-400/30"
+                />
+                <div
+                  class="absolute -bottom-1 -right-1 bg-yellow-500 text-yellow-900 rounded-full w-6 h-6 flex items-center justify-center border border-yellow-400 font-bold text-xs animate-pulse-subtle"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                class="w-16 sm:w-24 bg-gradient-to-t from-yellow-600 to-yellow-300 rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-yellow-400 shadow-inner shadow-yellow-400/20 relative overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-yellow-300 opacity-30 scanline"
+                ></div>
+                <span
+                  class="text-xl sm:text-2xl font-bold font-orbitron text-yellow-800 z-10"
+                  >{{ medalCount.gold }}</span
+                >
+              </div>
+            </div>
+
+            <!-- 3ème place (bronze) -->
+            <div class="flex flex-col items-center">
+              <div v-if="medalCount.bronze > 0" class="relative mb-2">
+                <img
+                  :src="
+                    user?.avatarUrl ||
+                    'https://cdn.discordapp.com/embed/avatars/0.png'
+                  "
+                  alt="Avatar"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-amber-700 shadow-md"
+                />
+                <div
+                  class="absolute -bottom-1 -right-1 bg-amber-700 text-amber-100 rounded-full w-6 h-6 flex items-center justify-center border border-amber-600 font-bold text-xs"
+                >
+                  3
+                </div>
+              </div>
+              <div
+                class="w-16 sm:w-24 bg-gradient-to-t from-amber-800 to-amber-500 rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-amber-700 shadow-inner relative overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-amber-600 opacity-30 scanline"
+                ></div>
+                <span
+                  class="text-xl sm:text-2xl font-bold font-orbitron text-amber-100 z-10"
+                  >{{ medalCount.bronze }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Base du podium -->
+          <div
+            class="absolute bottom-0 bg-gray-800 h-4 w-full max-w-md rounded-md border-t border-purple-500/30"
+          ></div>
+        </div>
+
+        <!-- Statistiques des médailles -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
+          <!-- Or -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg text-center border border-yellow-500/50 shadow-md shadow-yellow-500/10 transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300"
+          >
+            <div class="text-yellow-400 text-lg font-orbitron mb-1">🥇 Or</div>
+            <div class="text-2xl font-bold text-white">
+              {{ medalCount.gold }}
+            </div>
+            <div class="text-xs text-yellow-300/70">victoires</div>
+          </div>
+
+          <!-- Argent -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-gray-800/30 p-4 rounded-lg text-center border border-gray-400/50 shadow-md shadow-gray-400/10 transform transition-all hover:scale-105 hover:shadow-gray-400/30 duration-300"
+          >
+            <div class="text-gray-300 text-lg font-orbitron mb-1">
+              🥈 Argent
+            </div>
+            <div class="text-2xl font-bold text-white">
+              {{ medalCount.silver }}
+            </div>
+            <div class="text-xs text-gray-400/70">2e places</div>
+          </div>
+
+          <!-- Bronze -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-amber-950/30 p-4 rounded-lg text-center border border-amber-700/50 shadow-md shadow-amber-700/10 transform transition-all hover:scale-105 hover:shadow-amber-700/30 duration-300"
+          >
+            <div class="text-amber-600 text-lg font-orbitron mb-1">
+              🥉 Bronze
+            </div>
+            <div class="text-2xl font-bold text-white">
+              {{ medalCount.bronze }}
+            </div>
+            <div class="text-xs text-amber-600/70">3e places</div>
+          </div>
+
+          <!-- Jeu favori -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-cyan-950/30 p-4 rounded-lg text-center border border-cyan-500/50 shadow-md shadow-cyan-500/10 transform transition-all hover:scale-105 hover:shadow-cyan-500/30 duration-300"
+          >
+            <div class="text-cyan-400 text-lg font-orbitron mb-1">
+              🎮 Meilleur jeu
+            </div>
+            <div
+              class="text-base font-bold text-white font-orbitron truncate max-w-full"
+              :title="favoriteGame.name"
+            >
+              {{ favoriteGame.name || "Aucun" }}
+            </div>
+            <div class="text-xs text-cyan-300/70 mt-1">
+              {{
+                favoriteGame.count
+                  ? `${favoriteGame.count} victoire${
+                      favoriteGame.count > 1 ? "s" : ""
+                    }`
+                  : "Pas encore de victoire"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Section des badges -->
       <div
         class="bg-black/75 rounded-lg p-8 mb-8 border border-purple-500 shadow-lg shadow-purple-500/30 transform transition-all hover:scale-[1.02] duration-300"
@@ -410,6 +596,90 @@ const selectedBadge = ref<Badge | null>(null); // Badge sélectionné pour affic
  * Accès aux paramètres de route
  */
 const route = useRoute();
+
+/**
+ * Calcule le nombre de médailles pour chaque type (or, argent, bronze)
+ */
+const medalCount = computed(() => {
+  // Valeurs par défaut
+  const counts = { gold: 0, silver: 0, bronze: 0 };
+
+  // Si pas de données de tournoi, retourner les compteurs à zéro
+  if (!playerRanking.value?.tournamentsParticipated) return counts;
+
+  // Compter les médailles basées sur le rang
+  playerRanking.value.tournamentsParticipated.forEach((tournament) => {
+    if (tournament.rank === 1) counts.gold++;
+    else if (tournament.rank === 2) counts.silver++;
+    else if (tournament.rank === 3) counts.bronze++;
+  });
+
+  return counts;
+});
+
+/**
+ * Détermine le jeu sur lequel le joueur a obtenu le plus de victoires
+ */
+const favoriteGame = computed(() => {
+  // Si pas de données de tournoi, retourner un objet vide
+  if (!playerRanking.value?.tournamentsParticipated) {
+    return { name: "Aucun", count: 0 };
+  }
+
+  // Filtrer les tournois avec victoire (rang 1)
+  const victories = playerRanking.value.tournamentsParticipated.filter(
+    (t) => t.rank === 1
+  );
+
+  if (victories.length === 0) {
+    return { name: "Aucun", count: 0 };
+  }
+
+  // Compter les victoires par jeu
+  const gameWins: Record<string, number> = {};
+  const gameMap: Record<string, string> = {}; // Pour stocker les noms de jeux par ID
+
+  victories.forEach((tournament) => {
+    if (!tournament.game) return;
+
+    // Récupérer l'ID et le nom du jeu
+    const gameId =
+      typeof tournament.game === "string"
+        ? tournament.game
+        : tournament.game._id || "";
+
+    const gameName =
+      typeof tournament.game === "object" && tournament.game.name
+        ? tournament.game.name
+        : "Jeu inconnu";
+
+    // Stocker le nom du jeu
+    if (gameId && gameName !== "Jeu inconnu") {
+      gameMap[gameId] = gameName;
+    }
+
+    // Compter les victoires
+    if (gameId) {
+      gameWins[gameId] = (gameWins[gameId] || 0) + 1;
+    }
+  });
+
+  // Trouver le jeu avec le plus de victoires
+  let topGameId = "unknown";
+  let topCount = 0;
+
+  Object.entries(gameWins).forEach(([id, count]) => {
+    if (count > topCount) {
+      topGameId = id;
+      topCount = count as number;
+    }
+  });
+
+  // Récupérer le nom du jeu gagnant
+  const topGameName = gameMap[topGameId] || "Jeu inconnu";
+
+  return { name: topGameName, count: topCount };
+});
 
 //-------------------------------------------------------
 // SECTION: Formatage et utilitaires
@@ -788,5 +1058,49 @@ h2 {
 
 .cyberpunk-btn-mini-pink:active {
   transform: translateY(1px);
+}
+
+/* Effet de néon doré */
+.neon-text-gold {
+  color: white;
+  text-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b, 0 0 15px #f59e0b;
+}
+
+/* Effet de scanline pour le podium */
+.scanline {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 0.5%,
+    transparent 1%
+  );
+  background-size: 100% 4px;
+  animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+/* Animation pour les médailles */
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
 }
 </style>

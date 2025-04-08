@@ -1,4 +1,5 @@
 import type { Badge } from "./Badge";
+import type { Game } from "./Game";
 
 export interface Player {
   _id?: string;
@@ -17,6 +18,7 @@ export interface TournamentParticipation {
   _id: string;
   name: string;
   date: string;
+  game: Game;
   rank: number | null;
   teamName: string;
   numberOfTeams: number;
