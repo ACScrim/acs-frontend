@@ -146,6 +146,114 @@
         </div>
       </div>
 
+      <div class="mb-6">
+        <label
+          for="discordReminderDate"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Rappel sur Discord
+          <div class="relative group ml-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-cyan-400 cursor-help"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div
+              class="absolute z-50 w-64 p-2 bg-gray-900 text-cyan-300 text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-cyan-500/30"
+            >
+              Date à laquelle un rappel sera envoyé sur le canal Discord. Par
+              défaut 2 jours avant le tournoi à 12h.
+            </div>
+          </div>
+        </label>
+        <div class="relative">
+          <input
+            id="discordReminderDate"
+            v-model="discordReminderDate"
+            type="datetime-local"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+          />
+          <div
+            class="absolute inset-0 pointer-events-none rounded-lg transition-all duration-300 focus-within:shadow-lg focus-within:shadow-cyan-500/50"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Rappel privé (1 jour avant) -->
+      <div class="mb-6">
+        <label
+          for="privateReminderDate"
+          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+            />
+            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+          </svg>
+          Rappel privé
+          <div class="relative group ml-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-cyan-400 cursor-help"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div
+              class="absolute z-50 w-64 p-2 bg-gray-900 text-cyan-300 text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-cyan-500/30"
+            >
+              Date à laquelle un rappel sera envoyé en message privé à chaque
+              joueur. Par défaut 1 jour avant le tournoi à 12h.
+            </div>
+          </div>
+        </label>
+        <div class="relative">
+          <input
+            id="privateReminderDate"
+            v-model="privateReminderDate"
+            type="datetime-local"
+            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+          />
+          <div
+            class="absolute inset-0 pointer-events-none rounded-lg transition-all duration-300 focus-within:shadow-lg focus-within:shadow-cyan-500/50"
+          ></div>
+        </div>
+      </div>
+
       <!-- Nom du channel Discord -->
       <div class="mb-6">
         <label
@@ -464,7 +572,7 @@
 
 <script setup lang="ts">
 // Script inchangé
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
 import tournamentService from "../../services/tournamentService";
@@ -489,7 +597,8 @@ const showConfirmationDialog = ref<boolean>(false);
 const description = ref<string>("");
 const playerCap = ref<number>(0);
 const waitlistPlayers = ref<PlayerCheckedIn[]>([]);
-
+const discordReminderDate = ref<string>("");
+const privateReminderDate = ref<string>("");
 const games = ref<Game[]>([]);
 
 const fetchTournaments = async () => {
@@ -508,16 +617,37 @@ const fetchTournaments = async () => {
     console.error("Erreur lors de la récupération des tournois:", error);
   }
 };
-// Convertit une date ISO UTC en format local pour l'input datetime-local
-const formatDateForInput = (isoString: string) => {
-  const date = new Date(isoString);
+
+// Ajouter cette fonction pour mettre à jour automatiquement les dates de rappel
+const updateReminderDates = () => {
+  if (!date.value) return;
+
+  // Convertir la date du tournoi en objet Date
+  const tournamentDate = new Date(date.value);
+
+  // Calculer les dates par défaut (2 jours avant pour Discord, 1 jour avant pour les messages privés)
+  const discordDate = new Date(tournamentDate);
+  discordDate.setDate(tournamentDate.getDate() - 2);
+  discordDate.setHours(12, 0, 0, 0);
+
+  const privateDate = new Date(tournamentDate);
+  privateDate.setDate(tournamentDate.getDate() - 1);
+  privateDate.setHours(12, 0, 0, 0);
+
+  // Mettre à jour les champs date-time
+  discordReminderDate.value = formatDateForInput(discordDate);
+  privateReminderDate.value = formatDateForInput(privateDate);
+};
+// Format d'une date pour l'input datetime-local
+const formatDateForInput = (date: Date | string): string => {
+  const d = date instanceof Date ? date : new Date(date);
 
   // Format YYYY-MM-DDTHH:MM requis par l'input datetime-local
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
@@ -534,6 +664,35 @@ const loadTournamentDetails = async () => {
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || "";
     playerCap.value = tournament.playerCap || 0; // Charger playerCap
+
+    // Charger les dates de rappel si elles existent
+    if (tournament.discordReminderDate) {
+      discordReminderDate.value = formatDateForInput(
+        tournament.discordReminderDate
+      );
+    } else {
+      // Date par défaut: 2 jours avant à 12h
+      const defaultDiscordDate = new Date(tournament.date);
+      defaultDiscordDate.setDate(defaultDiscordDate.getDate() - 2);
+      defaultDiscordDate.setHours(12, 0, 0, 0);
+      discordReminderDate.value = formatDateForInput(
+        defaultDiscordDate.toISOString()
+      );
+    }
+
+    if (tournament.privateReminderDate) {
+      privateReminderDate.value = formatDateForInput(
+        tournament.privateReminderDate
+      );
+    } else {
+      // Date par défaut: 1 jour avant à 12h
+      const defaultPrivateDate = new Date(tournament.date);
+      defaultPrivateDate.setDate(defaultPrivateDate.getDate() - 1);
+      defaultPrivateDate.setHours(12, 0, 0, 0);
+      privateReminderDate.value = formatDateForInput(
+        defaultPrivateDate.toISOString()
+      );
+    }
 
     // Charger les joueurs de la liste principale
     selectedPlayers.value = tournament.players.map((player: any) => ({
@@ -636,7 +795,14 @@ const removePlayer = (player: PlayerCheckedIn) => {
 const editTournament = async () => {
   try {
     const selectedDate = new Date(date.value);
+    // Calculer les dates de rappel
+    const discordReminder = discordReminderDate.value
+      ? new Date(discordReminderDate.value)
+      : null;
 
+    const privateReminder = privateReminderDate.value
+      ? new Date(privateReminderDate.value)
+      : null;
     const allPlayers = [...selectedPlayers.value, ...waitlistPlayers.value];
 
     const tournament: Tournament = {
@@ -649,6 +815,8 @@ const editTournament = async () => {
       players: allPlayers, // Envoyer tous les joueurs (actifs + liste d'attente)
       playerCap: playerCap.value,
       finished: false,
+      discordReminderDate: new Date(discordReminder || date.value),
+      privateReminderDate: new Date(privateReminder || date.value),
     };
 
     await tournamentService.updateTournament(
@@ -741,6 +909,13 @@ const hidePlayerList = () => {
     showPlayerList.value = false;
   }, 200);
 };
+
+// Puis ajouter ce watcher après les autres fonctions
+watch(date, (newValue) => {
+  if (newValue) {
+    updateReminderDates();
+  }
+});
 
 onMounted(() => {
   fetchTournaments();

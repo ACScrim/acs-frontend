@@ -35,6 +35,8 @@ export interface Tournament {
   checkIns?: { [key: string]: boolean };
   registrationDates?: { [key: string]: string };
   waitlistRegistrationDates?: { [key: string]: string }; // Nouvelle propriété
+  discordReminderDate: Date;
+  privateReminderDate: Date;
 }
 
 /**
