@@ -185,7 +185,7 @@
                       {{ badge.title }}
                     </h3>
                     <span
-                      class="bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs px-2 py-1 rounded-full mt-1 inline-block"
+                      class="bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs px-2 py-1 rounded-full mt-1 inline-block max-w-full truncate"
                     >
                       {{ getGameName(badge.categoryId) }}
                     </span>
@@ -283,7 +283,7 @@
                       {{ badge.title }}
                     </h3>
                     <span
-                      class="bg-pink-900/20 text-pink-700/70 border border-pink-800/30 text-xs px-2 py-1 rounded-full mt-1 inline-block"
+                      class="bg-pink-500/20 text-pink-300 border border-pink-400/30 text-xs px-2 py-1 rounded-full mt-1 inline-block"
                     >
                       ACS
                     </span>
@@ -334,7 +334,7 @@
                       {{ badge.title }}
                     </h3>
                     <span
-                      class="bg-cyan-900/20 text-cyan-700/70 border border-cyan-800/30 text-xs px-2 py-1 rounded-full mt-1 inline-block"
+                      class="bg-cyan-900/20 text-cyan-700/70 border border-cyan-800/30 text-xs px-2 py-1 rounded-full mt-1 inline-block max-w-full truncate"
                     >
                       {{ getGameName(badge.categoryId) }}
                     </span>
