@@ -14,6 +14,117 @@
       </div>
     </div>
 
+    <!-- Sélection commune du jeu et du tournoi -->
+    <div
+      class="bg-black/70 backdrop-blur-md rounded-lg p-6 mb-8 border border-cyan-500/50 shadow-lg shadow-cyan-500/20"
+    >
+      <h2 class="text-xl text-cyan-400 font-audiowide mb-4">
+        Sélection du tournoi
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Sélection du jeu -->
+        <div class="w-full">
+          <label
+            for="globalGameSelect"
+            class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+              />
+            </svg>
+            Sélectionner un jeu
+          </label>
+          <div class="relative w-full">
+            <select
+              id="globalGameSelect"
+              v-model="selectedGame"
+              @change="handleGameChange"
+              class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            >
+              <option value="" disabled selected>Choisissez un jeu</option>
+              <option v-for="game in games" :key="game._id" :value="game._id">
+                {{ game.name }}
+              </option>
+            </select>
+            <div
+              class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Sélection du tournoi -->
+        <div class="w-full" v-if="tournaments.length > 0">
+          <label
+            for="globalTournamentSelect"
+            class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Sélectionner un tournoi
+          </label>
+          <div class="relative w-full">
+            <select
+              id="globalTournamentSelect"
+              v-model="selectedTournament"
+              @change="handleTournamentChange"
+              class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            >
+              <option value="" disabled selected>Choisissez un tournoi</option>
+              <option
+                v-for="tournament in tournaments"
+                :key="tournament._id"
+                :value="tournament._id"
+                :class="{ 'text-gray-400': tournament.finished }"
+              >
+                {{ tournament.name }}
+                {{ tournament.finished ? "(terminé)" : "" }}
+              </option>
+            </select>
+            <div
+              class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Message si aucun tournoi disponible -->
+        <div
+          v-else-if="selectedGame && tournaments.length === 0"
+          class="md:col-span-2 flex items-center gap-2 p-4 bg-gray-800/80 border border-red-500/30 rounded-lg shadow-md text-white/80"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-red-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>Aucun tournoi disponible pour ce jeu.</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Onglets -->
     <div
       class="relative bg-black/70 backdrop-blur-md rounded-lg p-4 mb-8 border border-purple-500/30 shadow-lg shadow-purple-500/15 overflow-hidden"
@@ -159,17 +270,26 @@
           key="teams"
           class="animate-fadeIn"
         >
-          <GestionEquipe />
+          <GestionEquipe
+            :selectedGame="selectedGame"
+            :selectedTournament="selectedTournament"
+          />
         </div>
         <div
           v-else-if="activeTab === 'checkin'"
           key="checkin"
           class="animate-fadeIn"
         >
-          <VoirCheckIn />
+          <VoirCheckIn
+            :selectedGame="selectedGame"
+            :selectedTournament="selectedTournament"
+          />
         </div>
         <div v-else-if="activeTab === 'end'" key="end" class="animate-fadeIn">
-          <EndTournoi />
+          <EndTournoi
+            :selectedGame="selectedGame"
+            :selectedTournament="selectedTournament"
+          />
         </div>
       </transition>
     </div>
@@ -177,15 +297,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import CreationTournoiForm from "../../components/gestion-tournois/CreationTournoiForm.vue";
 import GestionEquipe from "../../components/gestion-tournois/GestionEquipe.vue";
 import EndTournoi from "../../components/gestion-tournois/EndTournoi.vue";
 import VoirCheckIn from "../../components/gestion-tournois/VoirCheckIn.vue";
-
+import gameService from "../../services/gameService";
+import tournamentService from "../../services/tournamentService";
+import type { Game, Tournament } from "../../types";
 //-------------------------------------------------------
 // SECTION: État du composant
 //-------------------------------------------------------
+// Gestion des données
+const games = ref<Game[]>([]);
+const tournaments = ref<Tournament[]>([]);
 
 /**
  * Gestion de la navigation par onglets
@@ -197,6 +322,64 @@ const activeTab = ref("creation");
  * Nombre total d'onglets pour le calcul de l'indicateur
  */
 const tabCount = 4;
+
+/**
+ * État partagé pour la sélection de jeu et de tournoi
+ */
+const selectedGame = ref("");
+const selectedTournament = ref("");
+
+//-------------------------------------------------------
+// SECTION: Chargement des données
+//-------------------------------------------------------
+
+/**
+ * Charge la liste des jeux disponibles depuis l'API
+ */
+const fetchGames = async () => {
+  try {
+    games.value = await gameService.getGames();
+  } catch (error) {
+    console.error("Erreur lors du chargement des jeux:", error);
+  }
+};
+
+/**
+ * Charge les tournois pour le jeu sélectionné
+ */
+const fetchTournamentsByGame = async (gameId: string) => {
+  try {
+    if (!gameId) return;
+
+    const allTournaments = await tournamentService.getTournamentsByGame(gameId);
+    // Filtrer pour n'inclure que les tournois non terminés
+    tournaments.value = allTournaments;
+  } catch (error) {
+    console.error("Erreur lors du chargement des tournois:", error);
+  }
+};
+
+//-------------------------------------------------------
+// SECTION: Gestionnaires d'événements
+//-------------------------------------------------------
+
+/**
+ * Gère le changement de jeu sélectionné
+ */
+const handleGameChange = async () => {
+  // Réinitialiser le tournoi sélectionné
+  selectedTournament.value = "";
+  // Charger les tournois pour ce jeu
+  await fetchTournamentsByGame(selectedGame.value);
+};
+
+/**
+ * Gère le changement de tournoi sélectionné
+ */
+const handleTournamentChange = async () => {
+  // Aucune action spécifique pour l'instant, mais pourrait être utilisé
+  // pour charger des informations supplémentaires sur le tournoi si nécessaire
+};
 
 //-------------------------------------------------------
 // SECTION: Propriétés calculées
@@ -225,6 +408,11 @@ const tabIndicatorStyle = computed(() => {
     left: `${position}%`,
     width: `${width}%`,
   };
+});
+
+// Charger les jeux au montage du composant
+onMounted(() => {
+  fetchGames();
 });
 </script>
 

@@ -3,74 +3,49 @@
   <div class="check-in-container">
     <h1 class="cyber-title">Statut des Check-ins</h1>
 
-    <!-- Formulaire de sélection -->
-    <div class="selection-grid">
-      <!-- Sélection du jeu -->
-      <div class="form-group">
-        <label for="game" class="form-label">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-            />
-          </svg>
-          Sélectionner un jeu
-        </label>
-        <div class="select-wrapper">
-          <select
-            id="game"
-            v-model="selectedGame"
-            @change="fetchTournamentsByGame"
-            class="cyber-select"
-          >
-            <option value="" disabled selected>Choisissez un jeu</option>
-            <option v-for="game in games" :key="game._id" :value="game._id">
-              {{ game.name }}
-            </option>
-          </select>
-          <div class="select-arrow"></div>
-        </div>
+    <!-- Information du tournoi sélectionné -->
+    <div class="tournament-selection-info">
+      <div class="info-header">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="tournament-icon"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <h2>Tournoi sélectionné</h2>
       </div>
 
-      <!-- Sélection du tournoi -->
-      <div class="form-group" v-if="tournaments.length > 0">
-        <label for="tournament" class="form-label">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Sélectionner un tournoi
-        </label>
-        <div class="select-wrapper">
-          <select
-            id="tournament"
-            v-model="selectedTournament"
-            @change="fetchTournamentDetails"
-            class="cyber-select"
-          >
-            <option value="" disabled selected>Choisissez un tournoi</option>
-            <option
-              v-for="tournament in tournaments"
-              :key="tournament._id"
-              :value="tournament._id"
-            >
-              {{ tournament.name }}
-            </option>
-          </select>
-          <div class="select-arrow"></div>
+      <!-- Affichage du tournoi -->
+      <div v-if="selectedTournamentDetails" class="tournament-info-box">
+        <div class="info-item">
+          <span class="info-label">Nom:</span>
+          <span class="info-value">{{ selectedTournamentDetails.name }}</span>
         </div>
+        <div class="info-item" v-if="selectedTournamentDetails.date">
+          <span class="info-label">Date:</span>
+          <span class="info-value">
+            {{
+              new Date(selectedTournamentDetails.date).toLocaleDateString(
+                "fr-FR"
+              )
+            }}
+          </span>
+        </div>
+        <div
+          v-if="selectedTournamentDetails.finished"
+          class="tournament-status finished"
+        >
+          <span>Tournoi terminé</span>
+        </div>
+      </div>
+      <div v-else class="tournament-info-empty">
+        Veuillez sélectionner un tournoi dans le menu en haut de la page
       </div>
     </div>
 
@@ -220,7 +195,7 @@
       </div>
 
       <div class="actions-container">
-        <button class="refresh-button" @click="fetchTournamentDetails">
+        <button class="refresh-button" @click="() => fetchTournamentDetails()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -308,15 +283,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, Player } from "../../types";
 
+// Accepter les props du parent
+const props = defineProps<{
+  selectedGame: string;
+  selectedTournament: string;
+}>();
+
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
-const selectedGame = ref("");
-const selectedTournament = ref("");
 
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
@@ -328,25 +307,20 @@ const fetchGames = async () => {
 };
 
 // Récupérer les tournois pour un jeu sélectionné
-const fetchTournamentsByGame = async () => {
-  selectedTournament.value = "";
-  selectedTournamentDetails.value = null;
-
-  if (selectedGame.value) {
-    const allTournaments = await tournamentService.getTournamentsByGame(
-      selectedGame.value
-    );
+const fetchTournamentsByGame = async (gameId: string) => {
+  if (gameId) {
+    const allTournaments = await tournamentService.getTournamentsByGame(gameId);
     tournaments.value = allTournaments.filter(
       (tournament) => !tournament.finished
     );
   }
 };
-
 // Récupérer les détails d'un tournoi sélectionné
-const fetchTournamentDetails = async () => {
-  if (selectedTournament.value) {
+const fetchTournamentDetails = async (tournamentId?: string) => {
+  const id = tournamentId || props.selectedTournament;
+  if (id) {
     selectedTournamentDetails.value = await tournamentService.getTournamentById(
-      selectedTournament.value
+      id
     );
   }
 };
@@ -396,10 +370,39 @@ const getCheckedInPercentage = () => {
   return Math.round((count / total) * 100);
 };
 
-// Charger les jeux au montage du composant
+// Charger les données initiales
 onMounted(() => {
   fetchGames();
+
+  // Si un jeu est déjà sélectionné depuis les props
+  if (props.selectedGame) {
+    fetchTournamentsByGame(props.selectedGame);
+
+    // Si un tournoi est déjà sélectionné depuis les props
+    if (props.selectedTournament) {
+      fetchTournamentDetails();
+    }
+  }
 });
+
+// Observer les changements sur les propriétés
+watch(
+  () => props.selectedGame,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentsByGame(newValue);
+    }
+  }
+);
+
+watch(
+  () => props.selectedTournament,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentDetails();
+    }
+  }
+);
 </script>
 
 <style scoped>
@@ -809,5 +812,83 @@ onMounted(() => {
 .registration-date svg {
   color: #c4b5fd; /* Violet plus clair */
   min-width: 16px;
+}
+
+/* Nouveaux styles pour l'affichage du tournoi sélectionné */
+.tournament-selection-info {
+  background: rgba(17, 24, 39, 0.7);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tournament-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #06b6d4;
+}
+
+.info-header h2 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #06b6d4;
+  text-shadow: 0 0 5px rgba(6, 182, 212, 0.5);
+}
+
+.tournament-info-box {
+  background: rgba(13, 6, 23, 0.6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.info-item {
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  color: #06b6d4;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.info-value {
+  color: white;
+}
+
+.tournament-status {
+  margin-top: 0.75rem;
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.75rem;
+}
+
+.tournament-status.finished {
+  background-color: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: rgb(252, 165, 165);
+}
+
+.tournament-info-empty {
+  background: rgba(13, 6, 23, 0.6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
 }
 </style>

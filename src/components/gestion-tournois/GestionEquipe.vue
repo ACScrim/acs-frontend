@@ -6,106 +6,90 @@
     <h1 class="text-4xl text-white mb-8 text-center neon-text">
       Gestion des Équipes
     </h1>
-    <!-- Sélection du jeu et du tournoi -->
+    <!-- Information du tournoi sélectionné -->
     <div
-      class="flex flex-col gap-6 mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
+      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
     >
-      <div class="w-full mb-4">
-        <label
-          for="game"
-          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+      <div class="flex items-center gap-3 mb-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-cyan-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-            />
-          </svg>
-          Sélectionner un jeu
-        </label>
-        <div class="relative w-full">
-          <select
-            id="game"
-            v-model="selectedGame"
-            @change="fetchTournamentsByGame"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-          >
-            <option value="" disabled selected>Choisissez un jeu</option>
-            <option v-for="game in games" :key="game._id" :value="game._id">
-              {{ game.name }}
-            </option>
-          </select>
-          <div
-            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
-        </div>
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <h2 class="font-['Orbitron'] font-semibold text-lg text-cyan-400">
+          Tournoi sélectionné
+        </h2>
       </div>
 
-      <div class="w-full mb-4" v-if="tournaments.length > 0">
-        <label
-          for="tournament"
-          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+      <!-- Affichage du tournoi ou message si aucun tournoi sélectionné -->
+      <div
+        v-if="selectedTournamentDetails"
+        class="bg-gray-900/60 p-4 rounded-lg border border-cyan-500/30"
+      >
+        <p class="text-white mb-2">
+          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
+            >Nom:</span
+          >
+          {{ selectedTournamentDetails.name }}
+        </p>
+        <p class="text-white mb-2" v-if="selectedTournamentDetails.date">
+          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
+            >Date:</span
+          >
+          {{
+            new Date(selectedTournamentDetails.date).toLocaleDateString("fr-FR")
+          }}
+        </p>
+        <p
+          v-if="selectedTournamentDetails.finished"
+          class="mt-2 text-sm px-3 py-1 bg-red-900/20 border border-red-500/50 rounded-full inline-block text-red-300"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Sélectionner un tournoi
-        </label>
-        <div class="relative w-full">
-          <select
-            id="tournament"
-            v-model="selectedTournament"
-            @change="fetchTournamentDetails"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-          >
-            <option value="" disabled selected>Choisissez un tournoi</option>
-            <option
-              v-for="tournament in tournaments"
-              :key="tournament._id"
-              :value="tournament._id"
-            >
-              {{ tournament.name }}
-            </option>
-          </select>
-          <div
-            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
-        </div>
+          <span class="font-['Orbitron']">Tournoi terminé</span>
+        </p>
       </div>
       <div
-        v-else-if="selectedGame && tournaments.length === 0"
-        class="flex flex-col items-center justify-center p-6 bg-gray-800/80 border border-red-500/30 rounded-xl shadow-md text-center gap-3"
+        v-else
+        class="bg-gray-900/60 p-4 rounded-lg border border-red-500/30 text-gray-400 italic"
       >
-        <div class="text-center">
-          <h3 class="text-xl font-['Orbitron'] font-semibold text-red-400 mb-1">
-            Aucun tournoi disponible
-          </h3>
-          <p class="text-white/70 font-['Orbitron'] text-sm">
-            Il n'existe pas de tournoi non finalisé pour ce jeu
-          </p>
-        </div>
-        <button
-          @click="selectedGame = ''"
-          class="cyberpunk-btn-gray mt-3 py-2 px-4 text-sm font-['Orbitron'] rounded-lg"
-        >
-          <span class="relative z-10">Choisir un autre jeu</span>
-        </button>
+        Veuillez sélectionner un tournoi dans le menu en haut de la page
       </div>
     </div>
 
+    <div
+      v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
+      class="mb-6 p-4 bg-red-900/20 text-white rounded-lg border border-red-500/50 shadow-md flex items-start gap-3"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 text-red-400 flex-shrink-0 mt-0.5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+        />
+      </svg>
+      <div>
+        <h3 class="font-['Orbitron'] font-bold text-red-300 mb-1">
+          Tournoi terminé
+        </h3>
+        <p class="text-sm text-white/80">
+          Ce tournoi est déjà terminé. Vous pouvez consulter les équipes mais
+          vous ne pouvez plus les modifier.
+        </p>
+      </div>
+    </div>
     <!-- Détails du tournoi -->
     <div
       v-if="selectedTournamentDetails"
@@ -160,7 +144,14 @@
         <div class="flex flex-wrap gap-3 mt-6 md:mt-8">
           <button
             @click="generateTeams"
-            class="cyberpunk-btn-purple flex items-center justify-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+            :disabled="selectedTournamentDetails?.finished"
+            :class="[
+              'cyberpunk-btn-purple flex items-center justify-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
+              {
+                'opacity-50 cursor-not-allowed':
+                  selectedTournamentDetails?.finished,
+              },
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -177,11 +168,18 @@
             <span class="relative z-10">Générer les équipes</span>
           </button>
 
-          <!-- Nouveau bouton pour supprimer les équipes -->
+          <!-- Supprimer les équipes -->
           <button
             v-if="teams.length > 0"
             @click="confirmDeleteAllTeams"
-            class="cyberpunk-btn-red flex items-center justify-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+            :disabled="selectedTournamentDetails?.finished"
+            :class="[
+              'cyberpunk-btn-red flex items-center justify-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
+              {
+                'opacity-50 cursor-not-allowed':
+                  selectedTournamentDetails?.finished,
+              },
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -446,10 +444,11 @@
                   onDragEnd();
                   isDragging = false;
                 "
+                :disabled="selectedTournamentDetails?.finished"
                 class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-gray-900/50 border-2 border-dashed border-emerald-500/30 rounded-lg transition-all duration-300"
                 :class="{
-                  'bg-gray-900/80 border-emerald-500/60 shadow-md shadow-emerald-500/30':
-                    isDragging,
+                  'opacity-70 cursor-not-allowed':
+                    selectedTournamentDetails?.finished,
                 }"
               >
                 <div
@@ -589,10 +588,10 @@
                   onDragEnd();
                   isDragging = false;
                 "
-                class="flex flex-col gap-2 min-h-[150px] max-h-[400px] overflow-y-auto p-3 bg-gray-900/50 border-2 border-dashed border-emerald-500/30 rounded-lg transition-all duration-300"
+                :disabled="selectedTournamentDetails?.finished"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px]"
                 :class="{
-                  'bg-gray-900/80 border-emerald-500/60 shadow-md shadow-emerald-500/30':
-                    isDragging,
+                  'opacity-70': selectedTournamentDetails?.finished,
                 }"
               >
                 <div
@@ -768,7 +767,14 @@
       <div class="flex flex-wrap gap-4 mt-6">
         <button
           @click="saveTeams"
-          class="cyberpunk-btn-green flex items-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+          :disabled="selectedTournamentDetails?.finished"
+          :class="[
+            'cyberpunk-btn-green flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
+            {
+              'opacity-50 cursor-not-allowed':
+                selectedTournamentDetails?.finished,
+            },
+          ]"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -786,7 +792,14 @@
         </button>
         <button
           @click="saveTeamDefinitive"
-          class="cyberpunk-btn-pink flex items-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg"
+          :disabled="selectedTournamentDetails?.finished"
+          :class="[
+            'cyberpunk-btn-pink flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
+            {
+              'opacity-50 cursor-not-allowed':
+                selectedTournamentDetails?.finished,
+            },
+          ]"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -828,13 +841,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, Team, Player } from "../../types";
 import { VueDraggableNext } from "vue-draggable-next";
 import Toast from "@/shared/Toast.vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
+
+// Définir les props et les émissions
+const props = defineProps<{
+  selectedGame: string;
+  selectedTournament: string;
+}>();
 
 //------------------------------------------------------
 // ÉTATS PRINCIPAUX
@@ -847,8 +866,6 @@ const teams = ref<Team[]>([]);
 const unassignedPlayers = ref<Player[]>([]);
 
 // Sélections et filtres
-const selectedGame = ref("");
-const selectedTournament = ref("");
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
 >(null);
@@ -878,31 +895,40 @@ const showDeleteTeamsDialog = ref(false);
  * Charge la liste des jeux disponibles depuis l'API
  */
 const fetchGames = async () => {
-  games.value = await gameService.getGames();
+  try {
+    games.value = await gameService.getGames();
+  } catch (error) {
+    console.error("Erreur lors du chargement des jeux:", error);
+  }
 };
 
 /**
  * Charge la liste des tournois pour le jeu sélectionné
  */
-const fetchTournamentsByGame = async () => {
-  if (selectedGame.value) {
-    const allTournaments = await tournamentService.getTournamentsByGame(
-      selectedGame.value
-    );
+const fetchTournamentsByGame = async (gameId: string) => {
+  try {
+    if (!gameId) return;
+
+    const allTournaments = await tournamentService.getTournamentsByGame(gameId);
     // Ne garder que les tournois non terminés
     tournaments.value = allTournaments.filter(
       (tournament) => !tournament.finished
     );
+  } catch (error) {
+    console.error("Erreur lors du chargement des tournois:", error);
   }
 };
 
 /**
  * Charge les détails du tournoi sélectionné et ses équipes si existantes
  */
-const fetchTournamentDetails = async () => {
-  if (selectedTournament.value) {
+const fetchTournamentDetails = async (tournamentId?: string) => {
+  try {
+    const id = tournamentId || props.selectedTournament;
+    if (!id) return;
+
     selectedTournamentDetails.value = await tournamentService.getTournamentById(
-      selectedTournament.value
+      id
     );
 
     // Si des équipes existent déjà, les afficher
@@ -917,6 +943,8 @@ const fetchTournamentDetails = async () => {
 
     // Mettre à jour la liste des joueurs non assignés
     updateUnassignedPlayers();
+  } catch (error) {
+    console.error("Erreur lors du chargement des détails du tournoi:", error);
   }
 };
 
@@ -928,18 +956,51 @@ const fetchTournamentDetails = async () => {
  * Génère les équipes automatiquement selon le nombre spécifié
  */
 const generateTeams = async () => {
-  if (selectedTournament.value && numTeams.value > 0) {
-    const response = await tournamentService.generateTeams(
-      selectedTournament.value,
-      numTeams.value
-    );
-    teams.value = response.teams ?? [];
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
 
-    // Initialiser en mode vue d'ensemble
-    viewMode.value = "overview";
+  if (
+    tournamentId &&
+    numTeams.value > 0 &&
+    !selectedTournamentDetails.value?.finished
+  ) {
+    try {
+      // Vérification que le tournoi n'est pas terminé
+      const response = await tournamentService.generateTeams(
+        tournamentId,
+        numTeams.value
+      );
 
-    // Mettre à jour la liste des joueurs non assignés
-    updateUnassignedPlayers();
+      if (response && response.teams) {
+        teams.value = response.teams;
+
+        // Initialiser en mode vue d'ensemble
+        viewMode.value = "overview";
+
+        // Mettre à jour la liste des joueurs non assignés
+        updateUnassignedPlayers();
+
+        // Afficher un message de succès
+        showMessage(
+          "success",
+          `${numTeams.value} équipes générées avec succès !`
+        );
+      } else {
+        showMessage(
+          "error",
+          "Erreur lors de la génération des équipes : réponse invalide du serveur"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la génération des équipes:", error);
+      showMessage("error", "Erreur lors de la génération des équipes");
+    }
+  } else if (selectedTournamentDetails.value?.finished) {
+    showMessage("error", "Impossible de modifier un tournoi terminé");
+  } else if (!tournamentId) {
+    showMessage("error", "Aucun tournoi sélectionné");
+  } else {
+    showMessage("error", "Paramètres invalides pour la génération d'équipes");
   }
 };
 /**
@@ -1014,14 +1075,22 @@ const confirmDeleteAllTeams = () => {
  * Supprime toutes les équipes du tournoi actuel
  */
 const deleteAllTeams = async () => {
-  if (selectedTournament.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId) {
     try {
+      if (selectedTournamentDetails.value?.finished) {
+        showMessage("error", "Impossible de modifier un tournoi terminé");
+        showDeleteTeamsDialog.value = false;
+        return;
+      }
+
       // Appeler le service pour supprimer les équipes
-      await tournamentService.deleteAllTeams(selectedTournament.value);
+      await tournamentService.deleteAllTeams(tournamentId);
 
       // Mettre à jour l'état local
       teams.value = [];
-      unassignedPlayers.value = [];
       viewMode.value = "overview";
 
       // Si on a des détails du tournoi, mettre à jour les joueurs non assignés
@@ -1039,13 +1108,18 @@ const deleteAllTeams = async () => {
 
       // Fermer la boîte de dialogue et afficher un message de succès
       showDeleteTeamsDialog.value = false;
-      success.value = "Toutes les équipes ont été supprimées avec succès";
-      setTimeout(() => {
-        success.value = null;
-      }, 3000);
+      showMessage(
+        "success",
+        "Toutes les équipes ont été supprimées avec succès"
+      );
     } catch (error) {
       console.error("Erreur lors de la suppression des équipes:", error);
+      showMessage("error", "Erreur lors de la suppression des équipes");
+      showDeleteTeamsDialog.value = false;
     }
+  } else {
+    showMessage("error", "Aucun tournoi sélectionné");
+    showDeleteTeamsDialog.value = false;
   }
 };
 
@@ -1094,12 +1168,16 @@ const getTeamBalanceClass = (team: Team): string => {
  * Sauvegarde les équipes sans les finaliser
  */
 const saveTeams = async () => {
-  if (selectedTournament.value && teams.value.length > 0) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (
+    tournamentId &&
+    teams.value.length > 0 &&
+    !selectedTournamentDetails.value?.finished
+  ) {
     try {
-      await tournamentService.updateTournamentTeams(
-        selectedTournament.value,
-        teams.value
-      );
+      await tournamentService.updateTournamentTeams(tournamentId, teams.value);
       showMessage("success", "Équipes enregistrées avec succès !");
     } catch (err) {
       console.error("Erreur lors de l'enregistrement des équipes:", err);
@@ -1108,6 +1186,10 @@ const saveTeams = async () => {
         "Une erreur est survenue lors de l'enregistrement des équipes"
       );
     }
+  } else if (selectedTournamentDetails.value?.finished) {
+    showMessage("error", "Impossible de modifier un tournoi terminé");
+  } else if (!tournamentId) {
+    showMessage("error", "Aucun tournoi sélectionné");
   } else {
     showMessage(
       "error",
@@ -1120,6 +1202,10 @@ const saveTeams = async () => {
  * Affiche le dialogue de confirmation pour finaliser les équipes
  */
 const saveTeamDefinitive = async () => {
+  if (selectedTournamentDetails.value?.finished) {
+    showMessage("error", "Ce tournoi est déjà terminé");
+    return;
+  }
   showConfirmationDialog.value = true;
 };
 
@@ -1129,17 +1215,17 @@ const saveTeamDefinitive = async () => {
 const confirmTeamDefinitive = async () => {
   showConfirmationDialog.value = false;
 
-  if (selectedTournament.value && selectedTournamentDetails.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId && selectedTournamentDetails.value) {
     try {
       // 1. Mettre à jour les équipes
-      await tournamentService.updateTournamentTeams(
-        selectedTournament.value,
-        teams.value
-      );
+      await tournamentService.updateTournamentTeams(tournamentId, teams.value);
 
       // 2. Marquer le tournoi comme terminé
       if (selectedTournamentDetails.value) {
-        await tournamentService.updateTournament(selectedTournament.value, {
+        await tournamentService.updateTournament(tournamentId, {
           ...selectedTournamentDetails.value,
           finished: true,
           game: selectedTournamentDetails.value.game,
@@ -1160,6 +1246,8 @@ const confirmTeamDefinitive = async () => {
       );
       console.error("Erreur lors de la validation des équipes:", err);
     }
+  } else if (!tournamentId) {
+    showMessage("error", "Aucun tournoi sélectionné");
   } else {
     showMessage(
       "error",
@@ -1306,9 +1394,38 @@ const showMessage = (type: "success" | "error", message: string) => {
   }, 5000);
 };
 
-// Charger les jeux au montage du composant
+// Observer les changements sur les propriétés
+watch(
+  () => props.selectedGame,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentsByGame(newValue);
+    }
+  }
+);
+
+watch(
+  () => props.selectedTournament,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentDetails(newValue);
+    }
+  }
+);
+
+// Charger les données initiales
 onMounted(() => {
   fetchGames();
+
+  // Si un jeu est déjà sélectionné depuis les props
+  if (props.selectedGame) {
+    fetchTournamentsByGame(props.selectedGame);
+
+    // Si un tournoi est déjà sélectionné depuis les props
+    if (props.selectedTournament) {
+      fetchTournamentDetails(props.selectedTournament);
+    }
+  }
 });
 </script>
 

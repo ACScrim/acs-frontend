@@ -7,102 +7,64 @@
 
     <!-- Sélection du jeu et du tournoi -->
     <div
-      class="flex flex-col gap-6 mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
+      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
     >
-      <div class="w-full mb-4">
-        <label
-          for="game"
-          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
+      <div class="flex items-center gap-3 mb-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-cyan-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-            />
-          </svg>
-          Sélectionner un jeu
-        </label>
-        <div class="relative w-full">
-          <select
-            id="game"
-            v-model="selectedGame"
-            @change="fetchTournamentsByGame"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-          >
-            <option value="" disabled selected>Choisissez un jeu</option>
-            <option v-for="game in games" :key="game._id" :value="game._id">
-              {{ game.name }}
-            </option>
-          </select>
-          <div
-            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
-        </div>
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <h2 class="font-['Orbitron'] font-semibold text-lg text-cyan-400">
+          Tournoi sélectionné
+        </h2>
       </div>
 
-      <div class="w-full mb-4" v-if="tournaments.length > 0">
-        <label
-          for="tournament"
-          class="flex items-center text-lg text-cyan-500 mb-2 font-['Orbitron'] font-semibold"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Sélectionner un tournoi
-        </label>
-        <div class="relative w-full">
-          <select
-            id="tournament"
-            v-model="selectedTournament"
-            @change="fetchTournamentDetails"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-['Orbitron'] appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-          >
-            <option value="" disabled selected>Choisissez un tournoi</option>
-            <option
-              v-for="tournament in tournaments"
-              :key="tournament._id"
-              :value="tournament._id"
-            >
-              {{ tournament.name }}
-            </option>
-          </select>
-          <div
-            class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
-        </div>
-      </div>
-
+      <!-- Affichage du tournoi ou message si aucun tournoi sélectionné -->
       <div
-        v-else-if="selectedGame && tournaments.length === 0"
-        class="flex flex-col items-center justify-center p-6 bg-gray-800/80 border border-red-500/30 rounded-xl shadow-md text-center gap-3"
+        v-if="selectedTournamentDetails"
+        class="bg-gray-900/60 p-4 rounded-lg border border-cyan-500/30"
       >
-        <div class="text-center">
-          <h3 class="text-xl font-['Orbitron'] font-semibold text-red-400 mb-1">
-            Aucun tournoi disponible
-          </h3>
-          <p class="text-white/70 font-['Orbitron'] text-sm">
-            Il n'existe pas de tournoi non finalisé pour ce jeu
-          </p>
-        </div>
-        <button
-          @click="selectedGame = ''"
-          class="cyberpunk-btn-gray mt-3 py-2 px-4 text-sm font-['Orbitron'] rounded-lg"
+        <p class="text-white mb-2">
+          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
+            >Nom:</span
+          >
+          {{ selectedTournamentDetails.name }}
+        </p>
+        <p class="text-white mb-2" v-if="selectedTournamentDetails.date">
+          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
+            >Date:</span
+          >
+          {{ formatLocalDate(selectedTournamentDetails.date) }}
+        </p>
+        <p
+          v-if="selectedTournamentDetails.discordChannelName"
+          class="text-white"
         >
-          <span class="relative z-10">Choisir un autre jeu</span>
-        </button>
+          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
+            >Discord:</span
+          >
+          {{ selectedTournamentDetails.discordChannelName }}
+        </p>
+        <p
+          v-if="selectedTournamentDetails.finished"
+          class="mt-2 text-sm px-3 py-1 bg-emerald-900/20 border border-emerald-500/50 rounded-full inline-block text-emerald-300"
+        >
+          <span class="font-['Orbitron']">Tournoi terminé</span>
+        </p>
+      </div>
+      <div
+        v-else
+        class="bg-gray-900/60 p-4 rounded-lg border border-red-500/30 text-gray-400 italic"
+      >
+        Veuillez sélectionner un tournoi dans le menu en haut de la page
       </div>
     </div>
 
@@ -433,12 +395,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import type { Game, Tournament, Team, Player } from "../../types";
 import Toast from "@/shared/Toast.vue";
+
+/**
+ * Définir les props et les émissions
+ */
+const props = defineProps<{
+  selectedGame: string;
+  selectedTournament: string;
+}>();
 
 /**
  * =============================================================
@@ -451,12 +421,6 @@ const games = ref<Game[]>([]);
 
 /** Liste des tournois pour le jeu sélectionné */
 const tournaments = ref<Tournament[]>([]);
-
-/** ID du jeu sélectionné */
-const selectedGame = ref("");
-
-/** ID du tournoi sélectionné */
-const selectedTournament = ref("");
 
 /** Détails du tournoi sélectionné */
 const selectedTournamentDetails = ref<
@@ -497,11 +461,10 @@ const fetchGames = async () => {
  * Récupère les tournois pour un jeu sélectionné
  * Appelée quand l'utilisateur change de jeu dans le select
  */
-const fetchTournamentsByGame = async () => {
-  if (selectedGame.value) {
-    tournaments.value = await tournamentService.getTournamentsByGame(
-      selectedGame.value
-    );
+const fetchTournamentsByGame = async (gameId: string) => {
+  if (gameId) {
+    const allTournaments = await tournamentService.getTournamentsByGame(gameId);
+    tournaments.value = allTournaments;
   }
 };
 
@@ -509,10 +472,11 @@ const fetchTournamentsByGame = async () => {
  * Récupère les détails complets d'un tournoi sélectionné
  * Appelée quand l'utilisateur sélectionne un tournoi dans le select
  */
-const fetchTournamentDetails = async () => {
-  if (selectedTournament.value) {
+const fetchTournamentDetails = async (tournamentId?: string) => {
+  const id = tournamentId || props.selectedTournament;
+  if (id) {
     selectedTournamentDetails.value = await tournamentService.getTournamentById(
-      selectedTournament.value
+      id
     );
     // Si des équipes existent déjà, les afficher
     if (selectedTournamentDetails.value.teams) {
@@ -539,19 +503,15 @@ const initTeamScores = () => {
 
 /**
  * Met à jour le classement d'une équipe
- *
- * @param teamId - Identifiant de l'équipe à mettre à jour
- * @param ranking - Nouveau classement à assigner (1 pour premier, etc.)
  */
 const setRanking = async (teamId: string, ranking: number) => {
-  if (selectedTournament.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId) {
     try {
       // Appel à l'API
-      await tournamentService.updateTeamRanking(
-        selectedTournament.value,
-        teamId,
-        ranking
-      );
+      await tournamentService.updateTeamRanking(tournamentId, teamId, ranking);
 
       // Mise à jour immédiate dans l'interface
       const teamToUpdate = teams.value.find((t) => t._id === teamId);
@@ -567,18 +527,22 @@ const setRanking = async (teamId: string, ranking: number) => {
       console.error("Erreur lors de la mise à jour du classement:", error);
       showMessage("error", "Erreur lors de la mise à jour du classement");
     }
+  } else {
+    showMessage("error", "Aucun tournoi sélectionné");
   }
 };
-// Méthode pour mettre à jour le score
+
+/**
+ * Met à jour le score d'une équipe
+ */
 const updateScore = async (teamId: string, score: number) => {
-  if (selectedTournament.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId) {
     try {
       // Appel à l'API
-      await tournamentService.updateTeamScore(
-        selectedTournament.value,
-        teamId,
-        score
-      );
+      await tournamentService.updateTeamScore(tournamentId, teamId, score);
 
       // Mettre à jour localement
       const teamToUpdate = teams.value.find((t) => t._id === teamId);
@@ -597,6 +561,8 @@ const updateScore = async (teamId: string, score: number) => {
       console.error("Erreur lors de la mise à jour du score:", error);
       showMessage("error", "Erreur lors de la mise à jour du score");
     }
+  } else {
+    showMessage("error", "Aucun tournoi sélectionné");
   }
 };
 
@@ -609,15 +575,15 @@ const confirmUnfinishTournament = () => {
 
 /**
  * Annule la finalisation d'un tournoi
- * Appelée après confirmation par l'utilisateur
  */
 const unfinishTournament = async () => {
-  if (selectedTournament.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId) {
     try {
       // Utiliser la fonction pour annuler la finalisation du tournoi
-      await tournamentService.unmarkTournamentAsFinished(
-        selectedTournament.value
-      );
+      await tournamentService.unmarkTournamentAsFinished(tournamentId);
 
       // Fermer la boîte de dialogue et rafraîchir les détails
       showUnfinishConfirmationDialog.value = false;
@@ -636,6 +602,8 @@ const unfinishTournament = async () => {
         "Erreur lors de l'annulation de la finalisation du tournoi"
       );
     }
+  } else {
+    showMessage("error", "Aucun tournoi sélectionné");
   }
 };
 
@@ -785,16 +753,16 @@ const confirmFinishTournament = () => {
 };
 
 /**
- * Termine le tournoi en considérant toutes les équipes de rang 1 comme gagnantes
- * Appelée après confirmation par l'utilisateur
+ * Termine le tournoi après confirmation
  */
 const finishTournament = async () => {
-  if (selectedTournament.value) {
+  // Utiliser props.selectedTournament au lieu de selectedTournament.value
+  const tournamentId = props.selectedTournament;
+
+  if (tournamentId) {
     try {
       // Utiliser la fonction spécialisée pour marquer le tournoi comme terminé
-      await tournamentService.markTournamentAsFinished(
-        selectedTournament.value
-      );
+      await tournamentService.markTournamentAsFinished(tournamentId);
 
       // Fermer la boîte de dialogue et rafraîchir les détails
       showConfirmationDialog.value = false;
@@ -810,6 +778,8 @@ const finishTournament = async () => {
       console.error("Erreur lors de la finalisation du tournoi:", error);
       showMessage("error", "Erreur lors de la finalisation du tournoi");
     }
+  } else {
+    showMessage("error", "Aucun tournoi sélectionné");
   }
 };
 
@@ -846,11 +816,40 @@ const showMessage = (type: "success" | "error", message: string) => {
  * =============================================================
  */
 
+// Observer les changements sur les propriétés
+watch(
+  () => props.selectedGame,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentsByGame(newValue);
+    }
+  }
+);
+
+watch(
+  () => props.selectedTournament,
+  async (newValue) => {
+    if (newValue) {
+      await fetchTournamentDetails(newValue);
+    }
+  }
+);
+
 /**
  * Récupère les jeux au chargement initial du composant
  */
 onMounted(() => {
   fetchGames();
+
+  // Si un jeu est déjà sélectionné depuis les props
+  if (props.selectedGame) {
+    fetchTournamentsByGame(props.selectedGame);
+
+    // Si un tournoi est déjà sélectionné depuis les props
+    if (props.selectedTournament) {
+      fetchTournamentDetails(props.selectedTournament);
+    }
+  }
 });
 </script>
 
