@@ -623,6 +623,39 @@
                 <span class="truncate" :title="player.username">{{
                   player.username
                 }}</span>
+                <!-- Icône de check-in si le joueur a fait son check-in -->
+                <div
+                  v-if="player._id && tournament?.checkIns?.[player._id]"
+                  class="ml-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-green-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <!-- Icône d'attente si le joueur n'a pas fait son check-in -->
+                <div v-else-if="isCheckInAvailable" class="ml-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-yellow-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
               </li>
             </ul>
             <p
@@ -924,6 +957,40 @@
                     <span class="text-purple-100 text-sm font-orbitron">{{
                       player.username
                     }}</span>
+                    <!-- Icône de check-in si le joueur a fait son check-in -->
+                    <div
+                      v-if="player._id && tournament?.checkIns?.[player._id]"
+                      class="ml-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-green-500"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+
+                    <!-- Icône d'attente si le joueur n'a pas fait son check-in -->
+                    <div v-else-if="isCheckInAvailable" class="ml-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-yellow-500"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1366,10 +1433,6 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
       checkedIn
     );
 
-    // Si le check-in est annulé, supprimer l'entrée du localStorage
-    if (!checkedIn) {
-      localStorage.removeItem(`checkin-reminded-${tournamentId}`);
-    }
     showMessage(
       "success",
       checkedIn ? "Check-in confirmé !" : "Check-in annulé."
