@@ -22,47 +22,42 @@
         Sélection du tournoi
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Sélection du jeu -->
-        <div class="w-full">
-          <label
-            for="globalGameSelect"
-            class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
+      <div class="grid grid-cols-1 gap-6">
+        <!-- Bouton pour afficher/masquer les tournois terminés -->
+        <div class="flex justify-end mb-2">
+          <button
+            @click="showFinishedTournaments = !showFinishedTournaments"
+            :class="[
+              'flex items-center px-4 py-2 rounded-md text-sm font-orbitron transition-all',
+              showFinishedTournaments
+                ? 'bg-purple-900/50 text-purple-300 border border-purple-500/50 hover:bg-purple-800/50'
+                : 'bg-gray-800/50 text-gray-300 border border-gray-700/50 hover:bg-gray-700/50',
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 mr-2"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
               <path
-                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+                fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
               />
             </svg>
-            Sélectionner un jeu
-          </label>
-          <div class="relative w-full">
-            <select
-              id="globalGameSelect"
-              v-model="selectedGame"
-              @change="handleGameChange"
-              class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-            >
-              <option value="" disabled selected>Choisissez un jeu</option>
-              <option v-for="game in games" :key="game._id" :value="game._id">
-                {{ game.name }}
-              </option>
-            </select>
-            <div
-              class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-            ></div>
-          </div>
+            {{
+              showFinishedTournaments
+                ? "Masquer les tournois terminés"
+                : "Afficher les tournois terminés"
+            }}
+          </button>
         </div>
 
-        <!-- Sélection du tournoi -->
-        <div class="w-full" v-if="tournaments.length > 0">
+        <!-- Sélection directe du tournoi (tournois actifs) -->
+        <div v-if="!showFinishedTournaments" class="w-full">
           <label
-            for="globalTournamentSelect"
+            for="activeTournamentSelect"
             class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
           >
             <svg
@@ -77,50 +72,153 @@
                 clip-rule="evenodd"
               />
             </svg>
-            Sélectionner un tournoi
+            Sélectionner un tournoi actif
           </label>
           <div class="relative w-full">
             <select
-              id="globalTournamentSelect"
+              id="activeTournamentSelect"
               v-model="selectedTournament"
               @change="handleTournamentChange"
               class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             >
-              <option value="" disabled selected>Choisissez un tournoi</option>
+              <option value="" disabled selected>
+                Choisissez un tournoi actif
+              </option>
               <option
-                v-for="tournament in tournaments"
+                v-for="tournament in activeTournaments"
                 :key="tournament._id"
                 :value="tournament._id"
-                :class="{ 'text-gray-400': tournament.finished }"
               >
                 {{ tournament.name }}
-                {{ tournament.finished ? "(terminé)" : "" }}
               </option>
             </select>
             <div
               class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
             ></div>
           </div>
+
+          <!-- Message si aucun tournoi actif disponible -->
+          <div
+            v-if="activeTournaments.length === 0"
+            class="mt-4 flex items-center gap-2 p-4 bg-gray-800/80 border border-amber-500/30 rounded-lg shadow-md text-white/80"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-amber-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>Aucun tournoi actif disponible actuellement.</span>
+          </div>
         </div>
 
-        <!-- Message si aucun tournoi disponible -->
-        <div
-          v-else-if="selectedGame && tournaments.length === 0"
-          class="md:col-span-2 flex items-center gap-2 p-4 bg-gray-800/80 border border-red-500/30 rounded-lg shadow-md text-white/80"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-red-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+        <!-- Sélection pour les tournois terminés -->
+        <div v-if="showFinishedTournaments" class="space-y-6">
+          <!-- Sélection du jeu pour les tournois terminés -->
+          <div class="w-full">
+            <label
+              for="globalGameSelect"
+              class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+                />
+              </svg>
+              Sélectionner un jeu
+            </label>
+            <div class="relative w-full">
+              <select
+                id="globalGameSelect"
+                v-model="selectedGame"
+                @change="handleGameChange"
+                class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+              >
+                <option value="" disabled selected>Choisissez un jeu</option>
+                <option v-for="game in games" :key="game._id" :value="game._id">
+                  {{ game.name }}
+                </option>
+              </select>
+              <div
+                class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Sélection du tournoi terminé -->
+          <div class="w-full" v-if="finishedTournaments.length > 0">
+            <label
+              for="finishedTournamentSelect"
+              class="flex items-center text-lg text-cyan-500 mb-2 font-orbitron font-semibold"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Sélectionner un tournoi terminé
+            </label>
+            <div class="relative w-full">
+              <select
+                id="finishedTournamentSelect"
+                v-model="selectedTournament"
+                @change="handleTournamentChange"
+                class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+              >
+                <option value="" disabled selected>
+                  Choisissez un tournoi terminé
+                </option>
+                <option
+                  v-for="tournament in finishedTournaments"
+                  :key="tournament._id"
+                  :value="tournament._id"
+                >
+                  {{ tournament.name }}
+                </option>
+              </select>
+              <div
+                class="absolute top-1/2 right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Message si aucun tournoi terminé disponible -->
+          <div
+            v-else-if="selectedGame && finishedTournaments.length === 0"
+            class="flex items-center gap-2 p-4 bg-gray-800/80 border border-red-500/30 rounded-lg shadow-md text-white/80"
           >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Aucun tournoi disponible pour ce jeu.</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-red-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>Aucun tournoi terminé disponible pour ce jeu.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -297,7 +395,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import CreationTournoiForm from "../../components/gestion-tournois/CreationTournoiForm.vue";
 import GestionEquipe from "../../components/gestion-tournois/GestionEquipe.vue";
 import EndTournoi from "../../components/gestion-tournois/EndTournoi.vue";
@@ -310,7 +408,10 @@ import type { Game, Tournament } from "../../types";
 //-------------------------------------------------------
 // Gestion des données
 const games = ref<Game[]>([]);
-const tournaments = ref<Tournament[]>([]);
+const allTournaments = ref<Tournament[]>([]);
+
+// Option pour afficher les tournois terminés
+const showFinishedTournaments = ref(false);
 
 /**
  * Gestion de la navigation par onglets
@@ -330,6 +431,24 @@ const selectedGame = ref("");
 const selectedTournament = ref("");
 
 //-------------------------------------------------------
+// SECTION: Propriétés calculées
+//-------------------------------------------------------
+
+/**
+ * Filtre les tournois non terminés
+ */
+const activeTournaments = computed(() => {
+  return allTournaments.value.filter((tournament) => !tournament.finished);
+});
+
+/**
+ * Filtre les tournois terminés
+ */
+const finishedTournaments = computed(() => {
+  return allTournaments.value.filter((tournament) => tournament.finished);
+});
+
+//-------------------------------------------------------
 // SECTION: Chargement des données
 //-------------------------------------------------------
 
@@ -345,15 +464,24 @@ const fetchGames = async () => {
 };
 
 /**
+ * Charge tous les tournois disponibles (sans filtrage par jeu)
+ */
+const fetchAllTournaments = async () => {
+  try {
+    allTournaments.value = await tournamentService.getTournaments();
+  } catch (error) {
+    console.error("Erreur lors du chargement des tournois:", error);
+  }
+};
+
+/**
  * Charge les tournois pour le jeu sélectionné
  */
 const fetchTournamentsByGame = async (gameId: string) => {
   try {
     if (!gameId) return;
 
-    const allTournaments = await tournamentService.getTournamentsByGame(gameId);
-    // Filtrer pour n'inclure que les tournois non terminés
-    tournaments.value = allTournaments;
+    allTournaments.value = await tournamentService.getTournamentsByGame(gameId);
   } catch (error) {
     console.error("Erreur lors du chargement des tournois:", error);
   }
@@ -410,9 +538,26 @@ const tabIndicatorStyle = computed(() => {
   };
 });
 
+/**
+ * Surveille les changements sur showFinishedTournaments et réinitialise les sélections
+ * lorsqu'on bascule entre les modes d'affichage
+ */
+watch(showFinishedTournaments, (newValue) => {
+  // Réinitialiser les sélections
+  selectedTournament.value = "";
+
+  // Si on masque les tournois terminés, réinitialiser la sélection de jeu
+  // et recharger tous les tournois
+  if (!newValue) {
+    selectedGame.value = "";
+    fetchAllTournaments();
+  }
+});
+
 // Charger les jeux au montage du composant
 onMounted(() => {
   fetchGames();
+  fetchAllTournaments();
 });
 </script>
 
