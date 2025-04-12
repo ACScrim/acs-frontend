@@ -316,7 +316,7 @@
 
             <!-- Groupe de boutons pour check-in + désinscription -->
             <div
-              v-else-if="isUserRegistered && isWithin24Hours"
+              v-else-if="isUserRegistered && isCheckInAvailable"
               class="flex flex-col space-y-3"
             >
               <!-- Bouton de check-in -->
@@ -368,7 +368,7 @@
 
             <!-- Bouton de désinscription standard (cas non-check-in) -->
             <button
-              v-else-if="isUserRegistered && !isWithin24Hours"
+              v-else-if="isUserRegistered && !isCheckInAvailable"
               @click="openRegistrationPopup(tournament, 'unregister')"
               class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
@@ -1078,6 +1078,7 @@ const currentPlayerId = computed(() => userStore.playerId);
  * Vérifie si l'utilisateur est inscrit au tournoi actuel
  */
 const isUserRegistered = computed(() => {
+  console.log(tournament.value, user.value);
   if (!user.value || !tournament.value) return false;
   return tournament.value.players.some(
     (player) => player.userId === user.value?._id
@@ -1085,14 +1086,25 @@ const isUserRegistered = computed(() => {
 });
 
 /**
- * Vérifie si on est dans les 24h avant le tournoi (période de check-in)
+ * Vérifie si le check-in est actuellement possible en fonction de discordReminderDate
  */
-const isWithin24Hours = computed(() => {
+const isCheckInAvailable = computed(() => {
   if (!tournament.value) return false;
+
   const tournamentDate = new Date(tournament.value.date);
   const now = new Date();
-  const diff = tournamentDate.getTime() - now.getTime();
-  return diff > 0 && diff <= 24 * 60 * 60 * 1000;
+
+  // Si la date discordReminderDate est définie, l'utiliser comme début de la période de check-in
+  if (tournament.value.discordReminderDate) {
+    const reminderDate = new Date(tournament.value.discordReminderDate);
+
+    // Check-in disponible si on est après la date de rappel et avant la date du tournoi
+    return now >= reminderDate && now < tournamentDate;
+  } else {
+    // Comportement par défaut: 24h avant le tournoi si discordReminderDate n'est pas défini
+    const diff = tournamentDate.getTime() - now.getTime();
+    return diff > 0 && diff <= 24 * 60 * 60 * 1000;
+  }
 });
 
 /**

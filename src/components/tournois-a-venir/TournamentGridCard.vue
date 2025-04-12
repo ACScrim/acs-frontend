@@ -179,7 +179,7 @@
         </button>
 
         <button
-          v-else-if="isWithin24Hours"
+          v-else-if="isCheckInAvailable && isUserRegistered"
           @click="$emit('check-in', tournament._id, !isCheckedIn)"
           :class="{
             'cyberpunk-btn-green': isCheckedIn,
@@ -289,12 +289,22 @@ const isUserRegistered = computed(() => {
     : false;
 });
 
-// Vérifier si on est dans les 24h avant le tournoi
-const isWithin24Hours = computed(() => {
+// Remplacer la propriété calculée isWithin24Hours par isCheckInAvailable
+const isCheckInAvailable = computed(() => {
   const tournamentDate = new Date(props.tournament.date);
   const now = new Date();
-  const diff = tournamentDate.getTime() - now.getTime();
-  return diff > 0 && diff <= 24 * 60 * 60 * 1000;
+
+  // Si la date discordReminderDate est définie, l'utiliser comme début de la période de check-in
+  if (props.tournament.discordReminderDate) {
+    const reminderDate = new Date(props.tournament.discordReminderDate);
+
+    // Check-in disponible si on est après la date de rappel et avant la date du tournoi
+    return now >= reminderDate && now < tournamentDate;
+  } else {
+    // Comportement par défaut: 24h avant le tournoi si discordReminderDate n'est pas défini
+    const diff = tournamentDate.getTime() - now.getTime();
+    return diff > 0 && diff <= 24 * 60 * 60 * 1000;
+  }
 });
 
 // Formatage de la date
