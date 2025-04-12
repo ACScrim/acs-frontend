@@ -235,7 +235,7 @@
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
               : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
           ]"
-          @click="activeTab = 'creation'"
+          @click="handleTabChange('creation')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +262,7 @@
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
               : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
           ]"
-          @click="activeTab = 'teams'"
+          @click="handleTabChange('teams')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -287,7 +287,7 @@
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
               : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
           ]"
-          @click="activeTab = 'checkin'"
+          @click="handleTabChange('checkin')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -314,7 +314,7 @@
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-lg shadow-purple-500/30'
               : 'bg-slate-800/70 text-gray-300 border-purple-500/20 hover:bg-slate-700/80 hover:text-white hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20',
           ]"
-          @click="activeTab = 'end'"
+          @click="handleTabChange('end')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -349,47 +349,28 @@
     <div
       class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500 shadow-lg shadow-cyan-500/30 p-6 min-h-[400px]"
     >
-      <transition
-        enter-active-class="transition-all duration-300 ease-out"
-        enter-from-class="opacity-0 translate-x-5"
-        leave-active-class="transition-all duration-300 ease-in"
-        leave-to-class="opacity-0 -translate-x-5"
-        mode="out-in"
-      >
-        <div
-          v-if="activeTab === 'creation'"
-          key="creation"
-          class="animate-fadeIn"
-        >
-          <CreationTournoiForm />
-        </div>
-        <div
-          v-else-if="activeTab === 'teams'"
-          key="teams"
-          class="animate-fadeIn"
-        >
-          <GestionEquipe
-            :selectedGame="selectedGame"
-            :selectedTournament="selectedTournament"
-          />
-        </div>
-        <div
-          v-else-if="activeTab === 'checkin'"
-          key="checkin"
-          class="animate-fadeIn"
-        >
-          <VoirCheckIn
-            :selectedGame="selectedGame"
-            :selectedTournament="selectedTournament"
-          />
-        </div>
-        <div v-else-if="activeTab === 'end'" key="end" class="animate-fadeIn">
-          <EndTournoi
-            :selectedGame="selectedGame"
-            :selectedTournament="selectedTournament"
-          />
-        </div>
-      </transition>
+      <!-- Remplacer la transition et le v-if/v-else-if par des v-show simples -->
+      <div v-show="activeTab === 'creation'" class="animate-fadeIn">
+        <CreationTournoiForm />
+      </div>
+      <div v-show="activeTab === 'teams'" class="animate-fadeIn">
+        <GestionEquipe
+          :selectedGame="selectedGame"
+          :selectedTournament="selectedTournament"
+        />
+      </div>
+      <div v-show="activeTab === 'checkin'" class="animate-fadeIn">
+        <VoirCheckIn
+          :selectedGame="selectedGame"
+          :selectedTournament="selectedTournament"
+        />
+      </div>
+      <div v-show="activeTab === 'end'" class="animate-fadeIn">
+        <EndTournoi
+          :selectedGame="selectedGame"
+          :selectedTournament="selectedTournament"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -434,6 +415,13 @@ const selectedTournament = ref("");
 // SECTION: Propriétés calculées
 //-------------------------------------------------------
 
+const handleTabChange = (newTab: string) => {
+  // Définir le nouvel onglet actif
+  activeTab.value = newTab;
+
+  // Pas besoin de réinitialiser selectedGame et selectedTournament
+  // Les conserver pour maintenir la sélection entre les changements d'onglets
+};
 /**
  * Filtre les tournois non terminés
  */
