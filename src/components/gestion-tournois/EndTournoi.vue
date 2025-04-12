@@ -69,48 +69,8 @@
     </div>
 
     <!-- Détails du tournoi -->
-    <div
-      v-if="selectedTournamentDetails"
-      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-purple-500/30 shadow-md shadow-purple-500/20"
-    >
-      <div class="flex items-center gap-3 mb-6">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 text-purple-500"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-          />
-        </svg>
-        <h2 class="font-['Orbitron'] font-bold text-2xl text-purple-400">
-          Détails du tournoi
-        </h2>
-      </div>
-
+    <div v-if="selectedTournamentDetails">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-        <div class="bg-gray-900/60 p-4 rounded-lg border border-purple-500/30">
-          <p class="text-white mb-2 flex items-center gap-2">
-            <span class="text-purple-400 font-['Orbitron'] font-semibold"
-              >Nom:</span
-            >
-            <span>{{ selectedTournamentDetails.name }}</span>
-          </p>
-          <p class="text-white mb-2 flex items-center gap-2">
-            <span class="text-purple-400 font-['Orbitron'] font-semibold"
-              >Date:</span
-            >
-            <span>{{ formatLocalDate(selectedTournamentDetails.date) }}</span>
-          </p>
-          <p class="text-white flex items-center gap-2">
-            <span class="text-purple-400 font-['Orbitron'] font-semibold"
-              >Discord:</span
-            >
-            <span>{{ selectedTournamentDetails.discordChannelName }}</span>
-          </p>
-        </div>
-
         <!-- Statut du tournoi -->
         <div
           v-if="selectedTournamentDetails.finished"
