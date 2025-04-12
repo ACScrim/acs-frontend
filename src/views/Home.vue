@@ -540,6 +540,17 @@
         </div>
       </div>
     </div>
+    <CheckInReminderModal
+      v-if="showCheckInReminder"
+      :show="showCheckInReminder"
+      :tournament="checkInTournament"
+      :is-checked-in="isCheckedIn"
+      @close="closeCheckInReminder"
+      @check-in-updated="handleCheckInUpdate"
+      @show-toast="handleShowToast"
+    />
+
+    <Toast v-if="toastMessage" :type="toastType" :message="toastMessage" />
   </div>
 </template>
 
@@ -553,10 +564,23 @@ import type { Announcement } from "../types";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import type { User } from "../types/User";
 import type { Tournament } from "../types";
+import CheckInReminderModal from "@/components/CheckInReminderModal.vue";
+import playerService from "../services/playerService";
+import Toast from "@/shared/Toast.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant
 //-------------------------------------------------------
+
+// Nouveaux états pour la modale de check-in
+const showCheckInReminder = ref(false);
+const checkInTournament = ref<Tournament | null>(null);
+const isCheckedIn = ref(false);
+const isUserLoggedIn = computed(() => !!userStore.user);
+
+// États pour les toasts
+const toastMessage = ref("");
+const toastType = ref<"success" | "error">("success");
 
 /**
  * Accès au store utilisateur et à la session active
@@ -632,6 +656,122 @@ const podiumTeams = computed(() => {
 
   return teams;
 });
+
+// Gestion de l'affichage du toast
+const handleShowToast = (toast: {
+  type: "success" | "error";
+  message: string;
+}) => {
+  toastType.value = toast.type;
+  toastMessage.value = toast.message;
+
+  // Effacer le toast après 3 secondes
+  setTimeout(() => {
+    toastMessage.value = "";
+  }, 3000);
+};
+
+/**
+ * Vérifie les tournois qui nécessitent un check-in
+ * et affiche la modale si nécessaire
+ */
+const checkForUpcomingTournaments = async () => {
+  // Ne vérifier que si l'utilisateur est connecté
+  if (!isUserLoggedIn.value) return;
+
+  try {
+    // Récupérer tous les tournois
+    const allTournaments = await tournamentService.getTournaments();
+
+    // Obtenir la date actuelle
+    const now = new Date();
+
+    // Filtrer les tournois à venir nécessitant un check-in
+    const upcomingTournaments = allTournaments.filter((tournament) => {
+      // Ne pas considérer les tournois terminés
+      if (tournament.finished) return false;
+
+      const tournamentDate = new Date(tournament.date);
+
+      // Vérifier si l'utilisateur est inscrit à ce tournoi
+      const isUserRegistered = tournament.players.some(
+        (player) => userStore.user && player.userId === userStore.user._id
+      );
+
+      if (!isUserRegistered) return false;
+
+      // Vérifier si le tournoi est dans les prochaines 48h
+      const timeDiff = tournamentDate.getTime() - now.getTime();
+      const isWithin48Hours = timeDiff > 0 && timeDiff <= 48 * 60 * 60 * 1000;
+
+      // Ou vérifier si le tournoi a une date de rappel définie et si cette date est passée
+      let isAfterReminderDate = false;
+      if (tournament.discordReminderDate) {
+        const reminderDate = new Date(tournament.discordReminderDate);
+        isAfterReminderDate = now >= reminderDate;
+      }
+
+      return isWithin48Hours || isAfterReminderDate;
+    });
+
+    // S'il y a des tournois imminents, vérifier l'état de check-in
+    if (upcomingTournaments.length > 0) {
+      // Trier par date (le plus proche d'abord)
+      upcomingTournaments.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+
+      // Prendre le tournoi le plus proche
+      const nextTournament = upcomingTournaments[0];
+
+      // Vérifier si on a déjà rappelé à l'utilisateur ce tournoi récemment
+      const dismissedUntil = localStorage.getItem(
+        `checkin-reminder-dismissed-${nextTournament._id}`
+      );
+      const alreadyReminded = localStorage.getItem(
+        `checkin-reminded-${nextTournament._id}`
+      );
+
+      // Si l'utilisateur a fermé la modale il y a moins d'1 heure, ne pas afficher
+      if (dismissedUntil && parseInt(dismissedUntil) > now.getTime()) {
+        return;
+      }
+
+      // Vérifier si l'utilisateur a déjà fait son check-in
+      const player = userStore.user
+        ? await playerService.getPlayerByIdUser(userStore.user._id)
+        : null;
+      let hasCheckedIn = false;
+
+      if (player && player._id && nextTournament.checkIns) {
+        hasCheckedIn = !!nextTournament.checkIns[player._id];
+      }
+
+      // MODIFICATION ICI: N'afficher la modale que si l'utilisateur n'a PAS fait son check-in
+      if (!hasCheckedIn && !alreadyReminded) {
+        checkInTournament.value = nextTournament;
+        isCheckedIn.value = hasCheckedIn;
+        showCheckInReminder.value = true;
+      }
+    }
+  } catch (error) {
+    console.error("Erreur lors de la vérification des tournois:", error);
+  }
+};
+
+/**
+ * Gère la mise à jour du check-in depuis la modale
+ */
+const handleCheckInUpdate = (checked: boolean) => {
+  isCheckedIn.value = checked;
+};
+
+/**
+ * Ferme la modale de rappel de check-in
+ */
+const closeCheckInReminder = () => {
+  showCheckInReminder.value = false;
+};
 
 //-------------------------------------------------------
 // SECTION: Authentification
@@ -963,6 +1103,9 @@ onMounted(async () => {
   try {
     // Récupération des informations utilisateur depuis le store
     await userStore.fetchUser();
+    if (userStore.user) {
+      await checkForUpcomingTournaments();
+    }
 
     // Récupération des tournois - faire cette opération séparément
     await fetchTournaments();

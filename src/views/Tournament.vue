@@ -1366,6 +1366,10 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
       checkedIn
     );
 
+    // Si le check-in est annulé, supprimer l'entrée du localStorage
+    if (!checkedIn) {
+      localStorage.removeItem(`checkin-reminded-${tournamentId}`);
+    }
     showMessage(
       "success",
       checkedIn ? "Check-in confirmé !" : "Check-in annulé."
