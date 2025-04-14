@@ -620,6 +620,7 @@ const createTournament = async () => {
       discordReminderDate: discordReminder, // Passer en tant qu'objet Date
       privateReminderDate: privateReminder, // Passer en tant qu'objet Date
       discordChannelName: discordChannelName.value,
+      teamsPublished: false,
       description: description.value,
       players: selectedPlayers.value,
       playerCap: playerCap.value,

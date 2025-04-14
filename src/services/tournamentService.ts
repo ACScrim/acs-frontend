@@ -286,6 +286,26 @@ const deleteAllTeams = async (tournamentId: string): Promise<Tournament> => {
   return response.data.tournament;
 };
 
+/**
+ * Publie ou dépublie les équipes d'un tournoi
+ * @param tournamentId - ID du tournoi
+ * @param published - Statut de publication (true = publié, false = non publié)
+ * @returns Tournoi mis à jour avec les équipes publiées ou dépubliées
+ */
+const toggleTeamsPublication = async (
+  tournamentId: string,
+  published: boolean
+): Promise<Tournament> => {
+  const response = await axios.put(
+    `${API_URL}/${tournamentId}/publish-teams`,
+    { published },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data.tournament;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -304,4 +324,5 @@ export default {
   markTournamentAsFinished,
   unmarkTournamentAsFinished,
   deleteAllTeams,
+  toggleTeamsPublication,
 };

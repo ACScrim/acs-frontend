@@ -30,6 +30,7 @@ export interface Tournament {
   waitlistPlayers?: Player[]; // Nouvelle propriété
   playerCap: number; // Nouvelle propriété
   teams?: Team[];
+  teamsPublished: boolean;
   finished: boolean;
   description?: string;
   checkIns?: { [key: string]: boolean };

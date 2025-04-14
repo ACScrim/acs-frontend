@@ -775,6 +775,7 @@
                 selectedTournamentDetails?.finished,
             },
           ]"
+          title="Enregistre la composition actuelle des équipes sans les finaliser ni les publier"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -791,6 +792,53 @@
           <span class="relative z-10">Valider les équipes</span>
         </button>
         <button
+          v-if="teams.length > 0"
+          @click="togglePublication"
+          :disabled="selectedTournamentDetails?.finished"
+          :class="[
+            selectedTournamentDetails?.teamsPublished
+              ? 'cyberpunk-btn-amber'
+              : 'cyberpunk-btn-cyan',
+            'flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
+            {
+              'opacity-50 cursor-not-allowed':
+                selectedTournamentDetails?.finished,
+            },
+          ]"
+          :title="
+            selectedTournamentDetails?.teamsPublished
+              ? 'Masque les équipes aux participants du tournoi'
+              : 'Rend les équipes visibles pour tous les participants du tournoi'
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2 relative z-10"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+              clip-rule="evenodd"
+              v-if="!selectedTournamentDetails?.teamsPublished"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+              clip-rule="evenodd"
+              v-else
+            />
+          </svg>
+          <span class="relative z-10">
+            {{
+              selectedTournamentDetails?.teamsPublished
+                ? "Dépublier les équipes"
+                : "Publier les équipes"
+            }}
+          </span>
+        </button>
+        <button
           @click="saveTeamDefinitive"
           :disabled="selectedTournamentDetails?.finished"
           :class="[
@@ -800,6 +848,7 @@
                 selectedTournamentDetails?.finished,
             },
           ]"
+          title="Finalise définitivement les équipes, crée les canaux Discord et supprime les anciens canaux"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1001,6 +1050,58 @@ const generateTeams = async () => {
     showMessage("error", "Aucun tournoi sélectionné");
   } else {
     showMessage("error", "Paramètres invalides pour la génération d'équipes");
+  }
+};
+
+/**
+ * Publie ou dépublie les équipes du tournoi
+ */
+const togglePublication = async () => {
+  // Vérifier que le tournoi est sélectionné
+  const tournamentId = props.selectedTournament;
+
+  if (!tournamentId) {
+    showMessage("error", "Aucun tournoi sélectionné");
+    return;
+  }
+
+  if (selectedTournamentDetails.value?.finished) {
+    showMessage("error", "Impossible de modifier un tournoi terminé");
+    return;
+  }
+
+  // Récupérer l'état actuel de publication
+  const currentStatus =
+    selectedTournamentDetails.value?.teamsPublished || false;
+
+  // Inverser le statut
+  const newStatus = !currentStatus;
+
+  try {
+    // Appeler l'API pour modifier le statut
+    await tournamentService.toggleTeamsPublication(tournamentId, newStatus);
+
+    // Mettre à jour l'état local
+    if (selectedTournamentDetails.value) {
+      selectedTournamentDetails.value.teamsPublished = newStatus;
+    }
+
+    // Afficher un message de succès
+    showMessage(
+      "success",
+      newStatus
+        ? "Les équipes ont été publiées avec succès"
+        : "Les équipes ont été dépubliées"
+    );
+  } catch (error) {
+    console.error(
+      "Erreur lors de la modification de la publication des équipes:",
+      error
+    );
+    showMessage(
+      "error",
+      "Une erreur est survenue lors de la modification de la publication des équipes"
+    );
   }
 };
 /**

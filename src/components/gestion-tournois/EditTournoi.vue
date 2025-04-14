@@ -814,6 +814,7 @@ const editTournament = async () => {
       description: description.value,
       players: allPlayers, // Envoyer tous les joueurs (actifs + liste d'attente)
       playerCap: playerCap.value,
+      teamsPublished: false,
       finished: false,
       discordReminderDate: new Date(discordReminder || date.value),
       privateReminderDate: new Date(privateReminder || date.value),
