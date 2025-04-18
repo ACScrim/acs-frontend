@@ -339,7 +339,7 @@
     <ConfirmationDialog
       v-if="showConfirmationDialog"
       :title="'Confirmer la fin du tournoi'"
-      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Les résultats seront comptabilisés dans le classement des joueurs.'"
+      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Les résultats seront comptabilisés dans le classement des joueurs. Le rôle sera supprimé du discord.'"
       @confirm="finishTournament"
       @cancel="showConfirmationDialog = false"
     />
