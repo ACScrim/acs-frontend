@@ -73,28 +73,7 @@ const routes = [
     component: () => import("../views/GameProposal.vue"),
     meta: { requiresAuth: false },
   },
-  {
-    path: "/annonces",
-    name: "AnnouncementList",
-    component: () => import("../views/AnnouncementList.vue"),
-  },
-  {
-    path: "/annonces/nouveau",
-    name: "NewAnnouncement",
-    component: () => import("../views/AnnouncementEditor.vue"),
-    meta: { requiresAdmin: true },
-  },
-  {
-    path: "/annonces/:id",
-    name: "AnnouncementDetail",
-    component: () => import("../views/AnnouncementDetail.vue"),
-  },
-  {
-    path: "/annonces/:id/edit",
-    name: "EditAnnouncement",
-    component: () => import("../views/AnnouncementEditor.vue"),
-    meta: { requiresAdmin: true },
-  },
+
   {
     path: "/calendar",
     name: "Calendar",
