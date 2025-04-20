@@ -1,11 +1,23 @@
 <template>
   <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
     <h1
-      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
+      class="text-3xl sm:text-4xl text-white mb-2 neon-text font-audiowide text-center"
       tabindex="0"
     >
       Liste des membres
     </h1>
+
+    <!-- Compteur en dessous du titre -->
+    <div class="cyber-counter-container mb-6">
+      <div class="cyber-counter">
+        <span class="cyber-counter-number">{{
+          memberStore.members.length
+        }}</span>
+        <span class="cyber-counter-label"
+          >membre{{ memberStore.members.length > 1 ? "s" : "" }}</span
+        >
+      </div>
+    </div>
 
     <!-- Recherche accessible -->
     <div class="mb-6 flex justify-center">
@@ -395,6 +407,11 @@ watch(currentSort, () => {
   letter-spacing: 1px;
 }
 
+.neon-text-subtle {
+  text-shadow: 0 0 5px rgba(34, 211, 238, 0.5), 0 0 10px rgba(34, 211, 238, 0.3);
+  letter-spacing: normal;
+}
+
 @media (max-width: 640px) {
   .role-badge {
     padding: 1px 5px;
@@ -499,6 +516,67 @@ watch(currentSort, () => {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.cyber-counter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cyber-counter {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 1rem;
+}
+
+.cyber-counter::before,
+.cyber-counter::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+  width: 60%;
+  left: 20%;
+}
+
+.cyber-counter::before {
+  top: -2px;
+}
+
+.cyber-counter::after {
+  bottom: -2px;
+}
+
+.cyber-counter-number {
+  font-family: "Orbitron", sans-serif;
+  color: #22d3ee;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  text-shadow: 0 0 5px rgba(34, 211, 238, 0.7);
+}
+
+.cyber-counter-label {
+  font-family: "Orbitron", sans-serif;
+  color: #22d3ee;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .cyber-counter {
+    margin-top: 0.5rem;
+  }
+
+  .cyber-counter-number {
+    font-size: 1rem;
+  }
+
+  .cyber-counter-label {
+    font-size: 0.75rem;
   }
 }
 </style>
