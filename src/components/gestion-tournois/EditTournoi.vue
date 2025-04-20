@@ -572,7 +572,7 @@
 
 <script setup lang="ts">
 // Script inchangé
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import Toast from "@/shared/Toast.vue";
 import tournamentService from "../../services/tournamentService";
@@ -618,38 +618,26 @@ const fetchTournaments = async () => {
   }
 };
 
-// Ajouter cette fonction pour mettre à jour automatiquement les dates de rappel
-const updateReminderDates = () => {
-  if (!date.value) return;
-
-  // Convertir la date du tournoi en objet Date
-  const tournamentDate = new Date(date.value);
-
-  // Calculer les dates par défaut (2 jours avant pour Discord, 1 jour avant pour les messages privés)
-  const discordDate = new Date(tournamentDate);
-  discordDate.setDate(tournamentDate.getDate() - 2);
-  discordDate.setHours(12, 0, 0, 0);
-
-  const privateDate = new Date(tournamentDate);
-  privateDate.setDate(tournamentDate.getDate() - 1);
-  privateDate.setHours(12, 0, 0, 0);
-
-  // Mettre à jour les champs date-time
-  discordReminderDate.value = formatDateForInput(discordDate);
-  privateReminderDate.value = formatDateForInput(privateDate);
-};
 // Format d'une date pour l'input datetime-local
 const formatDateForInput = (date: Date | string): string => {
+  // Vous avez une date en UTC, vous voulez l'afficher en local
+  // Convertir en objet Date
   const d = date instanceof Date ? date : new Date(date);
 
-  // Format YYYY-MM-DDTHH:MM requis par l'input datetime-local
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const hours = String(d.getHours()).padStart(2, "0");
-  const minutes = String(d.getMinutes()).padStart(2, "0");
+  // Vérifier si la date est valide
+  if (isNaN(d.getTime())) {
+    console.error("Date invalide:", date);
+    return "";
+  }
 
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  // Date en local déjà convertie par JavaScript
+  const localYear = d.getFullYear();
+  const localMonth = String(d.getMonth() + 1).padStart(2, "0");
+  const localDay = String(d.getDate()).padStart(2, "0");
+  const localHours = String(d.getHours()).padStart(2, "0");
+  const localMinutes = String(d.getMinutes()).padStart(2, "0");
+
+  return `${localYear}-${localMonth}-${localDay}T${localHours}:${localMinutes}`;
 };
 
 const loadTournamentDetails = async () => {
@@ -664,35 +652,12 @@ const loadTournamentDetails = async () => {
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || "";
     playerCap.value = tournament.playerCap || 0; // Charger playerCap
-
-    // Charger les dates de rappel si elles existent
-    if (tournament.discordReminderDate) {
-      discordReminderDate.value = formatDateForInput(
-        tournament.discordReminderDate
-      );
-    } else {
-      // Date par défaut: 2 jours avant à 12h
-      const defaultDiscordDate = new Date(tournament.date);
-      defaultDiscordDate.setDate(defaultDiscordDate.getDate() - 2);
-      defaultDiscordDate.setHours(12, 0, 0, 0);
-      discordReminderDate.value = formatDateForInput(
-        defaultDiscordDate.toISOString()
-      );
-    }
-
-    if (tournament.privateReminderDate) {
-      privateReminderDate.value = formatDateForInput(
-        tournament.privateReminderDate
-      );
-    } else {
-      // Date par défaut: 1 jour avant à 12h
-      const defaultPrivateDate = new Date(tournament.date);
-      defaultPrivateDate.setDate(defaultPrivateDate.getDate() - 1);
-      defaultPrivateDate.setHours(12, 0, 0, 0);
-      privateReminderDate.value = formatDateForInput(
-        defaultPrivateDate.toISOString()
-      );
-    }
+    discordReminderDate.value = formatDateForInput(
+      tournament.discordReminderDate
+    );
+    privateReminderDate.value = formatDateForInput(
+      tournament.privateReminderDate
+    );
 
     // Charger les joueurs de la liste principale
     selectedPlayers.value = tournament.players.map((player: any) => ({
@@ -910,13 +875,6 @@ const hidePlayerList = () => {
     showPlayerList.value = false;
   }, 200);
 };
-
-// Puis ajouter ce watcher après les autres fonctions
-watch(date, (newValue) => {
-  if (newValue) {
-    updateReminderDates();
-  }
-});
 
 onMounted(() => {
   fetchTournaments();
