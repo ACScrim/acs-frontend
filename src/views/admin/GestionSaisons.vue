@@ -47,7 +47,7 @@
               type="number"
               id="seasonNumber"
               v-model="seasonForm.numero"
-              min="1"
+              min="0"
               required
               class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
             />

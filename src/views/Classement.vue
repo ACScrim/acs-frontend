@@ -139,7 +139,11 @@
                 :value="season._id"
                 :selected="season._id === seasons[0]?._id"
               >
-                Saison {{ season.numero }}
+                {{
+                  season.numero === 0
+                    ? "Alors ça chill"
+                    : `Saison ${season.numero}`
+                }}
               </option>
             </select>
 
