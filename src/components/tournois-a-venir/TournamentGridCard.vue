@@ -66,7 +66,7 @@
       <!-- Infos du tournoi -->
       <div class="font-orbitron text-sm space-y-2 mb-4">
         <!-- Date -->
-        <p class="text-white flex items-center">
+        <div class="text-white flex items-center mb-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4 mr-2 text-pink-500"
@@ -79,8 +79,15 @@
               clip-rule="evenodd"
             />
           </svg>
-          {{ formatLocalDate(tournament.date) }}
-        </p>
+          <span class="flex items-center">
+            <span
+              class="py-0.5 px-2 mr-2 text-xs font-medium text-cyan-300 bg-cyan-900/60 border border-cyan-500/50 rounded-md font-orbitron"
+            >
+              {{ getWeekday(tournament.date) }}
+            </span>
+            <span>{{ formatLocalDate(tournament.date) }}</span>
+          </span>
+        </div>
 
         <!-- Jeu -->
         <p class="text-white flex items-center">
@@ -268,6 +275,21 @@ const isTournamentFull = computed(() => {
     props.tournament.players.length >= props.tournament.playerCap
   );
 });
+
+// Fonction pour obtenir le jour de la semaine en français
+const getWeekday = (dateString: string) => {
+  const date = new Date(dateString);
+  const weekdays = [
+    "Dimanche",
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi",
+  ];
+  return weekdays[date.getDay()];
+};
 
 const isUserInWaitlist = computed(() => {
   if (!props.currentPlayerId || !props.tournament.waitlistPlayers) return false;
