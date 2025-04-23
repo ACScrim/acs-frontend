@@ -286,6 +286,7 @@
               Propositions
             </router-link>
             <router-link
+              v-if="user"
               to="/badges"
               @click="closeAllMenus"
               class="mobile-dropdown-item"

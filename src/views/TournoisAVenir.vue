@@ -120,26 +120,43 @@
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
 
-    <!-- Avertissement connexion -->
+    <!-- Remplacer l'avertissement de connexion actuel par celui-ci -->
     <div
       v-if="!user"
-      class="mb-4 sm:mb-8 p-3 sm:p-4 bg-red-900 text-white rounded border border-red-600 shadow-md flex items-center text-xs sm:text-sm"
+      class="mb-4 sm:mb-8 cyberpunk-alert-container overflow-hidden"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 mr-2 text-red-300"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
-      Veuillez vous connecter pour pouvoir vous inscrire aux tournois.
+      <div class="cyberpunk-alert">
+        <div class="alert-icon-container">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="alert-icon"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div class="alert-content">
+          <span class="font-audiowide text-sm sm:text-base"
+            >ACCÈS RESTREINT</span
+          >
+          <span class="font-orbitron text-xs sm:text-sm opacity-80">
+            Authentification requise pour l'inscription aux tournois
+          </span>
+        </div>
+        <router-link
+          to="/connexion"
+          class="ml-auto cyberpunk-btn-sm"
+          aria-label="Se connecter"
+        >
+          <span class="btn-text">CONNEXION</span>
+          <span class="btn-glitch"></span>
+        </router-link>
+      </div>
     </div>
 
     <!-- Affichage du loader pendant le chargement -->
@@ -1052,6 +1069,196 @@ onMounted(async () => {
       box-shadow: inset 0 0 10px rgba(236, 72, 153, 0.4),
         0 0 8px rgba(236, 72, 153, 0.4);
     }
+  }
+}
+
+/* Style cyberpunk pour l'alerte de connexion */
+.cyberpunk-alert-container {
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    rgba(31, 19, 24, 0.9),
+    rgba(17, 24, 39, 0.9)
+  );
+  border-left: 2px solid rgba(236, 72, 153, 0.8);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6),
+    0 0 10px rgba(236, 72, 153, 0.4);
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+}
+
+.cyberpunk-alert-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  background-color: rgba(236, 72, 153, 0.8);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.cyberpunk-alert {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-alert::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(236, 72, 153, 0.1),
+    transparent
+  );
+  animation: alertGlow 3s infinite;
+}
+
+.alert-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  border-radius: 50%;
+  margin-right: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.alert-icon-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(236, 72, 153, 0.4) 0%,
+    transparent 70%
+  );
+  animation: pulse 2s infinite;
+}
+
+.alert-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgba(236, 72, 153, 0.9);
+  filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.8));
+  z-index: 1;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
+}
+
+.cyberpunk-btn-sm {
+  display: inline-block;
+  padding: 0.375rem 1rem;
+  background: rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(236, 72, 153, 0.6);
+  color: rgba(236, 72, 153, 1);
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.cyberpunk-btn-sm:hover {
+  background: rgba(236, 72, 153, 0.3);
+  color: white;
+  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-glitch {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(236, 72, 153, 0.3),
+    transparent
+  );
+  opacity: 0;
+}
+
+.cyberpunk-btn-sm:hover .btn-glitch {
+  animation: glitch 1s infinite;
+  opacity: 1;
+}
+
+@keyframes alertGlow {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .alert-icon-container {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+  }
+
+  .alert-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .cyberpunk-btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
   }
 }
 </style>
