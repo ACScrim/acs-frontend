@@ -121,41 +121,49 @@
     <Toast v-if="success" type="success" :message="success" />
 
     <!-- Remplacer l'avertissement de connexion actuel par celui-ci -->
+    <!-- Message d'authentification avec design responsive amélioré -->
     <div
       v-if="!user"
       class="mb-4 sm:mb-8 cyberpunk-alert-container overflow-hidden"
     >
-      <div class="cyberpunk-alert">
-        <div class="alert-icon-container">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="alert-icon"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
+      <div
+        class="cyberpunk-alert flex flex-col sm:flex-row items-start sm:items-center"
+      >
+        <!-- Partie supérieure (visible sur mobile) avec icône et texte -->
+        <div class="flex items-center w-full sm:w-auto mb-3 sm:mb-0">
+          <div class="alert-icon-container flex-shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="alert-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="alert-content ml-3">
+            <span class="font-audiowide text-sm sm:text-base">
+              ACCÈS RESTREINT
+            </span>
+            <span class="font-orbitron text-xs sm:text-sm opacity-80">
+              Authentification requise pour l'inscription aux tournois
+            </span>
+          </div>
         </div>
-        <div class="alert-content">
-          <span class="font-audiowide text-sm sm:text-base"
-            >ACCÈS RESTREINT</span
-          >
-          <span class="font-orbitron text-xs sm:text-sm opacity-80">
-            Authentification requise pour l'inscription aux tournois
-          </span>
-        </div>
-        <router-link
-          to="/connexion"
-          class="ml-auto cyberpunk-btn-sm"
+
+        <!-- Bouton de connexion Discord (pleine largeur sur mobile) -->
+        <button
+          @click="loginWithDiscord"
+          class="cyberpunk-btn-sm flex items-center justify-center w-full sm:w-auto sm:ml-auto mt-2 sm:mt-0"
           aria-label="Se connecter"
         >
           <span class="btn-text">CONNEXION</span>
           <span class="btn-glitch"></span>
-        </router-link>
+        </button>
       </div>
     </div>
 
@@ -419,6 +427,33 @@ const openRegistrationPopup = (tournament: Tournament, type: string) => {
   }
 
   showPopup.value = true;
+};
+
+/**
+ * Déclenche le processus d'authentification Discord
+ * Redirige l'utilisateur vers l'autorisation OAuth2 de Discord
+ */
+const loginWithDiscord = () => {
+  try {
+    // Récupération des variables d'environnement pour OAuth2
+    const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+    const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
+
+    // Vérification de la configuration
+    if (!clientId || !redirectUri) {
+      error.value = "Configuration Discord manquante";
+      return;
+    }
+
+    // Redirection vers la page d'autorisation Discord
+    window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=identify+guilds+email`;
+  } catch (err) {
+    // Gestion des erreurs d'authentification
+    error.value = "Impossible de se connecter à Discord. Veuillez réessayer.";
+    console.error("Erreur d'authentification Discord:", err);
+  }
 };
 
 /**
@@ -1099,7 +1134,6 @@ onMounted(async () => {
 
 .cyberpunk-alert {
   display: flex;
-  align-items: center;
   padding: 0.75rem 1.25rem;
   position: relative;
   overflow: hidden;
@@ -1120,7 +1154,6 @@ onMounted(async () => {
   );
   animation: alertGlow 3s infinite;
 }
-
 .alert-icon-container {
   display: flex;
   align-items: center;
@@ -1165,9 +1198,12 @@ onMounted(async () => {
   text-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
 }
 
+/* Modifications pour le bouton */
 .cyberpunk-btn-sm {
-  display: inline-block;
-  padding: 0.375rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
   background: rgba(236, 72, 153, 0.2);
   border: 1px solid rgba(236, 72, 153, 0.6);
   color: rgba(236, 72, 153, 1);
