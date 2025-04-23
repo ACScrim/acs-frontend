@@ -738,17 +738,17 @@
               Aucun participant inscrit pour ce tournoi.
             </p>
 
-            <!-- Section Liste d'attente -->
+            <!-- Section Liste d'attente avec design responsive amélioré -->
             <div
               v-if="hasWaitlist"
               class="mt-6 sm:mt-8 animate__animated animate__fadeIn"
             >
               <h3
-                class="text-lg sm:text-xl text-pink-400 font-audiowide mb-3 sm:mb-4 flex items-center"
+                class="text-lg sm:text-xl text-pink-400 font-audiowide mb-3 sm:mb-4 flex flex-wrap items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2 text-pink-400"
+                  class="h-6 w-6 mr-2 text-pink-400 flex-shrink-0"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -758,9 +758,9 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                Liste d'attente
+                <span class="mr-2">Liste d'attente</span>
                 <span
-                  class="ml-2 text-base bg-pink-900/50 px-2 py-0.5 rounded-full border border-pink-500/30"
+                  class="text-base bg-pink-900/50 px-2 py-0.5 rounded-full border border-pink-500/30"
                 >
                   {{ waitlistCount }} joueurs
                 </span>
@@ -788,6 +788,7 @@
                     }"
                     class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-2 rounded-md text-white transition-colors hover:bg-gray-700/50"
                   >
+                    <!-- Position - Responsive sur mobile -->
                     <div
                       class="flex items-center justify-between sm:justify-start"
                     >
@@ -801,18 +802,13 @@
                           >Position</span
                         >
                       </div>
-                      <span class="text-xs text-pink-200 sm:hidden">
-                        {{
-                          player._id
-                            ? formatWaitingTime(player._id)
-                            : "ID inconnu"
-                        }}
-                      </span>
                     </div>
-                    <div class="flex items-center">
+
+                    <!-- Nom du joueur - Avec optimisation pour éviter les débordements -->
+                    <div class="flex items-center truncate">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 text-pink-400"
+                        class="h-4 w-4 mr-2 flex-shrink-0 text-pink-400"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -822,28 +818,49 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                      <!-- Correction ici pour afficher le nom du joueur correctement -->
-                      {{
-                        typeof player === "object"
-                          ? player.username
-                          : "Joueur inconnu"
-                      }}
-                      <span
-                        v-if="
-                          typeof player === 'object' &&
-                          player.userId === user?._id
-                        "
-                        class="ml-2 text-xs font-semibold bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
+                      <div
+                        class="flex flex-col sm:flex-row sm:items-center truncate"
                       >
-                        Vous
-                      </span>
+                        <span class="truncate">
+                          {{
+                            typeof player === "object"
+                              ? player.username
+                              : "Joueur inconnu"
+                          }}
+                        </span>
+                        <span
+                          v-if="
+                            typeof player === 'object' &&
+                            player.userId === user?._id
+                          "
+                          class="mt-1 sm:mt-0 sm:ml-2 text-xs font-semibold bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
+                        >
+                          Vous
+                        </span>
+                      </div>
                     </div>
+
+                    <!-- Temps d'attente - Caché sur mobile, visible uniquement sur SM+ -->
                     <div class="hidden sm:block text-sm text-pink-200">
                       {{
                         player._id
                           ? formatWaitingTime(player._id)
                           : "ID inconnu"
                       }}
+                    </div>
+
+                    <!-- Temps d'attente pour mobile seulement -->
+                    <div class="flex justify-between sm:hidden mt-1">
+                      <span class="text-xs text-pink-200"
+                        >En attente depuis:</span
+                      >
+                      <span class="text-xs text-pink-200">
+                        {{
+                          player._id
+                            ? formatWaitingTime(player._id)
+                            : "ID inconnu"
+                        }}
+                      </span>
                     </div>
                   </li>
                 </ul>
