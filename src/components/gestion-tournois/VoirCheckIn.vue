@@ -190,6 +190,22 @@
                   : "En attente"
               }}
             </div>
+            <!-- Nouveau bouton pour le check-in manuel -->
+            <button
+              @click="player._id ? togglePlayerCheckIn(player._id) : null"
+              :class="[
+                'manual-check-button',
+                player._id && selectedTournamentDetails?.checkIns?.[player._id]
+                  ? 'check-out-button'
+                  : 'check-in-button',
+              ]"
+            >
+              {{
+                player._id && selectedTournamentDetails?.checkIns?.[player._id]
+                  ? "Annuler le check-in"
+                  : "Marquer présent"
+              }}
+            </button>
           </div>
         </div>
       </div>
@@ -280,6 +296,13 @@
       <p>Aucun tournoi actif pour ce jeu</p>
     </div>
   </div>
+
+  <Toast
+    v-if="toast.show"
+    :message="toast.message"
+    :type="toast.type"
+    @close="toast.show = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -287,6 +310,7 @@ import { ref, onMounted, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, Player } from "../../types";
+import Toast from "../../shared/Toast.vue";
 
 // Accepter les props du parent
 const props = defineProps<{
@@ -296,6 +320,8 @@ const props = defineProps<{
 
 const games = ref<Game[]>([]);
 const tournaments = ref<Tournament[]>([]);
+
+const toast = ref({ show: false, message: "", type: "success" });
 
 const selectedTournamentDetails = ref<
   (Tournament & { players: Player[] }) | null
@@ -368,6 +394,69 @@ const getCheckedInPercentage = () => {
   const count = getCheckedInCount();
   const total = selectedTournamentDetails.value.players.length;
   return Math.round((count / total) * 100);
+};
+
+// Fonction pour basculer le check-in d'un joueur
+const togglePlayerCheckIn = async (playerId: string) => {
+  if (
+    !selectedTournamentDetails.value ||
+    !props.selectedTournament ||
+    !playerId
+  )
+    return;
+
+  try {
+    const player = selectedTournamentDetails.value.players.find(
+      (p) => p._id === playerId
+    );
+    if (!player || !player.userId) {
+      toast.value = {
+        show: true,
+        message: "Impossible de trouver l'utilisateur associé à ce joueur",
+        type: "error",
+      };
+      setTimeout(() => {
+        toast.value.show = false;
+      }, 3000);
+      return;
+    }
+
+    const isCurrentlyCheckedIn =
+      selectedTournamentDetails.value.checkIns?.[playerId] || false;
+
+    await tournamentService.checkInPlayer(
+      props.selectedTournament,
+      player.userId, // Utiliser le userId au lieu du playerId
+      !isCurrentlyCheckedIn
+    );
+
+    // Mettre à jour les détails du tournoi
+    await fetchTournamentDetails();
+
+    // Afficher une notification
+    toast.value = {
+      show: true,
+      message: isCurrentlyCheckedIn
+        ? "Check-in annulé avec succès"
+        : "Joueur marqué comme présent",
+      type: "success",
+    };
+
+    setTimeout(() => {
+      toast.value.show = false;
+    }, 3000);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du check-in:", error);
+    toast.value = {
+      show: true,
+      message: "Erreur lors de la mise à jour du check-in",
+      type: "error",
+    };
+
+    setTimeout(() => {
+      toast.value.show = false;
+    }, 3000);
+  }
 };
 
 // Charger les données initiales
@@ -497,6 +586,45 @@ watch(
   box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
   transition: all 0.3s ease;
   appearance: none;
+}
+
+.manual-check-button {
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.35rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.check-in-button {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: rgb(110, 231, 183);
+}
+
+.check-in-button:hover {
+  background-color: rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.check-out-button {
+  background-color: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: rgb(252, 165, 165);
+}
+
+.check-out-button:hover {
+  background-color: rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .cyber-select:focus {
