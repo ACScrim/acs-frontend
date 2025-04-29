@@ -580,7 +580,24 @@
                 maxlength="20"
                 class="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white focus:border-cyan-500 focus:outline-none font-orbitron"
               />
-              <div class="flex justify-end mt-1">
+              <div class="flex justify-between mt-1">
+                <p class="text-xs text-amber-400 italic font-orbitron">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 inline mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Merci d'indiquer votre plus haut rang, pas un smurf
+                </p>
                 <p class="text-xs text-gray-400">{{ rank.length }}/20</p>
               </div>
             </div>
@@ -851,6 +868,7 @@ const saveLevel = async (e?: Event) => {
   // Empêcher le comportement par défaut du formulaire si l'événement est fourni
   if (e) e.preventDefault();
 
+  // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
     showToast("Données incomplètes pour l'enregistrement", "error");
     return;
@@ -943,6 +961,7 @@ const openEditModal = (level: PlayerGameLevel) => {
 const selectGame = (game: Game) => {
   selectedGame.value = game;
   selectedGameId.value = game._id as string; // Stocker l'ID séparément
+
   showGameSelector.value = false;
 
   // Vérifier si le joueur a déjà défini un niveau pour ce jeu
@@ -956,8 +975,14 @@ const selectGame = (game: Game) => {
     comment.value = existingLevel.comment || "";
     editingLevelId.value = existingLevel._id || null;
   } else {
-    resetForm();
+    // Important: Ne pas appeler resetForm() car cela effacerait selectedGameId
+    // Au lieu de cela, réinitialiser uniquement les autres champs
     selectedLevel.value = "débutant"; // Valeur par défaut
+    gameUsername.value = "";
+    isRanked.value = false;
+    rank.value = "";
+    comment.value = "";
+    editingLevelId.value = null;
   }
 
   showLevelSelector.value = true;
@@ -972,7 +997,10 @@ const cancelLevelEdit = () => {
 // Réinitialiser le formulaire
 const resetForm = () => {
   selectedGame.value = null;
-  selectedGameId.value = ""; // Ne pas oublier de réinitialiser aussi l'ID
+  // Ne réinitialiser selectedGameId que si nous ne sommes pas dans la modale de sélection de niveau
+  if (!showLevelSelector.value) {
+    selectedGameId.value = "";
+  }
   selectedLevel.value = "";
   gameUsername.value = "";
   isRanked.value = false;
