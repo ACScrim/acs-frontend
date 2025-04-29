@@ -935,12 +935,15 @@ const deleteLevel = async () => {
 // #region GESTION DU FORMULAIRE
 // -----------------------------------------------
 // Ouvrir le modal d'édition pour un niveau existant
+// Ouvrir le modal d'édition pour un niveau existant
 const openEditModal = (level: PlayerGameLevel) => {
   // Récupérer le jeu
   if (typeof level.game === "object") {
     selectedGame.value = level.game;
+    selectedGameId.value = level.game._id as string; // Ajouter cette ligne
   } else {
     selectedGame.value = games.value.find((g) => g._id === level.game) || null;
+    selectedGameId.value = level.game as string; // Ajouter cette ligne
   }
 
   if (!selectedGame.value) return;
