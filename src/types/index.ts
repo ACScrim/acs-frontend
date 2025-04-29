@@ -5,3 +5,4 @@ export * from "./Tournament";
 export * from "./User";
 export * from "./GameProposal";
 export * from "./Season";
+export * from "./PlayerGameLevel";

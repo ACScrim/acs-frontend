@@ -1,12 +1,13 @@
 import type { Badge } from "./Badge";
 import type { Game } from "./Game";
-
+import type { UserInfo } from "./PlayerGameLevel";
 export interface Player {
   _id?: string;
   username: string;
   userId: string;
   discordId?: string;
   badges?: Badge[];
+  userInfo?: UserInfo; // Ajout de cette propriété pour le rendu
 }
 
 export interface PlayerCheckedIn extends Player {

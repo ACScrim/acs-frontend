@@ -103,6 +103,18 @@ const routes = [
       title: "Badges - ACS",
     },
   },
+  {
+    path: "/player-level",
+    name: "PlayerLevel",
+    component: () => import("../views/PlayerLevel.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/gestion-niveaux",
+    name: "GestionNiveaux",
+    component: () => import("../views/admin/GestionNiveaux.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
