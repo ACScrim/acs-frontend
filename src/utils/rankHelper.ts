@@ -15,6 +15,7 @@ const rankMappings: Record<string, RankInfo> = {
   or: { class: "text-yellow-400", color: "#facc15" },
   platinum: { class: "text-blue-200", color: "#bfdbfe" },
   platine: { class: "text-blue-200", color: "#bfdbfe" },
+  plat: { class: "text-blue-200", color: "#bfdbfe" },
   diamond: { class: "text-cyan-400", color: "#22d3ee" },
   diamant: { class: "text-cyan-400", color: "#22d3ee" },
   master: { class: "text-purple-400", color: "#c084fc" },
