@@ -82,6 +82,24 @@ const playerGameLevelService = {
   },
 
   /**
+   * Récupère tous les niveaux de tous les joueurs pour tous les jeux
+   */
+  getAllPlayerLevels: async (): Promise<PlayerGameLevel[]> => {
+    try {
+      const response = await axios.get(`${API_URL}/all`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de tous les niveaux:",
+        error
+      );
+      throw error;
+    }
+  },
+
+  /**
    * Définit ou met à jour le niveau d'un joueur pour un jeu
    * @param playerId ID du joueur
    * @param gameId ID du jeu

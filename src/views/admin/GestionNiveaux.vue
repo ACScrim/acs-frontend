@@ -96,7 +96,11 @@
               Joueurs ayant défini leur niveau sur
               <span class="text-pink-400">{{ selectedGameName }}</span>
             </span>
-            <span v-else>Sélectionnez un jeu pour voir les joueurs</span>
+            <span v-else
+              >Tous les niveaux de jeux ({{
+                filteredPlayerLevels.length
+              }})</span
+            >
           </h2>
 
           <div v-if="filteredPlayerLevels.length > 0" class="flex items-center">
@@ -132,7 +136,7 @@
 
         <!-- Message quand aucun jeu n'est sélectionné -->
         <div
-          v-else-if="!selectedGameId"
+          v-if="!selectedGameId && filteredPlayerLevels.length === 0"
           class="bg-gray-900/60 rounded-lg p-12 border border-cyan-500/30 flex flex-col items-center"
         >
           <svg
@@ -146,7 +150,7 @@
             />
           </svg>
           <p class="text-cyan-300 font-orbitron text-center">
-            Veuillez sélectionner un jeu pour voir la liste des joueurs
+            Aucun niveau de jeu défini pour le moment
           </p>
         </div>
 
@@ -184,7 +188,13 @@
                 >
                   Joueur
                 </th>
-                <!-- Suppression de la colonne Discord -->
+                <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
+                <th
+                  v-if="!selectedGameId"
+                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                >
+                  Jeu
+                </th>
                 <th
                   class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
                 >
@@ -250,7 +260,21 @@
                     </div>
                   </div>
                 </td>
-                <!-- Suppression de la colonne Discord -->
+                <td v-if="!selectedGameId" class="py-4 px-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <img
+                      v-if="getGameImage(playerLevel)"
+                      :src="getGameImage(playerLevel)"
+                      class="w-7 h-7 rounded object-cover mr-2"
+                      alt="Logo du jeu"
+                      loading="lazy"
+                      @error="handleImageError($event)"
+                    />
+                    <span class="text-sm font-medium text-white">{{
+                      getGameName(playerLevel)
+                    }}</span>
+                  </div>
+                </td>
                 <td class="py-4 px-4 whitespace-nowrap">
                   <div class="text-sm text-gray-300">
                     {{ playerLevel.gameUsername || "Non renseigné" }}
@@ -353,17 +377,24 @@ const selectedGameName = computed(() => {
 });
 
 const filteredPlayerLevels = computed(() => {
-  if (!selectedGameId.value) return [];
-
   let filtered = [...playerLevels.value];
 
-  // Si un tournoi est sélectionné, filtrer par joueurs de ce tournoi
-  if (selectedTournamentId.value && tournamentPlayers.value.length > 0) {
+  // Filtrer par jeu sélectionné si ce n'est pas vide
+  if (selectedGameId.value) {
     filtered = filtered.filter((level) => {
-      const playerId =
-        typeof level.player === "object" ? level.player._id : level.player;
-      return tournamentPlayers.value.includes(playerId ?? "");
+      const gameId =
+        typeof level.game === "object" ? level.game._id : level.game;
+      return gameId === selectedGameId.value;
     });
+
+    // Si un tournoi est sélectionné, filtrer par joueurs de ce tournoi
+    if (selectedTournamentId.value && tournamentPlayers.value.length > 0) {
+      filtered = filtered.filter((level) => {
+        const playerId =
+          typeof level.player === "object" ? level.player._id : level.player;
+        return tournamentPlayers.value.includes(playerId ?? "");
+      });
+    }
   }
 
   return filtered;
@@ -383,32 +414,50 @@ const fetchGames = async () => {
 };
 
 /**
- * Récupérer les niveaux des joueurs pour un jeu spécifique
+ * Récupérer les niveaux des joueurs pour un jeu spécifique ou tous les niveaux
  */
 const fetchPlayerLevels = async () => {
   // Réinitialiser la sélection du tournoi
   selectedTournamentId.value = "";
   tournamentPlayers.value = [];
 
-  if (!selectedGameId.value) {
-    playerLevels.value = [];
-    return;
-  }
-
   try {
     loading.value = true;
 
-    // Récupérer les niveaux des joueurs pour ce jeu
-    const response = await playerGameLevelService.getPlayerLevelsByGame(
-      selectedGameId.value
-    );
-    playerLevels.value = response;
+    if (!selectedGameId.value) {
+      // Si aucun jeu n'est sélectionné, récupérer tous les niveaux
+      await fetchAllPlayerLevels();
+    } else {
+      // Récupérer les niveaux des joueurs pour ce jeu
+      const response = await playerGameLevelService.getPlayerLevelsByGame(
+        selectedGameId.value
+      );
+      playerLevels.value = response;
 
-    // Récupérer les tournois associés à ce jeu
-    const tournamentsResponse = await tournamentService.getTournamentsByGame(
-      selectedGameId.value
-    );
-    tournaments.value = tournamentsResponse;
+      // Récupérer les tournois associés à ce jeu
+      const tournamentsResponse = await tournamentService.getTournamentsByGame(
+        selectedGameId.value
+      );
+      tournaments.value = tournamentsResponse;
+    }
+  } catch (err) {
+    console.error("Erreur lors du chargement des niveaux de jeu:", err);
+    showMessage("error", "Erreur lors du chargement des niveaux de jeu");
+    playerLevels.value = [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+/**
+ * Récupérer tous les niveaux de tous les jeux
+ */
+const fetchAllPlayerLevels = async () => {
+  try {
+    loading.value = true;
+    // Appel à une API qui récupère tous les niveaux de tous les jeux
+    const response = await playerGameLevelService.getAllPlayerLevels();
+    playerLevels.value = response;
   } catch (err) {
     console.error("Erreur lors du chargement des niveaux de jeu:", err);
     showMessage("error", "Erreur lors du chargement des niveaux de jeu");
@@ -475,6 +524,24 @@ const getLevelBadgeClass = (level: string): string => {
     default:
       return `${baseClasses} bg-gray-900/50 text-gray-300 border border-gray-500/50`;
   }
+};
+
+/**
+ * Récupérer l'image du jeu
+ */
+const getGameImage = (level: PlayerGameLevel): string | undefined => {
+  return typeof level.game === "object" && level.game.imageUrl
+    ? level.game.imageUrl
+    : undefined;
+};
+
+/**
+ * Récupérer le nom du jeu
+ */
+const getGameName = (level: PlayerGameLevel): string => {
+  return typeof level.game === "object" && level.game.name
+    ? level.game.name
+    : "Jeu inconnu";
 };
 /**
  * Gère l'erreur de chargement d'image
@@ -616,21 +683,46 @@ const showMessage = (type: "success" | "error", message: string) => {
   }, 3000);
 };
 
+const fetchTournamentsForGame = async (gameId: string) => {
+  try {
+    // Réinitialiser la sélection du tournoi
+    selectedTournamentId.value = "";
+    tournamentPlayers.value = [];
+
+    // Récupérer les tournois associés à ce jeu
+    const tournamentsResponse = await tournamentService.getTournamentsByGame(
+      gameId
+    );
+    tournaments.value = tournamentsResponse;
+  } catch (err) {
+    console.error("Erreur lors du chargement des tournois:", err);
+    showMessage("error", "Erreur lors du chargement des tournois");
+    tournaments.value = [];
+  }
+};
+
 // Observer les changements de jeu sélectionné
 watch(selectedGameId, () => {
   if (selectedGameId.value) {
-    fetchPlayerLevels();
+    // Si un jeu est sélectionné, on charge les tournois associés
+    fetchTournamentsForGame(selectedGameId.value);
   } else {
-    playerLevels.value = [];
-    tournaments.value = [];
+    // Si on désélectionne, on réinitialise juste le tournoi mais pas les niveaux
     selectedTournamentId.value = "";
+    tournaments.value = [];
   }
 });
 
 // Initialisation
 onMounted(async () => {
-  await fetchGames();
-  loading.value = false;
+  try {
+    // Chargement parallèle des jeux et de tous les niveaux
+    await Promise.all([fetchGames(), fetchAllPlayerLevels()]);
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation:", error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
