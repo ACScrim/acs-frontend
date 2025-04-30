@@ -694,7 +694,8 @@ import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import Toast from "@/shared/Toast.vue";
 import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import { getRankClass } from "../utils/rankHelper"; // Importez la fonction utilitaire
-
+import { useRoute, useRouter } from "vue-router";
+import tournamentService from "../services/tournamentService";
 // -----------------------------------------------
 // #region ÉTATS RÉACTIFS
 // -----------------------------------------------
@@ -703,6 +704,9 @@ const loading = ref(true);
 const playerLevels = ref<PlayerGameLevel[]>([]);
 const games = ref<Game[]>([]);
 const currentPlayerId = computed(() => userStore.playerId || "");
+
+const route = useRoute();
+const router = useRouter();
 
 // États des modales
 const showGameSelector = ref(false);
@@ -892,6 +896,8 @@ const saveLevel = async (e?: Event) => {
     await fetchPlayerLevels();
     showLevelSelector.value = false;
     resetForm();
+    handleSuccessfulSave(); // Utiliser la nouvelle fonction
+
     showToast("Niveau enregistré avec succès", "success");
   } catch (error) {
     console.error("Erreur lors de l'enregistrement du niveau:", error);
@@ -1059,6 +1065,16 @@ onMounted(async () => {
 
     // Charger les données en parallèle
     await Promise.all([fetchPlayerLevels(), fetchGames()]);
+
+    // Vérifier s'il y a un gameId dans l'URL pour ouvrir directement le modal
+    const gameId = route.query.gameId as string;
+
+    if (gameId) {
+      const game = games.value.find((g) => g._id === gameId);
+      if (game) {
+        selectGame(game);
+      }
+    }
   } catch (error) {
     console.error("Erreur lors de l'initialisation:", error);
     showToast("Erreur lors du chargement des données", "error");
@@ -1066,6 +1082,60 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+/**
+ * Gère les actions après un enregistrement réussi et inscrit automatiquement au tournoi si nécessaire
+ */
+const handleSuccessfulSave = async () => {
+  try {
+    const redirectPath = route.query.redirect as string;
+    const tournamentId = route.query.tournamentId as string;
+    const autoRegister = route.query.autoRegister === "true";
+
+    if (redirectPath) {
+      // Si on doit s'inscrire automatiquement
+      if (tournamentId && autoRegister && userStore.user) {
+        try {
+          showToast("Inscription au tournoi en cours...", "success");
+
+          // Appeler l'API pour inscrire le joueur au tournoi
+          const result = await tournamentService.registerPlayer(
+            tournamentId,
+            userStore.user._id
+          );
+
+          // Message de succès spécifique pour l'inscription
+          showToast("Inscription au tournoi réussie!", "success");
+        } catch (error) {
+          console.error("Erreur lors de l'inscription automatique:", error);
+          showToast(
+            "Erreur lors de l'inscription automatique au tournoi",
+            "error"
+          );
+        }
+      } else {
+        // Message standard si pas d'inscription auto
+        showToast("Niveau enregistré avec succès!", "success");
+      }
+
+      // Rediriger vers le tournoi après un court délai
+      setTimeout(() => {
+        // Nettoyer d'abord l'URL actuelle en redirigeant vers /player-level sans paramètres
+        router.replace("/player-level").then(() => {
+          // Puis rediriger vers la page d'origine
+          router.push(redirectPath);
+        });
+      }, 1500);
+    } else {
+      // Si pas de redirection, juste nettoyer l'URL
+      router.replace("/player-level");
+      showToast("Niveau enregistré avec succès", "success");
+    }
+  } catch (err) {
+    console.error("Erreur dans handleSuccessfulSave:", err);
+    showToast("Erreur lors de la finalisation de l'enregistrement", "error");
+  }
+};
 
 // Observer les changements d'utilisateur
 const unwatchUser = watch(

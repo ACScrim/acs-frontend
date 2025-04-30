@@ -138,10 +138,10 @@
         <!-- Bouton inscription / liste d'attente  -->
         <button
           v-if="!isUserRegistered && !isUserInWaitlist"
-          @click="$emit('open-registration', tournament, 'register')"
+          @click="handleRegistration"
           :class="{
-            'cyberpunk-btn-amber': isTournamentFull, // Utiliser amber pour liste d'attente
-            'cyberpunk-btn-pink': !isTournamentFull, // Conserver pink pour inscription normale
+            'cyberpunk-btn-amber': isTournamentFull,
+            'cyberpunk-btn-pink': !isTournamentFull,
           }"
           class="px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
         >
@@ -239,6 +239,7 @@
 import { computed, ref } from "vue"; // Ajout de ref
 import { useRouter } from "vue-router";
 import type { Tournament } from "../../types";
+import playerGameLevelService from "../../services/playerGameLevelService"; // Ajout de l'import
 
 const props = defineProps({
   tournament: {
@@ -264,7 +265,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["open-registration", "check-in"]);
+const emit = defineEmits([
+  "open-registration",
+  "check-in",
+  "show-level-prompt", // Nouvel événement
+]);
 const router = useRouter();
 const imageError = ref(false); // Pour suivre l'état de l'erreur d'image
 
@@ -275,6 +280,49 @@ const isTournamentFull = computed(() => {
     props.tournament.players.length >= props.tournament.playerCap
   );
 });
+
+// Fonction qui gère l'inscription et vérifie le niveau
+const handleRegistration = async () => {
+  // Vérifier que l'on a bien l'ID du joueur et du jeu
+  if (!props.currentPlayerId || !props.tournament?.game?._id) {
+    // Sinon, simplement ouvrir la modale d'inscription normalement
+    emit(
+      "open-registration",
+      props.tournament,
+      isTournamentFull.value ? "waitlist" : "register"
+    );
+    return;
+  }
+
+  try {
+    // Vérifier si le niveau existe pour ce jeu
+    const gameId = props.tournament.game._id;
+    const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
+      props.currentPlayerId,
+      gameId
+    );
+
+    // Si aucun niveau n'est défini, demander d'en définir un via l'événement
+    if (!playerLevel) {
+      emit("show-level-prompt", props.tournament.game, props.tournament._id);
+    } else {
+      // Sinon ouvrir la modale d'inscription normalement
+      emit(
+        "open-registration",
+        props.tournament,
+        isTournamentFull.value ? "waitlist" : "register"
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la vérification du niveau:", error);
+    // En cas d'erreur, continuer avec l'inscription
+    emit(
+      "open-registration",
+      props.tournament,
+      isTournamentFull.value ? "waitlist" : "register"
+    );
+  }
+};
 
 // Fonction pour obtenir le jour de la semaine en français
 const getWeekday = (dateString: string) => {

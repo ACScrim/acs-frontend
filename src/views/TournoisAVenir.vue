@@ -188,6 +188,7 @@
           :current-player-id="currentPlayerId"
           @open-registration="openRegistrationPopup"
           @check-in="checkIn"
+          @show-level-prompt="showLevelPromptModal"
         />
       </div>
 
@@ -206,6 +207,15 @@
         @page-select="goToPage"
       />
     </div>
+
+    <!-- Ajout du composant LevelPromptModal à la fin du template -->
+    <LevelPromptModal
+      :show="showLevelPrompt"
+      :game-name="levelPromptGameName"
+      @confirm="goToLevelDefinition"
+      @close="closeLevelPrompt"
+      @register-without-level="registerWithoutLevel"
+    />
 
     <!-- Message pas de tournois -->
     <CyberTerminal
@@ -240,9 +250,19 @@ import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
 import playerService from "../services/playerService";
+import LevelPromptModal from "@/shared/LevelPromptModal.vue"; // Ajoutez cet import
+import { useRouter, useRoute } from "vue-router"; // Ajoutez cet import
+
 // Regroupement et organisation des états du composant
 // SECTION: État du composant
 //-------------------------------------------------------
+// États pour la modale de niveau de jeu
+const showLevelPrompt = ref(false);
+const levelPromptGameId = ref("");
+const levelPromptGameName = ref("");
+const levelPromptTournamentId = ref("");
+const router = useRouter();
+const route = useRoute();
 
 // États globaux
 const games = ref<Game[]>([]);
@@ -457,6 +477,39 @@ const loginWithDiscord = () => {
 };
 
 /**
+ * Affiche la modale pour définir le niveau de jeu
+ */
+const showLevelPromptModal = (game: Game, tournamentId: string) => {
+  levelPromptGameId.value = game._id || "";
+  levelPromptGameName.value = game.name;
+  levelPromptTournamentId.value = tournamentId;
+  showLevelPrompt.value = true;
+};
+/**
+ * Redirige vers la page de définition de niveau avec inscription automatique
+ */
+const goToLevelDefinition = () => {
+  router.push({
+    path: "/player-level",
+    query: {
+      gameId: levelPromptGameId.value,
+      redirect: route.fullPath,
+      tournamentId: levelPromptTournamentId.value,
+      autoRegister: "true", // Important: ceci doit être une chaîne, pas un boolean
+    },
+  });
+};
+
+/**
+ * Ferme la popup de définition de niveau
+ */
+const closeLevelPrompt = () => {
+  showLevelPrompt.value = false;
+  levelPromptGameId.value = "";
+  levelPromptGameName.value = "";
+};
+
+/**
  * Ferme le popup de confirmation
  */
 const closePopup = () => {
@@ -527,6 +580,39 @@ const confirmAction = async () => {
       console.error("Erreur lors de l'action:", error);
       showMessage("error", `Erreur lors de l'action.`);
     }
+  }
+};
+
+/**
+ * Inscrit l'utilisateur au tournoi sans définir son niveau
+ */
+const registerWithoutLevel = async () => {
+  if (!user.value || !levelPromptTournamentId.value) return;
+
+  try {
+    // Fermer la modale
+    closeLevelPrompt();
+
+    // Appel au service pour inscrire le joueur
+    await tournamentService.registerPlayer(
+      levelPromptTournamentId.value,
+      user.value._id
+    );
+
+    // Afficher un message de succès
+    showMessage(
+      "success",
+      "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
+    );
+
+    // Recharger les données des tournois
+    await fetchTournaments();
+  } catch (error) {
+    console.error("Erreur lors de l'inscription sans niveau:", error);
+    showMessage(
+      "error",
+      "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+    );
   }
 };
 

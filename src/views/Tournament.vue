@@ -1143,6 +1143,14 @@
       @confirm="confirmAction"
       @cancel="closePopup"
     />
+
+    <LevelPromptModal
+      :show="showLevelPrompt"
+      :game-name="levelPromptGameName"
+      @confirm="goToLevelDefinition"
+      @close="closeLevelPrompt"
+      @register-without-level="registerWithoutLevel"
+    />
   </div>
 </template>
 
@@ -1158,7 +1166,8 @@ import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
 import type { Tournament } from "../types";
 import tournamentService from "../services/tournamentService";
-
+import LevelPromptModal from "@/shared/LevelPromptModal.vue";
+import playerGameLevelService from "../services/playerGameLevelService";
 //------------------------------------------------------
 // 1. ÉTAT ET CONFIGURATION DU COMPOSANT
 //------------------------------------------------------
@@ -1167,6 +1176,12 @@ import tournamentService from "../services/tournamentService";
 const route = useRoute();
 const router = useRouter();
 const tournamentId = computed(() => route.params.id as string);
+
+// Modale de level de tournoi
+const showLevelPrompt = ref(false);
+const levelPromptGameId = ref<string>("");
+const levelPromptGameName = ref<string>("");
+const levelPromptTournamentId = ref<string>("");
 
 // Initialisation des stores
 const userStore = useUserStore();
@@ -1202,7 +1217,6 @@ const currentPlayerId = computed(() => userStore.playerId);
  * Vérifie si l'utilisateur est inscrit au tournoi actuel
  */
 const isUserRegistered = computed(() => {
-  console.log(tournament.value, user.value);
   if (!user.value || !tournament.value) return false;
   return tournament.value.players.some(
     (player) => player.userId === user.value?._id
@@ -1230,6 +1244,40 @@ const isCheckInAvailable = computed(() => {
     return diff > 0 && diff <= 24 * 60 * 60 * 1000;
   }
 });
+
+/**
+ * Inscrit l'utilisateur au tournoi sans définir son niveau
+ */
+const registerWithoutLevel = async () => {
+  if (!user.value || !levelPromptTournamentId.value) return;
+
+  try {
+    // Fermer la modale
+    closeLevelPrompt();
+    // Afficher un indicateur de chargement ou un spinner si nécessaire
+
+    // Appel au service pour inscrire le joueur
+    await tournamentService.registerPlayer(
+      levelPromptTournamentId.value,
+      user.value._id
+    );
+
+    // Afficher un message de succès
+    showMessage(
+      "success",
+      "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
+    );
+
+    // Recharger les données du tournoi
+    await fetchTournament();
+  } catch (error) {
+    console.error("Erreur lors de l'inscription sans niveau:", error);
+    showMessage(
+      "error",
+      "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+    );
+  }
+};
 
 /**
  * Gère le cas où l'image ne peut pas être chargée
@@ -1412,64 +1460,112 @@ const closePopup = () => {
 };
 
 /**
+ * Redirige vers la page de définition de niveau
+ */
+const goToLevelDefinition = () => {
+  router.push({
+    path: "/player-level",
+    query: {
+      gameId: levelPromptGameId.value,
+      redirect: route.fullPath, // Pour pouvoir revenir au tournoi après
+      tournamentId: levelPromptTournamentId.value, // Ajoutez cette ligne
+      autoRegister: "true", // Ajoutez cette ligne
+    },
+  });
+};
+
+/**
+ * Ferme la popup de définition de niveau
+ */
+const closeLevelPrompt = () => {
+  showLevelPrompt.value = false;
+  levelPromptGameId.value = "";
+  levelPromptGameName.value = "";
+};
+
+/**
  * Confirme l'action d'inscription/désinscription en utilisant le store
  */
 const confirmAction = async () => {
   if (!selectedTournament.value || !user.value) return;
 
   try {
+    // Vérifier si le joueur a déjà défini un niveau pour ce jeu
+    if (actionType.value === "register" || actionType.value === "waitlist") {
+      const gameId = selectedTournament.value.game._id;
+
+      try {
+        // Vérifier si un niveau existe pour ce jeu
+        const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
+          currentPlayerId.value ?? "",
+          gameId ?? ""
+        );
+
+        // Si aucun niveau n'est défini, montrer la popup et ARRÊTER l'exécution
+        if (!playerLevel) {
+          closePopup(); // Fermer la popup d'inscription
+          showLevelPrompt.value = true; // Montrer la popup de niveau
+          levelPromptGameId.value = gameId ?? "";
+          levelPromptGameName.value = selectedTournament.value.game.name;
+          // Ajouter le tournamentId pour l'inscription automatique après définition du niveau
+          levelPromptTournamentId.value = selectedTournament.value._id || "";
+          return; // Important: arrêter l'exécution ici pour ne pas inscrire tout de suite
+        }
+      } catch (err) {
+        console.error("Erreur lors de la vérification du niveau:", err);
+        // Continuer l'inscription même en cas d'erreur de vérification
+      }
+    }
+
     let success = false;
 
     if (
       (actionType.value === "register" || actionType.value === "waitlist") &&
       selectedTournament.value._id
     ) {
-      // Appel direct au service au lieu du store
+      // Code pour l'inscription
       await tournamentService.registerPlayer(
         selectedTournament.value._id,
         user.value._id
       );
       success = true;
 
-      if (success) {
-        showMessage(
-          "success",
-          actionType.value === "register"
-            ? "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
-            : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent."
-        );
-      }
+      showMessage(
+        "success",
+        actionType.value === "register"
+          ? "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
+          : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent."
+      );
     } else if (
       (actionType.value === "unregister" ||
         actionType.value === "unregister-waitlist") &&
       selectedTournament.value._id
     ) {
-      // Appel direct au service au lieu du store
+      // Code pour la désinscription
       await tournamentService.unregisterPlayer(
         selectedTournament.value._id,
         user.value._id
       );
       success = true;
 
-      if (success) {
-        showMessage(
-          "success",
-          actionType.value === "unregister"
-            ? "Désinscription réussie ! Triste de te voir partir :("
-            : "Vous avez été retiré de la liste d'attente."
-        );
-      }
+      showMessage(
+        "success",
+        actionType.value === "unregister"
+          ? "Désinscription effectuée avec succès."
+          : "Vous avez été retiré de la liste d'attente."
+      );
     }
 
     // Mettre à jour l'état local en rechargeant les données
     if (success && selectedTournament.value._id) {
-      await fetchTournament(); // Recharger le tournoi pour avoir les données à jour
+      await fetchTournament();
     }
 
     closePopup();
   } catch (err) {
     console.error("Erreur lors de l'action:", err);
     showMessage("error", `Erreur lors de l'action.`);
+    closePopup();
   }
 };
 
