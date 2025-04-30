@@ -1099,7 +1099,7 @@ const handleSuccessfulSave = async () => {
           showToast("Inscription au tournoi en cours...", "success");
 
           // Appeler l'API pour inscrire le joueur au tournoi
-          const result = await tournamentService.registerPlayer(
+          await tournamentService.registerPlayer(
             tournamentId,
             userStore.user._id
           );
