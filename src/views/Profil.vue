@@ -715,13 +715,22 @@ const getInitials = (username: string) => {
 };
 
 /**
- * Gère les erreurs de chargement d'image
- * Remplace l'image par un placeholder en cas d'échec
+ * Gère les erreurs de chargement d'image d'avatar
+ * Remplace l'image par un avatar généré avec les initiales
  * @param e - Événement d'erreur
  */
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
-    e.target.src = "https://via.placeholder.com/100?text=?";
+    // Récupérer le username pour générer les initiales
+    const username = player.value?.username || "?";
+    const initials = getInitials(username);
+
+    // Utiliser l'API ui-avatars pour générer un avatar basé sur les initiales
+    e.target.src = `https://ui-avatars.com/api/?name=${initials}&background=6D28D9&color=F9FAFB&size=150&bold=true&font-family=monospace`;
+
+    // Ajouter une classe pour styliser différemment les avatars de remplacement
+    e.target.classList.remove("border-pink-500", "shadow-glow-pink");
+    e.target.classList.add("border-purple-500", "shadow-purple-500/50");
   }
 };
 
