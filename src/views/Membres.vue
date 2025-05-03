@@ -327,7 +327,20 @@ const getUserInitials = (username: string) => {
 
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
-    e.target.src = "https://via.placeholder.com/50?text=?";
+    // Remplacer par un avatar généré avec les initiales ou une image de secours
+    const username =
+      e.target
+        .closest(".member-card")
+        ?.querySelector(".text-white")
+        ?.textContent?.trim() || "?";
+    const initials = getUserInitials(username);
+
+    // Utiliser une API pour générer un avatar basé sur les initiales
+    e.target.src = `https://ui-avatars.com/api/?name=${initials}&background=6D28D9&color=F9FAFB&size=150&bold=true&font-family=monospace`;
+
+    // Ajouter une classe pour styliser différemment les avatars de remplacement
+    e.target.classList.remove("avatar-glow");
+    e.target.classList.add("fallback-avatar");
   }
 };
 
