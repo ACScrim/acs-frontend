@@ -40,9 +40,11 @@
               {{ game.name }}
             </option>
           </select>
-          <div
-            class="absolute top-[38px] right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
+          <div class="absolute right-4 top-1/2 mt-3 pointer-events-none">
+            <div
+              class="w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500"
+            ></div>
+          </div>
         </div>
 
         <!-- Sélection de tournoi (affiché uniquement si un jeu est sélectionné) -->
@@ -68,9 +70,11 @@
               {{ tournament.name }} - {{ formatDate(tournament.date) }}
             </option>
           </select>
-          <div
-            class="absolute top-[38px] right-4 -translate-y-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500 pointer-events-none"
-          ></div>
+          <div class="absolute right-4 top-1/2 mt-3 pointer-events-none">
+            <div
+              class="w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500"
+            ></div>
+          </div>
         </div>
       </div>
 
@@ -177,163 +181,318 @@
         </div>
 
         <!-- Tableau des joueurs -->
-        <div v-else class="overflow-x-auto">
-          <table
-            class="min-w-full bg-gray-900/40 border border-cyan-500/30 rounded-lg overflow-hidden"
-          >
-            <thead>
-              <tr class="bg-cyan-900/30 border-b border-cyan-500/30">
-                <th
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                >
-                  Joueur
-                </th>
-                <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
-                <th
-                  v-if="!selectedGameId"
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                >
-                  Jeu
-                </th>
-                <th
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                >
-                  Pseudo dans le jeu
-                </th>
-                <th
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                >
-                  Niveau
-                </th>
+        <div v-else>
+          <div class="hidden md:block overflow-x-auto">
+            <table
+              class="min-w-full bg-gray-900/40 border border-cyan-500/30 rounded-lg overflow-hidden"
+            >
+              <thead>
+                <tr class="bg-cyan-900/30 border-b border-cyan-500/30">
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Joueur
+                  </th>
+                  <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
+                  <th
+                    v-if="!selectedGameId"
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Jeu
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Pseudo dans le jeu
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Niveau
+                  </th>
 
-                <th
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Rang
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
+                    Commentaire
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cyan-500/20">
+                <tr
+                  v-for="playerLevel in filteredPlayerLevels"
+                  :key="playerLevel._id"
+                  class="hover:bg-cyan-900/20 transition-colors duration-150"
                 >
-                  Rang
-                </th>
-                <th
-                  class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                >
-                  Commentaire
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-cyan-500/20">
-              <tr
-                v-for="playerLevel in filteredPlayerLevels"
-                :key="playerLevel._id"
-                class="hover:bg-cyan-900/20 transition-colors duration-150"
-              >
-                <td class="py-4 px-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <!-- Mise à jour de l'avatar comme dans la vue Membres -->
-                    <div class="avatar-container">
+                  <td class="py-4 px-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <!-- Mise à jour de l'avatar comme dans la vue Membres -->
+                      <div class="avatar-container">
+                        <img
+                          v-if="playerLevel.player.userInfo?.avatarUrl"
+                          :src="playerLevel.player.userInfo.avatarUrl"
+                          class="w-8 h-8 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
+                          alt="Avatar"
+                          loading="lazy"
+                          @error="handleImageError($event)"
+                        />
+                        <div
+                          v-else
+                          class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
+                        >
+                          <span class="text-pink-500 text-xs font-bold">{{
+                            getUserInitials(
+                              playerLevel.player.username || "inconnu"
+                            )
+                          }}</span>
+                        </div>
+                      </div>
+                      <div class="ml-3">
+                        <div class="text-sm font-medium text-white">
+                          {{ playerLevel.player.username }}
+                        </div>
+                        <div
+                          v-if="playerLevel.player.userInfo?.username"
+                          class="text-xs text-gray-400"
+                        >
+                          {{ playerLevel.player.userInfo.username }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td
+                    v-if="!selectedGameId"
+                    class="py-4 px-4 whitespace-nowrap"
+                  >
+                    <div class="flex items-center">
                       <img
-                        v-if="playerLevel.player.userInfo?.avatarUrl"
-                        :src="playerLevel.player.userInfo.avatarUrl"
-                        class="w-8 h-8 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
-                        alt="Avatar"
+                        v-if="getGameImage(playerLevel)"
+                        :src="getGameImage(playerLevel)"
+                        class="w-7 h-7 rounded object-cover mr-2"
+                        alt="Logo du jeu"
                         loading="lazy"
                         @error="handleImageError($event)"
                       />
-                      <div
-                        v-else
-                        class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
-                      >
-                        <span class="text-pink-500 text-xs font-bold">{{
-                          getUserInitials(
-                            playerLevel.player.username || "inconnu"
-                          )
-                        }}</span>
-                      </div>
+                      <span class="text-sm font-medium text-white">{{
+                        getGameName(playerLevel)
+                      }}</span>
                     </div>
-                    <div class="ml-3">
-                      <div class="text-sm font-medium text-white">
-                        {{ playerLevel.player.username }}
-                      </div>
-                      <div
-                        v-if="playerLevel.player.userInfo?.username"
-                        class="text-xs text-gray-400"
-                      >
-                        {{ playerLevel.player.userInfo.username }}
-                      </div>
+                  </td>
+                  <td class="py-4 px-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-300">
+                      {{ playerLevel.gameUsername || "Non renseigné" }}
                     </div>
-                  </div>
-                </td>
-                <td v-if="!selectedGameId" class="py-4 px-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <img
-                      v-if="getGameImage(playerLevel)"
-                      :src="getGameImage(playerLevel)"
-                      class="w-7 h-7 rounded object-cover mr-2"
-                      alt="Logo du jeu"
-                      loading="lazy"
-                      @error="handleImageError($event)"
-                    />
-                    <span class="text-sm font-medium text-white">{{
-                      getGameName(playerLevel)
-                    }}</span>
-                  </div>
-                </td>
-                <td class="py-4 px-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-300">
-                    {{ playerLevel.gameUsername || "Non renseigné" }}
-                  </div>
-                </td>
-                <td class="py-4 px-4 whitespace-nowrap">
-                  <span :class="getLevelBadgeClass(playerLevel.level)">
-                    {{ capitalizeFirstLetter(playerLevel.level) }}
-                  </span>
-                </td>
+                  </td>
+                  <td class="py-4 px-4 whitespace-nowrap">
+                    <span :class="getLevelBadgeClass(playerLevel.level)">
+                      {{ capitalizeFirstLetter(playerLevel.level) }}
+                    </span>
+                  </td>
 
-                <td class="py-4 px-4 whitespace-nowrap">
+                  <td class="py-4 px-4 whitespace-nowrap">
+                    <div
+                      v-if="playerLevel.isRanked && playerLevel.rank"
+                      class="flex items-center"
+                    >
+                      <span
+                        :class="[
+                          'h-2 w-2 rounded-full mr-2',
+                          getRankClass(playerLevel.rank).replace(
+                            'text-',
+                            'bg-'
+                          ),
+                        ]"
+                        :style="{
+                          boxShadow: `0 0 5px ${getRankColor(
+                            playerLevel.rank
+                          )}`,
+                        }"
+                      ></span>
+                      <span
+                        :class="[
+                          'text-sm font-medium',
+                          getRankClass(playerLevel.rank),
+                        ]"
+                        :style="getRankStyle(playerLevel.rank)"
+                      >
+                        {{ playerLevel.rank }}
+                      </span>
+                    </div>
+                    <div v-else class="text-sm text-gray-500 italic">
+                      Non classé
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 max-w-xs">
+                    <div
+                      v-if="playerLevel.comment"
+                      class="text-sm text-gray-300"
+                    >
+                      <div class="relative group">
+                        <!-- Commentaire tronqué -->
+                        <div class="truncate max-w-xs">
+                          {{ playerLevel.comment }}
+                        </div>
+
+                        <!-- Tooltip pour afficher le commentaire complet au survol -->
+                        <div
+                          class="absolute left-0 -bottom-1 translate-y-full w-72 z-30 hidden group-hover:block bg-gray-800 border border-cyan-500/40 p-3 rounded-lg shadow-lg shadow-cyan-500/20 whitespace-pre-wrap break-words"
+                        >
+                          <div class="text-sm text-gray-300">
+                            {{ playerLevel.comment }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else class="text-sm text-gray-500 italic">
+                      Aucun commentaire
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Vue mobile - cartes empilées -->
+          <div class="md:hidden space-y-4">
+            <div
+              v-for="playerLevel in filteredPlayerLevels"
+              :key="playerLevel._id"
+              class="bg-gray-900/40 border border-cyan-500/30 rounded-lg p-4 shadow-md hover:shadow-cyan-500/20 transition-all duration-300"
+            >
+              <!-- En-tête de la carte avec avatar et nom -->
+              <div
+                class="flex items-center mb-3 pb-2 border-b border-cyan-500/20"
+              >
+                <div class="avatar-container">
+                  <img
+                    v-if="playerLevel.player.userInfo?.avatarUrl"
+                    :src="playerLevel.player.userInfo.avatarUrl"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
+                    alt="Avatar"
+                    loading="lazy"
+                    @error="handleImageError($event)"
+                  />
                   <div
-                    v-if="playerLevel.isRanked && playerLevel.rank"
-                    class="flex items-center"
+                    v-else
+                    class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
                   >
-                    <span
-                      :class="[
-                        'h-2 w-2 rounded-full mr-2',
-                        getRankClass(playerLevel.rank).replace('text-', 'bg-'),
-                      ]"
-                      :style="{
-                        boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
-                      }"
-                    ></span>
-                    <span
-                      :class="[
-                        'text-sm font-medium',
-                        getRankClass(playerLevel.rank),
-                      ]"
-                      :style="getRankStyle(playerLevel.rank)"
-                    >
-                      {{ playerLevel.rank }}
+                    <span class="text-pink-500 text-sm font-bold">
+                      {{
+                        getUserInitials(
+                          playerLevel.player.username || "inconnu"
+                        )
+                      }}
                     </span>
                   </div>
-                  <div v-else class="text-sm text-gray-500 italic">
-                    Non classé
+                </div>
+                <div class="ml-3">
+                  <div class="text-base font-medium text-white">
+                    {{ playerLevel.player.username }}
                   </div>
-                </td>
-                <td class="py-4 px-4">
-                  <div v-if="playerLevel.comment" class="text-sm text-gray-300">
-                    <!-- Afficher le début du commentaire avec limite de caractères -->
-                    <span :title="playerLevel.comment">
-                      {{ truncateText(playerLevel.comment, 50) }}
-                    </span>
-                    <!-- Si le commentaire est trop long, afficher "..." -->
-                    <span
-                      v-if="playerLevel.comment.length > 50"
-                      class="text-cyan-400"
-                      >...</span
-                    >
+                  <div
+                    v-if="playerLevel.player.userInfo?.username"
+                    class="text-xs text-gray-400"
+                  >
+                    {{ playerLevel.player.userInfo.username }}
                   </div>
-                  <div v-else class="text-sm text-gray-500 italic">
-                    Aucun commentaire
+                </div>
+              </div>
+
+              <!-- Informations du jeu quand aucun filtre n'est appliqué -->
+              <div v-if="!selectedGameId" class="flex items-center mb-3">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Jeu
+                </div>
+                <div class="flex items-center">
+                  <img
+                    v-if="getGameImage(playerLevel)"
+                    :src="getGameImage(playerLevel)"
+                    class="w-6 h-6 rounded object-cover mr-2"
+                    alt="Logo du jeu"
+                    loading="lazy"
+                    @error="handleImageError($event)"
+                  />
+                  <span class="text-sm font-medium text-white">
+                    {{ getGameName(playerLevel) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Pseudo dans le jeu -->
+              <div class="flex items-start mb-3">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Pseudo jeu
+                </div>
+                <div class="text-sm text-gray-300">
+                  {{ playerLevel.gameUsername || "Non renseigné" }}
+                </div>
+              </div>
+
+              <!-- Niveau -->
+              <div class="flex items-start mb-3">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Niveau
+                </div>
+                <span :class="getLevelBadgeClass(playerLevel.level)">
+                  {{ capitalizeFirstLetter(playerLevel.level) }}
+                </span>
+              </div>
+
+              <!-- Rang -->
+              <div class="flex items-start mb-3">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Rang
+                </div>
+                <div
+                  v-if="playerLevel.isRanked && playerLevel.rank"
+                  class="flex items-center"
+                >
+                  <span
+                    :class="[
+                      'h-2 w-2 rounded-full mr-2',
+                      getRankClass(playerLevel.rank).replace('text-', 'bg-'),
+                    ]"
+                    :style="{
+                      boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
+                    }"
+                  ></span>
+                  <span
+                    :class="[
+                      'text-sm font-medium',
+                      getRankClass(playerLevel.rank),
+                    ]"
+                    :style="getRankStyle(playerLevel.rank)"
+                  >
+                    {{ playerLevel.rank }}
+                  </span>
+                </div>
+                <div v-else class="text-sm text-gray-500 italic">
+                  Non classé
+                </div>
+              </div>
+
+              <!-- Commentaire amélioré -->
+              <div class="flex items-start">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Commentaire
+                </div>
+                <div v-if="playerLevel.comment">
+                  <div
+                    class="text-sm text-gray-300 whitespace-pre-wrap break-words max-w-xs"
+                  >
+                    {{ playerLevel.comment }}
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+                <div v-else class="text-sm text-gray-500 italic">
+                  Aucun commentaire
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -548,16 +707,29 @@ const getGameName = (level: PlayerGameLevel): string => {
  */
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
-    e.target.src = "https://cdn.discordapp.com/embed/avatars/0.png";
-  }
-};
+    // Vérifier si c'est un avatar ou une image de jeu
+    const isAvatar = e.target.classList.contains("rounded-full");
 
-/**
- * Tronquer un texte s'il dépasse la longueur maximale
- */
-const truncateText = (text: string, maxLength: number): string => {
-  if (!text) return "";
-  return text.length > maxLength ? text.substring(0, maxLength) : text;
+    if (isAvatar) {
+      // Récupérer le nom d'utilisateur pour générer les initiales
+      const container = e.target.closest(".avatar-container");
+      const usernameElement =
+        container?.parentElement?.querySelector(".text-white");
+      const username = usernameElement?.textContent?.trim() || "?";
+      const initials = getUserInitials(username);
+
+      // Utiliser l'API ui-avatars pour générer un avatar
+      e.target.src = `https://ui-avatars.com/api/?name=${initials}&background=6D28D9&color=F9FAFB&size=150&bold=true&font-family=monospace`;
+
+      // Modifier le style
+      e.target.classList.remove("avatar-glow");
+      e.target.classList.add("border-pink-500");
+    } else {
+      // Pour les images de jeu, utiliser une image générique
+      e.target.src = "/images/default-game.png"; // Créez cette image par défaut
+      e.target.classList.add("opacity-70");
+    }
+  }
 };
 
 /**
@@ -755,11 +927,43 @@ onMounted(async () => {
   transition: all 0.3s ease;
 }
 
-tr:hover .avatar-glow {
+tr:hover .avatar-glow,
+div:hover .avatar-glow {
   box-shadow: 0 0 15px rgba(34, 211, 238, 0.8);
 }
+
 [title] {
   cursor: help;
   position: relative;
+}
+
+/* Style pour l'affichage des commentaires sur mobile */
+.break-words {
+  word-break: break-word;
+}
+
+/* Animation du tooltip */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.group:hover .group-hover\:block {
+  display: block;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Responsive design pour le container principal */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 </style>
