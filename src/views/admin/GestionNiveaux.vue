@@ -196,7 +196,7 @@
                   <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
                   <th
                     v-if="!selectedGameId"
-                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider w-40"
                   >
                     Jeu
                   </th>
@@ -267,20 +267,22 @@
                   </td>
                   <td
                     v-if="!selectedGameId"
-                    class="py-4 px-4 whitespace-nowrap"
+                    class="py-4 px-4 whitespace-nowrap max-w-[160px]"
                   >
                     <div class="flex items-center">
                       <img
                         v-if="getGameImage(playerLevel)"
                         :src="getGameImage(playerLevel)"
-                        class="w-7 h-7 rounded object-cover mr-2"
+                        class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
                         alt="Logo du jeu"
                         loading="lazy"
                         @error="handleImageError($event)"
                       />
-                      <span class="text-sm font-medium text-white">{{
-                        getGameName(playerLevel)
-                      }}</span>
+                      <span
+                        class="text-xs font-medium text-white truncate"
+                        title="{{ getGameName(playerLevel) }}"
+                        >{{ getGameName(playerLevel) }}</span
+                      >
                     </div>
                   </td>
                   <td class="py-4 px-4 whitespace-nowrap">
@@ -407,16 +409,19 @@
                 <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
                   Jeu
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center max-w-[calc(100%-96px)]">
                   <img
                     v-if="getGameImage(playerLevel)"
                     :src="getGameImage(playerLevel)"
-                    class="w-6 h-6 rounded object-cover mr-2"
+                    class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
                     alt="Logo du jeu"
                     loading="lazy"
                     @error="handleImageError($event)"
                   />
-                  <span class="text-sm font-medium text-white">
+                  <span
+                    class="text-xs font-medium text-white truncate"
+                    title="{{ getGameName(playerLevel) }}"
+                  >
                     {{ getGameName(playerLevel) }}
                   </span>
                 </div>
