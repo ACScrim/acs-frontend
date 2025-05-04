@@ -280,9 +280,10 @@
                       />
                       <span
                         class="text-xs font-medium text-white truncate"
-                        title="{{ getGameName(playerLevel) }}"
-                        >{{ getGameName(playerLevel) }}</span
+                        :title="getGameName(playerLevel)"
                       >
+                        {{ getGameName(playerLevel) }}
+                      </span>
                     </div>
                   </td>
                   <td class="py-4 px-4 whitespace-nowrap">
@@ -420,7 +421,7 @@
                   />
                   <span
                     class="text-xs font-medium text-white truncate"
-                    title="{{ getGameName(playerLevel) }}"
+                    :title="getGameName(playerLevel)"
                   >
                     {{ getGameName(playerLevel) }}
                   </span>
