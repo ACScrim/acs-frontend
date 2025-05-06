@@ -413,7 +413,7 @@
         </form>
       </div>
 
-      <!-- Section badges du joueur -->
+      <!-- Section badges du joueur avec autocomplete -->
       <div
         class="mb-8 bg-gray-900/70 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 shadow-lg shadow-purple-500/20 relative z-10"
       >
@@ -431,46 +431,118 @@
 
         <div>
           <label
-            for="playerSelect"
-            class="block text-lg text-purple-300 mb-2 font-orbitron"
-            >Sélectionner un joueur</label
+            for="playerSelectSearch"
+            class="flex items-center text-lg text-purple-300 mb-2 font-orbitron"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+              />
+            </svg>
+            Rechercher un joueur
+          </label>
+
           <div class="relative">
-            <select
-              id="playerSelect"
-              v-model="selectedPlayerId"
-              @change="fetchPlayerBadges(selectedPlayerId)"
-              class="w-full p-3 text-white bg-gray-800/80 border border-purple-500/50 rounded-lg shadow-inner shadow-purple-500/20 focus:outline-none focus:ring-2 focus:ring-purple-500/70 transition-all duration-300 font-orbitron appearance-none"
-            >
-              <option value="" disabled selected>Sélectionner un joueur</option>
-              <option
-                v-for="player in players"
-                :key="player._id"
-                :value="player._id"
-              >
-                {{ player.username }}
-              </option>
-            </select>
+            <input
+              type="text"
+              id="playerSelectSearch"
+              autocomplete="off"
+              v-model="playerBadgeSearch"
+              @focus="showPlayerBadgeList = true"
+              @blur="hidePlayerBadgeList"
+              @input="searchPlayersBadge"
+              placeholder="Nom du joueur..."
+              class="w-full p-3 text-white bg-gray-800/80 border border-purple-500/50 rounded-lg shadow-inner shadow-purple-500/20 focus:outline-none focus:ring-2 focus:ring-purple-500/70 transition-all duration-300 font-orbitron"
+            />
+
+            <!-- Liste des résultats de recherche -->
             <div
-              class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              v-if="showPlayerBadgeList && filteredPlayersBadge.length > 0"
+              class="absolute z-10 left-0 right-0 mt-1 bg-gray-900/95 border border-purple-500/30 rounded-lg shadow-lg shadow-purple-500/20 max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-gray-800"
             >
-              <svg
-                class="h-5 w-5 text-purple-300"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+              <div
+                v-for="player in filteredPlayersBadge"
+                :key="player._id"
+                @mousedown.prevent="selectPlayerForBadges(player)"
+                class="p-3 hover:bg-gray-800/80 cursor-pointer border-b border-purple-500/10 last:border-b-0 text-white font-orbitron flex items-center space-x-2 hover:text-purple-300 transition-colors duration-200"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+                <span class="flex-1">{{ player.username }}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-purple-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                    clip-rule="evenodd"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 5a1 1 0 011 1v8a1 1 0 11-2 0V6a1 1 0 011-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Message si aucun résultat -->
+            <div
+              v-if="
+                showPlayerBadgeList &&
+                playerBadgeSearch &&
+                filteredPlayersBadge.length === 0
+              "
+              class="absolute z-10 left-0 right-0 mt-1 bg-gray-900/95 border border-purple-500/30 rounded-lg shadow-lg shadow-purple-500/20 p-4 text-center text-purple-300 font-orbitron"
+            >
+              Aucun joueur trouvé
             </div>
           </div>
         </div>
 
-        <div v-if="selectedPlayerBadges.length > 0" class="mt-6">
+        <!-- Affichage du joueur sélectionné -->
+        <div
+          v-if="selectedPlayerBadge"
+          class="mt-4 p-3 bg-gray-800/40 border border-purple-500/20 rounded-lg flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <span class="text-white font-orbitron">{{
+              selectedPlayerBadge.username
+            }}</span>
+          </div>
+          <button
+            @click="clearSelectedPlayerBadge"
+            type="button"
+            class="cyberpunk-btn-purple p-1 rounded-full"
+            title="Changer de joueur"
+            aria-label="Changer de joueur"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 relative z-10"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Badges du joueur sélectionné -->
+        <div
+          v-if="selectedPlayerId && selectedPlayerBadges.length > 0"
+          class="mt-6"
+        >
           <div class="flex items-center mb-4">
             <div
               class="h-px flex-grow bg-gradient-to-r from-transparent via-purple-500 to-transparent"
@@ -545,6 +617,15 @@
           </svg>
           <p class="text-purple-300 font-orbitron">
             Ce joueur n'a pas de badges pour le moment
+          </p>
+        </div>
+
+        <div
+          v-else-if="playerBadgeSearch && !selectedPlayerBadge"
+          class="mt-6 bg-gray-800/40 rounded-lg p-6 border border-purple-500/20 text-center"
+        >
+          <p class="text-purple-300 font-orbitron">
+            Sélectionnez un joueur pour voir et modifier ses badges
           </p>
         </div>
       </div>
@@ -1000,6 +1081,12 @@ const playerSearch = ref<string>("");
 const showPlayerList = ref<boolean>(false);
 const filteredPlayers = ref<Player[]>([]);
 
+// État de recherche pour la section "Modifier les badges d'un joueur"
+const playerBadgeSearch = ref<string>("");
+const showPlayerBadgeList = ref<boolean>(false);
+const filteredPlayersBadge = ref<Player[]>([]);
+const selectedPlayerBadge = ref<Player | null>(null);
+
 //------------------------------------------------------
 // 2. FONCTIONS UTILITAIRES
 //------------------------------------------------------
@@ -1360,6 +1447,54 @@ const searchPlayers = () => {
         !selectedPlayers.value.some((sp) => sp._id === p._id)
     )
     .slice(0, 10); // Limite à 10 résultats
+};
+
+/**
+ * Cache la liste des joueurs pour la section badges
+ */
+const hidePlayerBadgeList = () => {
+  // Retarder la fermeture pour permettre le clic sur un élément de la liste
+  setTimeout(() => {
+    showPlayerBadgeList.value = false;
+  }, 200);
+};
+
+/**
+ * Recherche des joueurs par nom pour la section badges
+ */
+const searchPlayersBadge = () => {
+  if (!playerBadgeSearch.value.trim()) {
+    filteredPlayersBadge.value = [];
+    return;
+  }
+
+  const search = playerBadgeSearch.value.toLowerCase();
+  filteredPlayersBadge.value = players.value
+    .filter((p) => p.username.toLowerCase().includes(search))
+    .slice(0, 10); // Limite à 10 résultats
+};
+
+/**
+ * Sélectionne un joueur et charge ses badges
+ */
+const selectPlayerForBadges = (player: Player) => {
+  selectedPlayerBadge.value = player;
+  if (player._id) {
+    selectedPlayerId.value = player._id;
+    fetchPlayerBadges(player._id);
+  }
+  playerBadgeSearch.value = player.username;
+  filteredPlayersBadge.value = [];
+};
+
+/**
+ * Efface le joueur sélectionné
+ */
+const clearSelectedPlayerBadge = () => {
+  selectedPlayerBadge.value = null;
+  selectedPlayerId.value = "";
+  selectedPlayerBadges.value = [];
+  playerBadgeSearch.value = "";
 };
 
 //------------------------------------------------------
