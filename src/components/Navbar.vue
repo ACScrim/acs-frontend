@@ -83,6 +83,26 @@
         </router-link>
       </div>
 
+      <!-- Toggle mode allégé -->
+      <div class="hidden sm:flex items-center mr-4 relative group">
+        <label class="toggle-container flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            @change="toggleLightMode"
+            :checked="isLightMode"
+            class="hidden"
+          />
+          <div class="toggle-switch relative">
+            <div class="toggle-circle"></div>
+          </div>
+          <span class="ml-2 text-xs text-gray-300 font-orbitron"
+            >Mode allégé</span
+          >
+        </label>
+
+        <div class="light-mode-tooltip">Activer/désactiver le fond vidéo</div>
+      </div>
+
       <!-- Menu utilisateur -->
       <div class="relative user-menu flex items-center">
         <span
@@ -510,10 +530,20 @@
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
 import { useRouter, useRoute } from "vue-router";
+import { useSettingsStore } from "../stores/settingsStore";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
 const player = computed(() => userStore.player);
+
+// Après vos autres variables et constantes
+const settingsStore = useSettingsStore();
+const isLightMode = computed(() => settingsStore.isLightMode);
+
+// Fonction pour basculer le mode allégé
+const toggleLightMode = () => {
+  settingsStore.toggleLightMode();
+};
 
 const isAdmin = computed(
   () =>
@@ -928,5 +958,71 @@ onBeforeUnmount(() => {
   .navbar-logo {
     height: 36px;
   }
+}
+
+/* Style du toggle mode allégé */
+.toggle-container {
+  position: relative;
+  z-index: 1;
+}
+
+.toggle-switch {
+  width: 36px;
+  height: 20px;
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  transition: all 0.3s;
+}
+
+.toggle-circle {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  border-radius: 50%;
+  transition: transform 0.3s, background 0.3s;
+}
+
+input:checked + .toggle-switch {
+  border-color: rgba(236, 72, 153, 0.5);
+}
+
+input:checked + .toggle-switch .toggle-circle {
+  transform: translateX(16px);
+  background: linear-gradient(to right, #ec4899, #f43f5e);
+}
+
+.toggle-switch:hover {
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+}
+
+input:checked + .toggle-switch:hover {
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+}
+
+.light-mode-tooltip {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #a855f7;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  font-family: "Orbitron", sans-serif;
+  white-space: nowrap;
+  z-index: 100;
+  width: max-content;
+}
+
+.group:hover .light-mode-tooltip {
+  opacity: 1;
 }
 </style>
