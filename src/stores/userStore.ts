@@ -10,6 +10,9 @@ export const useUserStore = defineStore("user", {
   }),
   getters: {
     isSuperAdmin: (state) => state.user?.role === "superadmin",
+    isAdmin: (state) =>
+      state.user?.role === "admin" || state.user?.role === "superadmin",
+    isLoggedIn: (state) => !!state.user,
     playerId: (state) => state.player?._id || null,
   },
   actions: {

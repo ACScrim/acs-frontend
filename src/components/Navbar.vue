@@ -74,6 +74,7 @@
           Propositions
         </router-link>
         <router-link
+          v-if="user"
           to="/badges"
           class="nav-link font-orbitron"
           :class="{ 'nav-link-active': isActive('/badges') }"

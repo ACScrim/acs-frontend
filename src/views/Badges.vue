@@ -2,33 +2,27 @@
   <div
     class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 min-h-screen relative"
   >
+    <!-- En-tête avec éléments graphiques cyberpunk -->
+    <div
+      class="absolute top-28 left-0 right-0 flex justify-between overflow-hidden z-0 opacity-30 pointer-events-none"
+    >
+      <div
+        class="w-1/4 h-1 bg-gradient-to-r from-purple-500/50 to-transparent"
+      ></div>
+      <div
+        class="w-1/4 h-1 bg-gradient-to-l from-purple-500/50 to-transparent"
+      ></div>
+    </div>
     <!-- Effet de grille cyberpunk en arrière-plan -->
     <div class="cyber-grid"></div>
 
     <!-- Header avec style cyberpunk synthwave -->
-    <div class="max-w-5xl mx-auto mb-10">
-      <div class="mb-8 text-center relative">
-        <!-- Lignes déco horizontales -->
-        <div
-          class="hidden sm:block absolute top-1/2 left-0 w-1/6 h-0.5 bg-gradient-to-r from-transparent to-pink-500"
-        ></div>
-        <div
-          class="hidden sm:block absolute top-1/2 right-0 w-1/6 h-0.5 bg-gradient-to-l from-transparent to-pink-500"
-        ></div>
-
+    <div class="max-w-6xl mx-auto mb-10">
+      <div class="text-center relative z-10">
         <!-- Titre principal avec effet néon -->
-        <h1
-          class="text-4xl text-white mb-8 neon-text font-audiowide text-center"
-        >
-          Badges
+        <h1 class="text-4xl text-white font-audiowide mb-4 neon-text">
+          Collection de Badges
         </h1>
-        <p
-          class="text-gray-300 max-w-2xl mx-auto font-orbitron text-sm bg-black/80 backdrop-blur-sm rounded-xl border border-pink-500/70 shadow-lg shadow-pink-500/30 p-4 transition-all duration-300 hover:shadow-pink-500/50 hover:border-pink-400 transform hover:-translate-y-1"
-        >
-          Découvrez tous les badges disponibles dans ACS et les joueurs qui les
-          ont obtenus. Chaque badge raconte une histoire et immortalise un
-          exploit.
-        </p>
       </div>
     </div>
 
@@ -37,14 +31,16 @@
       <CyberpunkLoader />
     </div>
 
-    <div v-else class="max-w-5xl mx-auto">
+    <div v-else class="max-w-6xl mx-auto">
       <!-- Onglets améliorés - Badges attribués / Badges disponibles -->
       <div class="mb-8 flex justify-center">
-        <div class="cyberpunk-neon-tabs">
+        <div
+          class="cyberpunk-neon-tabs bg-black/75 backdrop-blur-sm border border-purple-500/30 shadow-lg shadow-purple-500/20 p-1 rounded-xl w-full max-w-md"
+        >
           <button
             @click="activeTab = 'assigned'"
             :class="[
-              'cyberpunk-neon-tab',
+              'cyberpunk-neon-tab w-1/2',
               { active: activeTab === 'assigned' },
             ]"
           >
@@ -55,7 +51,7 @@
           <button
             @click="activeTab = 'available'"
             :class="[
-              'cyberpunk-neon-tab',
+              'cyberpunk-neon-tab w-1/2',
               { active: activeTab === 'available' },
             ]"
           >
@@ -66,11 +62,70 @@
         </div>
       </div>
 
+      <!-- Filtre par jeu -->
+      <div class="mb-8">
+        <div
+          class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500/30 shadow-lg shadow-purple-500/20 p-4"
+        >
+          <label
+            for="gameFilter"
+            class="flex items-center text-lg text-purple-300 mb-3 font-orbitron"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
+              />
+            </svg>
+            Filtrer par jeu
+          </label>
+          <div class="relative">
+            <select
+              id="gameFilter"
+              v-model="selectedGameFilter"
+              class="w-full p-3 text-white bg-gray-800/80 border border-purple-500/50 rounded-lg shadow-inner shadow-purple-500/20 focus:outline-none focus:ring-2 focus:ring-purple-500/70 font-orbitron appearance-none"
+            >
+              <option value="all">Tous les jeux</option>
+              <option value="acs">Badges ACS (Général)</option>
+              <option v-for="game in games" :key="game._id" :value="game._id">
+                {{ game.name }}
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-5 w-5 text-purple-300"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Liste des badges attribués -->
       <div v-if="activeTab === 'assigned'">
         <div v-if="assignedBadges.length > 0">
-          <!-- Section Badges ACS -->
-          <div v-if="assignedAcsBadges.length > 0" class="mb-8">
+          <!-- Section Badges ACS (visible seulement si selectedGameFilter est 'all' ou 'acs') -->
+          <div
+            v-if="
+              (selectedGameFilter === 'all' || selectedGameFilter === 'acs') &&
+              filteredAssignedAcsBadges.length > 0
+            "
+            class="mb-8 bg-black/40 backdrop-blur-sm rounded-xl border border-pink-500/10 p-6"
+          >
             <div class="flex items-center mb-4">
               <div
                 class="h-1 flex-grow bg-gradient-to-r from-transparent to-pink-500/70"
@@ -85,9 +140,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div
-                v-for="badge in assignedAcsBadges"
+                v-for="badge in filteredAssignedAcsBadges"
                 :key="badge._id"
-                class="bg-black/75 backdrop-blur-sm rounded-lg border border-pink-500/70 p-5 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-pink-500/30 flex flex-col h-auto min-h-[170px]"
+                class="bg-black/75 backdrop-blur-sm rounded-lg border-2 border-pink-500/40 p-5 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-pink-500/30 hover:border-pink-500/70 flex flex-col h-auto min-h-[170px]"
               >
                 <!-- En-tête du badge avec image et titre -->
                 <div class="flex items-center mb-auto">
@@ -141,15 +196,22 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Section Badges de Jeux -->
-          <div v-if="assignedGameBadges.length > 0" class="mb-8">
+        <!-- Section Badges par jeu -->
+        <template v-for="game in gamesWithAssignedBadges" :key="game._id">
+          <div
+            v-if="
+              selectedGameFilter === 'all' || selectedGameFilter === game._id
+            "
+            class="mb-8 bg-black/40 backdrop-blur-sm rounded-xl border border-cyan-500/10 p-6"
+          >
             <div class="flex items-center mb-4">
               <div
                 class="h-1 flex-grow bg-gradient-to-r from-transparent to-cyan-500/70"
               ></div>
               <h2 class="text-xl font-audiowide text-white mx-4 neon-text-cyan">
-                Badges de Jeux
+                {{ game.name }}
               </h2>
               <div
                 class="h-1 flex-grow bg-gradient-to-l from-transparent to-cyan-500/70"
@@ -158,9 +220,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div
-                v-for="badge in assignedGameBadges"
+                v-for="badge in getAssignedBadgesByGame(game._id)"
                 :key="badge._id"
-                class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500/70 p-5 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/30 flex flex-col h-auto min-h-[170px]"
+                class="bg-black/75 backdrop-blur-sm rounded-lg border-2 border-cyan-500/40 p-5 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/30 hover:border-cyan-500/70 flex flex-col h-auto min-h-[170px]"
               >
                 <!-- En-tête du badge avec image et titre -->
                 <div class="flex items-center mb-auto">
@@ -187,7 +249,7 @@
                     <span
                       class="bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs px-2 py-1 rounded-full mt-1 inline-block max-w-full truncate"
                     >
-                      {{ getGameName(badge.categoryId) }}
+                      {{ game.name }}
                     </span>
                   </div>
                 </div>
@@ -214,8 +276,44 @@
               </div>
             </div>
           </div>
+        </template>
+
+        <!-- Message si aucun badge ne correspond au filtre sélectionné -->
+        <div
+          v-if="filteredAssignedBadges.length === 0"
+          class="cyberpunk-panel p-8 text-center"
+        >
+          <div class="cyber-angle top-right"></div>
+          <div class="cyber-angle bottom-left"></div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 mx-auto text-purple-400/70 mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
+            />
+          </svg>
+          <h3
+            class="text-xl text-purple-300 font-orbitron mb-2 cyber-text-glow-purple"
+          >
+            Aucun badge ne correspond au filtre
+          </h3>
+          <p class="text-gray-400">
+            Il n'y a pas de badges attribués pour le jeu sélectionné.
+          </p>
         </div>
-        <div v-else class="cyberpunk-panel p-8 text-center">
+        <!-- Message si aucun badge n'est attribué -->
+        <div
+          v-else-if="assignedBadges.length === 0"
+          class="cyberpunk-panel p-8 text-center"
+        >
           <div class="cyber-angle top-right"></div>
           <div class="cyber-angle bottom-left"></div>
 
@@ -249,7 +347,13 @@
       <div v-if="activeTab === 'available'">
         <div v-if="availableBadges.length > 0">
           <!-- Section Badges ACS disponibles -->
-          <div v-if="availableAcsBadges.length > 0" class="mb-8">
+          <div
+            v-if="
+              (selectedGameFilter === 'all' || selectedGameFilter === 'acs') &&
+              filteredAvailableAcsBadges.length > 0
+            "
+            class="mb-8 bg-black/40 backdrop-blur-sm rounded-xl border border-pink-500/10 p-6"
+          >
             <div class="flex items-center mb-4">
               <div
                 class="h-1 flex-grow bg-gradient-to-r from-transparent to-pink-500/30"
@@ -264,7 +368,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div
-                v-for="badge in availableAcsBadges"
+                v-for="badge in filteredAvailableAcsBadges"
                 :key="badge._id"
                 class="bg-black/75 backdrop-blur-sm rounded-lg border border-gray-600 p-5 transform transition-all duration-300 hover:scale-[1.02] grayscale hover:grayscale-0 flex flex-col h-auto min-h-[170px]"
               >
@@ -299,57 +403,98 @@
             </div>
           </div>
 
-          <!-- Section Badges de Jeux disponibles -->
-          <div v-if="availableGameBadges.length > 0" class="mb-8">
-            <div class="flex items-center mb-4">
-              <div
-                class="h-1 flex-grow bg-gradient-to-r from-transparent to-cyan-500/30"
-              ></div>
-              <h2 class="text-xl font-audiowide text-gray-400 mx-4">
-                Badges de Jeux
-              </h2>
-              <div
-                class="h-1 flex-grow bg-gradient-to-l from-transparent to-cyan-500/30"
-              ></div>
-            </div>
+          <!-- Section Badges de Jeux disponibles (par jeu) -->
+          <template v-for="game in gamesWithAvailableBadges" :key="game._id">
+            <div
+              v-if="
+                selectedGameFilter === 'all' || selectedGameFilter === game._id
+              "
+              class="mb-8"
+            >
+              <div class="flex items-center mb-4">
+                <div
+                  class="h-1 flex-grow bg-gradient-to-r from-transparent to-cyan-500/30"
+                ></div>
+                <h2 class="text-xl font-audiowide text-gray-400 mx-4">
+                  {{ game.name }}
+                </h2>
+                <div
+                  class="h-1 flex-grow bg-gradient-to-l from-transparent to-cyan-500/30"
+                ></div>
+              </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div
-                v-for="badge in availableGameBadges"
-                :key="badge._id"
-                class="bg-black/75 backdrop-blur-sm rounded-lg border border-gray-600 p-5 transform transition-all duration-300 hover:scale-[1.02] grayscale hover:grayscale-0 flex flex-col h-auto min-h-[170px]"
-              >
-                <div class="flex items-center mb-auto">
-                  <div class="relative flex-shrink-0 mr-4">
-                    <img
-                      :src="badge.imageUrl"
-                      :alt="badge.title"
-                      class="h-16 w-16 rounded-full border-2 border-gray-600 object-cover opacity-75"
-                      loading="lazy"
-                      @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
-                    />
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="text-gray-400 text-xl font-orbitron">
-                      {{ badge.title }}
-                    </h3>
-                    <span
-                      class="bg-cyan-900/20 text-cyan-700/70 border border-cyan-800/30 text-xs px-2 py-1 rounded-full mt-1 inline-block max-w-full truncate"
-                    >
-                      {{ getGameName(badge.categoryId) }}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  class="cyberpunk-btn-gray mt-4 w-full py-2 px-4 rounded-md text-sm opacity-75 cursor-not-allowed"
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div
+                  v-for="badge in getAvailableBadgesByGame(game._id)"
+                  :key="badge._id"
+                  class="bg-black/75 backdrop-blur-sm rounded-lg border border-gray-600 p-5 transform transition-all duration-300 hover:scale-[1.02] grayscale hover:grayscale-0 flex flex-col h-auto min-h-[170px]"
                 >
-                  Ce badge n'a pas encore été attribué
-                </button>
+                  <div class="flex items-center mb-auto">
+                    <div class="relative flex-shrink-0 mr-4">
+                      <img
+                        :src="badge.imageUrl"
+                        :alt="badge.title"
+                        class="h-16 w-16 rounded-full border-2 border-gray-600 object-cover opacity-75"
+                        loading="lazy"
+                        @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-gray-400 text-xl font-orbitron">
+                        {{ badge.title }}
+                      </h3>
+                      <span
+                        class="bg-cyan-900/20 text-cyan-700/70 border border-cyan-800/30 text-xs px-2 py-1 rounded-full mt-1 inline-block max-w-full truncate"
+                      >
+                        {{ game.name }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    class="cyberpunk-btn-gray mt-4 w-full py-2 px-4 rounded-md text-sm opacity-75 cursor-not-allowed"
+                  >
+                    Ce badge n'a pas encore été attribué
+                  </button>
+                </div>
               </div>
             </div>
+          </template>
+
+          <!-- Message si aucun badge disponible ne correspond au filtre -->
+          <div
+            v-if="filteredAvailableBadges.length === 0"
+            class="cyberpunk-panel p-8 text-center"
+          >
+            <div class="cyber-angle top-right"></div>
+            <div class="cyber-angle bottom-left"></div>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-16 w-16 mx-auto text-cyan-500/70 mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              />
+            </svg>
+            <h3
+              class="text-xl text-cyan-300 font-orbitron mb-2 cyber-text-glow-cyan"
+            >
+              Tous les badges sont déjà attribués
+            </h3>
+            <p class="text-gray-400">
+              Pour le jeu sélectionné, tous les badges ont déjà été attribués à
+              au moins un joueur.
+            </p>
           </div>
         </div>
+        <!-- Message si tous les badges ont été attribués -->
         <div v-else class="cyberpunk-panel p-8 text-center">
           <div class="cyber-angle top-right"></div>
           <div class="cyber-angle bottom-left"></div>
@@ -550,44 +695,147 @@
 </template>
 
 <script setup lang="ts">
+//------------------------------------------------------
+// 1. IMPORTS
+//------------------------------------------------------
 import { ref, onMounted, computed, watch } from "vue";
 import badgeService from "../services/badgeService";
 import playerService from "../services/playerService";
-import type { Badge, Player } from "../types";
-import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
 import userService from "../services/userService";
 import gameService from "../services/gameService";
-// État
+import type { Badge, Player } from "../types";
+import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
+
+//------------------------------------------------------
+// 2. ÉTAT ET RÉFÉRENCES
+//------------------------------------------------------
+// Données principales
 const badges = ref<Badge[]>([]);
 const players = ref<Player[]>([]);
+const games = ref<any[]>([]);
+const users = ref<any[]>([]);
+
+// Interface utilisateur
 const loading = ref(true);
 const activeTab = ref("assigned"); // 'assigned' ou 'available'
+const selectedGameFilter = ref("all");
 const selectedBadge = ref<Badge | null>(null);
 const modalEnterActive = ref(false);
-const users = ref<any[]>([]);
-// État pour stocker les jeux
-const games = ref<any[]>([]);
-// Filtres par catégorie
 
-// Badges attribués par catégorie
+//------------------------------------------------------
+// 3. PROPRIÉTÉS CALCULÉES
+//------------------------------------------------------
+// 3.1 Filtres de base pour les badges
+const assignedBadges = computed(() => {
+  return badges.value.filter((badge) =>
+    players.value.some(
+      (player) =>
+        player.badges &&
+        player.badges.some((playerBadge) =>
+          typeof playerBadge === "string"
+            ? playerBadge === badge._id
+            : playerBadge._id === badge._id
+        )
+    )
+  );
+});
+
+const availableBadges = computed(() => {
+  return badges.value.filter(
+    (badge) =>
+      !players.value.some(
+        (player) =>
+          player.badges &&
+          player.badges.some((playerBadge) =>
+            typeof playerBadge === "string"
+              ? playerBadge === badge._id
+              : playerBadge._id === badge._id
+          )
+      )
+  );
+});
+
+// 3.2 Filtres par type (ACS vs Jeux)
 const assignedAcsBadges = computed(() => {
   return assignedBadges.value.filter((badge) => badge.categoryType === "acs");
 });
 
-const assignedGameBadges = computed(() => {
-  return assignedBadges.value.filter((badge) => badge.categoryType === "game");
+const filteredAssignedAcsBadges = computed(() => {
+  return assignedAcsBadges.value;
 });
 
-// Badges disponibles par catégorie
 const availableAcsBadges = computed(() => {
   return availableBadges.value.filter((badge) => badge.categoryType === "acs");
 });
 
-const availableGameBadges = computed(() => {
-  return availableBadges.value.filter((badge) => badge.categoryType === "game");
+const filteredAvailableAcsBadges = computed(() => {
+  return availableAcsBadges.value;
 });
 
-// Mettre à jour fetchData pour récupérer les jeux
+// 3.3 Filtres par jeu sélectionné
+const filteredAssignedBadges = computed(() => {
+  if (selectedGameFilter.value === "all") {
+    return assignedBadges.value;
+  } else if (selectedGameFilter.value === "acs") {
+    return assignedBadges.value.filter((badge) => badge.categoryType === "acs");
+  } else {
+    return assignedBadges.value.filter(
+      (badge) =>
+        badge.categoryType === "game" &&
+        badge.categoryId === selectedGameFilter.value
+    );
+  }
+});
+
+const filteredAvailableBadges = computed(() => {
+  if (selectedGameFilter.value === "all") {
+    return availableBadges.value;
+  } else if (selectedGameFilter.value === "acs") {
+    return availableBadges.value.filter(
+      (badge) => badge.categoryType === "acs"
+    );
+  } else {
+    return availableBadges.value.filter(
+      (badge) =>
+        badge.categoryType === "game" &&
+        badge.categoryId === selectedGameFilter.value
+    );
+  }
+});
+
+// 3.4 Listes des jeux avec badges
+const gamesWithAssignedBadges = computed(() => {
+  const gameIds = new Set();
+
+  assignedBadges.value.forEach((badge) => {
+    if (badge.categoryType === "game" && badge.categoryId) {
+      gameIds.add(badge.categoryId);
+    }
+  });
+
+  return games.value
+    .filter((game) => gameIds.has(game._id))
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
+
+const gamesWithAvailableBadges = computed(() => {
+  const gameIds = new Set();
+
+  availableBadges.value.forEach((badge) => {
+    if (badge.categoryType === "game" && badge.categoryId) {
+      gameIds.add(badge.categoryId);
+    }
+  });
+
+  return games.value
+    .filter((game) => gameIds.has(game._id))
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
+
+//------------------------------------------------------
+// 4. MÉTHODES
+//------------------------------------------------------
+// 4.1 Chargement des données
 const fetchData = async () => {
   try {
     loading.value = true;
@@ -609,13 +857,19 @@ const fetchData = async () => {
   }
 };
 
-const getUserAvatar = (player: Player): string | undefined => {
-  if (!player || !player.userId) return undefined;
-  const user = users.value.find((u) => u._id === player.userId);
-  return user?.avatarUrl || undefined;
+// 4.2 Méthodes d'aide pour filtrer et afficher les badges
+const getAssignedBadgesByGame = (gameId: string) => {
+  return assignedBadges.value.filter(
+    (badge) => badge.categoryType === "game" && badge.categoryId === gameId
+  );
 };
 
-// Récupérer les joueurs qui ont un badge spécifique
+const getAvailableBadgesByGame = (gameId: string) => {
+  return availableBadges.value.filter(
+    (badge) => badge.categoryType === "game" && badge.categoryId === gameId
+  );
+};
+
 const getBadgePlayers = (badgeId: string): Player[] => {
   return players.value.filter(
     (player) =>
@@ -626,51 +880,24 @@ const getBadgePlayers = (badgeId: string): Player[] => {
   );
 };
 
-// Obtenir le nom du jeu associé à un badge
 const getGameName = (gameId: string): string => {
   if (!gameId) return "";
   const game = games.value.find((g) => g._id === gameId);
   return game ? game.name : "Jeu inconnu";
 };
 
-// Calculer les badges qui ont été attribués à au moins un joueur
-const assignedBadges = computed(() => {
-  return badges.value.filter((badge) =>
-    players.value.some(
-      (player) =>
-        player.badges &&
-        player.badges.some((playerBadge) =>
-          typeof playerBadge === "string"
-            ? playerBadge === badge._id
-            : playerBadge._id === badge._id
-        )
-    )
-  );
-});
+// 4.3 Méthodes pour l'interface utilisateur
+const getUserAvatar = (player: Player): string | undefined => {
+  if (!player || !player.userId) return undefined;
+  const user = users.value.find((u) => u._id === player.userId);
+  return user?.avatarUrl || undefined;
+};
 
-// Calculer les badges qui n'ont jamais été attribués
-const availableBadges = computed(() => {
-  return badges.value.filter(
-    (badge) =>
-      !players.value.some(
-        (player) =>
-          player.badges &&
-          player.badges.some((playerBadge) =>
-            typeof playerBadge === "string"
-              ? playerBadge === badge._id
-              : playerBadge._id === badge._id
-          )
-      )
-  );
-});
-
-// Obtenir les initiales d'un nom d'utilisateur
 const getInitials = (username: string): string => {
   if (!username) return "?";
   return username.charAt(0).toUpperCase();
 };
 
-// Sélectionner un badge pour voir les joueurs associés
 const selectBadge = (badge: Badge) => {
   selectedBadge.value = badge;
   // Ajouter un petit délai pour permettre à l'animation d'entrée de fonctionner
@@ -679,7 +906,9 @@ const selectBadge = (badge: Badge) => {
   }, 10);
 };
 
-// Surveiller les changements de selectedBadge
+//------------------------------------------------------
+// 5. CYCLE DE VIE ET OBSERVATEURS
+//------------------------------------------------------
 watch(selectedBadge, (newValue) => {
   if (!newValue) {
     // Animation de sortie
@@ -717,6 +946,16 @@ onMounted(() => {
 .neon-text {
   color: white;
   text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 15px #ff00ff;
+}
+
+.neon-text-pink {
+  color: white;
+  text-shadow: 0 0 10px #ec4899, 0 0 20px #ec4899, 0 0 15px #ec4899;
+}
+
+.neon-text-cyan {
+  color: white;
+  text-shadow: 0 0 10px #06b6d4, 0 0 20px #06b6d4, 0 0 15px #06b6d4;
 }
 
 .neon-text-purple {
@@ -843,7 +1082,7 @@ onMounted(() => {
 .cyberpunk-neon-tab.active {
   background: rgba(168, 85, 247, 0.3);
   color: rgb(216, 180, 254);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
   text-shadow: 0 0 5px rgba(216, 180, 254, 0.7),
     0 0 10px rgba(216, 180, 254, 0.5);
 }
@@ -878,5 +1117,32 @@ onMounted(() => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(168, 85, 247, 0.7);
+}
+
+/* Améliorations pour les écrans mobiles */
+@media (max-width: 640px) {
+  .cyberpunk-neon-tabs {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cyberpunk-neon-tab {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .cyber-bracket {
+    display: none; /* Cache les crochets sur mobile pour plus de lisibilité */
+  }
+}
+
+/* Hover amélioré pour les cartes de badge */
+.bg-black\/75 {
+  transition: all 0.3s ease-in-out;
+}
+
+.bg-black\/75:hover {
+  background-color: rgba(17, 24, 39, 0.85);
+  transform: translateY(-5px);
 }
 </style>
