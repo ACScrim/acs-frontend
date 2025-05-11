@@ -582,24 +582,33 @@
         <!-- Contenu du modal -->
         <div class="p-6">
           <!-- Titre et description du badge -->
-          <div class="flex items-center mb-3">
-            <div class="relative flex-shrink-0 mr-4">
+          <div class="flex flex-col items-center mb-6">
+            <div class="relative mb-4">
               <img
                 :src="selectedBadge.imageUrl"
                 :alt="selectedBadge.title"
-                class="h-16 w-16 rounded-full border-2 border-purple-500 object-cover"
+                class="h-48 w-48 rounded-full border-4 border-purple-500 object-cover shadow-lg"
                 @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
               />
-              <div class="absolute inset-0 rounded-full glow-badge"></div>
+              <div
+                class="absolute inset-0 rounded-full"
+                style="
+                  box-shadow: 0 0 30px rgba(168, 85, 247, 0.7),
+                    0 0 60px rgba(168, 85, 247, 0.3);
+                  border-radius: 50%;
+                "
+              ></div>
             </div>
             <div class="flex-1">
-              <h3 class="text-white text-2xl font-orbitron neon-text-purple">
+              <h3
+                class="text-white text-2xl font-orbitron neon-text-purple text-center"
+              >
                 {{ selectedBadge.title }}
               </h3>
               <div class="mt-1">
                 <span
                   :class="[
-                    'text-xs px-2 py-1 rounded-full',
+                    'text-sm px-3 py-1 rounded-full',
                     selectedBadge.categoryType === 'acs'
                       ? 'bg-pink-500/20 text-pink-300 border border-pink-400/30'
                       : 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30',
@@ -626,7 +635,7 @@
           </p>
 
           <!-- Liste des joueurs -->
-          <h4 class="text-purple-400 font-orbitron mb-3">
+          <h4 class="text-purple-400 font-orbitron mb-3 flex items-center">
             Joueurs avec ce badge ({{
               selectedBadge._id ? getBadgePlayers(selectedBadge._id).length : 0
             }})
