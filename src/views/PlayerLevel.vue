@@ -483,8 +483,9 @@
           <div>
             <label
               class="block text-cyan-300 text-sm font-medium mb-3 font-orbitron"
-              >Niveau de jeu</label
-            >
+              >Niveau de jeu
+              <span class="text-pink-500 ml-1">*</span>
+            </label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div
                 v-for="levelOption in availableLevels"
@@ -571,17 +572,42 @@
                 class="block text-cyan-300 text-sm font-medium mb-2 font-orbitron"
               >
                 Rang actuel
+                <span class="text-pink-500 ml-1">*</span>
               </label>
+
               <input
                 id="rank"
                 v-model="rank"
                 type="text"
                 placeholder="Ex: Diamant 2, Master, Silver 3..."
                 maxlength="20"
-                class="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white focus:border-cyan-500 focus:outline-none font-orbitron"
+                :class="[
+                  'w-full p-3 bg-gray-800 border rounded-md text-white focus:outline-none font-orbitron',
+                  rankError
+                    ? 'border-pink-500 focus:border-pink-500 focus:ring-1 focus:ring-pink-500/50'
+                    : 'border-gray-700 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50',
+                ]"
+                required
               />
               <div class="flex justify-between mt-1">
-                <p class="text-xs text-amber-400 italic font-orbitron">
+                <p v-if="rankError" class="text-xs text-pink-500 font-orbitron">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 inline mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  Veuillez indiquer votre rang actuel
+                </p>
+                <p v-else class="text-xs text-amber-400 italic font-orbitron">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-3 w-3 inline mr-1"
@@ -707,6 +733,8 @@ const currentPlayerId = computed(() => userStore.playerId || "");
 
 const route = useRoute();
 const router = useRouter();
+
+const rankError = ref(false);
 
 // États des modales
 const showGameSelector = ref(false);
@@ -872,9 +900,19 @@ const saveLevel = async (e?: Event) => {
   // Empêcher le comportement par défaut du formulaire si l'événement est fourni
   if (e) e.preventDefault();
 
+  // Réinitialiser l'état d'erreur
+  rankError.value = false;
+
   // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
     showToast("Données incomplètes pour l'enregistrement", "error");
+    return;
+  }
+
+  // Vérifier si le rang est requis mais non fourni
+  if (isRanked.value && !rank.value.trim()) {
+    rankError.value = true;
+    showToast("Veuillez indiquer votre rang actuel", "error");
     return;
   }
 
@@ -896,7 +934,7 @@ const saveLevel = async (e?: Event) => {
     await fetchPlayerLevels();
     showLevelSelector.value = false;
     resetForm();
-    handleSuccessfulSave(); // Utiliser la nouvelle fonction
+    handleSuccessfulSave();
 
     showToast("Niveau enregistré avec succès", "success");
   } catch (error) {
