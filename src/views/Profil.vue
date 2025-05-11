@@ -509,52 +509,101 @@
       </div>
     </div>
 
+    <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
     <!-- Modal détail badge -->
     <div
       v-if="selectedBadge"
-      class="fixed inset-0 flex items-center justify-center z-50 bg-black/70 backdrop-blur-sm"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-md"
       @click="selectedBadge = null"
     >
       <div
-        class="bg-gray-900 border-2 border-purple-500 rounded-lg p-6 max-w-md mx-4 transform transition-all duration-300 scale-100 shadow-2xl shadow-purple-500/30"
+        class="bg-black/90 border-2 border-purple-500 rounded-lg p-6 max-w-md mx-4 transform transition-all duration-300 scale-100 shadow-2xl shadow-purple-500/30"
         @click.stop
       >
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-2xl font-orbitron text-purple-400 neon-text-purple">
-            Détails du badge
-          </h3>
-          <button
-            @click="selectedBadge = null"
-            class="text-gray-400 hover:text-white"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        <!-- Header with angled borders -->
+        <div class="relative mb-8">
+          <div
+            class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+          ></div>
+          <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-orbitron text-purple-400 neon-text-purple">
+              Détails du badge
+            </h3>
+            <button
+              @click="selectedBadge = null"
+              class="text-gray-400 hover:text-white transition-colors"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="flex flex-col items-center mb-4">
-          <img
-            :src="selectedBadge.imageUrl"
-            :alt="selectedBadge.title"
-            class="h-24 w-24 rounded-full border-2 border-purple-500 glow-badge mb-4"
-          />
-          <h4 class="text-xl text-white font-orbitron">
+
+        <!-- Badge showcase with enhanced visuals -->
+        <div class="flex flex-col items-center mb-6">
+          <!-- Large badge image with enhanced glow effect -->
+          <div class="relative mb-4 group">
+            <img
+              :src="selectedBadge.imageUrl"
+              :alt="selectedBadge.title"
+              class="h-48 w-48 rounded-full border-4 border-purple-500 object-cover group-hover:scale-105 transition-transform duration-500"
+              @error="handleImageError"
+            />
+            <div
+              class="absolute inset-0 rounded-full"
+              style="
+                box-shadow: 0 0 30px rgba(168, 85, 247, 0.7),
+                  0 0 60px rgba(168, 85, 247, 0.3);
+                border-radius: 50%;
+              "
+            ></div>
+          </div>
+
+          <!-- Badge title with enhanced styling -->
+          <h4
+            class="text-2xl text-white font-audiowide mb-2 neon-text-purple text-center"
+          >
             {{ selectedBadge.title }}
           </h4>
-          <p class="text-gray-400 mt-2 text-center">
-            {{ selectedBadge.description || "Aucune description disponible" }}
-          </p>
+
+          <!-- Badge description with background -->
+          <div
+            class="w-full bg-purple-900/20 p-4 rounded-lg border border-purple-500/30 mt-2"
+          >
+            <p class="text-purple-200 text-sm text-center">
+              {{
+                selectedBadge.description ||
+                "Ce badge est une récompense mystérieuse. Aucune description disponible."
+              }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer with angled borders -->
+        <div class="relative mt-8">
+          <div
+            class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+          ></div>
+          <div class="flex justify-center">
+            <button
+              @click="selectedBadge = null"
+              class="cyberpunk-btn-purple px-5 py-2 rounded-md text-sm font-orbitron shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-purple-500/50"
+            >
+              Fermer
+            </button>
+          </div>
         </div>
       </div>
     </div>
