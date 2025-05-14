@@ -386,6 +386,29 @@
                 />
               </svg>
             </button>
+            <button
+              v-if="
+                isUserRegistered &&
+                !hasPlayerLevelForGame &&
+                !tournament.finished
+              "
+              @click.stop="redirectToPlayerLevel"
+              class="cyberpunk-btn-cyan px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 mt-3"
+            >
+              <span class="mr-2">Définir votre niveau</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -1182,6 +1205,7 @@ const showLevelPrompt = ref(false);
 const levelPromptGameId = ref<string>("");
 const levelPromptGameName = ref<string>("");
 const levelPromptTournamentId = ref<string>("");
+const hasPlayerLevelForGame = ref(false);
 
 // Initialisation des stores
 const userStore = useUserStore();
@@ -1363,6 +1387,7 @@ const fetchTournament = async () => {
     // Vérifier l'état de check-in du joueur si l'utilisateur est connecté
     if (user.value) {
       await checkPlayerCheckIn();
+      await checkPlayerLevel();
     }
 
     // Récupérer le dernier tournoi terminé pour ce jeu
@@ -1481,6 +1506,42 @@ const closeLevelPrompt = () => {
   showLevelPrompt.value = false;
   levelPromptGameId.value = "";
   levelPromptGameName.value = "";
+};
+
+// Vérifier si le joueur a un niveau pour ce jeu
+const checkPlayerLevel = async () => {
+  if (!currentPlayerId.value || !tournament.value?.game?._id) {
+    hasPlayerLevelForGame.value = false;
+    return;
+  }
+
+  try {
+    // Vérifier si un niveau existe pour ce jeu
+    const gameId = tournament.value.game._id;
+    const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
+      currentPlayerId.value,
+      gameId
+    );
+
+    // Mettre à jour la référence
+    hasPlayerLevelForGame.value = !!playerLevel;
+  } catch (error) {
+    console.error("Erreur lors de la vérification du niveau:", error);
+    hasPlayerLevelForGame.value = false;
+  }
+};
+
+// Fonction pour rediriger vers la page de définition de niveau
+const redirectToPlayerLevel = () => {
+  router.push({
+    path: "/player-level",
+    query: {
+      gameId: tournament.value?.game._id || "",
+      redirect: route.fullPath,
+      tournamentId: tournament.value?._id || "",
+      autoRegister: "false", // Déjà inscrit, pas besoin d'inscription auto
+    },
+  });
 };
 
 /**
