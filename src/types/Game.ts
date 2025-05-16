@@ -1,4 +1,12 @@
 /**
+ * Interface représentant un rôle de jeu
+ */
+export interface GameRole {
+  name: string;
+  color: string;
+}
+
+/**
  * Interface représentant un jeu
  */
 export interface Game {
@@ -6,6 +14,7 @@ export interface Game {
   name: string;
   description?: string;
   imageUrl?: string;
+  roles?: GameRole[];
 }
 
 /**

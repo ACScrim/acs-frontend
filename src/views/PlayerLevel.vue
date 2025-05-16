@@ -142,6 +142,39 @@
                   </span>
                 </div>
 
+                <div
+                  v-if="level.selectedRoles && level.selectedRoles.length > 0"
+                  class="mb-3 bg-gray-800/50 p-2 rounded"
+                >
+                  <div class="flex items-center mb-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-cyan-400 mr-2 flex-shrink-0"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        d="M12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                      />
+                    </svg>
+                    <span class="text-sm text-gray-300">Rôles:</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span
+                      v-for="roleName in level.selectedRoles"
+                      :key="roleName"
+                      class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-gray-700/80 border border-gray-600 truncate max-w-[120px]"
+                      :style="getRoleStyle(level.game, roleName)"
+                      :title="roleName"
+                    >
+                      <span class="truncate">{{ roleName }}</span>
+                    </span>
+                  </div>
+                </div>
+
                 <!-- Commentaire -->
                 <div
                   v-if="level.comment"
@@ -629,6 +662,107 @@
             </div>
           </div>
 
+          <!-- Sélection des rôles si disponibles -->
+          <div
+            v-if="
+              selectedGame &&
+              selectedGame.roles &&
+              selectedGame.roles.length > 0
+            "
+            class="mb-6"
+          >
+            <label
+              class="flex items-center justify-between text-cyan-300 text-sm font-medium mb-2 font-orbitron"
+            >
+              <span class="flex items-center">
+                Rôles préférés
+                <span class="text-pink-500 ml-1">*</span>
+              </span>
+              <div class="flex items-center gap-3">
+                <button
+                  @click="selectAllRoles"
+                  type="button"
+                  class="px-2 py-0.5 text-xs bg-cyan-900/50 hover:bg-cyan-800/60 text-cyan-300 rounded-md border border-cyan-700/50 transition-colors font-orbitron flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 mr-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Fill
+                </button>
+                <span class="text-xs text-amber-400">
+                  {{ selectedRoles.length }} /
+                  {{ selectedGame?.roles?.length || 0 }}
+                </span>
+              </div>
+            </label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div
+                v-for="role in selectedGame.roles"
+                :key="role.name"
+                :class="[
+                  'flex items-center p-2 border rounded-md cursor-pointer transition-all duration-300 overflow-hidden',
+                  selectedRoles.includes(role.name)
+                    ? 'border-cyan-500 bg-cyan-900/30 shadow-inner shadow-cyan-500/20'
+                    : 'border-gray-700 hover:border-gray-500',
+                ]"
+                @click="toggleRole(role.name)"
+              >
+                <input
+                  type="checkbox"
+                  :id="`role-${role.name}`"
+                  :checked="selectedRoles.includes(role.name)"
+                  @change="toggleRole(role.name)"
+                  class="h-4 w-4 text-cyan-500 focus:ring-cyan-500 border-gray-700 rounded bg-gray-800 flex-shrink-0"
+                />
+                <label
+                  :for="`role-${role.name}`"
+                  class="ml-2 flex-grow cursor-pointer flex items-center truncate"
+                  :title="role.name"
+                >
+                  <div
+                    class="w-3 h-3 rounded-full mr-2 flex-shrink-0"
+                    :style="{ backgroundColor: role.color || '#6B7280' }"
+                  ></div>
+                  <span class="text-white font-orbitron text-sm truncate">{{
+                    role.name
+                  }}</span>
+                </label>
+              </div>
+            </div>
+
+            <p
+              v-if="roleError"
+              class="text-xs text-pink-500 font-orbitron mt-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3 inline mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              Veuillez sélectionner au moins un rôle
+            </p>
+          </div>
+
           <!-- Commentaire -->
           <div>
             <label
@@ -741,6 +875,10 @@ const showGameSelector = ref(false);
 const showLevelSelector = ref(false);
 const showDeleteConfirmation = ref(false);
 
+// État pour les rôles
+const selectedRoles = ref<string[]>([]);
+const roleError = ref(false);
+
 // États du formulaire de niveau
 const selectedGame = ref<Game | null>(null);
 const selectedGameId = ref<string>(""); // Nouvelle référence pour l'ID du jeu
@@ -849,6 +987,68 @@ const getLevelForGame = (game: Game): PlayerGameLevel | undefined => {
     return gameId === game._id;
   });
 };
+
+/**
+ * Ajoute ou supprime un rôle de la sélection
+ */
+const toggleRole = (roleName: string) => {
+  if (selectedRoles.value.includes(roleName)) {
+    // Si le rôle est déjà sélectionné, le désélectionner
+    selectedRoles.value = selectedRoles.value.filter(
+      (role) => role !== roleName
+    );
+  } else {
+    // Sinon, l'ajouter
+    selectedRoles.value.push(roleName);
+  }
+};
+
+// Obtenir le style pour un rôle spécifique
+const getRoleStyle = (game: string | Game, roleName: string) => {
+  if (typeof game === "object" && game && game.roles) {
+    const role = game.roles.find((r) => r.name === roleName);
+    if (role && role.color) {
+      const bgColor = role.color;
+      return {
+        backgroundColor: `${bgColor}20`, // Réduction de l'opacité pour plus de lisibilité
+        color: bgColor,
+        borderColor: `${bgColor}60`,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: "100%",
+      };
+    }
+  }
+
+  // Style par défaut
+  return {
+    backgroundColor: "rgba(107, 114, 128, 0.2)",
+    color: "#6B7280",
+    borderColor: "rgba(107, 114, 128, 0.4)",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100%",
+  };
+};
+
+/**
+ * Sélectionne tous les rôles disponibles pour le jeu actuel
+ */
+const selectAllRoles = () => {
+  if (selectedGame.value && selectedGame.value.roles) {
+    // Récupérer tous les noms de rôles disponibles
+    const allRoleNames = selectedGame.value.roles.map((role) => role.name);
+
+    // Remplacer la sélection actuelle par tous les rôles
+    selectedRoles.value = [...allRoleNames];
+
+    // Réinitialiser l'erreur si présente
+    roleError.value = false;
+  }
+};
+
 // #endregion
 
 // -----------------------------------------------
@@ -900,8 +1100,9 @@ const saveLevel = async (e?: Event) => {
   // Empêcher le comportement par défaut du formulaire si l'événement est fourni
   if (e) e.preventDefault();
 
-  // Réinitialiser l'état d'erreur
+  // Réinitialiser les états d'erreur
   rankError.value = false;
+  roleError.value = false;
 
   // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
@@ -916,6 +1117,17 @@ const saveLevel = async (e?: Event) => {
     return;
   }
 
+  // Vérifier si les rôles sont requis mais non fournis
+  if (
+    selectedGame.value?.roles &&
+    selectedGame.value.roles.length > 0 &&
+    selectedRoles.value.length === 0
+  ) {
+    roleError.value = true;
+    showToast("Veuillez sélectionner au moins un rôle", "error");
+    return;
+  }
+
   isSaving.value = true;
 
   try {
@@ -927,6 +1139,7 @@ const saveLevel = async (e?: Event) => {
         gameUsername: gameUsername.value.trim(),
         isRanked: isRanked.value,
         rank: isRanked.value ? rank.value.trim() : undefined,
+        selectedRoles: selectedRoles.value,
         comment: comment.value.trim(),
       }
     );
@@ -998,6 +1211,7 @@ const openEditModal = (level: PlayerGameLevel) => {
   isRanked.value = level.isRanked || false;
   rank.value = level.rank || "";
   comment.value = level.comment || "";
+  selectedRoles.value = level.selectedRoles || [];
   editingLevelId.value = level._id || null;
 
   // Afficher la modale
@@ -1007,7 +1221,7 @@ const openEditModal = (level: PlayerGameLevel) => {
 // Sélectionner un jeu dans la liste
 const selectGame = (game: Game) => {
   selectedGame.value = game;
-  selectedGameId.value = game._id as string; // Stocker l'ID séparément
+  selectedGameId.value = game._id as string;
 
   showGameSelector.value = false;
 
@@ -1020,15 +1234,15 @@ const selectGame = (game: Game) => {
     isRanked.value = existingLevel.isRanked || false;
     rank.value = existingLevel.rank || "";
     comment.value = existingLevel.comment || "";
+    selectedRoles.value = existingLevel.selectedRoles || [];
     editingLevelId.value = existingLevel._id || null;
   } else {
-    // Important: Ne pas appeler resetForm() car cela effacerait selectedGameId
-    // Au lieu de cela, réinitialiser uniquement les autres champs
     selectedLevel.value = "débutant"; // Valeur par défaut
     gameUsername.value = "";
     isRanked.value = false;
     rank.value = "";
     comment.value = "";
+    selectedRoles.value = [];
     editingLevelId.value = null;
   }
 
@@ -1044,7 +1258,6 @@ const cancelLevelEdit = () => {
 // Réinitialiser le formulaire
 const resetForm = () => {
   selectedGame.value = null;
-  // Ne réinitialiser selectedGameId que si nous ne sommes pas dans la modale de sélection de niveau
   if (!showLevelSelector.value) {
     selectedGameId.value = "";
   }
@@ -1053,8 +1266,11 @@ const resetForm = () => {
   isRanked.value = false;
   rank.value = "";
   comment.value = "";
+  selectedRoles.value = [];
   editingLevelId.value = null;
+  roleError.value = false;
 };
+
 // #endregion
 
 // -----------------------------------------------

@@ -9,6 +9,7 @@ interface SetPlayerLevelData {
   isRanked?: boolean;
   rank?: string;
   comment?: string;
+  selectedRoles?: string[];
 }
 
 /**

@@ -219,6 +219,11 @@
                   <th
                     class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
                   >
+                    Rôles
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
+                  >
                     Commentaire
                   </th>
                 </tr>
@@ -330,6 +335,75 @@
                       Non classé
                     </div>
                   </td>
+
+                  <td class="py-4 px-4">
+                    <div
+                      v-if="
+                        playerLevel.selectedRoles &&
+                        playerLevel.selectedRoles.length > 0
+                      "
+                    >
+                      <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
+                      <span
+                        v-if="
+                          hasAllRoles(
+                            playerLevel.game,
+                            playerLevel.selectedRoles
+                          )
+                        "
+                        class="inline-flex items-center px-3 py-1 text-xs rounded-md bg-cyan-900/40 text-cyan-300 border border-cyan-600/50 shadow-inner shadow-cyan-500/10"
+                        :title="playerLevel.selectedRoles.join(', ')"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-3.5 w-3.5 mr-1"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                          <path
+                            fill-rule="evenodd"
+                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        Fill
+                      </span>
+
+                      <!-- Afficher les rôles individuels si certains sont sélectionnés -->
+                      <div v-else class="flex flex-wrap gap-1">
+                        <!-- Le code existant pour afficher max 3 rôles -->
+                        <template
+                          v-for="roleName in playerLevel.selectedRoles.slice(
+                            0,
+                            3
+                          )"
+                          :key="roleName"
+                        >
+                          <span
+                            class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[80px]"
+                            :style="getRoleStyle(playerLevel.game, roleName)"
+                            :title="roleName"
+                          >
+                            <span class="truncate">{{ roleName }}</span>
+                          </span>
+                        </template>
+
+                        <!-- Indicateur "+N" si plus de 3 rôles -->
+                        <span
+                          v-if="playerLevel.selectedRoles.length > 3"
+                          class="px-2 py-0.5 text-xs bg-gray-700 text-gray-300 rounded-full cursor-help"
+                          :title="playerLevel.selectedRoles.slice(3).join(', ')"
+                        >
+                          +{{ playerLevel.selectedRoles.length - 3 }}
+                        </span>
+                      </div>
+                    </div>
+                    <div v-else class="text-sm text-gray-500 italic">
+                      Non spécifié
+                    </div>
+                  </td>
+
                   <td class="py-4 px-4 max-w-xs">
                     <div
                       v-if="playerLevel.comment"
@@ -478,6 +552,58 @@
                 </div>
                 <div v-else class="text-sm text-gray-500 italic">
                   Non classé
+                </div>
+              </div>
+              <!-- Rôles -->
+              <div class="flex items-start mb-3">
+                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
+                  Rôles
+                </div>
+                <div
+                  v-if="
+                    playerLevel.selectedRoles &&
+                    playerLevel.selectedRoles.length > 0
+                  "
+                >
+                  <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
+                  <span
+                    v-if="
+                      hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
+                    "
+                    class="inline-flex items-center px-3 py-1 text-xs rounded-md bg-cyan-900/40 text-cyan-300 border border-cyan-600/50 shadow-inner shadow-cyan-500/10"
+                    :title="playerLevel.selectedRoles.join(', ')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5 mr-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Fill
+                  </span>
+
+                  <!-- Afficher les rôles individuels si certains sont sélectionnés -->
+                  <div v-else class="flex flex-wrap gap-1">
+                    <span
+                      v-for="roleName in playerLevel.selectedRoles"
+                      :key="roleName"
+                      class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[120px]"
+                      :style="getRoleStyle(playerLevel.game, roleName)"
+                      :title="roleName"
+                    >
+                      <span class="truncate">{{ roleName }}</span>
+                    </span>
+                  </div>
+                </div>
+                <div v-else class="text-sm text-gray-500 italic">
+                  Non spécifié
                 </div>
               </div>
 
@@ -692,6 +818,25 @@ const getLevelBadgeClass = (level: string): string => {
 };
 
 /**
+ * Vérifie si le joueur a sélectionné tous les rôles disponibles
+ */
+const hasAllRoles = (
+  game: string | Game,
+  selectedRoles?: string[]
+): boolean => {
+  if (!selectedRoles || selectedRoles.length === 0) return false;
+
+  if (typeof game === "object" && game?.roles && game.roles.length > 0) {
+    // Si le nombre de rôles sélectionnés est égal au nombre total de rôles
+    if (game.roles.length === selectedRoles.length) {
+      // Vérifier que chaque rôle du jeu est dans la liste des rôles sélectionnés
+      return game.roles.every((role) => selectedRoles.includes(role.name));
+    }
+  }
+  return false;
+};
+
+/**
  * Récupérer l'image du jeu
  */
 const getGameImage = (level: PlayerGameLevel): string | undefined => {
@@ -774,6 +919,37 @@ const getRankStyle = (rank: string) => {
   const color = getRankColor(rank);
   return {
     textShadow: `0 0 8px ${color}90`,
+  };
+};
+
+/**
+ * Obtenir le style pour un rôle spécifique
+ */
+const getRoleStyle = (game: string | Game, roleName: string) => {
+  if (typeof game === "object" && game && game.roles) {
+    const role = game.roles.find((r) => r.name === roleName);
+    if (role && role.color) {
+      const bgColor = role.color;
+      return {
+        backgroundColor: `${bgColor}20`,
+        color: bgColor,
+        borderColor: `${bgColor}60`,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: "100%",
+      };
+    }
+  }
+
+  // Style par défaut
+  return {
+    backgroundColor: "rgba(107, 114, 128, 0.2)",
+    color: "#6B7280",
+    borderColor: "rgba(107, 114, 128, 0.4)",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   };
 };
 /**

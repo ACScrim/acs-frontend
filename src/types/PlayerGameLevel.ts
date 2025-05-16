@@ -9,6 +9,7 @@ export interface PlayerGameLevel {
   gameUsername?: string;
   isRanked?: boolean;
   rank?: string;
+  selectedRoles?: string[];
   comment?: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -202,6 +202,266 @@
           </div>
         </div>
 
+        <div class="mb-6">
+          <label
+            for="roles"
+            class="text-lg text-cyan-400 mb-3 font-orbitron flex items-center group relative"
+          >
+            <div class="relative w-8 h-8 mr-3 flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-cyan-500 z-10"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                />
+              </svg>
+              <div
+                class="absolute inset-0 bg-cyan-500/20 rounded-full blur-[6px] group-hover:bg-cyan-500/30 transition-all duration-300"
+              ></div>
+            </div>
+            <span>Rôles disponibles pour ce jeu</span>
+            <div
+              class="absolute bottom-0 left-8 right-0 h-[1px] bg-gradient-to-r from-cyan-500/80 to-transparent"
+            ></div>
+          </label>
+
+          <!-- Liste des rôles existants -->
+          <div
+            class="mb-4 bg-gray-900/70 rounded-lg p-4 border border-cyan-500/30 backdrop-blur-sm"
+          >
+            <div
+              v-if="game.roles && game.roles.length > 0"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
+            >
+              <div
+                v-for="(role, index) in game.roles"
+                :key="index"
+                class="flex items-center justify-between p-3 bg-gray-800/80 rounded-md transition-all duration-300 group relative overflow-hidden"
+                :style="{
+                  borderColor: `${role.color}50`,
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                }"
+              >
+                <!-- Effet de surbrillance au survol -->
+                <div
+                  class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  :style="{
+                    background: `linear-gradient(90deg, ${role.color}05, ${role.color}15, ${role.color}05)`,
+                  }"
+                ></div>
+
+                <div class="flex items-center z-10">
+                  <div
+                    class="w-4 h-4 rounded-full mr-3 shadow-glow transition-all duration-300 group-hover:scale-110"
+                    :style="{
+                      backgroundColor: role.color || '#6B7280',
+                      boxShadow: `0 0 6px ${role.color}`,
+                    }"
+                  ></div>
+                  <span class="text-white font-medium font-orbitron">{{
+                    role.name
+                  }}</span>
+                </div>
+
+                <div class="flex space-x-1 z-10">
+                  <button
+                    @click.prevent="editRole(index)"
+                    class="p-1.5 text-blue-400 hover:text-blue-300 hover:bg-blue-900/50 rounded transition-colors"
+                    type="button"
+                    title="Modifier ce rôle"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    @click.prevent="removeRole(index)"
+                    class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-900/50 rounded transition-colors"
+                    type="button"
+                    title="Supprimer ce rôle"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div v-else class="text-center py-8 relative overflow-hidden">
+              <!-- Effet néon cyberpunk -->
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-20"
+              >
+                <div
+                  class="w-40 h-40 rounded-full bg-cyan-900/30 filter blur-2xl animate-pulse-slow"
+                ></div>
+              </div>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-12 w-12 mx-auto text-cyan-400/50 mb-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                />
+              </svg>
+              <p class="text-cyan-400/70 font-orbitron text-sm relative z-10">
+                Aucun rôle défini pour ce jeu
+              </p>
+              <p class="text-xs text-gray-500 mt-2 max-w-md mx-auto">
+                Ajoutez des rôles pour permettre aux joueurs de spécifier leurs
+                positions préférées
+              </p>
+            </div>
+          </div>
+
+          <!-- Formulaire d'ajout de rôle (simplifié, sans description) -->
+          <div
+            class="p-4 bg-gray-800/80 rounded-lg border relative overflow-hidden"
+            :class="[
+              editingRoleIndex !== null
+                ? 'border-amber-500/40 shadow-lg shadow-amber-500/10'
+                : 'border-cyan-500/30',
+            ]"
+          >
+            <!-- Effets de fond cyberpunk -->
+            <div
+              class="absolute -top-24 -right-24 w-48 h-48 bg-cyan-900/10 rounded-full filter blur-3xl pointer-events-none"
+            ></div>
+            <div
+              class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-900/10 rounded-full filter blur-3xl pointer-events-none"
+            ></div>
+
+            <h4
+              class="font-orbitron text-base mb-4 flex items-center relative z-10"
+            >
+              <span
+                class="w-1 h-6 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full mr-3"
+              ></span>
+              <span
+                :class="[
+                  editingRoleIndex !== null
+                    ? 'text-amber-400'
+                    : 'text-cyan-400',
+                ]"
+              >
+                {{
+                  editingRoleIndex !== null
+                    ? "Modifier le rôle"
+                    : "Ajouter un rôle"
+                }}
+              </span>
+            </h4>
+
+            <div class="flex items-center space-x-3 mb-4 relative z-10">
+              <div class="flex-grow">
+                <input
+                  v-model="newRole.name"
+                  type="text"
+                  placeholder="Nom du rôle (Ex: Support, Tank, DPS)"
+                  class="w-full p-3 bg-black/40 border border-cyan-500/30 rounded-md text-white focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 placeholder-gray-500 font-orbitron text-sm"
+                  :class="[
+                    editingRoleIndex !== null
+                      ? 'focus:border-amber-400 focus:ring-amber-500/50'
+                      : '',
+                  ]"
+                />
+              </div>
+              <div class="relative w-20 h-10 flex-shrink-0">
+                <input
+                  v-model="newRole.color"
+                  type="color"
+                  class="absolute inset-0 opacity-0 cursor-pointer z-10"
+                  title="Choisir une couleur"
+                />
+                <div
+                  class="h-full w-full rounded-md border overflow-hidden"
+                  :style="{
+                    borderColor: `${newRole.color}80`,
+                    background: `linear-gradient(to right, #000 0%, ${newRole.color} 100%)`,
+                  }"
+                >
+                  <div
+                    class="bg-black/50 text-xs text-white font-orbitron py-3 px-2 text-center"
+                  >
+                    Couleur
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 relative z-10">
+              <button
+                v-if="editingRoleIndex !== null"
+                @click.prevent="cancelEditRole"
+                type="button"
+                class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md text-sm font-orbitron transition-colors flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Annuler
+              </button>
+              <button
+                @click.prevent="addOrUpdateRole"
+                type="button"
+                :class="[
+                  'px-4 py-2 text-sm font-orbitron transition-all duration-300 rounded-md flex items-center',
+                  editingRoleIndex !== null
+                    ? 'bg-amber-800/60 hover:bg-amber-700/80 text-amber-100 border border-amber-600/50 hover:shadow-amber-500/30 hover:shadow-md'
+                    : 'bg-cyan-800/60 hover:bg-cyan-700/80 text-cyan-100 border border-cyan-600/50 hover:shadow-cyan-500/30 hover:shadow-md',
+                ]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                {{ editingRoleIndex !== null ? "Mettre à jour" : "Ajouter" }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="flex justify-between">
           <!-- Bouton Annuler (apparaît uniquement en mode édition) -->
           <button
@@ -455,6 +715,7 @@ const game = ref<Game>({
   name: "",
   description: "",
   imageUrl: "",
+  roles: [], // Initialisation comme tableau vide
 });
 
 /**
@@ -470,6 +731,15 @@ const searchResults = ref<RawgGame[]>([]); // Résultats de recherche RAWG
 const isSearching = ref(false); // État de chargement pour la recherche
 const selectedRawgGame = ref<RawgGame | null>(null); // Jeu RAWG sélectionné
 const imagePreviewError = ref(false); // Erreur lors du chargement de l'image
+
+/**
+ * État pour l'ajout/édition de rôle
+ */
+const newRole = ref({
+  name: "",
+  color: "#6B7280", // Gris par défaut
+});
+const editingRoleIndex = ref<number | null>(null);
 
 /**
  * États pour l'édition
@@ -632,6 +902,75 @@ const createGame = async () => {
   }
 };
 
+// Ajouter ces méthodes dans le script
+const addOrUpdateRole = () => {
+  // Validation basique
+  if (!newRole.value.name.trim()) {
+    showMessage("error", "Le nom du rôle est requis");
+    return;
+  }
+
+  // S'assurer que roles existe toujours
+  if (!game.value.roles) {
+    game.value.roles = [];
+  }
+
+  // Vérifier si le nom est unique (sauf si on est en train d'éditer)
+  const isDuplicate = game.value.roles.some(
+    (role, index) =>
+      role.name.toLowerCase() === newRole.value.name.toLowerCase() &&
+      index !== editingRoleIndex.value
+  );
+
+  if (isDuplicate) {
+    showMessage("error", "Un rôle avec ce nom existe déjà");
+    return;
+  }
+
+  if (editingRoleIndex.value !== null) {
+    // Mise à jour d'un rôle existant
+    game.value.roles[editingRoleIndex.value] = { ...newRole.value };
+  } else {
+    // Ajout d'un nouveau rôle
+    game.value.roles.push({ ...newRole.value });
+  }
+
+  // Réinitialiser le formulaire
+  resetRoleForm();
+};
+
+const editRole = (index: number) => {
+  if (!game.value.roles) {
+    game.value.roles = [];
+    return;
+  }
+
+  editingRoleIndex.value = index;
+  const role = game.value.roles[index];
+  newRole.value = {
+    name: role.name,
+    color: role.color,
+  };
+};
+
+const removeRole = (index: number) => {
+  if (!game.value.roles) return;
+
+  game.value.roles.splice(index, 1);
+};
+
+const cancelEditRole = () => {
+  resetRoleForm();
+};
+
+const resetRoleForm = () => {
+  newRole.value = {
+    name: "",
+    color: "#6B7280",
+  };
+  editingRoleIndex.value = null;
+};
+
 /**
  * Met à jour un jeu existant
  */
@@ -740,6 +1079,7 @@ const editGame = (gameToEdit: Game) => {
     name: gameToEdit.name,
     description: gameToEdit.description || "",
     imageUrl: gameToEdit.imageUrl || "",
+    roles: gameToEdit.roles || [],
   };
 
   // Réinitialiser les erreurs
@@ -765,7 +1105,12 @@ const resetForm = () => {
   isEditing.value = false;
   editingId.value = null;
   originalGameData.value = null;
-  game.value = { name: "", description: "", imageUrl: "" };
+  game.value = {
+    name: "",
+    description: "",
+    imageUrl: "",
+    roles: [], // Assurez-vous d'initialiser les rôles ici aussi
+  };
   searchResults.value = [];
   selectedRawgGame.value = null;
   errors.value = {};
