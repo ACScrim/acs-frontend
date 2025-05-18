@@ -1161,7 +1161,13 @@
       v-if="showPopup"
       :title="'Confirmation'"
       :message="`Voulez-vous ${
-        actionType === 'register' ? 'vous inscrire' : 'vous désinscrire'
+        actionType === 'register'
+          ? 'vous inscrire'
+          : actionType === 'waitlist'
+          ? 'rejoindre la liste d\'attente'
+          : actionType === 'unregister-waitlist'
+          ? 'quitter la liste d\'attente'
+          : 'vous désinscrire'
       } au tournoi ${selectedTournament?.name} en tant que ${user?.username} ?`"
       @confirm="confirmAction"
       @cancel="closePopup"
