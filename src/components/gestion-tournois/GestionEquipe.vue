@@ -1324,16 +1324,7 @@ const confirmTeamDefinitive = async () => {
       // 1. Mettre à jour les équipes
       await tournamentService.updateTournamentTeams(tournamentId, teams.value);
 
-      // 2. Marquer le tournoi comme terminé
-      if (selectedTournamentDetails.value) {
-        await tournamentService.updateTournament(tournamentId, {
-          ...selectedTournamentDetails.value,
-          finished: true,
-          game: selectedTournamentDetails.value.game,
-        });
-      }
-
-      // 3. Créer les canaux Discord
+      // 2. Créer les canaux Discord
       await tournamentService.createDiscordChannels(teams.value);
 
       showMessage(

@@ -640,9 +640,21 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                    <span class="truncate" :title="player.username">{{
-                      player.username
-                    }}</span>
+                    <router-link
+                      v-if="player._id"
+                      :to="{ name: 'Profil', params: { id: player._id } }"
+                      class="text-purple-100 text-sm font-orbitron truncate hover:text-pink-400 transition-colors"
+                      :title="player.username"
+                    >
+                      {{ player.username }}
+                    </router-link>
+                    <span
+                      v-else
+                      class="text-purple-100 text-sm font-orbitron truncate"
+                      :title="player.username"
+                    >
+                      {{ player.username }}
+                    </span>
 
                     <!-- Icône de check-in si le joueur a fait son check-in -->
                     <div
@@ -714,9 +726,17 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="truncate" :title="player.username">{{
-                  player.username
-                }}</span>
+                <router-link
+                  v-if="player._id"
+                  :to="{ name: 'Profil', params: { id: player._id } }"
+                  class="truncate hover:text-pink-400 transition-colors"
+                  :title="player.username"
+                >
+                  {{ player.username }}
+                </router-link>
+                <span v-else class="truncate" :title="player.username">
+                  {{ player.username }}
+                </span>
 
                 <!-- Icône de check-in si le joueur a fait son check-in -->
                 <div
@@ -844,13 +864,28 @@
                       <div
                         class="flex flex-col sm:flex-row sm:items-center truncate"
                       >
-                        <span class="truncate">
+                        <router-link
+                          v-if="typeof player === 'object' && player._id"
+                          :to="{ name: 'Profil', params: { id: player._id } }"
+                          class="truncate hover:text-pink-400 transition-colors"
+                          :title="
+                            typeof player === 'object' ? player.username : ''
+                          "
+                        >
+                          {{
+                            typeof player === "object"
+                              ? player.username
+                              : "Joueur inconnu"
+                          }}
+                        </router-link>
+                        <span v-else class="truncate">
                           {{
                             typeof player === "object"
                               ? player.username
                               : "Joueur inconnu"
                           }}
                         </span>
+
                         <span
                           v-if="
                             typeof player === 'object' &&
@@ -2475,5 +2510,24 @@ onMounted(() => {
   .neon-text {
     font-size: 2rem;
   }
+}
+
+router-link.truncate {
+  position: relative;
+}
+
+router-link.truncate::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -1px;
+  left: 0;
+  background-image: linear-gradient(to right, #ec4899, #8b5cf6);
+  transition: width 0.3s ease-in-out;
+}
+
+router-link.truncate:hover::after {
+  width: 100%;
 }
 </style>
