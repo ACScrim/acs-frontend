@@ -142,7 +142,7 @@
               class="text-lg font-bold font-orbitron"
               :class="getVoteCountClass()"
             >
-              {{ proposal.totalVotes }}
+              {{ displayVoteCount }}
             </span>
 
             <button
@@ -259,15 +259,19 @@
                     <div class="mt-2 flex justify-between items-center">
                       <div class="flex items-center">
                         <span class="text-xs text-gray-400 font-orbitron">
-                          Total:
+                          {{
+                            props.showPositiveOnly
+                              ? "Votes positifs:"
+                              : "Total:"
+                          }}
                           <span
                             class="font-medium"
                             :class="{
-                              'text-green-400': proposal.totalVotes > 0,
-                              'text-red-400': proposal.totalVotes < 0,
-                              'text-gray-300': proposal.totalVotes === 0,
+                              'text-green-400': displayVoteCount > 0,
+                              'text-red-400': displayVoteCount < 0,
+                              'text-gray-300': displayVoteCount === 0,
                             }"
-                            >{{ proposal.totalVotes }}</span
+                            >{{ displayVoteCount }}</span
                           >
                         </span>
                         <span class="inline-block mx-2 text-gray-500">•</span>
@@ -558,6 +562,7 @@ const props = defineProps<{
   proposal: GameProposal;
   isAdmin: boolean;
   isAuthenticated: boolean;
+  showPositiveOnly: boolean; // Nouveau prop
 }>();
 
 /**
@@ -677,8 +682,8 @@ const getVoteButtonClass = (voteType: number) => {
  * @returns {string} Les classes CSS à appliquer
  */
 const getVoteCountClass = () => {
-  if (props.proposal.totalVotes > 0) return "text-green-400 text-shadow-green";
-  if (props.proposal.totalVotes < 0) return "text-red-400 text-shadow-red";
+  if (displayVoteCount.value > 0) return "text-green-400 text-shadow-green";
+  if (displayVoteCount.value < 0) return "text-red-400 text-shadow-red";
   return "text-cyan-400";
 };
 
@@ -751,6 +756,19 @@ const currentVotesList = computed(() => {
   return activeTab.value === "positive"
     ? positiveVotes.value
     : negativeVotes.value;
+});
+
+/**
+ * Calcule le nombre de votes à afficher selon le mode sélectionné
+ */
+const displayVoteCount = computed(() => {
+  if (props.showPositiveOnly) {
+    // Si on veut voir uniquement les votes positifs, compter seulement ceux-ci
+    return props.proposal.votes?.filter((v) => v.value > 0).length || 0;
+  } else {
+    // Sinon afficher le total normal (votes pour - votes contre)
+    return props.proposal.totalVotes;
+  }
 });
 
 /**

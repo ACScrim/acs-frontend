@@ -221,6 +221,7 @@
           :proposal="proposal"
           :is-admin="isAdmin"
           :is-authenticated="isAuthenticated"
+          :show-positive-only="onlyPositiveVotes"
           @vote="handleVote"
           @approve="approveProposal"
           @reject="openRejectDialog"
