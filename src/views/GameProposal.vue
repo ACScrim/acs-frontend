@@ -66,6 +66,47 @@
                 <option value="votesAsc">Votes (-)</option>
               </select>
               <div
+                v-show="sortOption === 'votesDesc' || sortOption === 'votesAsc'"
+                class="mt-2 flex items-center"
+              >
+                <label
+                  class="cyber-checkbox-container relative flex items-center cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    id="positiveVotesOnly"
+                    v-model="onlyPositiveVotes"
+                    class="absolute opacity-0 w-0 h-0"
+                  />
+                  <span
+                    class="cyber-checkbox flex items-center justify-center w-5 h-5 bg-gray-900 border border-cyan-500/70 mr-2 transition-all duration-200 overflow-hidden"
+                  >
+                    <span
+                      class="check-inner absolute inset-0 bg-gradient-to-br from-pink-500 to-purple-600 opacity-0 transition-opacity duration-200"
+                      :class="{ 'opacity-100': onlyPositiveVotes }"
+                    ></span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3 w-3 text-black transform scale-0 transition-transform duration-200"
+                      :class="{ 'scale-100': onlyPositiveVotes }"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="text-xs text-cyan-300 font-orbitron hover:text-pink-300 transition-colors duration-200"
+                  >
+                    Compter uniquement les votes positifs
+                  </span>
+                </label>
+              </div>
+              <div
                 class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
               ></div>
             </div>
@@ -472,6 +513,8 @@ const filters = [
 ];
 const sortOption = ref("default");
 
+const onlyPositiveVotes = ref(false);
+
 // Modal de nouvelle proposition
 const showProposalForm = ref(false);
 const newProposal = ref({
@@ -577,10 +620,21 @@ const filteredProposals = computed(() => {
   }
 
   // Appliquer le tri selon l'option sélectionnée
-  if (sortOption.value === "votesDesc") {
-    result = [...result].sort((a, b) => b.totalVotes - a.totalVotes);
-  } else if (sortOption.value === "votesAsc") {
-    result = [...result].sort((a, b) => a.totalVotes - b.totalVotes);
+  if (sortOption.value === "votesDesc" || sortOption.value === "votesAsc") {
+    result = [...result].sort((a, b) => {
+      // Calculer les scores selon la préférence utilisateur
+      const scoreA = onlyPositiveVotes.value
+        ? a.votes?.filter((v) => v.value > 0).length || 0
+        : a.totalVotes;
+      const scoreB = onlyPositiveVotes.value
+        ? b.votes?.filter((v) => v.value > 0).length || 0
+        : b.totalVotes;
+
+      // Tri ascendant ou descendant selon l'option
+      return sortOption.value === "votesDesc"
+        ? scoreB - scoreA
+        : scoreA - scoreB;
+    });
   }
 
   return result;
@@ -612,6 +666,11 @@ watch(filteredProposals, () => {
 
 watch(sortOption, () => {
   // Rester à la page 1 quand on change de tri
+  currentPage.value = 1;
+});
+
+watch(onlyPositiveVotes, () => {
+  // Rester à la page 1 quand on change le mode de comptage des votes
   currentPage.value = 1;
 });
 
@@ -1070,5 +1129,36 @@ onMounted(() => {
   color: rgba(139, 92, 246, 0.6);
   font-size: 1.1em;
   vertical-align: middle;
+}
+
+.cyber-checkbox-container:hover .cyber-checkbox {
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.5);
+  border-color: rgba(45, 212, 191, 0.9);
+}
+
+.cyber-checkbox {
+  position: relative;
+  transform: skewX(-10deg);
+}
+
+.cyber-checkbox .check-inner {
+  clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+}
+
+.cyber-checkbox::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #0ff, #f0f);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-checkbox-container:hover .cyber-checkbox::before {
+  opacity: 0.5;
 }
 </style>
