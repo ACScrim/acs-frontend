@@ -488,45 +488,69 @@
         id="collaborations"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-indigo-500 shadow-lg shadow-indigo-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
-        <h2 class="text-3xl text-white mb-6 neon-text-indigo flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-indigo-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <h2
+          class="text-3xl text-white mb-6 neon-text-indigo flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 mr-3 text-indigo-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 515.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            Collaborations
+          </div>
+
+          <!-- Bouton d'expansion -->
+          <button
+            v-if="totalCollaborators > 5"
+            @click="expandedCollaborations = !expandedCollaborations"
+            class="text-sm bg-indigo-900/50 text-indigo-300 px-4 py-2 rounded-md hover:bg-indigo-800/50 transition-colors font-orbitron border border-indigo-500/30"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-          Collaborations
+            {{
+              expandedCollaborations
+                ? "RÉDUIRE"
+                : `TOUT VOIR (${totalCollaborators})`
+            }}
+          </button>
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Coéquipiers fréquents -->
           <div>
             <h3
-              class="text-xl font-orbitron text-indigo-300 mb-4 flex items-center"
+              class="text-xl font-orbitron text-indigo-300 mb-4 flex items-center justify-between"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                />
-              </svg>
-              Coéquipiers fréquents
+              <div class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                  />
+                </svg>
+                Coéquipiers fréquents
+              </div>
+
+              <!-- Compteur pour cette section -->
+              <span class="text-sm text-indigo-400">
+                ({{ socialStats.frequentTeammates.length }})
+              </span>
             </h3>
 
             <div
@@ -534,7 +558,7 @@
               class="space-y-3"
             >
               <div
-                v-for="teammate in socialStats.frequentTeammates.slice(0, 5)"
+                v-for="teammate in displayedFrequentTeammates"
                 :key="teammate.playerId"
                 class="bg-gray-800/70 p-4 rounded-lg flex items-center justify-between transform transition-all hover:bg-gray-700/90 hover:scale-[1.02] duration-300 border border-indigo-500/20"
               >
@@ -561,6 +585,20 @@
                   </div>
                   <div class="text-xs text-indigo-300/70">équipes</div>
                 </div>
+              </div>
+
+              <!-- Indicateur s'il y a plus d'éléments cachés -->
+              <div
+                v-if="
+                  !expandedCollaborations &&
+                  socialStats.frequentTeammates.length > 5
+                "
+                class="text-center py-2"
+              >
+                <span class="text-xs text-indigo-400/70 font-orbitron">
+                  ... et {{ socialStats.frequentTeammates.length - 5 }} autres
+                  coéquipiers
+                </span>
               </div>
             </div>
 
@@ -589,23 +627,30 @@
           <!-- Partenaires de victoire -->
           <div>
             <h3
-              class="text-xl font-orbitron text-yellow-300 mb-4 flex items-center"
+              class="text-xl font-orbitron text-yellow-300 mb-4 flex items-center justify-between"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                />
-              </svg>
-              Partenaires de victoire
+              <div class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                  />
+                </svg>
+                Partenaires de victoire
+              </div>
+
+              <!-- Compteur pour cette section -->
+              <span class="text-sm text-yellow-400">
+                ({{ socialStats.winningPartners.length }})
+              </span>
             </h3>
 
             <div
@@ -613,7 +658,7 @@
               class="space-y-3"
             >
               <div
-                v-for="partner in socialStats.winningPartners.slice(0, 5)"
+                v-for="partner in displayedWinningPartners"
                 :key="partner.playerId"
                 class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg flex items-center justify-between transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300 border border-yellow-500/50"
               >
@@ -642,6 +687,20 @@
                   </div>
                   <div class="text-xs text-yellow-300/70">victoires</div>
                 </div>
+              </div>
+
+              <!-- Indicateur s'il y a plus d'éléments cachés -->
+              <div
+                v-if="
+                  !expandedCollaborations &&
+                  socialStats.winningPartners.length > 5
+                "
+                class="text-center py-2"
+              >
+                <span class="text-xs text-yellow-400/70 font-orbitron">
+                  ... et {{ socialStats.winningPartners.length - 5 }} autres
+                  partenaires
+                </span>
               </div>
             </div>
 
@@ -1283,6 +1342,7 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 const selectedBadge = ref<Badge | null>(null);
 const expandedGameStats = ref(false);
+const expandedCollaborations = ref(false);
 
 // Navigation et pagination
 const activeSection = ref("profil");
@@ -1435,6 +1495,36 @@ const maxOverallValue = computed(() => {
 
   // Minimum de 1 pour éviter la division par zéro
   return Math.max(maxValue, 1);
+});
+
+// Affichage des coéquipiers fréquents avec expansion
+const displayedFrequentTeammates = computed(() => {
+  const teammates = socialStats.value.frequentTeammates;
+  if (expandedCollaborations.value || teammates.length <= 5) {
+    return teammates;
+  }
+  return teammates.slice(0, 5);
+});
+
+// Affichage des partenaires de victoire avec expansion
+const displayedWinningPartners = computed(() => {
+  const partners = socialStats.value.winningPartners;
+  if (expandedCollaborations.value || partners.length <= 5) {
+    return partners;
+  }
+  return partners.slice(0, 5);
+});
+
+// Total des collaborations uniques
+const totalCollaborators = computed(() => {
+  const teammates = socialStats.value.frequentTeammates.length;
+  const partners = socialStats.value.winningPartners.length;
+  // Éviter les doublons en utilisant un Set des IDs
+  const uniqueIds = new Set([
+    ...socialStats.value.frequentTeammates.map((t) => t.playerId),
+    ...socialStats.value.winningPartners.map((p) => p.playerId),
+  ]);
+  return uniqueIds.size;
 });
 
 //-------------------------------------------------------
