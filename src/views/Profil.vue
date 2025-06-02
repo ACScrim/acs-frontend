@@ -1,6 +1,40 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
 <template>
   <div class="container mx-auto p-4 pt-20 min-h-screen">
+    <!-- Navigation latérale -->
+    <div
+      class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block"
+    >
+      <div
+        class="bg-black/90 backdrop-blur-sm border border-cyan-500/30 rounded-lg p-3 space-y-1 shadow-lg shadow-cyan-500/20"
+      >
+        <div class="text-xs text-cyan-400 font-orbitron mb-2 px-2 text-center">
+          NAVIGATION
+        </div>
+
+        <button
+          v-for="section in navigationSections"
+          :key="section.id"
+          @click="scrollToSection(section.id)"
+          :class="[
+            'w-full text-left px-3 py-2 text-xs font-orbitron rounded transition-all duration-200 flex items-center space-x-2',
+            activeSection === section.id
+              ? 'bg-cyan-500/20 text-cyan-300 border-l-2 border-cyan-400 shadow-glow-cyan'
+              : 'text-gray-400 hover:text-cyan-400 hover:bg-cyan-900/20',
+          ]"
+          :title="section.label"
+        >
+          <svg
+            class="w-4 h-4 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            v-html="section.icon"
+          ></svg>
+          <span class="truncate">{{ section.shortLabel }}</span>
+        </button>
+      </div>
+    </div>
     <!-- État d'erreur -->
     <CyberTerminal
       v-if="error"
@@ -15,6 +49,7 @@
     <div v-else-if="player" class="max-w-4xl mx-auto">
       <!-- En-tête du profil -->
       <div
+        id="profil"
         class="bg-black/50 backdrop-blur-2xl rounded-lg p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
       >
         <div class="flex items-center justify-center mb-4">
@@ -51,6 +86,7 @@
 
       <!-- Section des statistiques - Version simplifiée -->
       <div
+        id="statistiques"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-cyan-500 shadow-lg shadow-cyan-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
         <h2 class="text-3xl text-white mb-6 neon-text-cyan flex items-center">
@@ -88,6 +124,7 @@
 
       <!-- Section Palmarès avec podium -->
       <div
+        id="palmares"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-amber-500 shadow-lg shadow-amber-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
         <h2 class="text-3xl text-white mb-6 neon-text-gold flex items-center">
@@ -208,10 +245,10 @@
         </div>
 
         <!-- Statistiques des médailles -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
+        <div class="flex flex-wrap justify-center gap-4 mb-4">
           <!-- Or -->
           <div
-            class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg text-center border border-yellow-500/50 shadow-md shadow-yellow-500/10 transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300"
+            class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg text-center border border-yellow-500/50 shadow-md shadow-yellow-500/10 transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
             <div class="text-yellow-400 text-lg font-orbitron mb-1">🥇 Or</div>
             <div class="text-2xl font-bold text-white">
@@ -222,7 +259,7 @@
 
           <!-- Argent -->
           <div
-            class="bg-gradient-to-br from-black/70 to-gray-800/30 p-4 rounded-lg text-center border border-gray-400/50 shadow-md shadow-gray-400/10 transform transition-all hover:scale-105 hover:shadow-gray-400/30 duration-300"
+            class="bg-gradient-to-br from-black/70 to-gray-800/30 p-4 rounded-lg text-center border border-gray-400/50 shadow-md shadow-gray-400/10 transform transition-all hover:scale-105 hover:shadow-gray-400/30 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
             <div class="text-gray-300 text-lg font-orbitron mb-1">
               🥈 Argent
@@ -235,7 +272,7 @@
 
           <!-- Bronze -->
           <div
-            class="bg-gradient-to-br from-black/70 to-amber-950/30 p-4 rounded-lg text-center border border-amber-700/50 shadow-md shadow-amber-700/10 transform transition-all hover:scale-105 hover:shadow-amber-700/30 duration-300"
+            class="bg-gradient-to-br from-black/70 to-amber-950/30 p-4 rounded-lg text-center border border-amber-700/50 shadow-md shadow-amber-700/10 transform transition-all hover:scale-105 hover:shadow-amber-700/30 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
             <div class="text-amber-600 text-lg font-orbitron mb-1">
               🥉 Bronze
@@ -245,28 +282,388 @@
             </div>
             <div class="text-xs text-amber-600/70">3e places</div>
           </div>
+        </div>
+      </div>
 
-          <!-- Jeu favori -->
-          <div
-            class="bg-gradient-to-br from-black/70 to-cyan-950/30 p-4 rounded-lg text-center border border-cyan-500/50 shadow-md shadow-cyan-500/10 transform transition-all hover:scale-105 hover:shadow-cyan-500/30 duration-300"
+      <!-- Section Activité et engagement -->
+      <div
+        id="activite"
+        class="bg-black/75 rounded-lg p-8 mb-8 border border-cyan-500 shadow-lg shadow-cyan-500/30 transform transition-all hover:scale-[1.02] duration-300"
+      >
+        <h2 class="text-3xl text-white mb-6 neon-text-cyan flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 mr-3 text-cyan-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <div class="text-cyan-400 text-lg font-orbitron mb-1">
-              🎮 Meilleur jeu
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          Activité
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Membre depuis -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-blue-950/30 p-4 rounded-lg text-center border border-blue-500/50 shadow-md shadow-blue-500/10 transform transition-all hover:scale-105 hover:shadow-blue-500/30 duration-300"
+          >
+            <div class="text-blue-400 text-lg font-orbitron mb-1">
+              📅 Membre
             </div>
-            <div
-              class="text-base font-bold text-white font-orbitron truncate max-w-full"
-              :title="favoriteGame.name"
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{ memberSince }}
+            </div>
+            <div class="text-xs text-blue-300/70">depuis</div>
+          </div>
+
+          <!-- Dernière activité -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-purple-950/30 p-4 rounded-lg text-center border border-purple-500/50 shadow-md shadow-purple-500/10 transform transition-all hover:scale-105 hover:shadow-purple-500/30 duration-300"
+          >
+            <div class="text-purple-400 text-lg font-orbitron mb-1">
+              ⚡ Activité
+            </div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{ lastSeen }}
+            </div>
+            <div class="text-xs text-purple-300/70">dernière fois</div>
+          </div>
+
+          <!-- Streak de participation -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-orange-950/30 p-4 rounded-lg text-center border border-orange-500/50 shadow-md shadow-orange-500/10 transform transition-all hover:scale-105 hover:shadow-orange-500/30 duration-300"
+          >
+            <div class="text-orange-400 text-lg font-orbitron mb-1">
+              🔥 Série
+            </div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{ participationStreak }}
+            </div>
+            <div class="text-xs text-orange-300/70">tournois consécutifs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Performance par jeu -->
+      <div
+        id="performance"
+        class="bg-black/75 rounded-lg p-8 mb-8 border border-green-500 shadow-lg shadow-green-500/30 transform transition-all hover:scale-[1.02] duration-300"
+      >
+        <h2
+          class="text-3xl text-white mb-6 neon-text-green flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 mr-3 text-green-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              {{ favoriteGame.name || "Aucun" }}
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+              />
+            </svg>
+            Performance par jeu
+          </div>
+
+          <!-- Bouton d'expansion -->
+          <button
+            v-if="gameStats.length > 3"
+            @click="expandedGameStats = !expandedGameStats"
+            class="text-sm bg-green-900/50 text-green-300 px-4 py-2 rounded-md hover:bg-green-800/50 transition-colors font-orbitron border border-green-500/30"
+          >
+            {{
+              expandedGameStats ? "RÉDUIRE" : `TOUT VOIR (${gameStats.length})`
+            }}
+          </button>
+        </h2>
+
+        <div v-if="gameStats.length > 0" class="space-y-4">
+          <div
+            v-for="gameStat in displayedGameStats"
+            :key="gameStat.gameId"
+            class="bg-gray-800/70 p-4 rounded-lg flex items-center justify-between transform transition-all hover:bg-gray-700/90 hover:scale-[1.02] duration-300 border border-green-500/20"
+          >
+            <div class="flex items-center">
+              <div class="relative mr-4">
+                <img
+                  v-if="gameStat.gameImage"
+                  :src="gameStat.gameImage"
+                  :alt="gameStat.gameName"
+                  class="w-12 h-12 rounded-lg object-cover border-2 border-green-500/50"
+                  @error="handleImageError"
+                />
+                <div
+                  v-else
+                  class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center border-2 border-green-500/50"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-9 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-white font-orbitron font-bold">
+                  {{ gameStat.gameName }}
+                </h3>
+                <div class="flex items-center space-x-3 mt-1">
+                  <span class="text-green-400 font-orbitron text-sm"
+                    >{{ gameStat.wins }}V</span
+                  >
+                  <span class="text-red-400 font-orbitron text-sm"
+                    >{{ gameStat.losses }}D</span
+                  >
+                  <span class="text-gray-400 text-sm"
+                    >{{ gameStat.totalPlayed }} parties</span
+                  >
+                </div>
+              </div>
             </div>
-            <div class="text-xs text-cyan-300/70 mt-1">
-              {{
-                favoriteGame.count
-                  ? `${favoriteGame.count} victoire${
-                      favoriteGame.count > 1 ? "s" : ""
-                    }`
-                  : "Pas encore de victoire"
-              }}
+
+            <div class="text-right flex flex-col items-end">
+              <div class="text-2xl font-bold text-green-400 font-orbitron mb-1">
+                {{ gameStat.winRate }}%
+              </div>
+              <div class="text-xs text-green-300/70 mb-2 whitespace-nowrap">
+                taux de victoire
+              </div>
+
+              <!-- Barre de progression corrigée -->
+              <div class="w-24 h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-gradient-to-r from-green-600 to-green-400 rounded-full transition-all duration-1000"
+                  :style="{ width: gameStat.winRate + '%' }"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-else
+          class="text-gray-400 text-center italic bg-gray-800/50 p-6 rounded-lg"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-12 w-12 mx-auto text-gray-500 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.707-2.626"
+            />
+          </svg>
+          Aucune donnée de performance disponible
+        </div>
+      </div>
+
+      <!-- Section Statistiques sociales -->
+      <div
+        id="collaborations"
+        class="bg-black/75 rounded-lg p-8 mb-8 border border-indigo-500 shadow-lg shadow-indigo-500/30 transform transition-all hover:scale-[1.02] duration-300"
+      >
+        <h2 class="text-3xl text-white mb-6 neon-text-indigo flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 mr-3 text-indigo-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          Collaborations
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Coéquipiers fréquents -->
+          <div>
+            <h3
+              class="text-xl font-orbitron text-indigo-300 mb-4 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                />
+              </svg>
+              Coéquipiers fréquents
+            </h3>
+
+            <div
+              v-if="socialStats.frequentTeammates.length > 0"
+              class="space-y-3"
+            >
+              <div
+                v-for="teammate in socialStats.frequentTeammates.slice(0, 5)"
+                :key="teammate.playerId"
+                class="bg-gray-800/70 p-4 rounded-lg flex items-center justify-between transform transition-all hover:bg-gray-700/90 hover:scale-[1.02] duration-300 border border-indigo-500/20"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 rounded-full bg-indigo-900/50 border-2 border-indigo-500/50 flex items-center justify-center mr-3"
+                  >
+                    <span class="text-indigo-400 font-orbitron font-bold">
+                      {{ teammate.username.charAt(0).toUpperCase() }}
+                    </span>
+                  </div>
+
+                  <router-link
+                    :to="{ name: 'Profil', params: { id: teammate.playerId } }"
+                    class="text-white font-orbitron hover:text-indigo-400 transition-colors"
+                  >
+                    {{ teammate.username }}
+                  </router-link>
+                </div>
+
+                <div class="text-right">
+                  <div class="text-lg font-bold text-indigo-400 font-orbitron">
+                    {{ teammate.count }}
+                  </div>
+                  <div class="text-xs text-indigo-300/70">équipes</div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-else
+              class="text-gray-400 text-center italic bg-gray-800/50 p-6 rounded-lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto text-gray-500 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                />
+              </svg>
+              Aucune collaboration répétée
+            </div>
+          </div>
+
+          <!-- Partenaires de victoire -->
+          <div>
+            <h3
+              class="text-xl font-orbitron text-yellow-300 mb-4 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                />
+              </svg>
+              Partenaires de victoire
+            </h3>
+
+            <div
+              v-if="socialStats.winningPartners.length > 0"
+              class="space-y-3"
+            >
+              <div
+                v-for="partner in socialStats.winningPartners.slice(0, 5)"
+                :key="partner.playerId"
+                class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg flex items-center justify-between transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300 border border-yellow-500/50"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 rounded-full bg-yellow-900/50 border-2 border-yellow-500/50 flex items-center justify-center mr-3"
+                  >
+                    <span class="text-yellow-400 font-orbitron font-bold">
+                      {{ partner.username.charAt(0).toUpperCase() }}
+                    </span>
+                  </div>
+
+                  <router-link
+                    :to="{ name: 'Profil', params: { id: partner.playerId } }"
+                    class="text-white font-orbitron hover:text-yellow-400 transition-colors"
+                  >
+                    {{ partner.username }}
+                  </router-link>
+                </div>
+
+                <div class="text-right">
+                  <div
+                    class="text-lg font-bold text-yellow-400 font-orbitron flex items-center"
+                  >
+                    🏆 {{ partner.wins }}
+                  </div>
+                  <div class="text-xs text-yellow-300/70">victoires</div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-else
+              class="text-gray-400 text-center italic bg-gray-800/50 p-6 rounded-lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto text-gray-500 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                />
+              </svg>
+              Aucune victoire en équipe
             </div>
           </div>
         </div>
@@ -274,6 +671,7 @@
 
       <!-- Section des badges -->
       <div
+        id="badges"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-purple-500 shadow-lg shadow-purple-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
         <h2 class="text-3xl text-white mb-6 neon-text-purple flex items-center">
@@ -336,8 +734,214 @@
         </div>
       </div>
 
+      <!-- Section Réalisations et progression -->
+      <div
+        id="records"
+        class="bg-black/75 rounded-lg p-8 mb-8 border border-amber-500 shadow-lg shadow-amber-500/30 transform transition-all hover:scale-[1.02] duration-300"
+      >
+        <h2 class="text-3xl text-white mb-6 neon-text-gold flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 mr-3 text-amber-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+          Records personnels
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <!-- Plus longue série de victoires -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-green-950/30 p-4 rounded-lg text-center border border-green-500/50 shadow-md shadow-green-500/10 transform transition-all hover:scale-105 hover:shadow-green-500/30 duration-300"
+          >
+            <div class="text-green-400 text-lg font-orbitron mb-1">
+              🔥 Série
+            </div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{ records.longestWinStreak }}
+            </div>
+            <div class="text-xs text-green-300/70">victoires consécutives</div>
+          </div>
+
+          <!-- Taux de top 25% -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-purple-950/30 p-4 rounded-lg text-center border border-purple-500/50 shadow-md shadow-purple-500/10 transform transition-all hover:scale-105 hover:shadow-purple-500/30 duration-300"
+          >
+            <div class="text-purple-400 text-lg font-orbitron mb-1">
+              🎯 Top 25%
+            </div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{ top25PercentRate }}%
+            </div>
+            <div class="text-xs text-purple-300/70">des tournois</div>
+          </div>
+
+          <!-- Taux de victoire -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-cyan-950/30 p-4 rounded-lg text-center border border-cyan-500/50 shadow-md shadow-cyan-500/10 transform transition-all hover:scale-105 hover:shadow-cyan-500/30 duration-300"
+          >
+            <div class="text-cyan-400 text-lg font-orbitron mb-1">📊 Taux</div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{
+                playerRanking?.totalTournaments
+                  ? Math.round(
+                      ((playerRanking?.totalVictories || 0) /
+                        playerRanking.totalTournaments) *
+                        100
+                    )
+                  : 0
+              }}%
+            </div>
+            <div class="text-xs text-cyan-300/70">de victoire</div>
+          </div>
+
+          <!-- Taux de podium -->
+          <div
+            class="bg-gradient-to-br from-black/70 to-yellow-950/30 p-4 rounded-lg text-center border border-yellow-500/50 shadow-md shadow-yellow-500/10 transform transition-all hover:scale-105 hover:shadow-yellow-500/30 duration-300"
+          >
+            <div class="text-yellow-400 text-lg font-orbitron mb-1">
+              🏆 Podium
+            </div>
+            <div class="text-2xl font-bold text-white font-orbitron">
+              {{
+                playerRanking?.totalTournaments
+                  ? Math.round(
+                      ((medalCount.gold +
+                        medalCount.silver +
+                        medalCount.bronze) /
+                        playerRanking.totalTournaments) *
+                        100
+                    )
+                  : 0
+              }}%
+            </div>
+            <div class="text-xs text-yellow-300/70">de podiums</div>
+          </div>
+        </div>
+
+        <!-- Graphique de progression intégré -->
+        <div class="bg-gray-800/50 p-6 rounded-lg border border-amber-500/20">
+          <h3
+            class="text-lg font-orbitron text-amber-300 mb-4 flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+              />
+            </svg>
+            Évolution des performances
+          </h3>
+
+          <!-- Graphique simple en CSS basé sur les données réelles -->
+          <div
+            class="h-48 bg-gray-900/50 rounded-lg p-4 border border-gray-700/50"
+          >
+            <div v-if="tournamentProgression.length > 0" class="h-full">
+              <div class="flex justify-between items-end h-full relative">
+                <div
+                  v-for="(month, index) in tournamentProgression"
+                  :key="index"
+                  class="flex flex-col items-center flex-1 mx-1"
+                >
+                  <!-- Barre empilée -->
+                  <div class="flex flex-col justify-end h-32 w-full relative">
+                    <div class="w-full flex flex-col justify-end h-full">
+                      <!-- Section podiums (base) -->
+                      <div
+                        v-if="month.podiums > 0"
+                        class="bg-gradient-to-t from-amber-700 to-amber-500 w-full transition-all duration-1000 relative"
+                        :style="{
+                          height:
+                            Math.max(
+                              (month.podiums /
+                                Math.max(
+                                  ...tournamentProgression.map((m) => m.podiums)
+                                )) *
+                                100,
+                              5
+                            ) + '%',
+                        }"
+                        :title="`${month.podiums} podiums en ${month.name}`"
+                      >
+                        <!-- Section victoires (au-dessus) -->
+                        <div
+                          v-if="month.victories > 0"
+                          class="bg-gradient-to-t from-green-600 to-green-400 w-full absolute top-0 rounded-t transition-all duration-1000"
+                          :style="{
+                            height:
+                              Math.max(
+                                (month.victories / month.podiums) * 100,
+                                30
+                              ) + '%',
+                          }"
+                          :title="`${month.victories} victoires en ${month.name}`"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Label du mois -->
+                  <div
+                    class="text-xs text-gray-400 mt-2 font-orbitron text-center"
+                  >
+                    {{ month.name }}
+                  </div>
+
+                  <!-- Statistiques détaillées -->
+                  <div class="text-xs font-orbitron text-center mt-1">
+                    <div v-if="month.victories > 0" class="text-green-400">
+                      🥇 {{ month.victories }}
+                    </div>
+                    <div
+                      v-if="month.podiums > month.victories"
+                      class="text-amber-400"
+                    >
+                      🏆 {{ month.podiums - month.victories }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Légende -->
+              <div class="flex justify-center mt-4 space-x-6">
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-green-400 rounded"></div>
+                  <span class="text-xs text-gray-400 font-orbitron"
+                    >Victoires</span
+                  >
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-amber-500 rounded"></div>
+                  <span class="text-xs text-gray-400 font-orbitron"
+                    >Autres podiums</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Section des tournois -->
       <div
+        id="tournois"
         class="bg-black/75 rounded-lg p-8 border border-pink-500 shadow-lg shadow-pink-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
         <h2 class="text-3xl text-white mb-6 neon-text flex items-center">
@@ -615,48 +1219,171 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import playerService from "../services/playerService";
 import userService from "../services/userService";
-import type { Player, PlayerRanking, Badge, User } from "../types";
+import type {
+  Player,
+  PlayerRanking,
+  Badge,
+  User,
+  ExtendedStats,
+} from "../types";
 import CyberTerminal from "../shared/CyberTerminal.vue";
+
 //-------------------------------------------------------
-// SECTION: Définition des états
+// SECTION: États réactifs principaux
 //-------------------------------------------------------
-/**
- * États pour la pagination et le tri des tournois
- */
-const tournamentSort = ref("date-desc"); // Tri par défaut: plus récents d'abord
-const currentTournamentPage = ref(1); // Page actuelle pour les tournois
-const tournamentsPerPage = 5; // Nombre de tournois par page
 
-/**
- * Données principales du profil
- */
-const player = ref<Player | null>(null); // Données du joueur
-const user = ref<User | null>(null); // Utilisateur associé au joueur
-const playerRanking = ref<PlayerRanking | null>(null); // Classement du joueur
+// Données du profil
+const player = ref<Player | null>(null);
+const user = ref<User | null>(null);
+const playerRanking = ref<PlayerRanking | null>(null);
+const extendedStats = ref<ExtendedStats | null>(null);
 
-/**
- * États UI
- */
-const loading = ref(true); // État de chargement
-const error = ref<string | null>(null); // Message d'erreur
-const selectedBadge = ref<Badge | null>(null); // Badge sélectionné pour affichage détaillé
+// États de l'interface
+const loading = ref(true);
+const error = ref<string | null>(null);
+const selectedBadge = ref<Badge | null>(null);
+const expandedGameStats = ref(false);
 
-/**
- * Accès aux paramètres de route
- */
+// Navigation et pagination
+const activeSection = ref("profil");
+const tournamentSort = ref("date-desc");
+const currentTournamentPage = ref(1);
+const tournamentsPerPage = 5;
+
+// Accès aux paramètres de route
 const route = useRoute();
 
-/**
- * Calcule le nombre de médailles pour chaque type (or, argent, bronze)
- */
+//-------------------------------------------------------
+// SECTION: Configuration de navigation
+//-------------------------------------------------------
+
+const navigationSections = ref([
+  {
+    id: "profil",
+    label: "Profil joueur",
+    shortLabel: "Profil",
+    icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />',
+  },
+  {
+    id: "statistiques",
+    label: "Statistiques générales",
+    shortLabel: "Stats",
+    icon: '<path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />',
+  },
+  {
+    id: "palmares",
+    label: "Palmarès et médailles",
+    shortLabel: "Palmarès",
+    icon: '<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd" />',
+  },
+  {
+    id: "activite",
+    label: "Activité joueur",
+    shortLabel: "Activité",
+    icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />',
+  },
+  {
+    id: "performance",
+    label: "Performance par jeu",
+    shortLabel: "Jeux",
+    icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />',
+  },
+  {
+    id: "collaborations",
+    label: "Collaborations",
+    shortLabel: "Équipes",
+    icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 515.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />',
+  },
+  {
+    id: "badges",
+    label: "Badges et récompenses",
+    shortLabel: "Badges",
+    icon: '<path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />',
+  },
+  {
+    id: "records",
+    label: "Records personnels",
+    shortLabel: "Records",
+    icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />',
+  },
+  {
+    id: "tournois",
+    label: "Historique tournois",
+    shortLabel: "Tournois",
+    icon: '<path d="M2 2v5h5" /><path d="M2 7h12v5H2z" /><path d="M14 4v8" /><path d="M14 12h5v5h-5z" /><path d="M19 17h3v5h-3z" /><path d="M8 12v5h6" /><path d="M8 17h3v5H8z" />',
+  },
+]);
+
+//-------------------------------------------------------
+// SECTION: Propriétés calculées - Données de base
+//-------------------------------------------------------
+
+// Statistiques des jeux
+const gameStats = computed(() => extendedStats.value?.gameStats || []);
+
+const displayedGameStats = computed(() => {
+  if (expandedGameStats.value || gameStats.value.length <= 3) {
+    return gameStats.value;
+  }
+  return gameStats.value.slice(0, 3);
+});
+
+// Informations d'activité
+const memberSince = computed(() => {
+  if (!extendedStats.value?.memberSince) return "Inconnu";
+  return formatDate(extendedStats.value.memberSince);
+});
+
+const lastSeen = computed(() => {
+  if (!extendedStats.value?.lastSeen) return "Inconnu";
+  return formatDate(extendedStats.value.lastSeen);
+});
+
+const participationStreak = computed(() => {
+  return extendedStats.value?.participationStreak || 0;
+});
+
+// Statistiques sociales
+const socialStats = computed(() => ({
+  teamsFormed: extendedStats.value?.socialStats?.teamsFormed || 0,
+  uniqueTeammates: extendedStats.value?.socialStats?.uniqueTeammates || 0,
+  frequentTeammates: extendedStats.value?.socialStats?.frequentTeammates || [],
+  winningPartners: extendedStats.value?.socialStats?.winningPartners || [],
+}));
+
+// Records personnels
+const records = computed(() => ({
+  longestWinStreak: extendedStats.value?.records?.longestWinStreak || 0,
+}));
+
+//-------------------------------------------------------
+// SECTION: Propriétés calculées - Statistiques avancées
+//-------------------------------------------------------
+
+// Calcul du taux de top 25%
+const top25PercentRate = computed(() => {
+  if (!playerRanking.value?.tournamentsParticipated) return 0;
+
+  const tournaments = playerRanking.value.tournamentsParticipated;
+
+  const top25Tournaments = tournaments.filter((tournament) => {
+    const rank = tournament.rank || 999;
+    const totalTeams = tournament.numberOfTeams || 1;
+    const top25Threshold = Math.ceil(totalTeams * 0.25);
+    return rank <= top25Threshold;
+  }).length;
+
+  return tournaments.length > 0
+    ? Math.round((top25Tournaments / tournaments.length) * 100)
+    : 0;
+});
+
+// Compte des médailles
 const medalCount = computed(() => {
-  // Valeurs par défaut
   const counts = { gold: 0, silver: 0, bronze: 0 };
 
-  // Si pas de données de tournoi, retourner les compteurs à zéro
   if (!playerRanking.value?.tournamentsParticipated) return counts;
 
-  // Compter les médailles basées sur le rang
   playerRanking.value.tournamentsParticipated.forEach((tournament) => {
     if (tournament.rank === 1) counts.gold++;
     else if (tournament.rank === 2) counts.silver++;
@@ -666,79 +1393,115 @@ const medalCount = computed(() => {
   return counts;
 });
 
-/**
- * Détermine le jeu sur lequel le joueur a obtenu le plus de victoires
- */
-const favoriteGame = computed(() => {
-  // Si pas de données de tournoi, retourner un objet vide
-  if (!playerRanking.value?.tournamentsParticipated) {
-    return { name: "Aucun", count: 0 };
-  }
+// Données pour le graphique de progression
+const tournamentProgression = computed(() => {
+  if (!playerRanking.value?.tournamentsParticipated) return [];
 
-  // Filtrer les tournois avec victoire (rang 1)
-  const victories = playerRanking.value.tournamentsParticipated.filter(
-    (t) => t.rank === 1
+  const tournaments = playerRanking.value.tournamentsParticipated;
+  const now = new Date();
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+  const recentTournaments = tournaments.filter(
+    (t) => new Date(t.date) >= sixMonthsAgo
   );
 
-  if (victories.length === 0) {
-    return { name: "Aucun", count: 0 };
+  const monthlyData = new Map();
+
+  // Initialiser les 6 derniers mois
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
+    const monthName = date.toLocaleDateString("fr-FR", { month: "short" });
+
+    monthlyData.set(key, {
+      name: monthName,
+      victories: 0,
+      podiums: 0,
+      total: 0,
+    });
   }
 
-  // Compter les victoires par jeu
-  const gameWins: Record<string, number> = {};
-  const gameMap: Record<string, string> = {}; // Pour stocker les noms de jeux par ID
+  // Compter les victoires et podiums par mois
+  recentTournaments.forEach((tournament) => {
+    const date = new Date(tournament.date);
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
 
-  victories.forEach((tournament) => {
-    if (!tournament.game) return;
+    if (monthlyData.has(key)) {
+      const monthData = monthlyData.get(key);
+      monthData.total++;
 
-    // Récupérer l'ID et le nom du jeu
-    const gameId =
-      typeof tournament.game === "string"
-        ? tournament.game
-        : tournament.game._id || "";
-
-    const gameName =
-      typeof tournament.game === "object" && tournament.game.name
-        ? tournament.game.name
-        : "Jeu inconnu";
-
-    // Stocker le nom du jeu
-    if (gameId && gameName !== "Jeu inconnu") {
-      gameMap[gameId] = gameName;
-    }
-
-    // Compter les victoires
-    if (gameId) {
-      gameWins[gameId] = (gameWins[gameId] || 0) + 1;
+      if (tournament.rank === 1) {
+        monthData.victories++;
+        monthData.podiums++; // Les victoires comptent aussi comme podiums
+      } else if (tournament.rank === 2 || tournament.rank === 3) {
+        monthData.podiums++;
+      }
     }
   });
 
-  // Trouver le jeu avec le plus de victoires
-  let topGameId = "unknown";
-  let topCount = 0;
-
-  Object.entries(gameWins).forEach(([id, count]) => {
-    if (count > topCount) {
-      topGameId = id;
-      topCount = count as number;
-    }
-  });
-
-  // Récupérer le nom du jeu gagnant
-  const topGameName = gameMap[topGameId] || "Jeu inconnu";
-
-  return { name: topGameName, count: topCount };
+  return Array.from(monthlyData.values());
 });
 
 //-------------------------------------------------------
-// SECTION: Formatage et utilitaires
+// SECTION: Propriétés calculées - Interface utilisateur
 //-------------------------------------------------------
 
-/**
- * Formatte une date au format français
- * @param dateString - Date à formater
- * @returns Date formatée en français (ex: "15 mars 2023")
- */
+// Badges
+const hasBadges = computed(
+  () => player.value?.badges && player.value.badges.length > 0
+);
+
+const badgeCount = computed(() => player.value?.badges?.length || 0);
+
+// Tournois
+const hasTournaments = computed(
+  () =>
+    playerRanking.value?.tournamentsParticipated &&
+    playerRanking.value.tournamentsParticipated.length > 0
+);
+
+const tournamentCount = computed(
+  () => playerRanking.value?.tournamentsParticipated?.length || 0
+);
+
+// Tri et pagination des tournois
+const sortedTournaments = computed(() => {
+  const tournaments = playerRanking.value?.tournamentsParticipated || [];
+
+  switch (tournamentSort.value) {
+    case "date-desc":
+      return [...tournaments].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+    case "date-asc":
+      return [...tournaments].sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+    case "rank-asc":
+      return [...tournaments].sort((a, b) => {
+        const rankA = a.rank || 999;
+        const rankB = b.rank || 999;
+        return rankA - rankB;
+      });
+    default:
+      return tournaments;
+  }
+});
+
+const totalTournamentPages = computed(() =>
+  Math.ceil((sortedTournaments.value?.length || 0) / tournamentsPerPage)
+);
+
+const paginatedTournaments = computed(() => {
+  const start = (currentTournamentPage.value - 1) * tournamentsPerPage;
+  const end = start + tournamentsPerPage;
+  return sortedTournaments.value?.slice(start, end) || [];
+});
+
+//-------------------------------------------------------
+// SECTION: Fonctions utilitaires
+//-------------------------------------------------------
+
 const formatDate = (dateString: string | Date) => {
   try {
     const options: Intl.DateTimeFormatOptions = {
@@ -753,137 +1516,81 @@ const formatDate = (dateString: string | Date) => {
   }
 };
 
-/**
- * Extrait les initiales d'un nom d'utilisateur
- * @param username - Nom d'utilisateur
- * @returns Première lettre du nom en majuscule
- */
 const getInitials = (username: string) => {
   if (!username) return "?";
   return username.charAt(0).toUpperCase();
 };
 
-/**
- * Gère les erreurs de chargement d'image d'avatar
- * Remplace l'image par un avatar généré avec les initiales
- * @param e - Événement d'erreur
- */
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
-    // Récupérer le username pour générer les initiales
     const username = player.value?.username || "?";
     const initials = getInitials(username);
 
-    // Utiliser l'API ui-avatars pour générer un avatar basé sur les initiales
     e.target.src = `https://ui-avatars.com/api/?name=${initials}&background=6D28D9&color=F9FAFB&size=150&bold=true&font-family=monospace`;
 
-    // Ajouter une classe pour styliser différemment les avatars de remplacement
     e.target.classList.remove("border-pink-500", "shadow-glow-pink");
     e.target.classList.add("border-purple-500", "shadow-purple-500/50");
   }
 };
 
 //-------------------------------------------------------
+// SECTION: Navigation et scroll
+//-------------------------------------------------------
+
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const yOffset = -100;
+    const elementPosition =
+      element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition + yOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+
+    activeSection.value = sectionId;
+  }
+};
+
+const setupScrollObserver = () => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+          activeSection.value = entry.target.id;
+        }
+      });
+    },
+    {
+      threshold: [0.3, 0.7],
+      rootMargin: "-20% 0px -20% 0px",
+    }
+  );
+
+  navigationSections.value.forEach((section) => {
+    const element = document.getElementById(section.id);
+    if (element) {
+      observer.observe(element);
+    }
+  });
+
+  return observer;
+};
+
+//-------------------------------------------------------
 // SECTION: Actions utilisateur
 //-------------------------------------------------------
 
-/**
- * Sélectionne un badge pour afficher ses détails dans une modal
- * @param badge - Badge à afficher
- */
 const selectBadge = (badge: Badge) => {
   selectedBadge.value = badge;
 };
 
 //-------------------------------------------------------
-// SECTION: Propriétés calculées
+// SECTION: Gestion des tournois
 //-------------------------------------------------------
 
-/**
- * Vérifie si le joueur possède des badges
- */
-const hasBadges = computed(
-  () => player.value?.badges && player.value.badges.length > 0
-);
-
-/**
- * Compte le nombre de badges du joueur
- */
-const badgeCount = computed(() => player.value?.badges?.length || 0);
-
-/**
- * Vérifie si le joueur a participé à des tournois
- */
-const hasTournaments = computed(
-  () =>
-    playerRanking.value?.tournamentsParticipated &&
-    playerRanking.value.tournamentsParticipated.length > 0
-);
-
-/**
- * Compte le nombre de tournois auxquels le joueur a participé
- */
-const tournamentCount = computed(
-  () => playerRanking.value?.tournamentsParticipated?.length || 0
-);
-
-//-------------------------------------------------------
-// SECTION: Récupération des données
-//-------------------------------------------------------
-
-/**
- * Récupère toutes les données du profil joueur:
- * - Informations du joueur
- * - Données de l'utilisateur associé
- * - Classement et historique des tournois
- */
-const fetchPlayerProfile = async () => {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    const playerId = route.params.id as string;
-
-    // Récupération des données du joueur
-    const playerData = await playerService.getPlayerProfile(playerId);
-    player.value = playerData;
-
-    // Récupération de l'utilisateur associé pour l'avatar
-    if (player.value && player.value.userId) {
-      try {
-        const userData = await userService.getUserById(player.value.userId);
-        user.value = userData;
-      } catch (userErr) {
-        console.error(
-          "Erreur lors de la récupération de l'utilisateur:",
-          userErr
-        );
-        // Ne pas bloquer le reste du chargement si l'utilisateur n'est pas trouvé
-      }
-    }
-
-    // Récupération du classement et de l'historique des tournois
-    try {
-      const rankings = await playerService.getPlayerRankings();
-      playerRanking.value =
-        rankings.find((ranking) => ranking.playerId === playerId) || null;
-    } catch (rankErr) {
-      console.error("Erreur lors de la récupération du classement:", rankErr);
-      // Ne pas bloquer le reste du chargement si le classement n'est pas disponible
-    }
-  } catch (err) {
-    console.error("Erreur lors de la récupération du profil du joueur:", err);
-    error.value = "Impossible de charger le profil de ce joueur.";
-  } finally {
-    loading.value = false;
-  }
-};
-
-/**
- * Obtient le libellé correspondant au classement
- * @param rank - Rang de l'équipe (1 pour 1er, 2 pour 2ème, etc.)
- * @returns Libellé formaté avec emoji pour les 3 premiers rangs
- */
 const getRankingLabel = (rank: number): string => {
   if (!rank) return "Non classé";
 
@@ -899,11 +1606,6 @@ const getRankingLabel = (rank: number): string => {
   }
 };
 
-/**
- * Obtient la classe CSS correspondant au rang pour styliser les badges
- * @param rank - Rang de l'équipe
- * @returns Classe CSS pour l'apparence du badge
- */
 const getRankingClass = (rank: number): string => {
   if (!rank) return "bg-gray-700 text-gray-300 border border-gray-600";
 
@@ -919,87 +1621,78 @@ const getRankingClass = (rank: number): string => {
   }
 };
 
-/**
- * Trie les tournois selon le critère sélectionné
- */
-const sortedTournaments = computed(() => {
-  const tournaments = playerRanking.value?.tournamentsParticipated || [];
-
-  switch (tournamentSort.value) {
-    case "date-desc":
-      return [...tournaments].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-    case "date-asc":
-      return [...tournaments].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-      );
-    case "rank-asc":
-      return [...tournaments].sort((a, b) => {
-        // D'abord trier par rang (les non-classés en dernier)
-        const rankA = a.rank || 999;
-        const rankB = b.rank || 999;
-        return rankA - rankB;
-      });
-    default:
-      return tournaments;
-  }
-});
-
-/**
- * Calcule le nombre total de pages pour la pagination des tournois
- */
-const totalTournamentPages = computed(() =>
-  Math.ceil((sortedTournaments.value?.length || 0) / tournamentsPerPage)
-);
-
-/**
- * Extrait les tournois à afficher sur la page courante
- */
-const paginatedTournaments = computed(() => {
-  const start = (currentTournamentPage.value - 1) * tournamentsPerPage;
-  const end = start + tournamentsPerPage;
-  return sortedTournaments.value?.slice(start, end) || [];
-});
-
-/**
- * Passe à la page suivante des tournois
- */
 const nextTournamentPage = () => {
   if (currentTournamentPage.value < totalTournamentPages.value) {
     currentTournamentPage.value++;
   }
 };
 
-/**
- * Revient à la page précédente des tournois
- */
 const prevTournamentPage = () => {
   if (currentTournamentPage.value > 1) {
     currentTournamentPage.value--;
   }
 };
 
-/**
- * Réinitialise la pagination quand le tri change
- */
+//-------------------------------------------------------
+// SECTION: Récupération des données
+//-------------------------------------------------------
+
+const fetchPlayerProfile = async () => {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const playerId = route.params.id as string;
+
+    // Récupération des données du joueur
+    const playerData = await playerService.getPlayerProfile(playerId);
+    player.value = playerData;
+
+    // Récupération de l'utilisateur associé
+    if (player.value?.userId) {
+      try {
+        const userData = await userService.getUserById(player.value.userId);
+        user.value = userData;
+      } catch (userErr) {
+        console.error("Erreur utilisateur:", userErr);
+      }
+    }
+
+    // Récupération des statistiques étendues
+    try {
+      const extendedStatsData = await playerService.getExtendedStats(playerId);
+      extendedStats.value = extendedStatsData;
+    } catch (statsErr) {
+      console.error("Erreur statistiques étendues:", statsErr);
+      extendedStats.value = null;
+    }
+
+    // Récupération du classement
+    try {
+      const rankings = await playerService.getPlayerRankings();
+      playerRanking.value =
+        rankings.find((ranking) => ranking.playerId === playerId) || null;
+    } catch (rankErr) {
+      console.error("Erreur classement:", rankErr);
+    }
+  } catch (err) {
+    console.error("Erreur profil joueur:", err);
+    error.value = "Impossible de charger le profil de ce joueur.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+//-------------------------------------------------------
+// SECTION: Watchers et cycle de vie
+//-------------------------------------------------------
+
+// Réinitialiser la pagination quand le tri change
 watch(tournamentSort, () => {
   currentTournamentPage.value = 1;
 });
 
-//-------------------------------------------------------
-// SECTION: Cycle de vie du composant
-//-------------------------------------------------------
-
-/**
- * Initialisation du composant au montage
- * Charge les données du profil joueur
- */
-onMounted(() => {
-  fetchPlayerProfile();
-});
-
-// Ajouter ce watcher pour réagir aux changements d'ID dans l'URL
+// Recharger quand l'ID change
 watch(
   () => route.params.id,
   (newId, oldId) => {
@@ -1008,6 +1701,14 @@ watch(
     }
   }
 );
+
+// Initialisation du composant
+onMounted(() => {
+  fetchPlayerProfile();
+  setTimeout(() => {
+    setupScrollObserver();
+  }, 1000);
+});
 </script>
 
 <style scoped>
@@ -1067,6 +1768,30 @@ h2 {
 
 .animate-pulse-subtle {
   animation: pulse 2s infinite;
+}
+.neon-text-green {
+  color: white;
+  text-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 15px #10b981;
+}
+
+.neon-text-indigo {
+  color: white;
+  text-shadow: 0 0 10px #6366f1, 0 0 20px #6366f1, 0 0 15px #6366f1;
+}
+
+/* Animation pour les barres de progression */
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--width);
+  }
+}
+
+/* Amélioration des transitions */
+.transform {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Animation au survol des éléments */
@@ -1160,5 +1885,54 @@ h2 {
 
 .animate-pulse-subtle {
   animation: pulse-subtle 2s infinite;
+}
+
+/* Navigation latérale */
+.shadow-glow-cyan {
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+/* Amélioration du style des boutons de navigation */
+.fixed.left-4 button {
+  min-width: 140px;
+  font-size: 11px;
+  padding: 8px 12px;
+}
+
+.fixed.left-4 button svg {
+  flex-shrink: 0;
+}
+
+/* Animation fluide pour les transitions */
+.fixed.left-4 button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Effet de survol amélioré */
+.fixed.left-4 button:hover {
+  transform: translateX(2px);
+}
+
+/* Style pour la section active */
+.fixed.left-4 button.bg-cyan-500\/20 {
+  position: relative;
+}
+
+.fixed.left-4 button.bg-cyan-500\/20::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #06b6d4, #0891b2);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Responsive - masquer sur les petits écrans */
+@media (max-width: 1024px) {
+  .fixed.left-4 {
+    display: none;
+  }
 }
 </style>

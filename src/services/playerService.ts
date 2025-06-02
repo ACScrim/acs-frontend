@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Player, PlayerRanking } from "../types";
+import type { Player, PlayerRanking, ExtendedStats } from "../types";
 
 /**
  * URL de base pour les opérations sur les joueurs
@@ -139,6 +139,26 @@ const getPlayerProfile = async (userId: string): Promise<Player> => {
   return response.data;
 };
 
+/**
+ * Récupère les statistiques étendues d'un joueur
+ * @param playerId - ID du joueur
+ * @returns Statistiques détaillées du joueur
+ */
+const getExtendedStats = async (playerId: string): Promise<ExtendedStats> => {
+  try {
+    const response = await axios.get(`${API_URL}/${playerId}/extended-stats`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des statistiques étendues:",
+      error
+    );
+    throw error;
+  }
+};
+
 export default {
   addPlayer,
   getPlayers,
@@ -151,4 +171,5 @@ export default {
   getPlayerRankingsByGame,
   getPlayerByIdUser,
   getPlayerProfile,
+  getExtendedStats,
 };
