@@ -1382,8 +1382,26 @@ const memberSince = computed(() => {
 });
 
 const lastSeen = computed(() => {
-  if (!extendedStats.value?.lastSeen) return "Inconnu";
-  return formatDate(extendedStats.value.lastSeen);
+  // Chercher le dernier tournoi participé
+  if (
+    !playerRanking.value?.tournamentsParticipated ||
+    playerRanking.value.tournamentsParticipated.length === 0
+  ) {
+    return "Aucun tournoi";
+  }
+
+  // Trier les tournois par date décroissante et prendre le premier
+  const sortedTournaments = [
+    ...playerRanking.value.tournamentsParticipated,
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const lastTournament = sortedTournaments[0];
+
+  if (!lastTournament) {
+    return "Aucun tournoi";
+  }
+
+  return formatDate(lastTournament.date);
 });
 
 const participationStreak = computed(() => {
