@@ -871,11 +871,7 @@
                       :style="{
                         height:
                           Math.max(
-                            (month.victories /
-                              Math.max(
-                                ...tournamentProgression.map((m) => m.victories)
-                              )) *
-                              100,
+                            (month.victories / maxOverallValue) * 100,
                             8
                           ) + '%',
                       }"
@@ -893,11 +889,7 @@
                         height:
                           Math.max(
                             ((month.podiums - month.victories) /
-                              Math.max(
-                                ...tournamentProgression.map(
-                                  (m) => m.podiums - m.victories
-                                )
-                              )) *
+                              maxOverallValue) *
                               100,
                             8
                           ) + '%',
@@ -955,6 +947,32 @@
                     >Autres podiums</span
                   >
                 </div>
+              </div>
+            </div>
+
+            <!-- État vide si pas de données -->
+            <div v-else class="h-full flex items-center justify-center">
+              <div class="text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-10 w-10 mx-auto text-gray-500 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+                <span class="text-gray-400 text-sm font-orbitron"
+                  >Pas assez de données</span
+                >
+                <p class="text-xs text-gray-500 mt-1">
+                  Participez à plus de tournois
+                </p>
               </div>
             </div>
           </div>
@@ -1384,6 +1402,22 @@ const socialStats = computed(() => ({
 const records = computed(() => ({
   longestWinStreak: extendedStats.value?.records?.longestWinStreak || 0,
 }));
+
+// Valeur maximale pour normaliser toutes les barres sur la même échelle
+const maxOverallValue = computed(() => {
+  if (tournamentProgression.value.length === 0) return 1;
+
+  let maxValue = 0;
+
+  tournamentProgression.value.forEach((month) => {
+    // Comparer victoires et podiums séparément
+    maxValue = Math.max(maxValue, month.victories);
+    maxValue = Math.max(maxValue, month.podiums - month.victories);
+  });
+
+  // Minimum de 1 pour éviter la division par zéro
+  return Math.max(maxValue, 1);
+});
 
 //-------------------------------------------------------
 // SECTION: Propriétés calculées - Statistiques avancées
