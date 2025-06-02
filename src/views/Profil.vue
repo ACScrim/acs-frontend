@@ -335,17 +335,17 @@
             <div class="text-xs text-purple-300/70">dernière fois</div>
           </div>
 
-          <!-- Streak de participation -->
+          <!-- Participation totale -->
           <div
             class="bg-gradient-to-br from-black/70 to-orange-950/30 p-4 rounded-lg text-center border border-orange-500/50 shadow-md shadow-orange-500/10 transform transition-all hover:scale-105 hover:shadow-orange-500/30 duration-300"
           >
             <div class="text-orange-400 text-lg font-orbitron mb-1">
-              🔥 Série
+              🎯 Participation
             </div>
             <div class="text-2xl font-bold text-white font-orbitron">
               {{ participationStreak }}
             </div>
-            <div class="text-xs text-orange-300/70">tournois consécutifs</div>
+            <div class="text-xs text-orange-300/70">tournois joués</div>
           </div>
         </div>
       </div>
@@ -858,43 +858,57 @@
                 <div
                   v-for="(month, index) in tournamentProgression"
                   :key="index"
-                  class="flex flex-col items-center flex-1 mx-1"
+                  class="flex flex-col items-center flex-1 mx-0.5"
                 >
-                  <!-- Barre empilée -->
-                  <div class="flex flex-col justify-end h-32 w-full relative">
-                    <div class="w-full flex flex-col justify-end h-full">
-                      <!-- Section podiums (base) -->
-                      <div
-                        v-if="month.podiums > 0"
-                        class="bg-gradient-to-t from-amber-700 to-amber-500 w-full transition-all duration-1000 relative"
-                        :style="{
-                          height:
-                            Math.max(
-                              (month.podiums /
-                                Math.max(
-                                  ...tournamentProgression.map((m) => m.podiums)
-                                )) *
-                                100,
-                              5
-                            ) + '%',
-                        }"
-                        :title="`${month.podiums} podiums en ${month.name}`"
-                      >
-                        <!-- Section victoires (au-dessus) -->
-                        <div
-                          v-if="month.victories > 0"
-                          class="bg-gradient-to-t from-green-600 to-green-400 w-full absolute top-0 rounded-t transition-all duration-1000"
-                          :style="{
-                            height:
+                  <!-- Conteneur avec deux barres côte à côte -->
+                  <div
+                    class="flex items-end justify-center h-32 w-full space-x-1"
+                  >
+                    <!-- Barre victoires (verte) -->
+                    <div
+                      v-if="month.victories > 0"
+                      class="bg-gradient-to-t from-green-600 to-green-400 rounded-t w-2/5 transition-all duration-1000"
+                      :style="{
+                        height:
+                          Math.max(
+                            (month.victories /
                               Math.max(
-                                (month.victories / month.podiums) * 100,
-                                30
-                              ) + '%',
-                          }"
-                          :title="`${month.victories} victoires en ${month.name}`"
-                        ></div>
-                      </div>
-                    </div>
+                                ...tournamentProgression.map((m) => m.victories)
+                              )) *
+                              100,
+                            8
+                          ) + '%',
+                      }"
+                      :title="`${month.victories} victoires en ${month.name}`"
+                    ></div>
+
+                    <!-- Placeholder pour victoires si aucune -->
+                    <div v-else class="w-2/5 h-1 bg-transparent"></div>
+
+                    <!-- Barre podiums (amber) -->
+                    <div
+                      v-if="month.podiums > month.victories"
+                      class="bg-gradient-to-t from-amber-600 to-amber-400 rounded-t w-2/5 transition-all duration-1000"
+                      :style="{
+                        height:
+                          Math.max(
+                            ((month.podiums - month.victories) /
+                              Math.max(
+                                ...tournamentProgression.map(
+                                  (m) => m.podiums - m.victories
+                                )
+                              )) *
+                              100,
+                            8
+                          ) + '%',
+                      }"
+                      :title="`${
+                        month.podiums - month.victories
+                      } autres podiums en ${month.name}`"
+                    ></div>
+
+                    <!-- Placeholder pour podiums si aucun -->
+                    <div v-else class="w-2/5 h-1 bg-transparent"></div>
                   </div>
 
                   <!-- Label du mois -->
@@ -904,17 +918,25 @@
                     {{ month.name }}
                   </div>
 
-                  <!-- Statistiques détaillées -->
-                  <div class="text-xs font-orbitron text-center mt-1">
-                    <div v-if="month.victories > 0" class="text-green-400">
-                      🥇 {{ month.victories }}
-                    </div>
-                    <div
+                  <!-- Statistiques -->
+                  <div
+                    class="text-xs font-orbitron text-center mt-1 flex space-x-1"
+                  >
+                    <span v-if="month.victories > 0" class="text-green-400">
+                      {{ month.victories }}V
+                    </span>
+                    <span
                       v-if="month.podiums > month.victories"
                       class="text-amber-400"
                     >
-                      🏆 {{ month.podiums - month.victories }}
-                    </div>
+                      {{ month.podiums - month.victories }}P
+                    </span>
+                    <span
+                      v-if="month.podiums === 0 && month.victories === 0"
+                      class="text-gray-500"
+                    >
+                      -
+                    </span>
                   </div>
                 </div>
               </div>
@@ -928,7 +950,7 @@
                   >
                 </div>
                 <div class="flex items-center space-x-2">
-                  <div class="w-3 h-3 bg-amber-500 rounded"></div>
+                  <div class="w-3 h-3 bg-amber-400 rounded"></div>
                   <span class="text-xs text-gray-400 font-orbitron"
                     >Autres podiums</span
                   >
@@ -1319,13 +1341,20 @@ const navigationSections = ref([
 //-------------------------------------------------------
 
 // Statistiques des jeux
-const gameStats = computed(() => extendedStats.value?.gameStats || []);
-
+const gameStats = computed(() => {
+  const stats = extendedStats.value?.gameStats || [];
+  return [...stats].sort((a, b) => b.winRate - a.winRate);
+});
 const displayedGameStats = computed(() => {
-  if (expandedGameStats.value || gameStats.value.length <= 3) {
-    return gameStats.value;
+  // Trier par taux de victoire décroissant
+  const sortedStats = [...gameStats.value].sort(
+    (a, b) => b.winRate - a.winRate
+  );
+
+  if (expandedGameStats.value || sortedStats.length <= 3) {
+    return sortedStats;
   }
-  return gameStats.value.slice(0, 3);
+  return sortedStats.slice(0, 3);
 });
 
 // Informations d'activité
