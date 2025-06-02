@@ -1517,9 +1517,6 @@ const displayedWinningPartners = computed(() => {
 
 // Total des collaborations uniques
 const totalCollaborators = computed(() => {
-  const teammates = socialStats.value.frequentTeammates.length;
-  const partners = socialStats.value.winningPartners.length;
-  // Éviter les doublons en utilisant un Set des IDs
   const uniqueIds = new Set([
     ...socialStats.value.frequentTeammates.map((t) => t.playerId),
     ...socialStats.value.winningPartners.map((p) => p.playerId),
