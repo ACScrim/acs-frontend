@@ -435,7 +435,7 @@
         <button
           @click="synchronizePlayers"
           :disabled="isLoading"
-          class="group relative bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 disabled:from-gray-600 disabled:via-gray-600 disabled:to-gray-600 text-white font-orbitron text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/50 hover:-translate-y-1 disabled:hover:translate-y-0 disabled:hover:shadow-xl transition-all duration-300 relative overflow-hidden min-w-[280px]"
+          class="group bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 disabled:from-gray-600 disabled:via-gray-600 disabled:to-gray-600 text-white font-orbitron text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/50 hover:-translate-y-1 disabled:hover:translate-y-0 disabled:hover:shadow-xl transition-all duration-300 relative overflow-hidden min-w-[280px]"
         >
           <span class="relative z-10 flex items-center justify-center gap-2">
             <svg

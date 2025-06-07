@@ -171,8 +171,11 @@
               </div>
               <div>
                 <router-link
-                  v-if="user.playerId"
-                  :to="{ name: 'Profil', params: { id: user.playerId } }"
+                  v-if="getPlayerIdForUser(user)"
+                  :to="{
+                    name: 'Profil',
+                    params: { id: getPlayerIdForUser(user) },
+                  }"
                   class="text-base sm:text-lg text-white hover:text-pink-400 font-orbitron transition-colors member-link capitalize"
                 >
                   {{ user.username }}
@@ -202,8 +205,11 @@
               class="view-profile-button mt-3 sm:mt-0 flex justify-center sm:justify-end"
             >
               <router-link
-                v-if="user.playerId"
-                :to="{ name: 'Profil', params: { id: user.playerId } }"
+                v-if="getPlayerIdForUser(user)"
+                :to="{
+                  name: 'Profil',
+                  params: { id: getPlayerIdForUser(user) },
+                }"
                 class="cyberpunk-btn-cyan px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-orbitron"
               >
                 Voir profil
@@ -278,6 +284,19 @@ const searchResults = computed(() => {
       user.role.toLowerCase().includes(term)
   );
 });
+
+const getPlayerIdForUser = (user: any): string | null => {
+  // Récupérer les players depuis le store ou faire un appel API
+  // Pour l'instant, on va chercher dans les members enrichis du store
+  if (!memberStore.members) return null;
+
+  // Trouver le player correspondant par discordId ou username
+  const matchingMember = memberStore.members.find(
+    (member) => member._id === user._id && member.playerId
+  );
+
+  return matchingMember?.playerId || null;
+};
 
 const sortedUsers = computed(() => {
   const usersToSort = [...searchResults.value];
