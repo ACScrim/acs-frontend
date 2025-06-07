@@ -52,12 +52,10 @@
         id="profil"
         class="bg-black/50 backdrop-blur-2xl rounded-lg p-4 sm:p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
       >
-        <!-- ✅ CORRECTION: Layout responsive pour avatar + nom -->
-        <div
-          class="flex flex-col sm:flex-row items-center justify-center mb-4 gap-4 sm:gap-0"
-        >
-          <!-- Avatar - taille fixe -->
-          <div class="avatar-container flex-shrink-0">
+        <!-- ✅ STRUCTURE SIMPLIFIÉE : tout centré -->
+        <div class="text-center">
+          <!-- Avatar centré -->
+          <div class="avatar-container inline-block mb-4">
             <img
               v-if="user && user.avatarUrl"
               :src="user.avatarUrl"
@@ -68,7 +66,7 @@
             />
             <div
               v-else
-              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-800 flex items-center justify-center border-2 border-pink-500"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-800 flex items-center justify-center border-2 border-pink-500 mx-auto"
             >
               <span class="text-pink-500 text-2xl sm:text-3xl font-bold">{{
                 getInitials(player.username)
@@ -76,27 +74,23 @@
             </div>
           </div>
 
-          <!-- Nom - responsive avec troncature -->
-          <div class="flex-1 min-w-0 text-center sm:text-left sm:ml-4">
-            <h1
-              class="text-white neon-text font-audiowide capitalize leading-tight break-words"
-              :class="[
-                player.username.length > 15
-                  ? 'text-2xl sm:text-4xl'
-                  : player.username.length > 10
-                  ? 'text-3xl sm:text-5xl'
-                  : 'text-4xl sm:text-5xl',
-              ]"
-            >
-              {{ player.username }}
-            </h1>
-          </div>
-        </div>
+          <!-- Nom centré -->
+          <h1
+            class="text-white neon-text font-audiowide capitalize leading-tight break-words mb-4"
+            :class="[
+              player.username.length > 15
+                ? 'text-2xl sm:text-4xl'
+                : player.username.length > 10
+                ? 'text-3xl sm:text-5xl'
+                : 'text-4xl sm:text-5xl',
+            ]"
+          >
+            {{ player.username }}
+          </h1>
 
-        <!-- Séparateur -->
-        <div class="flex justify-center">
+          <!-- ✅ Barre parfaitement centrée sous le nom -->
           <div
-            class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+            class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto"
           ></div>
         </div>
       </div>
