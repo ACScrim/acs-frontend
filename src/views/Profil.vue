@@ -50,33 +50,50 @@
       <!-- En-tête du profil -->
       <div
         id="profil"
-        class="bg-black/50 backdrop-blur-2xl rounded-lg p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
+        class="bg-black/50 backdrop-blur-2xl rounded-lg p-4 sm:p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
       >
-        <div class="flex items-center justify-center mb-4">
-          <div class="avatar-container mr-4">
+        <!-- ✅ CORRECTION: Layout responsive pour avatar + nom -->
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center mb-4 gap-4 sm:gap-0"
+        >
+          <!-- Avatar - taille fixe -->
+          <div class="avatar-container flex-shrink-0">
             <img
               v-if="user && user.avatarUrl"
               :src="user.avatarUrl"
               alt="Avatar"
-              class="h-24 w-24 rounded-full object-cover border-2 border-pink-500 shadow-glow-pink"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-pink-500 shadow-glow-pink"
               loading="lazy"
               @error="handleImageError"
             />
             <div
               v-else
-              class="h-24 w-24 rounded-full bg-gray-800 flex items-center justify-center border-2 border-pink-500"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-800 flex items-center justify-center border-2 border-pink-500"
             >
-              <span class="text-pink-500 text-3xl font-bold">{{
+              <span class="text-pink-500 text-2xl sm:text-3xl font-bold">{{
                 getInitials(player.username)
               }}</span>
             </div>
           </div>
-          <h1
-            class="text-4xl sm:text-5xl text-white neon-text font-audiowide capitalize"
-          >
-            {{ player.username }}
-          </h1>
+
+          <!-- Nom - responsive avec troncature -->
+          <div class="flex-1 min-w-0 text-center sm:text-left sm:ml-4">
+            <h1
+              class="text-white neon-text font-audiowide capitalize leading-tight break-words"
+              :class="[
+                player.username.length > 15
+                  ? 'text-2xl sm:text-4xl'
+                  : player.username.length > 10
+                  ? 'text-3xl sm:text-5xl'
+                  : 'text-4xl sm:text-5xl',
+              ]"
+            >
+              {{ player.username }}
+            </h1>
+          </div>
         </div>
+
+        <!-- Séparateur -->
         <div class="flex justify-center">
           <div
             class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"

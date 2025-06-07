@@ -1,9 +1,10 @@
 <template>
   <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
     <div class="mb-6">
+      <!-- Bouton retour existant -->
       <button
         @click="goBackToTournaments"
-        class="cyberpunk-btn-pink px-5 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300"
+        class="cyberpunk-btn-pink px-5 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 w-full sm:w-auto"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -19,6 +20,169 @@
         </svg>
         Retour aux tournois
       </button>
+
+      <!-- ✅ VERSION MOBILE (au-dessus comme avant) -->
+      <div v-if="hasNavigation" class="mt-4 sm:hidden">
+        <div class="flex items-center justify-between gap-2">
+          <!-- Bouton précédent mobile -->
+          <button
+            v-if="previousTournament"
+            @click="navigateToTournament(previousTournament._id!)"
+            class="cyberpunk-btn-cyan p-2 rounded-md flex items-center justify-center shadow-lg transition-all duration-300"
+            :title="previousTournament.name"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+
+          <!-- Indicateur central mobile -->
+          <div
+            class="text-center text-white font-orbitron text-xs bg-black/50 px-3 py-2 rounded-md border border-pink-500/30"
+          >
+            {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
+          </div>
+
+          <!-- Bouton suivant mobile -->
+          <button
+            v-if="nextTournament"
+            @click="navigateToTournament(nextTournament._id!)"
+            class="cyberpunk-btn-cyan p-2 rounded-md flex items-center justify-center shadow-lg transition-all duration-300"
+            :title="nextTournament.name"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-if="hasNavigation" class="hidden sm:block">
+      <!-- Flèche précédent (côté gauche) -->
+      <button
+        v-if="previousTournament"
+        @click="navigateToTournament(previousTournament._id!)"
+        class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 group"
+        :title="`Tournoi précédent: ${previousTournament.name}`"
+      >
+        <div
+          class="tournament-nav-button tournament-nav-left flex items-center bg-black/80 backdrop-blur-sm border border-cyan-500/50 rounded-lg shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300"
+        >
+          <!-- Icône flèche -->
+          <div class="p-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-cyan-400 group-hover:-translate-x-1 transition-transform duration-300"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+
+          <!-- Panneau d'information (apparaît au hover) -->
+          <div
+            class="tournament-nav-info overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-xs"
+          >
+            <div
+              class="px-4 py-3 border-l border-cyan-500/30 whitespace-nowrap"
+            >
+              <div class="text-xs text-cyan-300 font-orbitron opacity-70 mb-1">
+                Précédent
+              </div>
+              <div class="text-sm text-white font-orbitron font-medium">
+                {{ previousTournament.name }}
+              </div>
+              <div class="text-xs text-cyan-200 opacity-80 mt-1">
+                {{ formatLocalDate(previousTournament.date) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <!-- Flèche suivant (côté droit) -->
+      <button
+        v-if="nextTournament"
+        @click="navigateToTournament(nextTournament._id!)"
+        class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 group"
+        :title="`Tournoi suivant: ${nextTournament.name}`"
+      >
+        <div
+          class="tournament-nav-button tournament-nav-right flex items-center bg-black/80 backdrop-blur-sm border border-cyan-500/50 rounded-lg shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 flex-row-reverse"
+        >
+          <!-- Icône flèche -->
+          <div class="p-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-cyan-400 group-hover:translate-x-1 transition-transform duration-300"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+
+          <!-- Panneau d'information (apparaît au hover) -->
+          <div
+            class="tournament-nav-info overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-xs"
+          >
+            <div
+              class="px-4 py-3 border-r border-cyan-500/30 whitespace-nowrap text-right"
+            >
+              <div class="text-xs text-cyan-300 font-orbitron opacity-70 mb-1">
+                Suivant
+              </div>
+              <div class="text-sm text-white font-orbitron font-medium">
+                {{ nextTournament.name }}
+              </div>
+              <div class="text-xs text-cyan-200 opacity-80 mt-1">
+                {{ formatLocalDate(nextTournament.date) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <!-- Indicateur de position (centré en bas) -->
+      <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
+        <div
+          class="bg-black/80 backdrop-blur-sm border border-pink-500/50 rounded-lg px-4 py-2 shadow-lg shadow-pink-500/30"
+        >
+          <div class="text-center text-white font-orbitron">
+            <div class="text-xs text-pink-300 opacity-70">Tournoi</div>
+            <div class="text-sm font-medium">
+              {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Loader durant le chargement -->
     <div v-if="isLoading" class="flex justify-center py-12">
@@ -1270,6 +1434,10 @@ const isCheckedIn = ref(false);
 const lastFinishedTournament = ref<Tournament | null>(null);
 const loadingLastTournament = ref(false);
 
+//  Navigation entre tournois
+const allTournaments = ref<Tournament[]>([]);
+const currentTournamentIndex = ref<number>(-1);
+
 // Récupérer l'utilisateur connecté depuis le store
 const user = computed(() => userStore.user);
 const currentPlayerId = computed(() => userStore.playerId);
@@ -1308,6 +1476,22 @@ const isCheckInAvailable = computed(() => {
     const diff = tournamentDate.getTime() - now.getTime();
     return diff > 0 && diff <= 24 * 60 * 60 * 1000;
   }
+});
+
+// Computed pour la navigation
+const previousTournament = computed(() => {
+  if (currentTournamentIndex.value <= 0) return null;
+  return allTournaments.value[currentTournamentIndex.value - 1];
+});
+
+const nextTournament = computed(() => {
+  if (currentTournamentIndex.value >= allTournaments.value.length - 1)
+    return null;
+  return allTournaments.value[currentTournamentIndex.value + 1];
+});
+
+const hasNavigation = computed(() => {
+  return allTournaments.value.length > 1;
 });
 
 /**
@@ -1418,6 +1602,9 @@ const fetchTournament = async () => {
 
     tournament.value = data;
 
+    // Récupérer tous les tournois pour la navigation
+    await fetchAllTournaments();
+
     // Définir l'onglet actif en fonction de l'état du tournoi
     if (data.finished) {
       activeTab.value = "results"; // Définir sur "results" si le tournoi est terminé
@@ -1439,6 +1626,33 @@ const fetchTournament = async () => {
     console.error("Erreur lors de la récupération du tournoi:", err);
     error.value = "Impossible de charger les données du tournoi";
   }
+};
+
+//  Récupérer tous les tournois pour la navigation
+const fetchAllTournaments = async () => {
+  try {
+    const tournaments = await tournamentService.getTournaments();
+
+    // Trier par date (plus récents en premier)
+    allTournaments.value = tournaments.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    // Trouver l'index du tournoi actuel
+    currentTournamentIndex.value = allTournaments.value.findIndex(
+      (t) => t._id === tournamentId.value
+    );
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération de tous les tournois:",
+      error
+    );
+  }
+};
+
+// ✅ NOUVEAU: Navigation vers un autre tournoi
+const navigateToTournament = (tournamentId: string) => {
+  router.push(`/tournois/${tournamentId}`);
 };
 
 /**
@@ -2529,5 +2743,172 @@ router-link.truncate::after {
 
 router-link.truncate:hover::after {
   width: 100%;
+}
+
+.tournament-nav-button {
+  cursor: pointer;
+  transform-origin: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tournament-nav-button:hover {
+  transform: scale(1.02);
+  border-color: rgba(34, 211, 238, 0.8);
+  box-shadow: 0 8px 32px rgba(34, 211, 238, 0.4);
+}
+
+.tournament-nav-button:active {
+  transform: scale(0.98);
+}
+
+/* Animation pour l'apparition du panneau d'information */
+.tournament-nav-left .tournament-nav-info {
+  transform-origin: left center;
+}
+
+.tournament-nav-right .tournament-nav-info {
+  transform-origin: right center;
+}
+
+/* Effet de lueur cyberpunk */
+.tournament-nav-button::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(34, 211, 238, 0.3),
+    transparent
+  );
+  border-radius: 10px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tournament-nav-button:hover::before {
+  opacity: 1;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+/* Responsive - cacher sur tablette si nécessaire */
+@media (max-width: 1024px) {
+  .tournament-nav-button {
+    transform: scale(0.9);
+  }
+
+  .tournament-nav-info {
+    display: none;
+  }
+}
+
+/* Responsive - ajustements pour les petits écrans desktop */
+@media (max-width: 1200px) {
+  .fixed.left-4 {
+    left: 0.5rem;
+  }
+
+  .fixed.right-4 {
+    right: 0.5rem;
+  }
+}
+
+/* Style pour l'indicateur de position en bas */
+.fixed.bottom-8 {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Assurer que les boutons restent visibles même avec du contenu défilant */
+.tournament-nav-button {
+  min-height: 60px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Animation d'entrée pour les boutons latéraux */
+.tournament-nav-left {
+  animation: slide-in-left 0.6s ease-out;
+}
+
+.tournament-nav-right {
+  animation: slide-in-right 0.6s ease-out;
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Effet de survol pour les icônes */
+.tournament-nav-button svg {
+  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5));
+}
+
+.tournament-nav-button:hover svg {
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.8));
+}
+
+/* Style pour éviter les conflits avec le bouton "retour en haut" */
+.cyberpunk-btn-pink.fixed.bottom-4 {
+  bottom: 6rem; /* Décaler vers le haut pour éviter le conflit avec l'indicateur */
+}
+
+/* Version compacte pour les écrans moyens */
+@media (max-width: 1400px) {
+  .tournament-nav-info {
+    max-width: 250px;
+  }
+
+  .tournament-nav-info div {
+    padding: 0.5rem;
+  }
+
+  .tournament-nav-info .text-sm {
+    font-size: 0.8rem;
+  }
 }
 </style>
