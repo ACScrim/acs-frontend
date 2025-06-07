@@ -355,107 +355,128 @@
         id="performance"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-green-500 shadow-lg shadow-green-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
-        <h2
-          class="text-3xl text-white mb-6 neon-text-green flex items-center justify-between"
-        >
-          <div class="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-green-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-              />
-            </svg>
-            Performance par jeu
-          </div>
-
-          <!-- Bouton d'expansion -->
-          <button
-            v-if="gameStats.length > 3"
-            @click="expandedGameStats = !expandedGameStats"
-            class="text-sm bg-green-900/50 text-green-300 px-4 py-2 rounded-md hover:bg-green-800/50 transition-colors font-orbitron border border-green-500/30"
+        <h2 class="text-3xl text-white mb-6 neon-text-green">
+          <!-- ✅ CORRECTION: Structure responsive pour titre + bouton -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           >
-            {{
-              expandedGameStats ? "RÉDUIRE" : `TOUT VOIR (${gameStats.length})`
-            }}
-          </button>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mr-3 text-green-400 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
+              </svg>
+              <span>Performance par jeu</span>
+            </div>
+
+            <!-- ✅ CORRECTION: Bouton d'expansion responsive -->
+            <button
+              v-if="gameStats.length > 3"
+              @click="expandedGameStats = !expandedGameStats"
+              class="text-sm bg-green-900/50 text-green-300 px-4 py-2 rounded-md hover:bg-green-800/50 transition-colors font-orbitron border border-green-500/30 self-start sm:self-auto whitespace-nowrap"
+            >
+              {{
+                expandedGameStats
+                  ? "RÉDUIRE"
+                  : `TOUT VOIR (${gameStats.length})`
+              }}
+            </button>
+          </div>
         </h2>
 
         <div v-if="gameStats.length > 0" class="space-y-4">
           <div
             v-for="gameStat in displayedGameStats"
             :key="gameStat.gameId"
-            class="bg-gray-800/70 p-4 rounded-lg flex items-center justify-between transform transition-all hover:bg-gray-700/90 hover:scale-[1.02] duration-300 border border-green-500/20"
+            class="bg-gray-800/70 p-4 rounded-lg transform transition-all hover:bg-gray-700/90 hover:scale-[1.02] duration-300 border border-green-500/20"
           >
-            <div class="flex items-center">
-              <div class="relative mr-4">
-                <img
-                  v-if="gameStat.gameImage"
-                  :src="gameStat.gameImage"
-                  :alt="gameStat.gameName"
-                  class="w-12 h-12 rounded-lg object-cover border-2 border-green-500/50"
-                  @error="handleImageError"
-                />
+            <!-- ✅ CORRECTION: Structure responsive avec flex-col sur mobile -->
+            <div
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            >
+              <!-- Partie gauche : Image + Info -->
+              <div class="flex items-center flex-1 min-w-0">
+                <div class="relative mr-4 flex-shrink-0">
+                  <img
+                    v-if="gameStat.gameImage"
+                    :src="gameStat.gameImage"
+                    :alt="gameStat.gameName"
+                    class="w-12 h-12 rounded-lg object-cover border-2 border-green-500/50"
+                    @error="handleImageError"
+                  />
+                  <div
+                    v-else
+                    class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center border-2 border-green-500/50"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-9 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                  <h3 class="text-white font-orbitron font-bold truncate">
+                    {{ gameStat.gameName }}
+                  </h3>
+                  <div class="flex items-center space-x-3 mt-1 flex-wrap">
+                    <span class="text-green-400 font-orbitron text-sm"
+                      >{{ gameStat.wins }}V</span
+                    >
+                    <span class="text-red-400 font-orbitron text-sm"
+                      >{{ gameStat.losses }}D</span
+                    >
+                    <span class="text-gray-400 text-sm"
+                      >{{ gameStat.totalPlayed }} parties</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- ✅ CORRECTION: Partie droite responsive -->
+              <div
+                class="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center"
+              >
+                <!-- Taux de victoire -->
+                <div class="flex items-center sm:text-right">
+                  <div
+                    class="text-2xl font-bold text-green-400 font-orbitron mr-2 sm:mr-0 sm:mb-1"
+                  >
+                    {{ gameStat.winRate }}%
+                  </div>
+                  <div class="text-xs text-green-300/70 sm:text-center">
+                    taux de victoire
+                  </div>
+                </div>
+
+                <!-- Barre de progression -->
                 <div
-                  v-else
-                  class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center border-2 border-green-500/50"
+                  class="w-16 sm:w-24 h-2 bg-gray-800 rounded-full overflow-hidden ml-4 sm:ml-0 sm:mt-2"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6 text-green-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-9 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"
-                    />
-                  </svg>
+                  <div
+                    class="h-full bg-gradient-to-r from-green-600 to-green-400 rounded-full transition-all duration-1000"
+                    :style="{ width: gameStat.winRate + '%' }"
+                  ></div>
                 </div>
-              </div>
-
-              <div>
-                <h3 class="text-white font-orbitron font-bold">
-                  {{ gameStat.gameName }}
-                </h3>
-                <div class="flex items-center space-x-3 mt-1">
-                  <span class="text-green-400 font-orbitron text-sm"
-                    >{{ gameStat.wins }}V</span
-                  >
-                  <span class="text-red-400 font-orbitron text-sm"
-                    >{{ gameStat.losses }}D</span
-                  >
-                  <span class="text-gray-400 text-sm"
-                    >{{ gameStat.totalPlayed }} parties</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <div class="text-right flex flex-col items-end">
-              <div class="text-2xl font-bold text-green-400 font-orbitron mb-1">
-                {{ gameStat.winRate }}%
-              </div>
-              <div class="text-xs text-green-300/70 mb-2 whitespace-nowrap">
-                taux de victoire
-              </div>
-
-              <!-- Barre de progression corrigée -->
-              <div class="w-24 h-2 bg-gray-800 rounded-full overflow-hidden">
-                <div
-                  class="h-full bg-gradient-to-r from-green-600 to-green-400 rounded-full transition-all duration-1000"
-                  :style="{ width: gameStat.winRate + '%' }"
-                ></div>
               </div>
             </div>
           </div>
@@ -488,39 +509,42 @@
         id="collaborations"
         class="bg-black/75 rounded-lg p-8 mb-8 border border-indigo-500 shadow-lg shadow-indigo-500/30 transform transition-all hover:scale-[1.02] duration-300"
       >
-        <h2
-          class="text-3xl text-white mb-6 neon-text-indigo flex items-center justify-between"
-        >
-          <div class="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-indigo-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 515.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            Collaborations
-          </div>
-
-          <!-- Bouton d'expansion -->
-          <button
-            v-if="totalCollaborators > 5"
-            @click="expandedCollaborations = !expandedCollaborations"
-            class="text-sm bg-indigo-900/50 text-indigo-300 px-4 py-2 rounded-md hover:bg-indigo-800/50 transition-colors font-orbitron border border-indigo-500/30"
+        <h2 class="text-3xl text-white mb-6 neon-text-indigo">
+          <!-- ✅ Structure responsive pour le titre et le bouton -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           >
-            {{
-              expandedCollaborations
-                ? "RÉDUIRE"
-                : `TOUT VOIR (${totalCollaborators})`
-            }}
-          </button>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mr-3 text-indigo-400 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 515.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              <span>Collaborations</span>
+            </div>
+
+            <!-- ✅ CORRECTION: Bouton responsive -->
+            <button
+              v-if="totalCollaborators > 5"
+              @click="expandedCollaborations = !expandedCollaborations"
+              class="text-sm bg-indigo-900/50 text-indigo-300 px-4 py-2 rounded-md hover:bg-indigo-800/50 transition-colors font-orbitron border border-indigo-500/30 self-start sm:self-auto whitespace-nowrap"
+            >
+              {{
+                expandedCollaborations
+                  ? "RÉDUIRE"
+                  : `TOUT VOIR (${totalCollaborators})`
+              }}
+            </button>
+          </div>
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
