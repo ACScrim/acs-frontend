@@ -99,7 +99,8 @@
       </div>
 
       <!-- ✅ Barre de recherche améliorée -->
-      <div class="mb-6 sm:mb-8">
+      <div class="mb-6 sm:mb-8 space-y-4">
+        <!-- Barre de recherche -->
         <div class="relative max-w-md mx-auto">
           <div
             class="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl blur-sm"
@@ -153,42 +154,120 @@
             </button>
           </div>
         </div>
+
+        <!-- ✅ NOUVEAU: Filtres et tri -->
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <!-- Filtre par statut -->
+          <div class="flex gap-2">
+            <button
+              @click="filterStatus = 'all'"
+              :class="[
+                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
+                filterStatus === 'all'
+                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
+              ]"
+            >
+              Tous ({{ players.length }})
+            </button>
+            <button
+              @click="filterStatus = 'synced'"
+              :class="[
+                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
+                filterStatus === 'synced'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
+              ]"
+            >
+              Synchronisés ({{ syncedCount }})
+            </button>
+            <button
+              @click="filterStatus = 'unsynced'"
+              :class="[
+                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
+                filterStatus === 'unsynced'
+                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
+              ]"
+            >
+              Non synchronisés ({{ unsyncedCount }})
+            </button>
+          </div>
+
+          <!-- Tri -->
+          <div class="flex items-center gap-2">
+            <span class="text-gray-400 font-orbitron text-sm">Tri:</span>
+            <select
+              v-model="sortBy"
+              class="bg-gray-700 text-white font-orbitron text-sm px-3 py-2 rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none"
+            >
+              <option value="username-asc">Nom A→Z</option>
+              <option value="username-desc">Nom Z→A</option>
+              <option value="status-synced">Synchronisés d'abord</option>
+              <option value="status-unsynced">Non synchronisés d'abord</option>
+              <option value="discord-asc">Discord ID A→Z</option>
+              <option value="discord-desc">Discord ID Z→A</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <!-- ✅ Statistiques rapides -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 sm:mb-8">
-        <div
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-cyan-500/30 text-center"
+        <button
+          @click="
+            filterStatus = 'all';
+            sortBy = 'username-asc';
+          "
+          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-cyan-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
         >
-          <div class="text-2xl font-bold text-cyan-400 mb-1">
-            {{ filteredPlayers.length }}
+          <div
+            class="text-2xl font-bold text-cyan-400 mb-1 group-hover:scale-110 transition-transform"
+          >
+            {{ players.length }}
           </div>
           <div class="text-xs text-gray-400 font-orbitron">Joueurs</div>
-        </div>
-        <div
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30 text-center"
+        </button>
+
+        <button
+          @click="filterStatus = 'all'"
+          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
         >
-          <div class="text-2xl font-bold text-purple-400 mb-1">
-            {{ filteredUsers.length }}
+          <div
+            class="text-2xl font-bold text-purple-400 mb-1 group-hover:scale-110 transition-transform"
+          >
+            {{ users.length }}
           </div>
           <div class="text-xs text-gray-400 font-orbitron">Utilisateurs</div>
-        </div>
-        <div
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-green-500/30 text-center"
+        </button>
+
+        <button
+          @click="showOnlySynced"
+          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-green-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
+          :class="{ 'ring-2 ring-green-500/50': filterStatus === 'synced' }"
         >
-          <div class="text-2xl font-bold text-green-400 mb-1">
+          <div
+            class="text-2xl font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform"
+          >
             {{ syncedCount }}
           </div>
           <div class="text-xs text-gray-400 font-orbitron">Synchronisés</div>
-        </div>
-        <div
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-yellow-500/30 text-center"
+        </button>
+
+        <button
+          @click="showOnlyUnsynced"
+          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-yellow-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
+          :class="{ 'ring-2 ring-yellow-500/50': filterStatus === 'unsynced' }"
         >
-          <div class="text-2xl font-bold text-yellow-400 mb-1">
+          <div
+            class="text-2xl font-bold text-yellow-400 mb-1 group-hover:scale-110 transition-transform"
+          >
             {{ unsyncedCount }}
           </div>
           <div class="text-xs text-gray-400 font-orbitron">En attente</div>
-        </div>
+        </button>
       </div>
 
       <!-- ✅ Loading amélioré -->
@@ -279,17 +358,29 @@
                   </div>
 
                   <div class="flex items-center gap-2">
-                    <!-- Badge de statut -->
+                    <!-- ✅ Badge de statut amélioré -->
                     <div
                       v-if="player.userId"
-                      class="w-2 h-2 bg-green-400 rounded-full"
+                      class="flex items-center gap-1 px-2 py-1 bg-green-500/20 border border-green-500/40 rounded-md"
                       title="Synchronisé"
-                    ></div>
+                    >
+                      <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span class="text-green-300 text-xs font-orbitron"
+                        >Sync</span
+                      >
+                    </div>
                     <div
                       v-else
-                      class="w-2 h-2 bg-yellow-400 rounded-full"
+                      class="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 border border-yellow-500/40 rounded-md"
                       title="Non synchronisé"
-                    ></div>
+                    >
+                      <div
+                        class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"
+                      ></div>
+                      <span class="text-yellow-300 text-xs font-orbitron"
+                        >Attente</span
+                      >
+                    </div>
 
                     <button
                       @click.stop="editPlayerUsername(player)"
@@ -504,6 +595,8 @@ const isLoading = ref(true);
 const searchQuery = ref("");
 const highlightedPlayerId = ref<string | null>(null);
 const highlightedUserId = ref<string | null>(null);
+const filterStatus = ref<"all" | "synced" | "unsynced">("all");
+const sortBy = ref<string>("username-asc");
 
 // ✅ Nouvelles computed properties pour les statistiques
 const syncedCount = computed(() => {
@@ -525,23 +618,70 @@ const getInitials = (name: string): string => {
     .slice(0, 2);
 };
 
-// Fonctions existantes...
-const filteredPlayers = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return players.value;
+const filteredAndSortedPlayers = computed(() => {
+  let result = [...players.value];
+
+  // 1. Appliquer le filtre de recherche
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim();
+    result = result.filter(
+      (player) =>
+        player.username?.toLowerCase().includes(query) ||
+        player.discordId?.toLowerCase().includes(query)
+    );
   }
-  const query = searchQuery.value.toLowerCase().trim();
-  return players.value.filter(
-    (player) =>
-      player.username?.toLowerCase().includes(query) ||
-      player.discordId?.toLowerCase().includes(query)
-  );
+
+  // 2. Appliquer le filtre de statut
+  if (filterStatus.value === "synced") {
+    result = result.filter((player) => player.userId);
+  } else if (filterStatus.value === "unsynced") {
+    result = result.filter((player) => !player.userId);
+  }
+
+  // 3. Appliquer le tri
+  switch (sortBy.value) {
+    case "username-asc":
+      result.sort((a, b) => (a.username || "").localeCompare(b.username || ""));
+      break;
+    case "username-desc":
+      result.sort((a, b) => (b.username || "").localeCompare(a.username || ""));
+      break;
+    case "status-synced":
+      result.sort((a, b) => {
+        if (a.userId && !b.userId) return -1;
+        if (!a.userId && b.userId) return 1;
+        return (a.username || "").localeCompare(b.username || "");
+      });
+      break;
+    case "status-unsynced":
+      result.sort((a, b) => {
+        if (!a.userId && b.userId) return -1;
+        if (a.userId && !b.userId) return 1;
+        return (a.username || "").localeCompare(b.username || "");
+      });
+      break;
+    case "discord-asc":
+      result.sort((a, b) =>
+        (a.discordId || "").localeCompare(b.discordId || "")
+      );
+      break;
+    case "discord-desc":
+      result.sort((a, b) =>
+        (b.discordId || "").localeCompare(a.discordId || "")
+      );
+      break;
+    default:
+      break;
+  }
+
+  return result;
 });
 
+// Fonctions existantes...
+const filteredPlayers = computed(() => filteredAndSortedPlayers.value);
+
 const filteredUsers = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return users.value;
-  }
+  // Si un joueur est mis en surbrillance, montrer les utilisateurs similaires
   if (highlightedPlayerId.value) {
     const highlightedPlayer = players.value.find(
       (p) => p._id === highlightedPlayerId.value
@@ -550,6 +690,12 @@ const filteredUsers = computed(() => {
       return findSimilarUsers(highlightedPlayer.username);
     }
   }
+
+  // Sinon, filtrer par recherche
+  if (!searchQuery.value.trim()) {
+    return users.value;
+  }
+
   const query = searchQuery.value.toLowerCase().trim();
   return users.value.filter(
     (user) =>
@@ -589,8 +735,20 @@ const fetchUsers = async () => {
 
 const clearSearch = () => {
   searchQuery.value = "";
+  filterStatus.value = "all";
+  sortBy.value = "username-asc";
   highlightedPlayerId.value = null;
   highlightedUserId.value = null;
+};
+
+const showOnlyUnsynced = () => {
+  filterStatus.value = "unsynced";
+  sortBy.value = "username-asc";
+};
+
+const showOnlySynced = () => {
+  filterStatus.value = "synced";
+  sortBy.value = "username-asc";
 };
 
 const highlightPlayerAndUser = (player: Player) => {
