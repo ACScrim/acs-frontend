@@ -161,7 +161,7 @@
               </div>
             </div>
 
-            <!-- <div class="w-full sm:w-auto">
+            <div class="w-full sm:w-auto">
               <button
                 @click="showProposalForm = true"
                 class="cyberpunk-btn-pink px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 text-sm w-full sm:w-auto"
@@ -180,7 +180,7 @@
                 </svg>
                 Proposer un jeu
               </button>
-            </div> -->
+            </div>
           </div>
         </div>
 
