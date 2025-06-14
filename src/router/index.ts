@@ -161,6 +161,12 @@ const adminRoutes = [
       title: "Gestion des niveaux",
     },
   },
+  {
+    path: "/parametres",
+    name: "UserSettings",
+    component: () => import("../views/UserSettings.vue"),
+    meta: { requiresAuth: true, title: "Informations Profil" },
+  },
 ];
 
 // Combinaison de toutes les routes

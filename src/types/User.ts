@@ -1,4 +1,20 @@
 /**
+ * Interface pour les roles de jeu Discord
+ */
+export interface GameRoles {
+  gameId: string;
+  enabled: boolean;
+}
+
+/**
+ * Interface pour le profil utilisateur
+ */
+export interface UserProfile {
+  twitchUsername?: string | null; // ✅ CORRIGER : permettre null
+  gameRoles: GameRoles[];
+}
+
+/**
  * Interface représentant un utilisateur dans le système
  *
  * Cette interface définit la structure d'un utilisateur telle qu'attendue
@@ -11,4 +27,5 @@ export interface User {
   role: string;
   discordId: string;
   avatarUrl: string;
+  profile: UserProfile;
 }
