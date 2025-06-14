@@ -126,43 +126,6 @@
                 </a>
               </div>
             </div>
-
-            <!-- Message d'aide pour Twitch -->
-            <div
-              class="text-xs text-gray-400 bg-gray-900/30 p-3 rounded border border-gray-700/50"
-            >
-              <div class="flex items-start space-x-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-purple-400 mt-0.5 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div>
-                  <div class="font-medium text-purple-300 mb-1">
-                    Profil Twitch :
-                  </div>
-                  <ul class="space-y-1 text-gray-400">
-                    <li>
-                      • Votre nom Twitch sera visible dans les tournois si vous
-                      streamez
-                    </li>
-                    <li>
-                      • Les organisateurs pourront voir qui est en ligne pendant
-                      les événements
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
