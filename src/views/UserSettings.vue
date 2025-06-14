@@ -513,7 +513,8 @@ const originalData = ref({
  * Compare les données actuelles avec les données originales
  */
 const hasChanges = computed(() => {
-  return JSON.stringify(formData.value) !== JSON.stringify(originalData.value);
+  // Seulement comparer le nom Twitch, pas les gameRoles
+  return formData.value.twitchUsername !== originalData.value.twitchUsername;
 });
 
 // ✅ NOUVEAU : Computed pour la pagination
