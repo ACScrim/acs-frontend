@@ -634,6 +634,24 @@
             </span>
           </button>
 
+          <!-- Onglet Twitch -->
+          <button
+            v-if="shouldShowTwitchTab"
+            @click="activeTab = 'twitch'"
+            :class="{
+              'active-tab-twitch': activeTab === 'twitch',
+              'inactive-tab-twitch': activeTab !== 'twitch',
+            }"
+            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all relative"
+          >
+            <!-- Icône Twitch -->
+            <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.429h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+              />
+            </svg>
+            Streams Live
+          </button>
           <!-- Onglet Résultats (pour les tournois terminés) -->
           <button
             v-if="tournament.finished"
@@ -717,6 +735,12 @@
               </p>
             </div>
           </div>
+
+          <TwitchStreams
+            v-if="activeTab === 'twitch'"
+            :tournament-id="tournamentId"
+            :is-tournament-today="isTournamentToday"
+          />
 
           <!-- Onglet Participants -->
           <div
@@ -804,21 +828,54 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                    <router-link
-                      v-if="player._id"
-                      :to="{ name: 'Profil', params: { id: player._id } }"
-                      class="text-purple-100 text-sm font-orbitron truncate hover:text-pink-400 transition-colors"
-                      :title="player.username"
-                    >
-                      {{ player.username }}
-                    </router-link>
-                    <span
-                      v-else
-                      class="text-purple-100 text-sm font-orbitron truncate"
-                      :title="player.username"
-                    >
-                      {{ player.username }}
-                    </span>
+                    <div class="flex-1 flex items-center min-w-0">
+                      <router-link
+                        v-if="player._id"
+                        :to="{ name: 'Profil', params: { id: player._id } }"
+                        class="text-purple-100 text-sm font-orbitron truncate hover:text-pink-400 transition-colors"
+                        :title="player.username"
+                      >
+                        {{ player.username }}
+                      </router-link>
+                      <span
+                        v-else
+                        class="text-purple-100 text-sm font-orbitron truncate"
+                        :title="player.username"
+                      >
+                        {{ player.username }}
+                      </span>
+
+                      <!--  Icône live avec lien Twitch -->
+                      <a
+                        v-if="getPlayerLiveStatus(player)"
+                        :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                          player
+                        )}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="ml-2 group relative"
+                        :title="`${player.username} est en live sur Twitch`"
+                      >
+                        <!-- Badge LIVE animé -->
+                        <div class="relative flex items-center">
+                          <div
+                            class="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75"
+                          ></div>
+                          <div
+                            class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border border-red-400 animate-pulse"
+                          >
+                            LIVE
+                          </div>
+                        </div>
+
+                        <!-- Tooltip au hover -->
+                        <div
+                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-orbitron rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none"
+                        >
+                          Regarder sur Twitch
+                        </div>
+                      </a>
+                    </div>
 
                     <!-- Icône de check-in si le joueur a fait son check-in -->
                     <div
@@ -859,8 +916,8 @@
               </div>
             </div>
 
-            <!-- Vue des joueurs individuels (quand pas d'équipes ou équipes avec joueurs vides) -->
-            <!-- Vue des joueurs individuels (si équipes non publiées ou pas d'équipes) -->
+            <!-- ✅ MODIFIÉ : Vue des joueurs individuels avec icônes live -->
+
             <ul
               v-else-if="
                 tournament.players &&
@@ -901,6 +958,34 @@
                 <span v-else class="truncate" :title="player.username">
                   {{ player.username }}
                 </span>
+
+                <a
+                  v-if="getPlayerLiveStatus(player)"
+                  :href="`https://twitch.tv/${getPlayerTwitchUsername(player)}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ml-2 group relative"
+                  :title="`${player.username} est en live sur Twitch`"
+                >
+                  <!-- Badge LIVE animé -->
+                  <div class="relative flex items-center">
+                    <div
+                      class="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75"
+                    ></div>
+                    <div
+                      class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border border-red-400 animate-pulse"
+                    >
+                      LIVE
+                    </div>
+                  </div>
+
+                  <!-- Tooltip au hover -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-orbitron rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none"
+                  >
+                    Regarder sur Twitch
+                  </div>
+                </a>
 
                 <!-- Icône de check-in si le joueur a fait son check-in -->
                 <div
@@ -1383,7 +1468,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+// ========================================
+// IMPORTS ET DÉPENDANCES
+// ========================================
+import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
@@ -1392,32 +1480,24 @@ import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentPodium from "@/components/tournois-a-venir/TournamentPodium.vue";
 import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import CyberTerminal from "@/shared/CyberTerminal.vue";
-import type { Tournament } from "../types";
-import tournamentService from "../services/tournamentService";
 import LevelPromptModal from "@/shared/LevelPromptModal.vue";
+import TwitchStreams from "@/components/tournois-a-venir/TwitchStreams.vue";
+import type { Tournament, UserWithTwitch } from "../types";
+import tournamentService from "../services/tournamentService";
 import playerGameLevelService from "../services/playerGameLevelService";
-//------------------------------------------------------
-// 1. ÉTAT ET CONFIGURATION DU COMPOSANT
-//------------------------------------------------------
+import streamService from "../services/streamService";
 
-// Récupérer l'ID du tournoi depuis l'URL et initialiser le router
+// ========================================
+// CONFIGURATION ET ÉTAT PRINCIPAL
+// ========================================
+
 const route = useRoute();
 const router = useRouter();
-const tournamentId = computed(() => route.params.id as string);
-
-// Modale de level de tournoi
-const showLevelPrompt = ref(false);
-const levelPromptGameId = ref<string>("");
-const levelPromptGameName = ref<string>("");
-const levelPromptTournamentId = ref<string>("");
-const hasPlayerLevelForGame = ref(false);
-
-// Initialisation des stores
 const userStore = useUserStore();
 
 // États principaux du composant
 const tournament = ref<Tournament | null>(null);
-const isLoading = ref(false); // Gérer l'état de chargement localement au lieu d'utiliser computed
+const isLoading = ref(false);
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const activeTab = ref("participants");
@@ -1430,25 +1510,52 @@ const selectedTournament = ref<Tournament | null>(null);
 const actionType = ref<string>("register");
 const isCheckedIn = ref(false);
 
-// États pour le tournoi précédent
+// États pour les modales
+const showLevelPrompt = ref(false);
+const levelPromptGameId = ref<string>("");
+const levelPromptGameName = ref<string>("");
+const levelPromptTournamentId = ref<string>("");
+const hasPlayerLevelForGame = ref(false);
+
+// États pour la navigation entre tournois
+const allTournaments = ref<Tournament[]>([]);
+const currentTournamentIndex = ref<number>(-1);
 const lastFinishedTournament = ref<Tournament | null>(null);
 const loadingLastTournament = ref(false);
 
-//  Navigation entre tournois
-const allTournaments = ref<Tournament[]>([]);
-const currentTournamentIndex = ref<number>(-1);
+const streamUsers = ref<UserWithTwitch[]>([]);
 
-// Récupérer l'utilisateur connecté depuis le store
+// ========================================
+// PROPRIÉTÉS CALCULÉES
+// ========================================
+
+const tournamentId = computed(() => route.params.id as string);
 const user = computed(() => userStore.user);
 const currentPlayerId = computed(() => userStore.playerId);
 
-//------------------------------------------------------
-// 2. PROPRIÉTÉS CALCULÉES
-//------------------------------------------------------
+const isTournamentToday = computed(() => {
+  if (!tournament.value?.date) return false;
 
-/**f
- * Vérifie si l'utilisateur est inscrit au tournoi actuel
- */
+  try {
+    const tournamentDate = new Date(tournament.value.date);
+    const today = new Date();
+
+    return (
+      tournamentDate.getFullYear() === today.getFullYear() &&
+      tournamentDate.getMonth() === today.getMonth() &&
+      tournamentDate.getDate() === today.getDate()
+    );
+  } catch (error) {
+    console.error(
+      "Erreur lors de la vérification de la date du tournoi:",
+      error
+    );
+    return false;
+  }
+});
+
+const shouldShowTwitchTab = computed(() => isTournamentToday.value);
+
 const isUserRegistered = computed(() => {
   if (!user.value || !tournament.value) return false;
   return tournament.value.players.some(
@@ -1456,29 +1563,22 @@ const isUserRegistered = computed(() => {
   );
 });
 
-/**
- * Vérifie si le check-in est actuellement possible en fonction de discordReminderDate
- */
 const isCheckInAvailable = computed(() => {
   if (!tournament.value) return false;
 
   const tournamentDate = new Date(tournament.value.date);
   const now = new Date();
 
-  // Si la date discordReminderDate est définie, l'utiliser comme début de la période de check-in
   if (tournament.value.discordReminderDate) {
     const reminderDate = new Date(tournament.value.discordReminderDate);
-
-    // Check-in disponible si on est après la date de rappel et avant la date du tournoi
     return now >= reminderDate && now < tournamentDate;
   } else {
-    // Comportement par défaut: 24h avant le tournoi si discordReminderDate n'est pas défini
     const diff = tournamentDate.getTime() - now.getTime();
     return diff > 0 && diff <= 24 * 60 * 60 * 1000;
   }
 });
 
-// Computed pour la navigation
+// Propriétés calculées pour la navigation
 const previousTournament = computed(() => {
   if (currentTournamentIndex.value <= 0) return null;
   return allTournaments.value[currentTournamentIndex.value - 1];
@@ -1490,54 +1590,118 @@ const nextTournament = computed(() => {
   return allTournaments.value[currentTournamentIndex.value + 1];
 });
 
-const hasNavigation = computed(() => {
-  return allTournaments.value.length > 1;
+const hasNavigation = computed(() => allTournaments.value.length > 1);
+
+// Propriétés calculées pour la liste d'attente
+const hasWaitlist = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return false;
+  return tournament.value.waitlistPlayers.length > 0;
 });
 
-/**
- * Inscrit l'utilisateur au tournoi sans définir son niveau
- */
-const registerWithoutLevel = async () => {
-  if (!user.value || !levelPromptTournamentId.value) return;
+const waitlistCount = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return 0;
+  return tournament.value.waitlistPlayers.length;
+});
 
-  try {
-    // Fermer la modale
-    closeLevelPrompt();
-    // Afficher un indicateur de chargement ou un spinner si nécessaire
+const isUserInWaitlist = computed(() => {
+  if (
+    !currentPlayerId.value ||
+    !tournament.value ||
+    !tournament.value.waitlistPlayers
+  )
+    return false;
 
-    // Appel au service pour inscrire le joueur
-    await tournamentService.registerPlayer(
-      levelPromptTournamentId.value,
-      user.value._id
-    );
+  return tournament.value.waitlistPlayers.some((waitlistId) => {
+    if (typeof waitlistId === "object") {
+      return waitlistId._id === currentPlayerId.value;
+    } else {
+      return waitlistId === currentPlayerId.value;
+    }
+  });
+});
 
-    // Afficher un message de succès
-    showMessage(
-      "success",
-      "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
-    );
-
-    // Recharger les données du tournoi
-    await fetchTournament();
-  } catch (error) {
-    console.error("Erreur lors de l'inscription sans niveau:", error);
-    showMessage(
-      "error",
-      "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
-    );
+const getUserWaitlistPosition = computed(() => {
+  if (
+    !user.value ||
+    !tournament.value ||
+    !tournament.value.waitlistPlayers ||
+    !isUserInWaitlist.value
+  ) {
+    return 0;
   }
-};
 
-/**
- * Gère le cas où l'image ne peut pas être chargée
- */
-const handleImageError = () => {
-  imageError.value = true;
-};
+  if (tournament.value.waitlistRegistrationDates) {
+    const waitlistWithDates = tournament.value.waitlistPlayers.map((player) => {
+      const playerId = typeof player === "object" ? player._id : player;
+      const registrationDate = playerId
+        ? tournament.value?.waitlistRegistrationDates?.[playerId]
+        : new Date();
+      return { player, registrationDate };
+    });
 
-/**
- * Vérifie s'il existe des équipes vides dans le tournoi
- */
+    waitlistWithDates.sort((a, b) => {
+      return (
+        new Date(a.registrationDate ?? new Date()).getTime() -
+        new Date(b.registrationDate ?? new Date()).getTime()
+      );
+    });
+
+    for (let i = 0; i < waitlistWithDates.length; i++) {
+      const playerId =
+        typeof waitlistWithDates[i].player === "object"
+          ? waitlistWithDates[i].player.userId
+          : waitlistWithDates[i].player;
+
+      if (playerId === user.value._id) {
+        return i + 1;
+      }
+    }
+  }
+
+  const index = tournament.value.waitlistPlayers.findIndex((player) => {
+    if (typeof player === "object" && player.userId) {
+      return user.value && player.userId === user.value._id;
+    }
+    return typeof player === "object" && player.userId === user.value?._id;
+  });
+
+  return index + 1;
+});
+
+const isTournamentFull = computed(() => {
+  if (!tournament.value) return false;
+  return (
+    tournament.value.playerCap > 0 &&
+    tournament.value.players.length >= tournament.value.playerCap
+  );
+});
+
+const waitlistPlayers = computed(() => {
+  if (!tournament.value || !tournament.value.waitlistPlayers) return [];
+
+  const playersWithDates = tournament.value.waitlistPlayers.map((player) => {
+    const playerId = typeof player === "object" ? player._id : player;
+    let registrationDate;
+
+    if (tournament.value?.waitlistRegistrationDates && playerId) {
+      registrationDate = tournament.value.waitlistRegistrationDates[playerId];
+    }
+
+    if (!registrationDate) {
+      registrationDate = new Date();
+    }
+
+    return { ...player, registrationDate };
+  });
+
+  return playersWithDates.sort((a, b) => {
+    return (
+      new Date(a.registrationDate).getTime() -
+      new Date(b.registrationDate).getTime()
+    );
+  });
+});
+
 const hasEmptyTeams = computed(() => {
   if (!tournament.value?.teams || tournament.value.teams.length === 0) {
     return true;
@@ -1547,98 +1711,126 @@ const hasEmptyTeams = computed(() => {
   );
 });
 
-/**
- * Liste des joueurs en attente triée par date d'inscription
- */
-const waitlistPlayers = computed(() => {
-  if (!tournament.value || !tournament.value.waitlistPlayers) return [];
-
-  // Créer une copie de la liste d'attente avec des dates
-  const playersWithDates = tournament.value.waitlistPlayers.map((player) => {
-    const playerId = typeof player === "object" ? player._id : player;
-    // Récupérer la date d'inscription depuis waitlistRegistrationDates s'il elle existe
-    let registrationDate;
-
-    if (tournament.value?.waitlistRegistrationDates && playerId) {
-      registrationDate = tournament.value.waitlistRegistrationDates[playerId];
-    }
-
-    // Utiliser une date par défaut si aucune date d'inscription n'est trouvée
-    if (!registrationDate) {
-      registrationDate = new Date();
-    }
-
-    return {
-      ...player,
-      registrationDate,
-    };
-  });
-
-  // Trier par date d'inscription (plus anciens en premier)
-  return playersWithDates.sort((a, b) => {
-    return (
-      new Date(a.registrationDate).getTime() -
-      new Date(b.registrationDate).getTime()
-    );
-  });
-});
-
-//------------------------------------------------------
-// 3. RÉCUPÉRATION DES DONNÉES
-//------------------------------------------------------
+// ========================================
+// NOUVELLES MÉTHODES POUR LES STREAMS
+// ========================================
 
 /**
- * Récupère les données du tournoi depuis l'API via le store
+ * Vérifie si un joueur est en live
  */
-const fetchTournament = async () => {
+const getPlayerLiveStatus = (player: any): boolean => {
+  if (!streamUsers.value.length || !player) return false;
+
+  // Recherche par userId ou username
+  const streamUser = streamUsers.value.find(
+    (user) =>
+      (player.userId && user.userId === player.userId) ||
+      (player.username && user.username === player.username)
+  );
+
+  return streamUser?.isLive || false;
+};
+
+/**
+ * Récupère le nom d'utilisateur Twitch d'un joueur
+ */
+const getPlayerTwitchUsername = (player: any): string => {
+  if (!streamUsers.value.length || !player) return "";
+
+  // Recherche par userId ou username
+  const streamUser = streamUsers.value.find(
+    (user) =>
+      (player.userId && user.userId === player.userId) ||
+      (player.username && user.username === player.username)
+  );
+
+  return streamUser?.twitchUsername || "";
+};
+
+/**
+ *  Met à jour les données de stream
+ */
+const updateStreamData = async () => {
+  if (!isTournamentToday.value || !tournament.value?._id) {
+    streamUsers.value = [];
+    return;
+  }
+
   try {
-    // Utiliser le store pour récupérer les détails du tournoi avec mise en cache
-    const data = await tournamentService.getTournamentById(tournamentId.value);
-
-    if (!data) {
-      error.value = "Impossible de charger les données du tournoi";
-      return;
-    }
-
-    tournament.value = data;
-
-    // Récupérer tous les tournois pour la navigation
-    await fetchAllTournaments();
-
-    // Définir l'onglet actif en fonction de l'état du tournoi
-    if (data.finished) {
-      activeTab.value = "results"; // Définir sur "results" si le tournoi est terminé
-    } else {
-      activeTab.value = "participants"; // Sinon, rester sur "description"
-    }
-
-    // Vérifier l'état de check-in du joueur si l'utilisateur est connecté
-    if (user.value) {
-      await checkPlayerCheckIn();
-      await checkPlayerLevel();
-    }
-
-    // Récupérer le dernier tournoi terminé pour ce jeu
-    if (data.game && data.game._id) {
-      await fetchLastFinishedTournament();
-    }
-  } catch (err) {
-    console.error("Erreur lors de la récupération du tournoi:", err);
-    error.value = "Impossible de charger les données du tournoi";
+    const response = await streamService.getTournamentStreams(
+      tournament.value._id
+    );
+    streamUsers.value = response.allUsersWithTwitch || [];
+  } catch (error) {
+    console.error("Erreur lors de la récupération des streams:", error);
+    streamUsers.value = [];
   }
 };
 
-//  Récupérer tous les tournois pour la navigation
+// ========================================
+// MÉTHODES PRINCIPALES
+// ========================================
+
+/**
+ * Récupère les données du tournoi
+ */
+const fetchTournament = async () => {
+  if (!tournamentId.value) {
+    error.value = "ID de tournoi manquant";
+    return;
+  }
+
+  isLoading.value = true;
+  error.value = null;
+
+  try {
+    console.log("🔄 Chargement du tournoi:", tournamentId.value);
+
+    const data = await tournamentService.getTournamentById(tournamentId.value);
+
+    if (!data) {
+      error.value = "Tournoi non trouvé";
+      return;
+    }
+
+    console.log("✅ Tournoi chargé:", data.name);
+    tournament.value = data;
+
+    // Récupération des données complémentaires (non critiques)
+    await Promise.allSettled([
+      fetchAllTournaments(),
+      user.value ? checkPlayerCheckIn() : Promise.resolve(),
+      user.value ? checkPlayerLevel() : Promise.resolve(),
+      data.game?._id ? fetchLastFinishedTournament() : Promise.resolve(),
+      updateStreamData(),
+    ]);
+
+    // Définir l'onglet actif
+    if (data.finished) {
+      activeTab.value = "results";
+    } else if (isTournamentToday.value) {
+      activeTab.value = "twitch";
+    } else {
+      activeTab.value = "participants";
+    }
+  } catch (err) {
+    console.error("❌ Erreur lors de la récupération du tournoi:", err);
+    error.value = "Impossible de charger les données du tournoi";
+    tournament.value = null;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/**
+ * Récupère tous les tournois pour la navigation
+ */
 const fetchAllTournaments = async () => {
   try {
     const tournaments = await tournamentService.getTournaments();
-
-    // Trier par date (plus récents en premier)
     allTournaments.value = tournaments.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-
-    // Trouver l'index du tournoi actuel
     currentTournamentIndex.value = allTournaments.value.findIndex(
       (t) => t._id === tournamentId.value
     );
@@ -1650,13 +1842,8 @@ const fetchAllTournaments = async () => {
   }
 };
 
-// ✅ NOUVEAU: Navigation vers un autre tournoi
-const navigateToTournament = (tournamentId: string) => {
-  router.push(`/tournois/${tournamentId}`);
-};
-
 /**
- * Récupère le dernier tournoi terminé pour le même jeu via le store
+ * Récupère le dernier tournoi terminé
  */
 const fetchLastFinishedTournament = async () => {
   if (!tournament.value?.game?._id) return;
@@ -1664,26 +1851,19 @@ const fetchLastFinishedTournament = async () => {
   loadingLastTournament.value = true;
 
   try {
-    // Utiliser le store pour récupérer les tournois par jeu
     const tournaments = await tournamentService.getTournamentsByGame(
       tournament.value.game._id
     );
-
-    // Filtrer uniquement les tournois terminés et différents du tournoi actuel
     const finishedTournaments = tournaments.filter(
       (t) => t.finished && t._id !== tournament.value?._id
     );
 
-    if (finishedTournaments.length === 0) {
-      return;
-    }
+    if (finishedTournaments.length === 0) return;
 
-    // Trier par date de création décroissante pour trouver le plus récent
     const sortedTournaments = finishedTournaments.sort((a, b) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
-    // Prendre le premier (le plus récent)
     lastFinishedTournament.value = sortedTournaments[0];
   } catch (err) {
     console.error("Erreur lors de la récupération du dernier tournoi:", err);
@@ -1693,7 +1873,7 @@ const fetchLastFinishedTournament = async () => {
 };
 
 /**
- * Vérifie l'état de check-in du joueur connecté
+ * Vérifie l'état de check-in du joueur
  */
 const checkPlayerCheckIn = async () => {
   if (!user.value || !tournament.value) return;
@@ -1708,12 +1888,41 @@ const checkPlayerCheckIn = async () => {
   }
 };
 
-//------------------------------------------------------
-// 4. GESTION DES ACTIONS UTILISATEUR
-//------------------------------------------------------
+/**
+ * Vérifie si le joueur a un niveau pour ce jeu
+ */
+const checkPlayerLevel = async () => {
+  if (!currentPlayerId.value || !tournament.value?.game?._id) {
+    hasPlayerLevelForGame.value = false;
+    return;
+  }
+
+  try {
+    const gameId = tournament.value.game._id;
+    const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
+      currentPlayerId.value,
+      gameId
+    );
+    hasPlayerLevelForGame.value = !!playerLevel;
+  } catch (error) {
+    console.error("Erreur lors de la vérification du niveau:", error);
+    hasPlayerLevelForGame.value = false;
+  }
+};
+
+// ========================================
+// MÉTHODES D'ACTIONS UTILISATEUR
+// ========================================
 
 /**
- * Navigue vers la liste des tournois
+ * Navigation vers un autre tournoi
+ */
+const navigateToTournament = (tournamentId: string) => {
+  router.push(`/tournois/${tournamentId}`);
+};
+
+/**
+ * Retour aux tournois
  */
 const goBackToTournaments = () => {
   router.push("/tournois-a-venir");
@@ -1740,96 +1949,32 @@ const closePopup = () => {
 };
 
 /**
- * Redirige vers la page de définition de niveau
- */
-const goToLevelDefinition = () => {
-  router.push({
-    path: "/player-level",
-    query: {
-      gameId: levelPromptGameId.value,
-      redirect: route.fullPath, // Pour pouvoir revenir au tournoi après
-      tournamentId: levelPromptTournamentId.value, // Ajoutez cette ligne
-      autoRegister: "true", // Ajoutez cette ligne
-    },
-  });
-};
-
-/**
- * Ferme la popup de définition de niveau
- */
-const closeLevelPrompt = () => {
-  showLevelPrompt.value = false;
-  levelPromptGameId.value = "";
-  levelPromptGameName.value = "";
-};
-
-// Vérifier si le joueur a un niveau pour ce jeu
-const checkPlayerLevel = async () => {
-  if (!currentPlayerId.value || !tournament.value?.game?._id) {
-    hasPlayerLevelForGame.value = false;
-    return;
-  }
-
-  try {
-    // Vérifier si un niveau existe pour ce jeu
-    const gameId = tournament.value.game._id;
-    const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
-      currentPlayerId.value,
-      gameId
-    );
-
-    // Mettre à jour la référence
-    hasPlayerLevelForGame.value = !!playerLevel;
-  } catch (error) {
-    console.error("Erreur lors de la vérification du niveau:", error);
-    hasPlayerLevelForGame.value = false;
-  }
-};
-
-// Fonction pour rediriger vers la page de définition de niveau
-const redirectToPlayerLevel = () => {
-  router.push({
-    path: "/player-level",
-    query: {
-      gameId: tournament.value?.game._id || "",
-      redirect: route.fullPath,
-      tournamentId: tournament.value?._id || "",
-      autoRegister: "false", // Déjà inscrit, pas besoin d'inscription auto
-    },
-  });
-};
-
-/**
- * Confirme l'action d'inscription/désinscription en utilisant le store
+ * Confirme l'action d'inscription/désinscription
  */
 const confirmAction = async () => {
   if (!selectedTournament.value || !user.value) return;
 
   try {
-    // Vérifier si le joueur a déjà défini un niveau pour ce jeu
+    // Vérification du niveau pour les inscriptions
     if (actionType.value === "register" || actionType.value === "waitlist") {
       const gameId = selectedTournament.value.game._id;
 
       try {
-        // Vérifier si un niveau existe pour ce jeu
         const playerLevel = await playerGameLevelService.getPlayerLevelForGame(
           currentPlayerId.value ?? "",
           gameId ?? ""
         );
 
-        // Si aucun niveau n'est défini, montrer la popup et ARRÊTER l'exécution
         if (!playerLevel) {
-          closePopup(); // Fermer la popup d'inscription
-          showLevelPrompt.value = true; // Montrer la popup de niveau
+          closePopup();
+          showLevelPrompt.value = true;
           levelPromptGameId.value = gameId ?? "";
           levelPromptGameName.value = selectedTournament.value.game.name;
-          // Ajouter le tournamentId pour l'inscription automatique après définition du niveau
           levelPromptTournamentId.value = selectedTournament.value._id || "";
-          return; // Important: arrêter l'exécution ici pour ne pas inscrire tout de suite
+          return;
         }
       } catch (err) {
         console.error("Erreur lors de la vérification du niveau:", err);
-        // Continuer l'inscription même en cas d'erreur de vérification
       }
     }
 
@@ -1839,7 +1984,6 @@ const confirmAction = async () => {
       (actionType.value === "register" || actionType.value === "waitlist") &&
       selectedTournament.value._id
     ) {
-      // Code pour l'inscription
       await tournamentService.registerPlayer(
         selectedTournament.value._id,
         user.value._id
@@ -1857,7 +2001,6 @@ const confirmAction = async () => {
         actionType.value === "unregister-waitlist") &&
       selectedTournament.value._id
     ) {
-      // Code pour la désinscription
       await tournamentService.unregisterPlayer(
         selectedTournament.value._id,
         user.value._id
@@ -1872,7 +2015,6 @@ const confirmAction = async () => {
       );
     }
 
-    // Mettre à jour l'état local en rechargeant les données
     if (success && selectedTournament.value._id) {
       await fetchTournament();
     }
@@ -1886,31 +2028,25 @@ const confirmAction = async () => {
 };
 
 /**
- * Gère le check-in d'un joueur via le store
+ * Gère le check-in d'un joueur
  */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
   if (!user.value) return;
 
-  // Mise à jour optimiste de l'UI
   isCheckedIn.value = checkedIn;
 
   try {
-    // Appel direct au service au lieu du store
     await tournamentService.checkInPlayer(
       tournamentId,
       user.value._id,
       checkedIn
     );
-
     showMessage(
       "success",
       checkedIn ? "Check-in confirmé !" : "Check-in annulé."
     );
-
-    // Mettre à jour les données locales après un check-in réussi
-    await fetchTournament(); // Recharger le tournoi
+    await fetchTournament();
   } catch (err) {
-    // En cas d'erreur, remettre l'état précédent
     isCheckedIn.value = !checkedIn;
     console.error("Erreur lors du check-in:", err);
     showMessage(
@@ -1923,127 +2059,94 @@ const checkIn = async (tournamentId: string, checkedIn: boolean) => {
 };
 
 /**
- * Gère la bascule des autres classements
+ * Inscription sans définir de niveau
+ */
+const registerWithoutLevel = async () => {
+  if (!user.value || !levelPromptTournamentId.value) return;
+
+  try {
+    closeLevelPrompt();
+    await tournamentService.registerPlayer(
+      levelPromptTournamentId.value,
+      user.value._id
+    );
+    showMessage(
+      "success",
+      "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
+    );
+    await fetchTournament();
+  } catch (error) {
+    console.error("Erreur lors de l'inscription sans niveau:", error);
+    showMessage(
+      "error",
+      "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+    );
+  }
+};
+
+/**
+ * Redirection vers la définition de niveau
+ */
+const goToLevelDefinition = () => {
+  router.push({
+    path: "/player-level",
+    query: {
+      gameId: levelPromptGameId.value,
+      redirect: route.fullPath,
+      tournamentId: levelPromptTournamentId.value,
+      autoRegister: "true",
+    },
+  });
+};
+
+/**
+ * Redirection vers la page de niveau
+ */
+const redirectToPlayerLevel = () => {
+  router.push({
+    path: "/player-level",
+    query: {
+      gameId: tournament.value?.game._id || "",
+      redirect: route.fullPath,
+      tournamentId: tournament.value?._id || "",
+      autoRegister: "false",
+    },
+  });
+};
+
+/**
+ * Ferme la popup de niveau
+ */
+const closeLevelPrompt = () => {
+  showLevelPrompt.value = false;
+  levelPromptGameId.value = "";
+  levelPromptGameName.value = "";
+};
+
+/**
+ * Bascule des autres classements
  */
 const toggleOtherRankings = () => {
   showOtherRankings.value = !showOtherRankings.value;
 };
 
 /**
- * Scroll vers le haut de la page
+ * Scroll vers le haut
  */
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 /**
- * Vérifie si le tournoi a une liste d'attente avec des joueurs
+ * Gestion de l'erreur d'image
  */
-const hasWaitlist = computed(() => {
-  if (!tournament.value || !tournament.value.waitlistPlayers) return false;
-  return tournament.value.waitlistPlayers.length > 0;
-});
+const handleImageError = () => {
+  imageError.value = true;
+};
 
-/**
- * Nombre de joueurs en liste d'attente
- */
-const waitlistCount = computed(() => {
-  if (!tournament.value || !tournament.value.waitlistPlayers) return 0;
-  return tournament.value.waitlistPlayers.length;
-});
-
-/**
- * Vérifie si l'utilisateur connecté est en liste d'attente
- */
-const isUserInWaitlist = computed(() => {
-  if (
-    !currentPlayerId.value ||
-    !tournament.value ||
-    !tournament.value.waitlistPlayers
-  )
-    return false;
-
-  return tournament.value.waitlistPlayers.some((waitlistId) => {
-    // Vérifier le type du waitlistId pour traiter correctement la comparaison
-    if (typeof waitlistId === "object") {
-      // Si waitlistId est un objet (Player)
-      return waitlistId._id === currentPlayerId.value;
-    } else {
-      // Si waitlistId est une chaîne (ID simple)
-      return waitlistId === currentPlayerId.value;
-    }
-  });
-});
-
-/**
- * Détermine la position de l'utilisateur dans la liste d'attente
- */
-const getUserWaitlistPosition = computed(() => {
-  if (
-    !user.value ||
-    !tournament.value ||
-    !tournament.value.waitlistPlayers ||
-    !isUserInWaitlist.value
-  ) {
-    return 0;
-  }
-
-  // Si waitlistRegistrationDates est disponible, trier par date d'inscription
-  if (tournament.value.waitlistRegistrationDates) {
-    const waitlistWithDates = tournament.value.waitlistPlayers.map((player) => {
-      const playerId = typeof player === "object" ? player._id : player;
-      const registrationDate = playerId
-        ? tournament.value?.waitlistRegistrationDates?.[playerId]
-        : new Date();
-      return { player, registrationDate };
-    });
-
-    // Trier par date d'inscription (plus anciens en premier)
-    waitlistWithDates.sort((a, b) => {
-      return (
-        new Date(a.registrationDate ?? new Date()).getTime() -
-        new Date(b.registrationDate ?? new Date()).getTime()
-      );
-    });
-
-    // Trouver la position de l'utilisateur
-    for (let i = 0; i < waitlistWithDates.length; i++) {
-      const playerId =
-        typeof waitlistWithDates[i].player === "object"
-          ? waitlistWithDates[i].player.userId
-          : waitlistWithDates[i].player;
-
-      if (playerId === user.value._id) {
-        return i + 1; // Position (1-indexed)
-      }
-    }
-  }
-
-  // Si pas de dates disponibles, juste retourner la position brute
-  const index = tournament.value.waitlistPlayers.findIndex((player) => {
-    if (typeof player === "object" && player.userId) {
-      return user.value && player.userId === user.value._id;
-    }
-    return typeof player === "object" && player.userId === user.value?._id;
-  });
-
-  return index + 1; // 1-indexed
-});
-
-/**
- * Vérifie si le tournoi est plein (cap atteint)
- */
-const isTournamentFull = computed(() => {
-  if (!tournament.value) return false;
-  return (
-    tournament.value.playerCap > 0 &&
-    tournament.value.players.length >= tournament.value.playerCap
-  );
-});
-
-//------------------------------------------------------
-// 5. UTILITAIRES ET FORMATAGE
-//------------------------------------------------------
+// ========================================
+// MÉTHODES UTILITAIRES
+// ========================================
 
 /**
  * Affiche un message de notification
@@ -2053,18 +2156,15 @@ const showMessage = (
   message: string,
   duration: number = 3000
 ) => {
-  // Réinitialiser tout message précédent
   success.value = null;
   error.value = null;
 
-  // Définir le nouveau message
   if (type === "success") {
     success.value = message;
   } else {
     error.value = message;
   }
 
-  // Auto-effacement après la durée spécifiée
   setTimeout(() => {
     if (type === "success") {
       success.value = null;
@@ -2075,7 +2175,7 @@ const showMessage = (
 };
 
 /**
- * Formate le temps d'attente d'un joueur dans la liste d'attente
+ * Formate le temps d'attente
  */
 const formatWaitingTime = (playerId: string) => {
   if (
@@ -2086,29 +2186,20 @@ const formatWaitingTime = (playerId: string) => {
     return "Date inconnue";
   }
 
-  // Problème : Accès direct à la HashMap
-  // Nous devons vérifier la structure des données
-
   let waitDate = null;
 
-  // Vérifier si waitlistRegistrationDates est un objet simple (JSON)
   if (
     typeof tournament.value.waitlistRegistrationDates === "object" &&
     !Array.isArray(tournament.value.waitlistRegistrationDates)
   ) {
-    // C'est un objet, on peut accéder à la propriété directement
     waitDate = tournament.value.waitlistRegistrationDates[playerId];
-  }
-  // Ou si c'est une instance de Map (moins probable côté frontend)
-  else if (tournament.value.waitlistRegistrationDates instanceof Map) {
+  } else if (tournament.value.waitlistRegistrationDates instanceof Map) {
     waitDate = tournament.value.waitlistRegistrationDates.get(playerId);
   }
 
   if (!waitDate) return "Date inconnue";
 
   const waitTimeMs = Date.now() - new Date(waitDate).getTime();
-
-  // Conversion en jours/heures/minutes
   const days = Math.floor(waitTimeMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor(
     (waitTimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -2147,7 +2238,7 @@ const getParticipantsCount = () => {
 };
 
 /**
- * Formate la description avec des sauts de ligne
+ * Formate la description
  */
 const formatDescription = (description: string) => {
   if (!description) return "";
@@ -2155,32 +2246,49 @@ const formatDescription = (description: string) => {
 };
 
 /**
- * Récupère les équipes gagnantes (rang 1) d'un tournoi
+ * Récupère les équipes gagnantes
  */
 const getWinningTeams = (tournament: Tournament) => {
   if (!tournament.teams) return [];
-
-  // Récupérer toutes les équipes avec le rang 1
   return tournament.teams.filter((team) => team.ranking === 1);
 };
 
-//------------------------------------------------------
-// 6. CYCLE DE VIE DU COMPOSANT ET OBSERVATEURS
-//------------------------------------------------------
+// ========================================
+// WATCHERS ET CYCLE DE VIE
+// ========================================
 
-// Observer les changements d'ID dans l'URL pour recharger les données
 watch(
   () => route.params.id,
   (newId, oldId) => {
     if (newId && newId !== oldId) {
-      fetchTournament(); // Recharge les données du tournoi quand l'ID change
+      fetchTournament();
     }
   }
 );
 
-// Récupérer les données au chargement du composant
+let streamUpdateInterval: number | null = null;
+
 onMounted(() => {
   fetchTournament();
+
+  // Actualisation automatique des streams toutes les 30 secondes si le tournoi est aujourd'hui
+  if (isTournamentToday.value) {
+    streamUpdateInterval = setInterval(updateStreamData, 30000);
+  }
+});
+
+onUnmounted(() => {
+  // Nettoyage de l'intervalle
+  if (streamUpdateInterval) {
+    clearInterval(streamUpdateInterval);
+  }
+});
+
+//  Watcher pour mettre à jour les streams quand l'onglet change
+watch(activeTab, (newTab) => {
+  if (newTab === "participants" && isTournamentToday.value) {
+    updateStreamData();
+  }
 });
 </script>
 
@@ -2910,5 +3018,153 @@ router-link.truncate:hover::after {
   .tournament-nav-info .text-sm {
     font-size: 0.8rem;
   }
+}
+
+/*  Styles pour l'onglet Twitch */
+.active-tab-twitch {
+  color: #a855f7; /* Purple-500 */
+  background-color: rgba(168, 85, 247, 0.1);
+  border-bottom: 2px solid #a855f7;
+}
+
+.inactive-tab-twitch {
+  color: #9ca3af; /* Gray-400 */
+  border-bottom: 2px solid transparent;
+}
+
+.inactive-tab-twitch:hover {
+  color: #a855f7; /* Purple-500 */
+  background-color: rgba(168, 85, 247, 0.1);
+}
+
+/* Style pour le scrollbar personnalisé */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.5) rgba(55, 65, 81, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.7);
+}
+
+/* Animation pour l'onglet Twitch actif */
+.active-tab-twitch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  z-index: -1;
+  animation: tab-glow 3s linear infinite;
+}
+
+/* Responsive pour l'interface de streams */
+@media (max-width: 1024px) {
+  .lg\:col-span-3,
+  .lg\:col-span-1 {
+    grid-column: span 1;
+  }
+
+  .grid-cols-1.lg\:grid-cols-4 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/*  Styles pour les badges LIVE */
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse {
+  animation: live-pulse 2s infinite;
+}
+
+/* Style pour les tooltips */
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}
+
+/* Amélioration de la position des badges live */
+.relative .absolute {
+  z-index: 10;
+}
+
+/* Animation pour l'apparition des badges live */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Badge live compact pour liste d'attente */
+.scale-75 {
+  transform: scale(0.75);
+}
+
+/* Responsive adjustments pour les badges */
+@media (max-width: 640px) {
+  /* Réduire la taille des badges sur mobile */
+  .relative .bg-red-500 {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.375rem;
+  }
+}
+
+/* Effet de brillance sur les badges live */
+@keyframes badge-shine {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.bg-red-500 {
+  background: linear-gradient(45deg, #ef4444, #dc2626, #ef4444);
+  background-size: 200% 100%;
+  animation: badge-shine 3s linear infinite;
+}
+
+/* Hover effect pour les liens Twitch */
+a[href*="twitch.tv"]:hover .bg-red-500 {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+  border-color: rgba(220, 38, 38, 0.8);
 }
 </style>

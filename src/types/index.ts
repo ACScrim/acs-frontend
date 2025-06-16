@@ -7,3 +7,4 @@ export * from "./GameProposal";
 export * from "./Season";
 export * from "./PlayerGameLevel";
 export * from "./ExtendedStats";
+export * from "./stream";
