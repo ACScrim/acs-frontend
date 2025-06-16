@@ -475,7 +475,7 @@ const allowedGames = [
   "Rocket League",
   "Valorant",
   "The Finals",
-  "Counter Strike",
+  "Counter-Strike",
   "Overwatch",
 ];
 
