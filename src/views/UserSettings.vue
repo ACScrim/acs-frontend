@@ -1,4 +1,3 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\views\UserSettings.vue -->
 <template>
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
@@ -155,15 +154,15 @@
               Rôles Discord par jeu
             </h2>
 
-            <!-- ✅ NOUVEAU : Compteur de jeux -->
+            <!-- ✅ MODIFIÉ : Compteur de jeux filtrés -->
             <div
-              v-if="games.length > 0"
+              v-if="filteredGames.length > 0"
               class="text-sm text-cyan-400 font-orbitron"
             >
-              {{ games.length }} jeu{{
-                games.length > 1 ? "x" : ""
+              {{ filteredGames.length }} jeu{{
+                filteredGames.length > 1 ? "x" : ""
               }}
-              disponible{{ games.length > 1 ? "s" : "" }}
+              disponible{{ filteredGames.length > 1 ? "s" : "" }}
             </div>
           </div>
 
@@ -211,12 +210,12 @@
             </div>
           </div>
 
-          <!-- ✅ NOUVEAU : Liste des jeux avec pagination -->
-          <div v-if="games.length > 0">
-            <!-- Liste des jeux paginés -->
-            <div class="space-y-3 mb-6">
+          <!-- ✅ MODIFIÉ : Liste des jeux filtrés sans pagination -->
+          <div v-if="filteredGames.length > 0">
+            <!-- Liste des jeux principaux -->
+            <div class="space-y-3">
               <div
-                v-for="game in paginatedGames"
+                v-for="game in filteredGames"
                 :key="game._id"
                 class="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-cyan-500/50 transition-colors"
               >
@@ -350,29 +349,15 @@
                 </label>
               </div>
             </div>
-
-            <!-- ✅ NOUVEAU : Pagination cyberpunk -->
-            <CyberpunkPagination
-              v-if="totalPages > 1"
-              :current-page="currentPage"
-              :total-pages="totalPages"
-              :show-dots="true"
-              color="cyan"
-              prev-label="Précédent"
-              next-label="Suivant"
-              @prev-page="goToPreviousPage"
-              @next-page="goToNextPage"
-              @page-select="goToPage"
-            />
           </div>
 
-          <!-- État vide - Terminal pour aucun jeu -->
+          <!-- ✅ NOUVEAU : État vide pour jeux filtrés -->
           <CyberTerminal
             v-else
-            title="BASE DE DONNÉES · JEUX"
-            command="query_games"
-            error-code="GAME_404"
-            message="Aucun jeu disponible dans la base de données. Veuillez contacter un administrateur pour ajouter des jeux."
+            title="BASE DE DONNÉES · JEUX PRINCIPAUX"
+            command="query_main_games"
+            error-code="GAME_FILTER_404"
+            message="Aucun des jeux principaux n'est disponible dans la base de données. Les jeux supportés sont : League of Legends, Rocket League, Valorant, The Finals, Counter Strike et Overwatch."
           />
         </div>
 
@@ -461,7 +446,6 @@ import type { GameRoles } from "../types/User";
 import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
 import CyberTerminal from "../shared/CyberTerminal.vue";
 import Toast from "../shared/Toast.vue";
-import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
 import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 
 // ========================================
@@ -485,9 +469,15 @@ const showUnsavedChangesDialog = ref(false);
 const showResetDialog = ref(false);
 const pendingRouteNavigation = ref<(() => void) | null>(null);
 
-//  États de pagination
-const currentPage = ref(1);
-const itemsPerPage = 5; // 5 jeux par page
+// ✅ NOUVEAU : Liste des jeux autorisés
+const allowedGames = [
+  "League of Legends",
+  "Rocket League",
+  "Valorant",
+  "The Finals",
+  "Counter Strike",
+  "Overwatch",
+];
 
 // Utilisateur connecté (depuis le store)
 const user = computed(() => userStore.user);
@@ -517,21 +507,32 @@ const hasChanges = computed(() => {
   return formData.value.twitchUsername !== originalData.value.twitchUsername;
 });
 
-// ✅ NOUVEAU : Computed pour la pagination
 /**
- * Calcule le nombre total de pages nécessaires
+ * ✅ NOUVEAU : Retourne uniquement les jeux autorisés
  */
-const totalPages = computed(() => {
-  return Math.ceil(games.value.length / itemsPerPage);
-});
-
-/**
- * Retourne les jeux de la page actuelle
- */
-const paginatedGames = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  return games.value.slice(start, end);
+const filteredGames = computed(() => {
+  return games.value
+    .filter((game) =>
+      allowedGames.some(
+        (allowedName) =>
+          game.name.toLowerCase().includes(allowedName.toLowerCase()) ||
+          allowedName.toLowerCase().includes(game.name.toLowerCase())
+      )
+    )
+    .sort((a, b) => {
+      // Trier par ordre de priorité dans allowedGames
+      const indexA = allowedGames.findIndex(
+        (name) =>
+          a.name.toLowerCase().includes(name.toLowerCase()) ||
+          name.toLowerCase().includes(a.name.toLowerCase())
+      );
+      const indexB = allowedGames.findIndex(
+        (name) =>
+          b.name.toLowerCase().includes(name.toLowerCase()) ||
+          name.toLowerCase().includes(b.name.toLowerCase())
+      );
+      return indexA - indexB;
+    });
 });
 
 // ========================================
@@ -572,43 +573,12 @@ const initializeUserProfile = () => {
 const loadGames = async () => {
   try {
     games.value = await gameService.getGames();
-    // ✅ NOUVEAU : Réinitialiser la pagination lors du rechargement
-    currentPage.value = 1;
+    console.log(
+      `✅ ${games.value.length} jeux chargés, ${filteredGames.value.length} jeux filtrés`
+    );
   } catch (error) {
     console.error("Erreur lors du chargement des jeux:", error);
     showMessage("Erreur lors du chargement des jeux", "error");
-  }
-};
-
-// ========================================
-// SECTION: MÉTHODES DE PAGINATION
-// ========================================
-
-/**
- * ✅ NOUVEAU : Navigue vers la page précédente
- */
-const goToPreviousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
-
-/**
- * ✅ NOUVEAU : Navigue vers la page suivante
- */
-const goToNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-/**
- * ✅ NOUVEAU : Navigue vers une page spécifique
- * @param page - Numéro de la page à afficher
- */
-const goToPage = (page: number) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
   }
 };
 
