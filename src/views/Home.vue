@@ -41,23 +41,13 @@
         :class="!user ? 'max-w-md' : ''"
       >
         <!-- Titre principal avec effet spatial -->
-        <div class="title-container relative">
-          <SpaceTitle
-            size="4xl"
-            :glitch="true"
-            className="mb-6 tracking-wider text-center leading-tight"
+        <div class="title-container relative mb-10">
+          <div class="title-bg"></div>
+          <h1
+            class="title-text font-nasa text-center leading-tight relative z-10"
           >
-            Alors, <br />ça scrim ?
-          </SpaceTitle>
-
-          <!-- Ligne décorative -->
-          <div
-            class="w-48 h-0.5 mx-auto bg-gradient-to-r from-transparent via-space-accent to-transparent relative"
-          >
-            <div
-              class="absolute inset-0 animate-pulse-slow opacity-70 bg-gradient-to-r from-transparent via-space-accent-light to-transparent"
-            ></div>
-          </div>
+            ALORS, <br />ÇA SCRIM ?
+          </h1>
         </div>
 
         <!-- Logo -->
@@ -162,17 +152,22 @@
           </div>
 
           <div v-else-if="nextTournament" class="space-y-4">
-            <div>
-              <h3
-                class="text-xl font-nasa text-space-primary-light mb-1 truncate"
-              >
-                {{ nextTournament.name }}
-              </h3>
-              <div class="flex flex-wrap gap-y-2 gap-x-4">
-                <div class="text-sm text-space-text flex items-center">
+            <div class="flex gap-4">
+              <!-- Image du jeu -->
+              <div class="game-image-container">
+                <img
+                  v-if="nextTournament.game && nextTournament.game.imageUrl"
+                  :src="nextTournament.game.imageUrl"
+                  :alt="nextTournament.game.name"
+                  class="w-16 h-16 rounded-lg object-cover border-2 border-space-primary/30"
+                />
+                <div
+                  v-else
+                  class="w-16 h-16 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-primary/30"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 text-space-primary-light"
+                    class="h-8 w-8 text-space-primary-light"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -181,28 +176,62 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span>{{ formatDate(nextTournament.date) }}</span>
                 </div>
+                <div class="game-image-glow"></div>
+              </div>
 
-                <div class="text-sm text-space-text flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 text-space-primary-light"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span>{{ formatTime(nextTournament.date) }}</span>
+              <!-- Informations du tournoi -->
+              <div class="flex-1">
+                <h3
+                  class="text-xl font-nasa text-space-primary-light mb-1 truncate"
+                >
+                  {{ nextTournament.name }}
+                </h3>
+                <div class="flex flex-wrap gap-y-2 gap-x-4">
+                  <div class="text-sm text-space-text flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-1 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span>{{ formatDate(nextTournament.date) }}</span>
+                  </div>
+
+                  <div class="text-sm text-space-text flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-1 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>{{ formatTime(nextTournament.date) }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1146,6 +1175,56 @@ onUnmounted(() => {
   100% {
     transform: rotate(45deg) translateX(100%);
   }
+}
+
+.title-container {
+  position: relative;
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.title-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.title-text {
+  font-size: 3.5rem;
+  letter-spacing: 0.15em;
+  color: white;
+  text-shadow: 0 0 10px rgba(109, 40, 217, 0.8),
+    0 0 20px rgba(109, 40, 217, 0.5), 0 0 30px rgba(109, 40, 217, 0.3);
+  position: relative;
+  z-index: 10;
+  transform: perspective(500px) rotateX(5deg);
+}
+
+@media (max-width: 640px) {
+  .title-text {
+    font-size: 2.5rem;
+  }
+}
+
+/* Styles pour l'image du jeu */
+.game-image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+}
+
+.game-image-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  background: var(--space-primary);
+  filter: blur(5px);
+  opacity: 0.3;
+  z-index: -1;
 }
 
 /* Style spécifique pour les badges de rang */
