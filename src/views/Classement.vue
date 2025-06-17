@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <div class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative">
     <!-- En-tête de la page avec style NASA -->
     <SpaceHeader title="CLASSEMENT" />
 
@@ -182,7 +182,7 @@
         className="overflow-hidden"
       >
         <!-- Version desktop du tableau (caché sur mobile) -->
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full divide-y divide-space-bg-light/30">
             <thead class="bg-space-bg-light/20">
               <tr>
@@ -326,20 +326,23 @@
         </div>
 
         <!-- Version mobile du tableau (affichée uniquement sur mobile) -->
-        <div class="md:hidden">
+        <div class="block md:hidden">
           <!-- Barre de tri pour mobile -->
           <div
             class="flex justify-between items-center p-3 bg-space-bg-light/20 border-b border-space-bg-light/30"
           >
-            <div class="flex gap-2 items-center">
-              <span class="font-heading text-space-text-muted text-sm"
+            <div
+              class="flex gap-2 items-center overflow-x-auto pb-2 hide-scrollbar"
+            >
+              <span
+                class="font-heading text-space-text-muted text-sm whitespace-nowrap"
                 >Trier par:</span
               >
               <!-- Boutons de tri -->
               <SpaceButton
                 @click="sortBy('username')"
                 variant="ghost"
-                size="sm"
+                size="xs"
                 :className="sortKey === 'username' ? 'bg-space-primary/20' : ''"
               >
                 Nom
@@ -354,7 +357,7 @@
               <SpaceButton
                 @click="sortBy('totalVictories')"
                 variant="ghost"
-                size="sm"
+                size="xs"
                 :className="
                   sortKey === 'totalVictories' ? 'bg-space-primary/20' : ''
                 "
@@ -380,7 +383,7 @@
             >
               <div class="flex items-center">
                 <!-- Rang -->
-                <div class="w-12 flex justify-center">
+                <div class="w-10 flex-shrink-0 flex justify-center">
                   <SpaceBadge
                     v-if="calculateGlobalRank(index) <= 3"
                     :variant="
@@ -394,23 +397,29 @@
                   }}</span>
                 </div>
 
-                <!-- Joueur -->
-                <div class="flex-grow">
+                <!-- Joueur avec troncature -->
+                <div class="flex-grow min-w-0">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300"
+                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300 block truncate"
+                    :title="ranking.username"
                   >
                     {{ ranking.username }}
                   </router-link>
                 </div>
 
                 <!-- Victoires -->
-                <div class="flex items-center ml-auto">
+                <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex items-center">
-                    <span class="font-mono text-space-accent-light mr-1">
+                    <span
+                      class="font-mono text-space-accent-light mr-1 whitespace-nowrap"
+                    >
                       {{ ranking.totalVictories }}
                     </span>
-                    <span class="text-xs text-space-text-muted">victoires</span>
+                    <span
+                      class="text-xs text-space-text-muted whitespace-nowrap"
+                      >victoires</span
+                    >
                   </div>
                 </div>
               </div>
@@ -734,35 +743,31 @@ onMounted(async () => {
 </script>
 
 <style>
-.nasa-header {
-  position: relative;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.nasa-title {
-  font-family: var(--font-nasa); /* Utilisation de la variable */
-  text-transform: uppercase;
-  letter-spacing: 3px;
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-.nasa-coordinates {
-  position: absolute;
-  right: 0;
-  bottom: 10px;
-  font-family: var(--font-mono); /* Utilisation de la variable */
-  font-size: 0.75rem;
-  color: var(--space-text-muted);
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
-.nasa-coordinates-label {
-  font-family: var(--font-nasa); /* Utilisation de la variable */
-  color: var(--space-secondary);
-}
+/* Améliorations pour la responsivité des mobiles */
+@media (max-width: 640px) {
+  .space-page-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 
-.nasa-coordinates-separator {
-  margin: 0 8px;
-  color: var(--space-primary);
+  /* Assure que les cartes ne débordent pas sur mobile */
+  .space-card {
+    overflow: hidden;
+  }
 }
 </style>
