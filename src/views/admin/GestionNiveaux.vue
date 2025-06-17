@@ -1,87 +1,64 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <div
-      class="bg-black/50 backdrop-blur-xl rounded-lg p-6 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
+    <SpaceHeader
+      title="GESTION DES NIVEAUX"
+      titleSize="3xl"
+      :showMissionInfo="true"
+      mission="LEVEL-MGMT"
     >
-      <h1 class="text-4xl text-white mb-4 font-audiowide text-center neon-text">
-        Gestion des niveaux de jeu
-      </h1>
-      <div class="flex justify-center">
-        <div
-          class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-        ></div>
-      </div>
-    </div>
+      <template #badge v-if="filteredPlayerLevels.length > 0">
+        <SpaceBadge variant="secondary" size="lg">{{
+          filteredPlayerLevels.length
+        }}</SpaceBadge>
+      </template>
+    </SpaceHeader>
 
     <!-- Panel principal -->
-    <div
-      class="bg-black/70 backdrop-blur-md rounded-lg p-6 border border-cyan-500/50 shadow-lg shadow-cyan-500/20"
+    <SpaceCard
+      variant="primary"
+      :stars="true"
+      :decorated="true"
+      className="mb-8"
     >
-      <div
-        class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
-      >
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Sélection de jeu -->
-        <div class="relative w-full md:w-96">
+        <div>
           <label
             for="gameSelect"
-            class="block text-cyan-400 font-orbitron text-sm mb-2"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
+              />
+            </svg>
             Sélectionner un jeu
           </label>
-          <select
+          <SpaceDropdown
             id="gameSelect"
             v-model="selectedGameId"
             @change="fetchPlayerLevels"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
+            placeholder="Tous les jeux"
           >
             <option value="">Tous les jeux</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </select>
-          <div class="absolute right-4 top-1/2 mt-3 pointer-events-none">
-            <div
-              class="w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500"
-            ></div>
-          </div>
+          </SpaceDropdown>
         </div>
 
         <!-- Sélection de tournoi (affiché uniquement si un jeu est sélectionné) -->
-        <div v-if="selectedGameId" class="relative w-full md:w-96">
+        <div v-if="selectedGameId">
           <label
             for="tournamentSelect"
-            class="block text-cyan-400 font-orbitron text-sm mb-2"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
-            Filtrer par tournoi (optionnel)
-          </label>
-          <select
-            id="tournamentSelect"
-            v-model="selectedTournamentId"
-            @change="filterPlayersByTournament"
-            class="w-full py-3 px-4 bg-gray-900/80 text-white border border-cyan-500/50 rounded-lg font-orbitron appearance-none shadow-md shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/50"
-          >
-            <option value="">Tous les joueurs</option>
-            <option
-              v-for="tournament in tournaments"
-              :key="tournament._id"
-              :value="tournament._id"
-            >
-              {{ tournament.name }} - {{ formatDate(tournament.date) }}
-            </option>
-          </select>
-          <div class="absolute right-4 top-1/2 mt-3 pointer-events-none">
-            <div
-              class="w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-cyan-500"
-            ></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Résultats -->
-      <div>
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl text-cyan-400 font-audiowide flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2"
@@ -92,581 +69,626 @@
                 d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"
               />
             </svg>
-            <span v-if="selectedTournamentId">
-              Joueurs du tournoi inscrits à
-              <span class="text-pink-400">{{ selectedGameName }}</span>
-            </span>
-            <span v-else-if="selectedGameId">
-              Joueurs ayant défini leur niveau sur
-              <span class="text-pink-400">{{ selectedGameName }}</span>
-            </span>
-            <span v-else
-              >Tous les niveaux de jeux ({{
-                filteredPlayerLevels.length
-              }})</span
+            Filtrer par tournoi (optionnel)
+          </label>
+          <SpaceDropdown
+            id="tournamentSelect"
+            v-model="selectedTournamentId"
+            @change="filterPlayersByTournament"
+            placeholder="Tous les joueurs"
+          >
+            <option value="">Tous les joueurs</option>
+            <option
+              v-for="tournament in tournaments"
+              :key="tournament._id"
+              :value="tournament._id"
             >
-          </h2>
+              {{ tournament.name }} - {{ formatDate(tournament.date) }}
+            </option>
+          </SpaceDropdown>
+        </div>
+      </div>
+    </SpaceCard>
+
+    <!-- Résultats -->
+    <SpaceCard
+      variant="secondary"
+      :stars="true"
+      :decorated="true"
+      className="mb-8"
+    >
+      <template #header>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 mr-2 text-space-secondary-light"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"
+              />
+            </svg>
+            <SpaceTitle size="lg">
+              <span v-if="selectedTournamentId">
+                Joueurs du tournoi inscrits à
+                <span class="text-space-accent">{{ selectedGameName }}</span>
+              </span>
+              <span v-else-if="selectedGameId">
+                Joueurs ayant défini leur niveau sur
+                <span class="text-space-accent">{{ selectedGameName }}</span>
+              </span>
+              <span v-else>
+                Tous les niveaux de jeux ({{ filteredPlayerLevels.length }})
+              </span>
+            </SpaceTitle>
+          </div>
 
           <div v-if="filteredPlayerLevels.length > 0" class="flex items-center">
-            <span class="text-gray-400 font-orbitron text-sm mr-2">
-              {{ filteredPlayerLevels.length }} joueur(s)
-            </span>
-            <button
+            <SpaceButton
               @click="exportToCSV"
-              class="p-2 rounded-lg bg-blue-900/40 hover:bg-blue-900/60 text-blue-300 border border-blue-500/40 hover:border-blue-500/80 transition-all duration-300 font-orbitron text-sm flex items-center"
-              title="Exporter en CSV"
+              variant="secondary"
+              size="sm"
+              icon
+              className="ml-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 mr-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Exporter
-            </button>
-          </div>
-        </div>
-
-        <!-- Loader -->
-        <div v-if="loading" class="flex justify-center p-12">
-          <CyberpunkLoader />
-        </div>
-
-        <!-- Message quand aucun jeu n'est sélectionné -->
-        <div
-          v-if="!selectedGameId && filteredPlayerLevels.length === 0"
-          class="bg-gray-900/60 rounded-lg p-12 border border-cyan-500/30 flex flex-col items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-16 w-16 text-cyan-500/50 mb-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-            />
-          </svg>
-          <p class="text-cyan-300 font-orbitron text-center">
-            Aucun niveau de jeu défini pour le moment
-          </p>
-        </div>
-
-        <!-- Aucun résultat -->
-        <div
-          v-else-if="filteredPlayerLevels.length === 0"
-          class="bg-gray-900/60 rounded-lg p-8 border border-cyan-500/30 flex flex-col items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12 text-gray-500 mb-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <p class="text-gray-400 font-orbitron text-center">
-            Aucun joueur trouvé pour ce critère de recherche
-          </p>
-        </div>
-
-        <!-- Tableau des joueurs -->
-        <div v-else>
-          <div class="hidden md:block relative">
-            <div
-              ref="topScrollBarContainer"
-              class="h-3 mb-1 rounded-lg bg-gray-800/80 overflow-x-auto scrollbar-thin scrollbar-thumb-cyan-600 scrollbar-track-gray-900/60 scrollbar-thumb-rounded-full"
-              @scroll="syncScroll('top')"
-            >
-              <div :style="{ width: tableWidth + 'px', height: '1px' }"></div>
-            </div>
-            <div
-              ref="tableContainer"
-              class="overflow-x-auto scrollbar-thin scrollbar-thumb-cyan-600 scrollbar-track-gray-900/60 scrollbar-thumb-rounded-full"
-              @scroll="syncScroll('bottom')"
-            >
-              <table
-                ref="dataTable"
-                class="min-w-full bg-gray-900/40 border border-cyan-500/30 rounded-lg overflow-hidden"
-              >
-                <thead>
-                  <tr class="bg-cyan-900/30 border-b border-cyan-500/30">
-                    <th
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Joueur
-                    </th>
-                    <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
-                    <th
-                      v-if="!selectedGameId"
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider w-40"
-                    >
-                      Jeu
-                    </th>
-                    <th
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Pseudo dans le jeu
-                    </th>
-                    <th
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Niveau
-                    </th>
-
-                    <th
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Rang
-                    </th>
-                    <th
-                      v-if="!selectedGameId || selectedGameHasRoles"
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Rôles
-                    </th>
-                    <th
-                      class="py-3 px-4 text-left text-xs font-orbitron text-cyan-300 uppercase tracking-wider"
-                    >
-                      Commentaire
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-cyan-500/20">
-                  <tr
-                    v-for="playerLevel in filteredPlayerLevels"
-                    :key="playerLevel._id"
-                    class="hover:bg-cyan-900/20 transition-colors duration-150"
-                  >
-                    <td class="py-4 px-4 whitespace-nowrap">
-                      <div class="flex items-center">
-                        <!-- Mise à jour de l'avatar comme dans la vue Membres -->
-                        <div class="avatar-container">
-                          <img
-                            v-if="playerLevel.player.userInfo?.avatarUrl"
-                            :src="playerLevel.player.userInfo.avatarUrl"
-                            class="w-8 h-8 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
-                            alt="Avatar"
-                            loading="lazy"
-                            @error="handleImageError($event)"
-                          />
-                          <div
-                            v-else
-                            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
-                          >
-                            <span class="text-pink-500 text-xs font-bold">{{
-                              getUserInitials(
-                                playerLevel.player.username || "inconnu"
-                              )
-                            }}</span>
-                          </div>
-                        </div>
-                        <div class="ml-3">
-                          <div class="text-sm font-medium text-white">
-                            {{ playerLevel.player.username }}
-                          </div>
-                          <div
-                            v-if="playerLevel.player.userInfo?.username"
-                            class="text-xs text-gray-400"
-                          >
-                            {{ playerLevel.player.userInfo.username }}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      v-if="!selectedGameId"
-                      class="py-4 px-4 whitespace-nowrap max-w-[160px]"
-                    >
-                      <div class="flex items-center">
-                        <img
-                          v-if="getGameImage(playerLevel)"
-                          :src="getGameImage(playerLevel)"
-                          class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
-                          alt="Logo du jeu"
-                          loading="lazy"
-                          @error="handleImageError($event)"
-                        />
-                        <span
-                          class="text-xs font-medium text-white truncate"
-                          :title="getGameName(playerLevel)"
-                        >
-                          {{ getGameName(playerLevel) }}
-                        </span>
-                      </div>
-                    </td>
-                    <td class="py-4 px-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-300">
-                        {{ playerLevel.gameUsername || "Non renseigné" }}
-                      </div>
-                    </td>
-                    <td class="py-4 px-4 whitespace-nowrap">
-                      <span :class="getLevelBadgeClass(playerLevel.level)">
-                        {{ capitalizeFirstLetter(playerLevel.level) }}
-                      </span>
-                    </td>
-
-                    <td class="py-4 px-4 whitespace-nowrap">
-                      <div
-                        v-if="playerLevel.isRanked && playerLevel.rank"
-                        class="flex items-center"
-                      >
-                        <span
-                          :class="[
-                            'h-2 w-2 rounded-full mr-2',
-                            getRankClass(playerLevel.rank).replace(
-                              'text-',
-                              'bg-'
-                            ),
-                          ]"
-                          :style="{
-                            boxShadow: `0 0 5px ${getRankColor(
-                              playerLevel.rank
-                            )}`,
-                          }"
-                        ></span>
-                        <span
-                          :class="[
-                            'text-sm font-medium',
-                            getRankClass(playerLevel.rank),
-                          ]"
-                          :style="getRankStyle(playerLevel.rank)"
-                        >
-                          {{ playerLevel.rank }}
-                        </span>
-                      </div>
-                      <div v-else class="text-sm text-gray-500 italic">
-                        Non classé
-                      </div>
-                    </td>
-
-                    <td
-                      v-if="!selectedGameId || selectedGameHasRoles"
-                      class="py-4 px-4"
-                    >
-                      <div
-                        v-if="
-                          playerLevel.selectedRoles &&
-                          playerLevel.selectedRoles.length > 0
-                        "
-                      >
-                        <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
-                        <span
-                          v-if="
-                            hasAllRoles(
-                              playerLevel.game,
-                              playerLevel.selectedRoles
-                            )
-                          "
-                          class="inline-flex items-center px-3 py-1 text-xs rounded-md bg-cyan-900/40 text-cyan-300 border border-cyan-600/50 shadow-inner shadow-cyan-500/10"
-                          :title="playerLevel.selectedRoles.join(', ')"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-3.5 w-3.5 mr-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                            <path
-                              fill-rule="evenodd"
-                              d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clip-rule="evenodd"
-                            />
-                          </svg>
-                          Fill
-                        </span>
-
-                        <!-- Afficher les rôles individuels si certains sont sélectionnés -->
-                        <div v-else class="flex flex-wrap gap-1">
-                          <!-- Le code existant pour afficher max 3 rôles -->
-                          <template
-                            v-for="roleName in playerLevel.selectedRoles.slice(
-                              0,
-                              3
-                            )"
-                            :key="roleName"
-                          >
-                            <span
-                              class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[80px]"
-                              :style="getRoleStyle(playerLevel.game, roleName)"
-                              :title="roleName"
-                            >
-                              <span class="truncate">{{ roleName }}</span>
-                            </span>
-                          </template>
-
-                          <!-- Indicateur "+N" si plus de 3 rôles -->
-                          <span
-                            v-if="playerLevel.selectedRoles.length > 3"
-                            class="px-2 py-0.5 text-xs bg-gray-700 text-gray-300 rounded-full cursor-help"
-                            :title="
-                              playerLevel.selectedRoles.slice(3).join(', ')
-                            "
-                          >
-                            +{{ playerLevel.selectedRoles.length - 3 }}
-                          </span>
-                        </div>
-                      </div>
-                      <div v-else class="text-sm text-gray-500 italic">
-                        Non spécifié
-                      </div>
-                    </td>
-
-                    <td class="py-4 px-4 max-w-xs">
-                      <div
-                        v-if="playerLevel.comment"
-                        class="text-sm text-gray-300"
-                      >
-                        <div class="relative group">
-                          <!-- Commentaire tronqué -->
-                          <div class="truncate max-w-xs">
-                            {{ playerLevel.comment }}
-                          </div>
-
-                          <!-- Tooltip pour afficher le commentaire complet au survol -->
-                          <div
-                            class="absolute left-0 -bottom-1 translate-y-full w-72 z-30 hidden group-hover:block bg-gray-800 border border-cyan-500/40 p-3 rounded-lg shadow-lg shadow-cyan-500/20 whitespace-pre-wrap break-words"
-                          >
-                            <div class="text-sm text-gray-300">
-                              {{ playerLevel.comment }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div v-else class="text-sm text-gray-500 italic">
-                        Aucun commentaire
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <!-- Vue mobile - cartes empilées -->
-          <div class="md:hidden space-y-4">
-            <div
-              v-for="playerLevel in filteredPlayerLevels"
-              :key="playerLevel._id"
-              class="bg-gray-900/40 border border-cyan-500/30 rounded-lg p-4 shadow-md hover:shadow-cyan-500/20 transition-all duration-300"
-            >
-              <!-- En-tête de la carte avec avatar et nom -->
-              <div
-                class="flex items-center mb-3 pb-2 border-b border-cyan-500/20"
-              >
-                <div class="avatar-container">
-                  <img
-                    v-if="playerLevel.player.userInfo?.avatarUrl"
-                    :src="playerLevel.player.userInfo.avatarUrl"
-                    class="w-10 h-10 rounded-full object-cover border-2 border-cyan-500 avatar-glow"
-                    alt="Avatar"
-                    loading="lazy"
-                    @error="handleImageError($event)"
+              <template #icon>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
                   />
-                  <div
-                    v-else
-                    class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center border-2 border-pink-500"
-                  >
-                    <span class="text-pink-500 text-sm font-bold">
-                      {{
-                        getUserInitials(
-                          playerLevel.player.username || "inconnu"
-                        )
-                      }}
+                </svg>
+              </template>
+              Exporter
+            </SpaceButton>
+          </div>
+        </div>
+      </template>
+
+      <!-- Loader -->
+      <div v-if="loading" class="flex justify-center py-12">
+        <SpaceLoader size="lg" text="Analyse des niveaux de jeu en cours..." />
+      </div>
+
+      <!-- Message quand aucun jeu n'est sélectionné -->
+      <SpaceTerminal
+        v-else-if="!selectedGameId && filteredPlayerLevels.length === 0"
+        command="scan --game-levels --all"
+        title="Analyse des niveaux"
+        :showCursor="true"
+        className="my-8"
+      >
+        <div class="text-space-text-muted">
+          Aucun niveau de jeu défini pour le moment
+        </div>
+      </SpaceTerminal>
+
+      <!-- Aucun résultat -->
+      <SpaceTerminal
+        v-else-if="filteredPlayerLevels.length === 0"
+        :command="`search --levels ${
+          selectedGameId ? '--game=' + selectedGameId : ''
+        } ${
+          selectedTournamentId ? '--tournament=' + selectedTournamentId : ''
+        }`"
+        title="Recherche de niveaux"
+        :showCursor="true"
+        className="my-8"
+      >
+        <div class="text-space-error font-mono">
+          Erreur 404: Aucun joueur trouvé pour ce critère de recherche.
+        </div>
+        <div class="text-space-text-muted mt-2">
+          Essayez de modifier vos critères de recherche.
+        </div>
+      </SpaceTerminal>
+
+      <!-- Tableau des joueurs - Version desktop -->
+      <div v-else class="hidden md:block relative">
+        <div
+          ref="topScrollBarContainer"
+          class="h-3 mb-1 rounded-lg bg-space-bg-dark/50 overflow-x-auto scrollbar-thin"
+          @scroll="syncScroll('top')"
+        >
+          <div :style="{ width: tableWidth + 'px', height: '1px' }"></div>
+        </div>
+        <div
+          ref="tableContainer"
+          class="overflow-x-auto scrollbar-thin"
+          @scroll="syncScroll('bottom')"
+        >
+          <table
+            ref="dataTable"
+            class="min-w-full border border-space-secondary/30 rounded-lg overflow-hidden"
+          >
+            <thead>
+              <tr
+                class="bg-space-bg-light/10 border-b border-space-secondary/30"
+              >
+                <th
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Joueur
+                </th>
+                <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
+                <th
+                  v-if="!selectedGameId"
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider w-40"
+                >
+                  Jeu
+                </th>
+                <th
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Pseudo dans le jeu
+                </th>
+                <th
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Niveau
+                </th>
+                <th
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Rang
+                </th>
+                <th
+                  v-if="!selectedGameId || selectedGameHasRoles"
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Rôles
+                </th>
+                <th
+                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                >
+                  Commentaire
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-space-bg-light/10">
+              <tr
+                v-for="playerLevel in filteredPlayerLevels"
+                :key="playerLevel._id"
+                class="hover:bg-space-bg-light/5 transition-colors duration-150"
+              >
+                <td class="py-4 px-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="avatar-container">
+                      <img
+                        v-if="playerLevel.player.userInfo?.avatarUrl"
+                        :src="playerLevel.player.userInfo.avatarUrl"
+                        class="w-8 h-8 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                        alt="Avatar"
+                        loading="lazy"
+                        @error="handleImageError($event)"
+                      />
+                      <div
+                        v-else
+                        class="w-8 h-8 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+                      >
+                        <span class="text-space-accent text-xs font-bold">{{
+                          getUserInitials(
+                            playerLevel.player.username || "inconnu"
+                          )
+                        }}</span>
+                      </div>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-nasa text-space-text">
+                        {{ playerLevel.player.username }}
+                      </div>
+                      <div
+                        v-if="playerLevel.player.userInfo?.username"
+                        class="text-xs text-space-text-muted"
+                      >
+                        {{ playerLevel.player.userInfo.username }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td
+                  v-if="!selectedGameId"
+                  class="py-4 px-4 whitespace-nowrap max-w-[160px]"
+                >
+                  <div class="flex items-center">
+                    <img
+                      v-if="getGameImage(playerLevel)"
+                      :src="getGameImage(playerLevel)"
+                      class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
+                      alt="Logo du jeu"
+                      loading="lazy"
+                      @error="handleImageError($event)"
+                    />
+                    <span
+                      class="text-xs font-medium text-space-text truncate"
+                      :title="getGameName(playerLevel)"
+                    >
+                      {{ getGameName(playerLevel) }}
                     </span>
                   </div>
-                </div>
-                <div class="ml-3">
-                  <div class="text-base font-medium text-white">
-                    {{ playerLevel.player.username }}
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
+                  <div class="text-sm text-space-text">
+                    {{ playerLevel.gameUsername || "Non renseigné" }}
                   </div>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
+                  <SpaceBadge
+                    :variant="getLevelBadgeVariant(playerLevel.level)"
+                    className="px-2 py-1"
+                  >
+                    {{ capitalizeFirstLetter(playerLevel.level) }}
+                  </SpaceBadge>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
                   <div
-                    v-if="playerLevel.player.userInfo?.username"
-                    class="text-xs text-gray-400"
+                    v-if="playerLevel.isRanked && playerLevel.rank"
+                    class="flex items-center"
                   >
-                    {{ playerLevel.player.userInfo.username }}
+                    <span
+                      :class="[
+                        'h-2 w-2 rounded-full mr-2',
+                        getRankClass(playerLevel.rank).replace('text-', 'bg-'),
+                      ]"
+                      :style="{
+                        boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
+                      }"
+                    ></span>
+                    <span
+                      :class="[
+                        'text-sm font-medium',
+                        getRankClass(playerLevel.rank),
+                      ]"
+                      :style="getRankStyle(playerLevel.rank)"
+                    >
+                      {{ playerLevel.rank }}
+                    </span>
                   </div>
-                </div>
-              </div>
-
-              <!-- Informations du jeu quand aucun filtre n'est appliqué -->
-              <div v-if="!selectedGameId" class="flex items-center mb-3">
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Jeu
-                </div>
-                <div class="flex items-center max-w-[calc(100%-96px)]">
-                  <img
-                    v-if="getGameImage(playerLevel)"
-                    :src="getGameImage(playerLevel)"
-                    class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
-                    alt="Logo du jeu"
-                    loading="lazy"
-                    @error="handleImageError($event)"
-                  />
-                  <span
-                    class="text-xs font-medium text-white truncate"
-                    :title="getGameName(playerLevel)"
+                  <div v-else class="text-sm text-space-text-muted">
+                    Non classé
+                  </div>
+                </td>
+                <td
+                  v-if="!selectedGameId || selectedGameHasRoles"
+                  class="py-4 px-4"
+                >
+                  <div
+                    v-if="
+                      playerLevel.selectedRoles &&
+                      playerLevel.selectedRoles.length > 0
+                    "
                   >
-                    {{ getGameName(playerLevel) }}
-                  </span>
-                </div>
-              </div>
+                    <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
+                    <SpaceBadge
+                      v-if="
+                        hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
+                      "
+                      variant="primary"
+                      className="flex items-center"
+                      :title="playerLevel.selectedRoles.join(', ')"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-3.5 w-3.5 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      Fill
+                    </SpaceBadge>
 
-              <!-- Pseudo dans le jeu -->
-              <div class="flex items-start mb-3">
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Pseudo jeu
-                </div>
-                <div class="text-sm text-gray-300">
-                  {{ playerLevel.gameUsername || "Non renseigné" }}
-                </div>
-              </div>
+                    <!-- Afficher les rôles individuels si certains sont sélectionnés -->
+                    <div v-else class="flex flex-wrap gap-1">
+                      <template
+                        v-for="roleName in playerLevel.selectedRoles.slice(
+                          0,
+                          3
+                        )"
+                        :key="roleName"
+                      >
+                        <span
+                          class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[80px] border"
+                          :style="getRoleStyle(playerLevel.game, roleName)"
+                          :title="roleName"
+                        >
+                          <span class="truncate">{{ roleName }}</span>
+                        </span>
+                      </template>
 
-              <!-- Niveau -->
-              <div class="flex items-start mb-3">
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Niveau
-                </div>
-                <span :class="getLevelBadgeClass(playerLevel.level)">
-                  {{ capitalizeFirstLetter(playerLevel.level) }}
+                      <!-- Indicateur "+N" si plus de 3 rôles -->
+                      <span
+                        v-if="playerLevel.selectedRoles.length > 3"
+                        class="px-2 py-0.5 text-xs bg-space-bg-light/30 text-space-text-muted rounded-full cursor-help border border-space-bg-light/50"
+                        :title="playerLevel.selectedRoles.slice(3).join(', ')"
+                      >
+                        +{{ playerLevel.selectedRoles.length - 3 }}
+                      </span>
+                    </div>
+                  </div>
+                  <div v-else class="text-sm text-space-text-muted">
+                    Non spécifié
+                  </div>
+                </td>
+                <td class="py-4 px-4 max-w-xs">
+                  <div
+                    v-if="playerLevel.comment"
+                    class="text-sm text-space-text"
+                  >
+                    <div class="relative group">
+                      <!-- Commentaire tronqué -->
+                      <div class="truncate max-w-xs">
+                        {{ playerLevel.comment }}
+                      </div>
+
+                      <!-- Tooltip pour afficher le commentaire complet au survol -->
+                      <div
+                        class="absolute left-0 -bottom-1 translate-y-full w-72 z-30 hidden group-hover:block bg-space-bg-dark border border-space-secondary/40 p-3 rounded-lg shadow-glow-secondary whitespace-pre-wrap break-words"
+                      >
+                        <div class="text-sm text-space-text">
+                          {{ playerLevel.comment }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="text-sm text-space-text-muted">
+                    Aucun commentaire
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Vue mobile - cartes empilées -->
+      <div class="md:hidden space-y-4">
+        <div
+          v-for="playerLevel in filteredPlayerLevels"
+          :key="playerLevel._id"
+          class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
+        >
+          <!-- En-tête de la carte avec avatar et nom -->
+          <div
+            class="flex items-center mb-3 pb-2 border-b border-space-secondary/20"
+          >
+            <div class="avatar-container">
+              <img
+                v-if="playerLevel.player.userInfo?.avatarUrl"
+                :src="playerLevel.player.userInfo.avatarUrl"
+                class="w-10 h-10 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                alt="Avatar"
+                loading="lazy"
+                @error="handleImageError($event)"
+              />
+              <div
+                v-else
+                class="w-10 h-10 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+              >
+                <span class="text-space-accent text-sm font-bold">
+                  {{
+                    getUserInitials(playerLevel.player.username || "inconnu")
+                  }}
                 </span>
               </div>
-
-              <!-- Rang -->
-              <div class="flex items-start mb-3">
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Rang
-                </div>
-                <div
-                  v-if="playerLevel.isRanked && playerLevel.rank"
-                  class="flex items-center"
-                >
-                  <span
-                    :class="[
-                      'h-2 w-2 rounded-full mr-2',
-                      getRankClass(playerLevel.rank).replace('text-', 'bg-'),
-                    ]"
-                    :style="{
-                      boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
-                    }"
-                  ></span>
-                  <span
-                    :class="[
-                      'text-sm font-medium',
-                      getRankClass(playerLevel.rank),
-                    ]"
-                    :style="getRankStyle(playerLevel.rank)"
-                  >
-                    {{ playerLevel.rank }}
-                  </span>
-                </div>
-                <div v-else class="text-sm text-gray-500 italic">
-                  Non classé
-                </div>
+            </div>
+            <div class="ml-3">
+              <div class="text-base font-nasa text-space-text">
+                {{ playerLevel.player.username }}
               </div>
-              <!-- Rôles -->
               <div
-                v-if="!selectedGameId || selectedGameHasRoles"
-                class="flex items-start mb-3"
+                v-if="playerLevel.player.userInfo?.username"
+                class="text-xs text-space-text-muted"
               >
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Rôles
-                </div>
-                <div
-                  v-if="
-                    playerLevel.selectedRoles &&
-                    playerLevel.selectedRoles.length > 0
-                  "
+                {{ playerLevel.player.userInfo.username }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Informations du jeu quand aucun filtre n'est appliqué -->
+          <div v-if="!selectedGameId" class="flex items-center mb-3">
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Jeu
+            </div>
+            <div class="flex items-center max-w-[calc(100%-96px)]">
+              <img
+                v-if="getGameImage(playerLevel)"
+                :src="getGameImage(playerLevel)"
+                class="w-6 h-6 rounded object-cover mr-2 flex-shrink-0"
+                alt="Logo du jeu"
+                loading="lazy"
+                @error="handleImageError($event)"
+              />
+              <span
+                class="text-xs font-medium text-space-text truncate"
+                :title="getGameName(playerLevel)"
+              >
+                {{ getGameName(playerLevel) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Pseudo dans le jeu -->
+          <div class="flex items-start mb-3">
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Pseudo jeu
+            </div>
+            <div class="text-sm text-space-text">
+              {{ playerLevel.gameUsername || "Non renseigné" }}
+            </div>
+          </div>
+
+          <!-- Niveau -->
+          <div class="flex items-start mb-3">
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Niveau
+            </div>
+            <SpaceBadge
+              :variant="getLevelBadgeVariant(playerLevel.level)"
+              className="px-2 py-1"
+            >
+              {{ capitalizeFirstLetter(playerLevel.level) }}
+            </SpaceBadge>
+          </div>
+
+          <!-- Rang -->
+          <div class="flex items-start mb-3">
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Rang
+            </div>
+            <div
+              v-if="playerLevel.isRanked && playerLevel.rank"
+              class="flex items-center"
+            >
+              <span
+                :class="[
+                  'h-2 w-2 rounded-full mr-2',
+                  getRankClass(playerLevel.rank).replace('text-', 'bg-'),
+                ]"
+                :style="{
+                  boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
+                }"
+              ></span>
+              <span
+                :class="['text-sm font-medium', getRankClass(playerLevel.rank)]"
+                :style="getRankStyle(playerLevel.rank)"
+              >
+                {{ playerLevel.rank }}
+              </span>
+            </div>
+            <div v-else class="text-sm text-space-text-muted">Non classé</div>
+          </div>
+
+          <!-- Rôles -->
+          <div
+            v-if="!selectedGameId || selectedGameHasRoles"
+            class="flex items-start mb-3"
+          >
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Rôles
+            </div>
+            <div
+              v-if="
+                playerLevel.selectedRoles &&
+                playerLevel.selectedRoles.length > 0
+              "
+            >
+              <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
+              <SpaceBadge
+                v-if="hasAllRoles(playerLevel.game, playerLevel.selectedRoles)"
+                variant="primary"
+                className="flex items-center"
+                :title="playerLevel.selectedRoles.join(', ')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
                 >
-                  <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
-                  <span
-                    v-if="
-                      hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
-                    "
-                    class="inline-flex items-center px-3 py-1 text-xs rounded-md bg-cyan-900/40 text-cyan-300 border border-cyan-600/50 shadow-inner shadow-cyan-500/10"
-                    :title="playerLevel.selectedRoles.join(', ')"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3.5 w-3.5 mr-1"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Fill
-                  </span>
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Fill
+              </SpaceBadge>
 
-                  <!-- Afficher les rôles individuels si certains sont sélectionnés -->
-                  <div v-else class="flex flex-wrap gap-1">
-                    <span
-                      v-for="roleName in playerLevel.selectedRoles"
-                      :key="roleName"
-                      class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[120px]"
-                      :style="getRoleStyle(playerLevel.game, roleName)"
-                      :title="roleName"
-                    >
-                      <span class="truncate">{{ roleName }}</span>
-                    </span>
-                  </div>
-                </div>
-                <div v-else class="text-sm text-gray-500 italic">
-                  Non spécifié
-                </div>
+              <!-- Afficher les rôles individuels si certains sont sélectionnés -->
+              <div v-else class="flex flex-wrap gap-1">
+                <span
+                  v-for="roleName in playerLevel.selectedRoles"
+                  :key="roleName"
+                  class="inline-flex items-center px-2 py-0.5 text-xs rounded-full truncate max-w-[120px] border"
+                  :style="getRoleStyle(playerLevel.game, roleName)"
+                  :title="roleName"
+                >
+                  <span class="truncate">{{ roleName }}</span>
+                </span>
               </div>
+            </div>
+            <div v-else class="text-sm text-space-text-muted">Non spécifié</div>
+          </div>
 
-              <!-- Commentaire amélioré -->
-              <div class="flex items-start">
-                <div class="text-xs text-cyan-400 font-orbitron uppercase w-24">
-                  Commentaire
-                </div>
-                <div v-if="playerLevel.comment">
-                  <div
-                    class="text-sm text-gray-300 whitespace-pre-wrap break-words max-w-xs"
-                  >
-                    {{ playerLevel.comment }}
-                  </div>
-                </div>
-                <div v-else class="text-sm text-gray-500 italic">
-                  Aucun commentaire
-                </div>
+          <!-- Commentaire amélioré -->
+          <div class="flex items-start">
+            <div
+              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+            >
+              Commentaire
+            </div>
+            <div v-if="playerLevel.comment">
+              <div
+                class="text-sm text-space-text whitespace-pre-wrap break-words max-w-xs"
+              >
+                {{ playerLevel.comment }}
               </div>
+            </div>
+            <div v-else class="text-sm text-space-text-muted">
+              Aucun commentaire
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </SpaceCard>
 
     <!-- Messages d'état -->
-    <Toast v-if="error" type="error" :message="error" />
-    <Toast v-if="success" type="success" :message="success" />
+    <SpaceAlert
+      v-if="error"
+      variant="error"
+      :title="'Erreur'"
+      dismissible
+      className="mb-4"
+      @close="error = null"
+    >
+      {{ error }}
+    </SpaceAlert>
+
+    <SpaceAlert
+      v-if="success"
+      variant="success"
+      :title="'Succès'"
+      dismissible
+      className="mb-4"
+      @close="success = null"
+    >
+      {{ success }}
+    </SpaceAlert>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
-import Toast from "@/shared/Toast.vue";
 import gameService from "../../services/gameService";
 import playerGameLevelService from "../../services/playerGameLevelService";
 import tournamentService from "../../services/tournamentService";
 import type { Game, Tournament, PlayerGameLevel } from "../../types";
 import { getRankClass, getRankColor } from "../../utils/rankHelper"; // Ajoutez cette ligne
-import CyberpunkLoader from "../../shared/CyberpunkLoader.vue"; // Assurez-vous que cette ligne est présente
 
 // État de l'interface
 const loading = ref(true);
@@ -847,22 +869,20 @@ const filterPlayersByTournament = async () => {
 };
 
 /**
- * Obtenir la classe CSS pour le badge de niveau
+ * Obtenir la variante de badge en fonction du niveau
  */
-const getLevelBadgeClass = (level: string): string => {
-  const baseClasses = "px-2 py-1 text-xs font-medium rounded-md";
-
+const getLevelBadgeVariant = (level: string): string => {
   switch (level) {
     case "débutant":
-      return `${baseClasses} bg-green-900/50 text-green-300 border border-green-500/50`;
+      return "success";
     case "intermédiaire":
-      return `${baseClasses} bg-blue-900/50 text-blue-300 border border-blue-500/50`;
+      return "info";
     case "avancé":
-      return `${baseClasses} bg-purple-900/50 text-purple-300 border border-purple-500/50`;
+      return "primary";
     case "expert":
-      return `${baseClasses} bg-pink-900/50 text-pink-300 border border-pink-500/50`;
+      return "accent";
     default:
-      return `${baseClasses} bg-gray-900/50 text-gray-300 border border-gray-500/50`;
+      return "secondary";
   }
 };
 

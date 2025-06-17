@@ -6,7 +6,7 @@ import Input from "@/components/ui/atoms/Input.vue";
 import Badge from "@/components/ui/atoms/Badge.vue";
 import Title from "@/components/ui/atoms/Title.vue";
 import Toggle from "@/components/ui/atoms/Toggle.vue"; // Ajout du composant Toggle
-
+import Dropdown from "@/components/ui/atoms/Dropdown.vue";
 // Composants moléculaires
 import Card from "@/components/ui/molecules/Card.vue";
 import Alert from "@/components/ui/molecules/Alert.vue";
@@ -26,7 +26,8 @@ const components = {
   SpaceBadge: Badge,
   SpaceTitle: Title,
   SpaceLoader: Loader,
-  SpaceToggle: Toggle, // Ajout du composant Toggle
+  SpaceToggle: Toggle,
+  SpaceDropdown: Dropdown, // Ajout du composant Toggle
 
   // Molecules
   SpaceCard: Card,

@@ -2,295 +2,356 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-2xl mx-auto">
       <!-- En-tête -->
-      <div
-        class="bg-black/50 backdrop-blur-xl rounded-lg p-8 mb-8 border border-pink-500 shadow-lg shadow-pink-500/30"
+      <SpaceHeader
+        :title="isEditing ? 'Modification d\'un jeu' : 'Création d\'un jeu'"
+        titleSize="3xl"
+        :showMissionInfo="true"
+        mission="GAMES-MGMT"
       >
-        <h1 class="text-4xl text-white mb-4 font-audiowide text-center">
-          <span
-            class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-600 neon-text-pink"
-            >{{ isEditing ? "Modification" : "Création" }} d'un jeu</span
-          >
-        </h1>
-        <div class="flex justify-center">
-          <div
-            class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-          ></div>
-        </div>
-      </div>
+        <template #badge v-if="games.length > 0">
+          <SpaceBadge variant="primary" size="lg">{{ games.length }}</SpaceBadge>
+        </template>
+      </SpaceHeader>
 
       <!-- Formulaire de création/modification de jeu -->
-      <form
-        @submit.prevent="isEditing ? updateGame() : createGame()"
-        class="bg-black/75 backdrop-blur-sm rounded-lg border border-cyan-500 shadow-lg shadow-cyan-500/30 p-8 mb-8"
-      >
-        <div class="mb-6">
-          <label
-            for="name"
-            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+      <SpaceCard variant="primary" :stars="true" :decorated="true" className="mb-8">
+        <form @submit.prevent="isEditing ? updateGame() : createGame()">
+          <div class="mb-6">
+            <label
+              for="name"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
             >
-              <path
-                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-              />
-            </svg>
-            Nom du jeu <span class="text-pink-500 ml-1">*</span>
-          </label>
-          <div class="relative">
-            <input
-              type="text"
-              id="name"
-              v-model="game.name"
-              @input="searchRAWG"
-              class="w-full p-3 pl-4 text-white bg-gray-900/70 border border-cyan-500/50 rounded-md focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 font-orbitron"
-              required
-              placeholder="Entrez le nom du jeu"
-            />
-          </div>
-          <div
-            v-if="errors.name"
-            class="text-red-400 text-sm mt-1 font-orbitron"
-          >
-            {{ errors.name }}
-          </div>
-        </div>
-
-        <!-- Résultats de recherche RAWG  -->
-        <div
-          v-if="searchResults.length > 0 && game.name.length >= 3"
-          class="mb-6"
-        >
-          <div class="text-cyan-400 text-sm mb-2 font-orbitron">
-            Jeux suggérés par RAWG - Cliquez pour sélectionner
-          </div>
-          <div
-            class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-gray-900/30 rounded-md border border-cyan-500/20"
-          >
-            <div
-              v-for="result in searchResults"
-              :key="result.id"
-              @click="selectGame(result)"
-              class="cursor-pointer bg-gray-800/50 rounded-md overflow-hidden border border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-md hover:shadow-cyan-500/20 transition-all duration-300"
-            >
-              <div class="h-28 overflow-hidden">
-                <img
-                  :src="result.background_image || '/placeholder-game.jpg'"
-                  :alt="result.name"
-                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                />
-              </div>
-              <div class="p-2">
-                <div class="text-white text-sm font-orbitron">
-                  {{ result.name }}
-                </div>
-                <div class="text-gray-300 text-xs mt-1">
-                  {{
-                    result.released
-                      ? formatReleaseDate(result.released)
-                      : "Date inconnue"
-                  }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-6">
-          <label
-            for="description"
-            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Description
-          </label>
-          <div class="relative">
-            <textarea
-              id="description"
-              v-model="game.description"
-              class="w-full p-3 pl-4 text-white bg-gray-900/70 border border-cyan-500/50 rounded-md focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 font-orbitron min-h-[120px]"
-              placeholder="Entrez une description du jeu (optionnel)"
-            ></textarea>
-          </div>
-        </div>
-
-        <div class="mb-6">
-          <label
-            for="imageUrl"
-            class="text-lg text-cyan-400 mb-2 font-orbitron flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Image URL
-          </label>
-          <div class="relative">
-            <input
-              type="text"
-              id="imageUrl"
-              v-model="game.imageUrl"
-              @input="validateImageUrl"
-              class="w-full p-3 pl-4 text-white bg-gray-900/70 border border-cyan-500/50 rounded-md focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 font-orbitron"
-              placeholder="URL de l'image du jeu (optionnel)"
-            />
-          </div>
-          <div
-            v-if="errors.imageUrl"
-            class="text-red-400 text-sm mt-1 font-orbitron"
-          >
-            {{ errors.imageUrl }}
-          </div>
-        </div>
-
-        <!-- Prévisualisation de l'image -->
-        <div
-          v-if="game.imageUrl"
-          class="mb-6 border border-cyan-500/30 rounded-lg overflow-hidden"
-        >
-          <div class="relative">
-            <img
-              :src="game.imageUrl"
-              :alt="game.name"
-              class="w-full h-48 object-cover"
-              @error="handleImageError"
-            />
-            <div
-              v-if="imagePreviewError"
-              class="absolute inset-0 bg-gray-900/80 flex items-center justify-center text-red-400 font-orbitron text-center p-4"
-            >
-              <div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 mx-auto mb-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-                <p>Erreur de chargement de l'image</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-6">
-          <label
-            for="roles"
-            class="text-lg text-cyan-400 mb-3 font-orbitron flex items-center group relative"
-          >
-            <div class="relative w-8 h-8 mr-3 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-cyan-500 z-10"
+                class="h-5 w-5 mr-2"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
                 <path
-                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                  d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
                 />
               </svg>
-              <div
-                class="absolute inset-0 bg-cyan-500/20 rounded-full blur-[6px] group-hover:bg-cyan-500/30 transition-all duration-300"
-              ></div>
-            </div>
-            <span>Rôles disponibles pour ce jeu</span>
-            <div
-              class="absolute bottom-0 left-8 right-0 h-[1px] bg-gradient-to-r from-cyan-500/80 to-transparent"
-            ></div>
-          </label>
+              Nom du jeu <span class="text-space-accent ml-1">*</span>
+            </label>
+            <SpaceInput
+              id="name"
+              name="name"
+              v-model="game.name"
+              @input="searchRAWG"
+              placeholder="Entrez le nom du jeu"
+              required
+              :error="errors.name"
+            >
+            </SpaceInput>
+          </div>
 
-          <!-- Liste des rôles existants -->
+          <!-- Résultats de recherche RAWG -->
           <div
-            class="mb-4 bg-gray-900/70 rounded-lg p-4 border border-cyan-500/30 backdrop-blur-sm"
+            v-if="searchResults.length > 0 && game.name.length >= 3"
+            class="mb-6"
           >
-            <div
-              v-if="game.roles && game.roles.length > 0"
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
+            <div class="text-space-primary-light text-sm mb-2 font-nasa">
+              Jeux suggérés par RAWG - Cliquez pour sélectionner
+            </div>
+            <div class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-space-bg-light/30 rounded-md border border-space-primary/20">
+              <div
+                v-for="result in searchResults"
+                :key="result.id"
+                @click="selectGame(result)"
+                class="cursor-pointer bg-space-bg-light/50 rounded-md overflow-hidden border border-space-primary/30 hover:border-space-primary/60 hover:shadow-md hover:shadow-space-primary/20 transition-all duration-300 group"
+              >
+                <div class="h-28 overflow-hidden relative">
+                  <img
+                    :src="result.background_image || '/placeholder-game.jpg'"
+                    :alt="result.name"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-space-bg/80 to-transparent"></div>
+                </div>
+                <div class="p-2">
+                  <div class="text-space-primary-light text-sm font-nasa">
+                    {{ result.name }}
+                  </div>
+                  <div class="text-space-text-muted text-xs mt-1">
+                    {{ result.released ? formatReleaseDate(result.released) : "Date inconnue" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label
+              for="description"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Description
+            </label>
+            <SpaceInput
+              id="description"
+              v-model="game.description"
+              type="textarea"
+              placeholder="Entrez une description du jeu (optionnel)"
+              :rows="4"
+              :error="errors.description"
+            >
+            </SpaceInput>
+          </div>
+
+          <div class="mb-6">
+            <label
+              for="imageUrl"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Image URL
+            </label>
+            <SpaceInput
+              id="imageUrl"
+              v-model="game.imageUrl"
+              @input="validateImageUrl"
+              placeholder="URL de l'image du jeu (optionnel)"
+              :error="errors.imageUrl"
+            >
+            </SpaceInput>
+          </div>
+
+          <!-- Prévisualisation de l'image -->
+          <div
+            v-if="game.imageUrl"
+            class="mb-6 border border-space-primary/30 rounded-lg overflow-hidden bg-space-bg-light/10"
+          >
+            <div class="relative">
+              <img
+                :src="game.imageUrl"
+                :alt="game.name"
+                class="w-full h-48 object-cover"
+                @error="handleImageError"
+              />
+              <div
+                v-if="imagePreviewError"
+                class="absolute inset-0 bg-space-bg/80 flex items-center justify-center text-space-error font-nasa text-center p-4"
+              >
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 mx-auto mb-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                  </svg>
+                  <p>Erreur de chargement de l'image</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label
+              for="roles"
+              class="text-lg text-space-primary-light mb-3 font-nasa flex items-center"
+            >
+              <div class="relative w-8 h-8 mr-3 flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-space-primary-light z-10"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                  />
+                </svg>
+                <div
+                  class="absolute inset-0 bg-space-primary/20 rounded-full blur-[6px]"
+                ></div>
+              </div>
+              <span>Rôles disponibles pour ce jeu</span>
+            </label>
+
+            <!-- Liste des rôles existants -->
+            <SpaceCard 
+              variant="secondary" 
+              className="mb-4 p-4" 
+              :noPadding="false"
             >
               <div
-                v-for="(role, index) in game.roles"
-                :key="index"
-                class="flex items-center justify-between p-3 bg-gray-800/80 rounded-md transition-all duration-300 group relative overflow-hidden"
-                :style="{
-                  borderColor: `${role.color}50`,
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                }"
+                v-if="game.roles && game.roles.length > 0"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
               >
-                <!-- Effet de surbrillance au survol -->
                 <div
-                  class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  v-for="(role, index) in game.roles"
+                  :key="index"
+                  class="flex items-center justify-between p-3 bg-space-bg-light/30 rounded-md transition-all duration-300 group relative overflow-hidden"
                   :style="{
-                    background: `linear-gradient(90deg, ${role.color}05, ${role.color}15, ${role.color}05)`,
+                    borderColor: `${role.color}50`,
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
                   }"
-                ></div>
-
-                <div class="flex items-center z-10">
+                >
+                  <!-- Effet de surbrillance au survol -->
                   <div
-                    class="w-4 h-4 rounded-full mr-3 shadow-glow transition-all duration-300 group-hover:scale-110"
+                    class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     :style="{
-                      backgroundColor: role.color || '#6B7280',
-                      boxShadow: `0 0 6px ${role.color}`,
+                      background: `linear-gradient(90deg, ${role.color}05, ${role.color}15, ${role.color}05)`,
                     }"
                   ></div>
-                  <span class="text-white font-medium font-orbitron">{{
-                    role.name
-                  }}</span>
-                </div>
 
-                <div class="flex space-x-1 z-10">
-                  <button
-                    @click.prevent="editRole(index)"
-                    class="p-1.5 text-blue-400 hover:text-blue-300 hover:bg-blue-900/50 rounded transition-colors"
-                    type="button"
-                    title="Modifier ce rôle"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                  <div class="flex items-center z-10">
+                    <div
+                      class="w-4 h-4 rounded-full mr-3 shadow-glow transition-all duration-300 group-hover:scale-110"
+                      :style="{
+                        backgroundColor: role.color || '#6B7280',
+                        boxShadow: `0 0 6px ${role.color}`,
+                      }"
+                    ></div>
+                    <span class="text-space-text font-medium font-nasa">{{ role.name }}</span>
+                  </div>
+
+                  <div class="flex space-x-1 z-10">
+                    <SpaceButton
+                      @click.prevent="editRole(index)"
+                      variant="secondary"
+                      size="xs"
+                      className="p-1.5"
+                      :title="'Modifier ' + role.name"
                     >
-                      <path
-                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    @click.prevent="removeRole(index)"
-                    class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-900/50 rounded transition-colors"
-                    type="button"
-                    title="Supprimer ce rôle"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                        />
+                      </svg>
+                    </SpaceButton>
+                    <SpaceButton
+                      @click.prevent="removeRole(index)"
+                      variant="error"
+                      size="xs"
+                      className="p-1.5"
+                      :title="'Supprimer ' + role.name"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </SpaceButton>
+                  </div>
+                </div>
+              </div>
+
+              <SpaceTerminal
+                v-else
+                command="search --game-roles"
+                title="Recherche de rôles"
+                :showCursor="true"
+              >
+                <div class="text-space-text-muted">
+                  Aucun rôle défini pour ce jeu. Ajoutez des rôles pour permettre aux joueurs de spécifier leurs positions préférées.
+                </div>
+              </SpaceTerminal>
+            </SpaceCard>
+
+            <!-- Formulaire d'ajout de rôle -->
+            <SpaceCard
+              :variant="editingRoleIndex !== null ? 'accent' : 'dark'"
+              className="p-4"
+              :noPadding="false"
+            >
+              <template #header>
+                <div class="flex items-center">
+                  <span
+                    class="w-1 h-6 bg-gradient-to-b from-space-primary to-space-accent rounded-full mr-3"
+                  ></span>
+                  <SpaceTitle 
+                    size="sm"
+                    :className="editingRoleIndex !== null ? 'text-space-accent-light' : 'text-space-primary-light'"
                   >
+                    {{ editingRoleIndex !== null ? "Modifier le rôle" : "Ajouter un rôle" }}
+                  </SpaceTitle>
+                </div>
+              </template>
+
+              <div class="flex items-center space-x-3 mb-4 relative z-10">
+                <div class="flex-grow">
+                  <SpaceInput
+                    v-model="newRole.name"
+                    placeholder="Nom du rôle (Ex: Support, Tank, DPS)"
+                  >
+                  </SpaceInput>
+                </div>
+                <div class="relative w-20 h-10 flex-shrink-0">
+                  <input
+                    v-model="newRole.color"
+                    type="color"
+                    class="absolute inset-0 opacity-0 cursor-pointer z-10"
+                    title="Choisir une couleur"
+                  />
+                  <div
+                    class="h-full w-full rounded-md border overflow-hidden"
+                    :style="{
+                      borderColor: `${newRole.color}80`,
+                      background: `linear-gradient(to right, #000 0%, ${newRole.color} 100%)`,
+                    }"
+                  >
+                    <div
+                      class="bg-black/50 text-xs text-white font-nasa py-3 px-2 text-center"
+                    >
+                      Couleur
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end space-x-3 relative z-10">
+                <SpaceButton
+                  v-if="editingRoleIndex !== null"
+                  @click.prevent="cancelEditRole"
+                  variant="outline"
+                  size="sm"
+                >
+                  <template #icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="h-4 w-4"
@@ -299,253 +360,128 @@
                     >
                       <path
                         fill-rule="evenodd"
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </button>
-                </div>
+                  </template>
+                  Annuler
+                </SpaceButton>
+                <SpaceButton
+                  @click.prevent="addOrUpdateRole"
+                  :variant="editingRoleIndex !== null ? 'accent' : 'primary'"
+                  size="sm"
+                >
+                  <template #icon>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </template>
+                  {{ editingRoleIndex !== null ? "Mettre à jour" : "Ajouter" }}
+                </SpaceButton>
               </div>
-            </div>
+            </SpaceCard>
+          </div>
 
-            <div v-else class="text-center py-8 relative overflow-hidden">
-              <!-- Effet néon cyberpunk -->
-              <div
-                class="absolute inset-0 flex items-center justify-center opacity-20"
-              >
-                <div
-                  class="w-40 h-40 rounded-full bg-cyan-900/30 filter blur-2xl animate-pulse-slow"
-                ></div>
-              </div>
+          <div class="flex justify-between">
+            <!-- Bouton Annuler (apparaît uniquement en mode édition) -->
+            <SpaceButton
+              v-if="isEditing"
+              @click="cancelEdit"
+              variant="outline"
+              size="lg"
+            >
+              Annuler
+            </SpaceButton>
 
+            <!-- Spacer quand pas en mode édition -->
+            <div v-else></div>
+
+            <!-- Bouton Créer/Modifier -->
+            <SpaceButton
+              type="submit"
+              :variant="isEditing ? 'accent' : 'primary'"
+              size="lg"
+              :loading="isLoading"
+              :disabled="isLoading"
+            >
+              {{ isEditing ? "Modifier le jeu" : "Créer le jeu" }}
+            </SpaceButton>
+          </div>
+        </form>
+      </SpaceCard>
+
+      <!-- Notifications -->
+      <SpaceAlert
+        v-if="error"
+        variant="error"
+        :title="'Erreur'"
+        dismissible
+        className="mb-4"
+      >
+        {{ error }}
+      </SpaceAlert>
+
+      <SpaceAlert
+        v-if="success"
+        variant="success"
+        :title="'Succès'"
+        dismissible
+        className="mb-4"
+      >
+        {{ success }}
+      </SpaceAlert>
+
+      <!-- Liste des jeux existants -->
+      <SpaceCard variant="secondary" :stars="true" :decorated="true">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-12 w-12 mx-auto text-cyan-400/50 mb-4"
+                class="h-6 w-6 mr-2 text-space-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
                 <path
-                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                  d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
                 />
               </svg>
-              <p class="text-cyan-400/70 font-orbitron text-sm relative z-10">
-                Aucun rôle défini pour ce jeu
-              </p>
-              <p class="text-xs text-gray-500 mt-2 max-w-md mx-auto">
-                Ajoutez des rôles pour permettre aux joueurs de spécifier leurs
-                positions préférées
-              </p>
+              <SpaceTitle size="xl">Jeux disponibles</SpaceTitle>
             </div>
+            <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{ games.length }}</SpaceBadge>
           </div>
+        </template>
 
-          <!-- Formulaire d'ajout de rôle (simplifié, sans description) -->
-          <div
-            class="p-4 bg-gray-800/80 rounded-lg border relative overflow-hidden"
-            :class="[
-              editingRoleIndex !== null
-                ? 'border-amber-500/40 shadow-lg shadow-amber-500/10'
-                : 'border-cyan-500/30',
-            ]"
-          >
-            <!-- Effets de fond cyberpunk -->
-            <div
-              class="absolute -top-24 -right-24 w-48 h-48 bg-cyan-900/10 rounded-full filter blur-3xl pointer-events-none"
-            ></div>
-            <div
-              class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-900/10 rounded-full filter blur-3xl pointer-events-none"
-            ></div>
-
-            <h4
-              class="font-orbitron text-base mb-4 flex items-center relative z-10"
-            >
-              <span
-                class="w-1 h-6 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full mr-3"
-              ></span>
-              <span
-                :class="[
-                  editingRoleIndex !== null
-                    ? 'text-amber-400'
-                    : 'text-cyan-400',
-                ]"
-              >
-                {{
-                  editingRoleIndex !== null
-                    ? "Modifier le rôle"
-                    : "Ajouter un rôle"
-                }}
-              </span>
-            </h4>
-
-            <div class="flex items-center space-x-3 mb-4 relative z-10">
-              <div class="flex-grow">
-                <input
-                  v-model="newRole.name"
-                  type="text"
-                  placeholder="Nom du rôle (Ex: Support, Tank, DPS)"
-                  class="w-full p-3 bg-black/40 border border-cyan-500/30 rounded-md text-white focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 placeholder-gray-500 font-orbitron text-sm"
-                  :class="[
-                    editingRoleIndex !== null
-                      ? 'focus:border-amber-400 focus:ring-amber-500/50'
-                      : '',
-                  ]"
-                />
-              </div>
-              <div class="relative w-20 h-10 flex-shrink-0">
-                <input
-                  v-model="newRole.color"
-                  type="color"
-                  class="absolute inset-0 opacity-0 cursor-pointer z-10"
-                  title="Choisir une couleur"
-                />
-                <div
-                  class="h-full w-full rounded-md border overflow-hidden"
-                  :style="{
-                    borderColor: `${newRole.color}80`,
-                    background: `linear-gradient(to right, #000 0%, ${newRole.color} 100%)`,
-                  }"
-                >
-                  <div
-                    class="bg-black/50 text-xs text-white font-orbitron py-3 px-2 text-center"
-                  >
-                    Couleur
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex justify-end space-x-3 relative z-10">
-              <button
-                v-if="editingRoleIndex !== null"
-                @click.prevent="cancelEditRole"
-                type="button"
-                class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md text-sm font-orbitron transition-colors flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                Annuler
-              </button>
-              <button
-                @click.prevent="addOrUpdateRole"
-                type="button"
-                :class="[
-                  'px-4 py-2 text-sm font-orbitron transition-all duration-300 rounded-md flex items-center',
-                  editingRoleIndex !== null
-                    ? 'bg-amber-800/60 hover:bg-amber-700/80 text-amber-100 border border-amber-600/50 hover:shadow-amber-500/30 hover:shadow-md'
-                    : 'bg-cyan-800/60 hover:bg-cyan-700/80 text-cyan-100 border border-cyan-600/50 hover:shadow-cyan-500/30 hover:shadow-md',
-                ]"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                {{ editingRoleIndex !== null ? "Mettre à jour" : "Ajouter" }}
-              </button>
-            </div>
-          </div>
+        <div v-if="loadingGames" class="py-12 flex justify-center items-center">
+          <SpaceLoader size="lg" text="Chargement des jeux..." />
         </div>
-
-        <div class="flex justify-between">
-          <!-- Bouton Annuler (apparaît uniquement en mode édition) -->
-          <button
-            v-if="isEditing"
-            type="button"
-            @click="cancelEdit"
-            class="inline-flex items-center justify-center px-6 py-3 text-lg bg-gray-800 text-white font-orbitron font-bold rounded border border-gray-600 shadow-md hover:shadow-lg hover:bg-gray-700 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none"
-          >
-            <span>Annuler</span>
-          </button>
-
-          <!-- Spacer quand pas en mode édition -->
-          <div v-else></div>
-
-          <!-- Bouton Créer/Modifier -->
-          <button
-            type="submit"
-            class="inline-flex items-center justify-center px-8 py-3 text-lg bg-gradient-to-r from-purple-800 to-purple-600 text-white font-orbitron font-bold rounded border border-pink-500 shadow-md hover:shadow-lg hover:shadow-pink-500/30 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-60 disabled:cursor-not-allowed"
-            :disabled="isLoading"
-          >
-            <svg
-              v-if="isLoading"
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span>{{
-              isLoading
-                ? isEditing
-                  ? "Modification en cours..."
-                  : "Création en cours..."
-                : isEditing
-                ? "Modifier le jeu"
-                : "Créer le jeu"
-            }}</span>
-          </button>
-        </div>
-      </form>
-
-      <!-- Liste des jeux existants -->
-      <div
-        class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 p-6 mb-8"
-      >
-        <h2 class="text-2xl text-white mb-6 font-audiowide flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 mr-2 text-purple-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-            />
-          </svg>
-          Jeux disponibles
-        </h2>
 
         <div
-          v-if="games.length > 0"
+          v-else-if="games.length > 0"
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <div
             v-for="existingGame in games"
             :key="existingGame._id"
-            class="bg-slate-800/60 rounded-lg overflow-hidden border border-purple-500/30 shadow-md transition-all duration-300 p-4 hover:transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/80 group relative"
+            class="group bg-space-bg-light/30 backdrop-blur-sm rounded-lg p-4 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300 relative overflow-hidden hover:shadow-glow-secondary"
           >
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-space-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
+            ></div>
+            
             <!-- Miniature du jeu -->
             <div
-              class="aspect-video relative mb-3 overflow-hidden rounded bg-slate-900/80"
+              class="aspect-video relative mb-3 overflow-hidden rounded bg-space-bg-light/50"
             >
               <img
                 v-if="existingGame.imageUrl"
@@ -556,7 +492,7 @@
               />
               <div
                 v-if="!existingGame.imageUrl"
-                class="absolute inset-0 flex items-center justify-center text-purple-300/50"
+                class="absolute inset-0 flex items-center justify-center text-space-primary-light/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -569,19 +505,25 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
+                    d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2"
                   />
                 </svg>
               </div>
             </div>
 
+            <!-- Nom du jeu -->
+            <div class="font-nasa text-lg font-semibold text-space-text mb-2 z-10 relative">
+              {{ existingGame.name }}
+            </div>
+
             <!-- Actions (édition et suppression) -->
-            <div class="absolute top-2 right-2 flex gap-2">
-              <!-- Bouton d'édition -->
-              <button
+            <div class="flex justify-end gap-2 mt-2 z-10 relative">
+              <SpaceButton
                 @click="editGame(existingGame)"
-                class="opacity-0 group-hover:opacity-100 w-8 h-8 flex items-center justify-center rounded-full bg-blue-900/20 text-blue-400 border border-blue-500/30 hover:bg-blue-900/40 hover:text-blue-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/20 transition-all duration-300 transform group-hover:scale-100 scale-90"
-                title="Modifier ce jeu"
+                variant="secondary"
+                size="sm"
+                className="p-1.5"
+                :title="'Modifier ' + existingGame.name"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -597,13 +539,13 @@
                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
-              </button>
-
-              <!-- Bouton de suppression -->
-              <button
+              </SpaceButton>
+              <SpaceButton
                 @click="confirmDelete(existingGame)"
-                class="opacity-0 group-hover:opacity-100 w-8 h-8 flex items-center justify-center rounded-full bg-red-900/20 text-red-400 border border-red-500/30 hover:bg-red-900/40 hover:text-red-300 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/20 transition-all duration-300 transform group-hover:scale-100 scale-90"
-                title="Supprimer ce jeu"
+                variant="error"
+                size="sm"
+                className="p-1.5"
+                :title="'Supprimer ' + existingGame.name"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -619,55 +561,51 @@
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   />
                 </svg>
-              </button>
-            </div>
-
-            <!-- Nom du jeu (sans description) -->
-            <div class="font-orbitron text-lg font-semibold text-gray-100 mb-2">
-              {{ existingGame.name }}
+              </SpaceButton>
             </div>
           </div>
         </div>
 
-        <div
-          v-else-if="loadingGames"
-          class="flex flex-col justify-center items-center py-12"
+        <SpaceTerminal
+          v-else
+          command="list --games"
+          title="Liste des jeux"
+          :showCursor="true"
         >
-          <div
-            class="w-10 h-10 border-4 border-purple-500/10 border-t-purple-500 rounded-full animate-spin"
-          ></div>
-          <p class="text-cyan-400 mt-4 font-orbitron">Chargement des jeux...</p>
-        </div>
-
-        <div v-else class="text-center py-8">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12 mx-auto text-purple-400 mb-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <p class="text-purple-300 font-orbitron">
-            Aucun jeu disponible pour le moment
-          </p>
-        </div>
-      </div>
-
-      <Toast v-if="error" type="error" :message="error" />
-      <Toast v-if="success" type="success" :message="success" />
-      <ConfirmationDialog
-        v-if="showDeleteConfirmation"
-        :title="'Supprimer le jeu'"
-        :message="deleteConfirmMessage"
-        @confirm="deleteGame"
-        @cancel="cancelDelete"
-      />
+          <div class="text-space-text-muted">Aucun jeu disponible pour le moment</div>
+        </SpaceTerminal>
+      </SpaceCard>
     </div>
+
+    <!-- Dialogue de confirmation pour la suppression -->
+    <SpaceModal
+      v-model="showDeleteConfirmation"
+      title="Confirmation de suppression"
+      className="max-w-md"
+    >
+      <div class="text-space-text mb-6">
+        {{ deleteConfirmMessage }}
+      </div>
+      <template #footer>
+        <div class="flex justify-end space-x-3">
+          <SpaceButton
+            @click="cancelDelete"
+            variant="outline"
+            size="sm"
+          >
+            Annuler
+          </SpaceButton>
+          <SpaceButton 
+            @click="deleteGame" 
+            variant="error" 
+            size="sm"
+            :loading="isDeleting"
+          >
+            Supprimer
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
   </div>
 </template>
 
@@ -679,15 +617,19 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
 //-------------------------------------------------------
 
 /**
- * Services et composants
+ * Services pour l'accès aux données
  */
 import gameService from "../../services/gameService";
 import rawgService from "../../services/rawgService";
-import Toast from "@/shared/Toast.vue";
-import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 
 /**
- * Types
+ * Composants UI
+ */
+// Composants Space UI
+// Tous les composants Space UI sont enregistrés globalement, pas besoin d'import
+
+/**
+ * Types pour le typage fort
  */
 import type { Game, RawgGame } from "../../types";
 
@@ -889,7 +831,7 @@ const createGame = async () => {
   try {
     await gameService.createGame(game.value);
     showMessage("success", "Jeu créé avec succès !");
-    game.value = { name: "", description: "", imageUrl: "" }; // Reset form
+    game.value = { name: "", description: "", imageUrl: "", roles: [] }; // Reset form
     searchResults.value = [];
     selectedRawgGame.value = null;
     imagePreviewError.value = false;
@@ -902,7 +844,9 @@ const createGame = async () => {
   }
 };
 
-// Ajouter ces méthodes dans le script
+/**
+ * Gestion des rôles dans le formulaire
+ */
 const addOrUpdateRole = () => {
   // Validation basique
   if (!newRole.value.name.trim()) {
@@ -1095,7 +1039,7 @@ const editGame = (gameToEdit: Game) => {
  */
 const cancelEdit = () => {
   resetForm();
-  showMessage("info", "Modification annulée", 3000);
+  showMessage("success", "Modification annulée", 3000);
 };
 
 /**
@@ -1109,7 +1053,7 @@ const resetForm = () => {
     name: "",
     description: "",
     imageUrl: "",
-    roles: [], // Assurez-vous d'initialiser les rôles ici aussi
+    roles: [],
   };
   searchResults.value = [];
   selectedRawgGame.value = null;
@@ -1275,11 +1219,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.font-audiowide {
-  font-family: "Audiowide", cursive;
+/* Animation de balayage lumineux pour les éléments de la liste */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
+.animate-shine {
+  animation: shine 1.5s infinite;
 }
 </style>

@@ -1,581 +1,507 @@
 <template>
-  <div
-    class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 min-h-screen p-4 sm:p-6 relative overflow-hidden"
-  >
-    <!-- ✅ Grille d'arrière-plan améliorée -->
-    <div class="absolute inset-0 z-0">
-      <div class="bg-grid-pattern opacity-10"></div>
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent"
-      ></div>
-    </div>
+  <div class="container mx-auto p-8 pt-20">
+    <!-- En-tête -->
+    <SpaceHeader
+      title="SYNCHRONISATION DES JOUEURS"
+      titleSize="3xl"
+      :showMissionInfo="true"
+      mission="PLAYER-SYNC"
+    >
+      <template #badge>
+        <SpaceBadge v-if="players.length > 0" variant="primary" size="lg">
+          {{ players.length }}
+        </SpaceBadge>
+      </template>
+    </SpaceHeader>
 
-    <!-- ✅ Particles flottantes -->
-    <div class="absolute inset-0 z-0 overflow-hidden">
-      <div class="floating-particles"></div>
-    </div>
-
-    <!-- Container principal -->
-    <div class="relative z-10 max-w-7xl mx-auto pt-4 sm:pt-8">
-      <!-- ✅ Header amélioré -->
-      <div class="text-center mb-8 sm:mb-12">
-        <div
-          class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mb-4 shadow-lg shadow-purple-500/50"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-        </div>
-
-        <h1
-          class="text-3xl sm:text-5xl font-audiowide text-center mb-4 text-white neon-text-pink leading-tight"
-        >
-          Synchronisation des Joueurs
-        </h1>
-
-        <p
-          class="text-gray-300 font-orbitron text-sm sm:text-base max-w-2xl mx-auto"
-        >
-          Gérez la correspondance entre les profils de joueurs et les comptes
-          utilisateurs
-        </p>
-      </div>
-
-      <!-- ✅ Instructions redesignées -->
-      <div
-        class="bg-gradient-to-r from-gray-900/80 to-purple-900/80 backdrop-blur-lg rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-xl shadow-purple-500/20 mb-6 sm:mb-8"
-      >
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0">
-            <div
-              class="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-yellow-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-          <div class="flex-1">
-            <h3 class="text-yellow-400 font-orbitron font-semibold mb-2">
-              Instructions importantes
-            </h3>
-            <p
-              class="text-cyan-300 font-orbitron text-sm sm:text-base leading-relaxed"
-            >
-              Assurez-vous que les noms d'utilisateur de
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-md bg-pink-500/20 text-pink-400 font-bold text-xs mx-1"
-                >Player</span
-              >
-              et de
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-md bg-purple-500/20 text-purple-400 font-bold text-xs mx-1"
-                >User</span
-              >
-              soient similaires avant de lancer la synchronisation.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Barre de recherche améliorée -->
-      <div class="mb-6 sm:mb-8 space-y-4">
-        <!-- Barre de recherche -->
-        <div class="relative max-w-md mx-auto">
+    <!-- Instructions -->
+    <SpaceCard
+      variant="accent"
+      :stars="true"
+      :decorated="true"
+      className="mb-8 mt-6"
+    >
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0">
           <div
-            class="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl blur-sm"
-          ></div>
+            class="w-10 h-10 bg-space-accent/20 rounded-full flex items-center justify-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-space-accent"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-space-accent-light font-nasa font-semibold mb-2">
+            Instructions importantes
+          </h3>
+          <p
+            class="text-space-text font-body text-sm sm:text-base leading-relaxed"
+          >
+            Assurez-vous que les noms d'utilisateur de
+            <SpaceBadge variant="primary" className="mx-1">Player</SpaceBadge>
+            et de
+            <SpaceBadge variant="secondary" className="mx-1">User</SpaceBadge>
+            soient similaires avant de lancer la synchronisation.
+          </p>
+        </div>
+      </div>
+    </SpaceCard>
+
+    <!-- Barre de recherche -->
+    <SpaceCard
+      variant="primary"
+      :stars="true"
+      :decorated="true"
+      className="mb-8"
+    >
+      <div class="space-y-4">
+        <div>
+          <label
+            for="searchInput"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Rechercher un joueur
+          </label>
           <div class="relative">
-            <input
-              type="text"
+            <SpaceInput
+              id="searchInput"
               v-model="searchQuery"
-              placeholder="Rechercher un joueur..."
-              class="w-full bg-gray-800/80 backdrop-blur-sm text-white border border-pink-500/40 rounded-xl py-3 px-4 pl-12 font-orbitron focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/30 transition-all duration-300 placeholder-gray-400"
-            />
-            <div
-              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              placeholder="Rechercher par nom ou Discord ID..."
+              className="pl-12"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-pink-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-            <button
-              v-if="searchQuery"
-              @click="clearSearch"
-              class="absolute inset-y-0 right-0 pr-4 flex items-center group"
-            >
-              <div
-                class="w-6 h-6 bg-gray-600 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors duration-200"
-              >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3 text-white"
+                  class="h-5 w-5 text-space-primary"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                     clip-rule="evenodd"
                   />
                 </svg>
-              </div>
-            </button>
+              </template>
+              <template #rightIcon>
+                <button
+                  v-if="searchQuery"
+                  @click="clearSearch"
+                  class="text-space-text-muted hover:text-space-text"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </template>
+            </SpaceInput>
           </div>
         </div>
 
-        <!-- ✅ NOUVEAU: Filtres et tri -->
+        <!-- Filtres et tri -->
         <div
-          class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          class="flex flex-col sm:flex-row gap-4 justify-between items-center"
         >
           <!-- Filtre par statut -->
-          <div class="flex gap-2">
-            <button
+          <div class="flex gap-2 flex-wrap">
+            <SpaceButton
               @click="filterStatus = 'all'"
-              :class="[
-                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
-                filterStatus === 'all'
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-              ]"
+              :variant="filterStatus === 'all' ? 'primary' : 'outline'"
+              size="sm"
             >
               Tous ({{ players.length }})
-            </button>
-            <button
+            </SpaceButton>
+            <SpaceButton
               @click="filterStatus = 'synced'"
-              :class="[
-                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
-                filterStatus === 'synced'
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-              ]"
+              :variant="filterStatus === 'synced' ? 'success' : 'outline'"
+              size="sm"
             >
               Synchronisés ({{ syncedCount }})
-            </button>
-            <button
+            </SpaceButton>
+            <SpaceButton
               @click="filterStatus = 'unsynced'"
-              :class="[
-                'px-4 py-2 rounded-lg font-orbitron text-sm transition-all duration-200',
-                filterStatus === 'unsynced'
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-              ]"
+              :variant="filterStatus === 'unsynced' ? 'warning' : 'outline'"
+              size="sm"
             >
               Non synchronisés ({{ unsyncedCount }})
-            </button>
+            </SpaceButton>
           </div>
 
           <!-- Tri -->
           <div class="flex items-center gap-2">
-            <span class="text-gray-400 font-orbitron text-sm">Tri:</span>
-            <select
-              v-model="sortBy"
-              class="bg-gray-700 text-white font-orbitron text-sm px-3 py-2 rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none"
-            >
+            <span class="text-space-text-muted font-nasa text-sm">Tri:</span>
+            <SpaceDropdown v-model="sortBy" className="w-48">
               <option value="username-asc">Nom A→Z</option>
               <option value="username-desc">Nom Z→A</option>
               <option value="status-synced">Synchronisés d'abord</option>
               <option value="status-unsynced">Non synchronisés d'abord</option>
               <option value="discord-asc">Discord ID A→Z</option>
               <option value="discord-desc">Discord ID Z→A</option>
-            </select>
+            </SpaceDropdown>
           </div>
         </div>
       </div>
+    </SpaceCard>
 
-      <!-- ✅ Statistiques rapides -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 sm:mb-8">
-        <button
-          @click="
-            filterStatus = 'all';
-            sortBy = 'username-asc';
-          "
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-cyan-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
-        >
-          <div
-            class="text-2xl font-bold text-cyan-400 mb-1 group-hover:scale-110 transition-transform"
-          >
-            {{ players.length }}
-          </div>
-          <div class="text-xs text-gray-400 font-orbitron">Joueurs</div>
-        </button>
-
-        <button
-          @click="filterStatus = 'all'"
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
-        >
-          <div
-            class="text-2xl font-bold text-purple-400 mb-1 group-hover:scale-110 transition-transform"
-          >
-            {{ users.length }}
-          </div>
-          <div class="text-xs text-gray-400 font-orbitron">Utilisateurs</div>
-        </button>
-
-        <button
-          @click="showOnlySynced"
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-green-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
-          :class="{ 'ring-2 ring-green-500/50': filterStatus === 'synced' }"
-        >
-          <div
-            class="text-2xl font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform"
-          >
-            {{ syncedCount }}
-          </div>
-          <div class="text-xs text-gray-400 font-orbitron">Synchronisés</div>
-        </button>
-
-        <button
-          @click="showOnlyUnsynced"
-          class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-4 border border-yellow-500/30 text-center hover:bg-gray-800/80 transition-all duration-200 group"
-          :class="{ 'ring-2 ring-yellow-500/50': filterStatus === 'unsynced' }"
-        >
-          <div
-            class="text-2xl font-bold text-yellow-400 mb-1 group-hover:scale-110 transition-transform"
-          >
-            {{ unsyncedCount }}
-          </div>
-          <div class="text-xs text-gray-400 font-orbitron">En attente</div>
-        </button>
-      </div>
-
-      <!-- ✅ Loading amélioré -->
-      <div v-if="isLoading" class="flex justify-center items-center h-64">
-        <div class="relative">
-          <div
-            class="w-20 h-20 border-4 border-t-pink-500 border-r-purple-500 border-b-cyan-500 border-l-transparent rounded-full animate-spin"
-          ></div>
-          <div
-            class="absolute inset-0 w-20 h-20 border-4 border-t-transparent border-r-transparent border-b-transparent border-l-pink-500 rounded-full animate-spin"
-            style="animation-direction: reverse; animation-duration: 1.5s"
-          ></div>
-          <div
-            class="absolute inset-2 w-16 h-16 border-2 border-t-cyan-400 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"
-            style="animation-duration: 0.8s"
-          ></div>
+    <!-- Statistiques rapides -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <SpaceCard
+        variant="primary"
+        :stars="false"
+        :decorated="true"
+        className="text-center cursor-pointer"
+        :hover="true"
+        @click="
+          filterStatus = 'all';
+          sortBy = 'username-asc';
+        "
+      >
+        <div class="text-2xl font-bold text-space-primary-light mb-1">
+          {{ players.length }}
         </div>
-      </div>
+        <div class="text-xs text-space-text-muted font-nasa">Joueurs</div>
+      </SpaceCard>
 
-      <!-- ✅ Tables améliorées -->
-      <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-        <!-- Table des joueurs -->
-        <div
-          class="bg-gradient-to-br from-gray-900/80 to-cyan-900/20 backdrop-blur-lg rounded-2xl border border-cyan-500/30 shadow-xl shadow-cyan-500/20 overflow-hidden"
-        >
-          <div class="border-b border-cyan-500/40 p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-cyan-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <h2
-                  class="text-xl sm:text-2xl font-orbitron text-cyan-300 neon-text-cyan"
-                >
-                  Players
-                </h2>
-              </div>
-              <span
-                class="px-3 py-1 bg-cyan-500/20 text-cyan-300 font-orbitron text-sm rounded-full"
-              >
-                {{ filteredPlayers.length }}
-              </span>
-            </div>
-          </div>
-
-          <div class="p-4 sm:p-6 max-h-96 overflow-y-auto custom-scrollbar">
-            <div class="space-y-3">
-              <div
-                v-for="player in filteredPlayers"
-                :key="player._id"
-                class="group relative bg-gray-800/40 hover:bg-gray-800/60 rounded-xl p-4 border border-gray-700/50 hover:border-cyan-500/50 transition-all duration-300 cursor-pointer"
-                :class="{
-                  'ring-2 ring-cyan-500/50 bg-cyan-900/20 border-cyan-500/50':
-                    highlightedPlayerId === player._id,
-                }"
-                @click="highlightPlayerAndUser(player)"
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                    >
-                      {{ getInitials(player.username) }}
-                    </div>
-                    <div>
-                      <div class="text-white font-orbitron font-medium">
-                        {{ player.username }}
-                      </div>
-                      <div class="text-xs text-gray-400 font-mono">
-                        {{ player.discordId || "Pas de Discord ID" }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-2">
-                    <!-- ✅ Badge de statut amélioré -->
-                    <div
-                      v-if="player.userId"
-                      class="flex items-center gap-1 px-2 py-1 bg-green-500/20 border border-green-500/40 rounded-md"
-                      title="Synchronisé"
-                    >
-                      <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span class="text-green-300 text-xs font-orbitron"
-                        >Sync</span
-                      >
-                    </div>
-                    <div
-                      v-else
-                      class="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 border border-yellow-500/40 rounded-md"
-                      title="Non synchronisé"
-                    >
-                      <div
-                        class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"
-                      ></div>
-                      <span class="text-yellow-300 text-xs font-orbitron"
-                        >Attente</span
-                      >
-                    </div>
-
-                    <button
-                      @click.stop="editPlayerUsername(player)"
-                      class="opacity-0 group-hover:opacity-100 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white font-orbitron text-xs px-3 py-1.5 rounded-lg shadow-lg transition-all duration-200 hover:scale-105"
-                    >
-                      Modifier
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="filteredPlayers.length === 0"
-                class="text-center py-12"
-              >
-                <div
-                  class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47.828-6.137 2.208A7.962 7.962 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8c0 1.76-.57 3.384-1.537 4.708z"
-                    />
-                  </svg>
-                </div>
-                <p class="text-gray-400 font-orbitron">Aucun joueur trouvé</p>
-              </div>
-            </div>
-          </div>
+      <SpaceCard
+        variant="secondary"
+        :stars="false"
+        :decorated="true"
+        className="text-center cursor-pointer"
+        :hover="true"
+        @click="filterStatus = 'all'"
+      >
+        <div class="text-2xl font-bold text-space-secondary-light mb-1">
+          {{ users.length }}
         </div>
+        <div class="text-xs text-space-text-muted font-nasa">Utilisateurs</div>
+      </SpaceCard>
 
-        <!-- Table des utilisateurs -->
-        <div
-          class="bg-gradient-to-br from-gray-900/80 to-purple-900/20 backdrop-blur-lg rounded-2xl border border-purple-500/30 shadow-xl shadow-purple-500/20 overflow-hidden"
-        >
-          <div class="border-b border-purple-500/40 p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-purple-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                    />
-                  </svg>
-                </div>
-                <h2
-                  class="text-xl sm:text-2xl font-orbitron text-purple-400 neon-text-purple"
-                >
-                  Users
-                </h2>
-              </div>
-              <span
-                class="px-3 py-1 bg-purple-500/20 text-purple-300 font-orbitron text-sm rounded-full"
+      <SpaceCard
+        variant="success"
+        :stars="false"
+        :decorated="true"
+        className="text-center cursor-pointer"
+        :hover="true"
+        @click="showOnlySynced"
+        :class="{
+          'ring-2 ring-space-success/50': filterStatus === 'synced',
+        }"
+      >
+        <div class="text-2xl font-bold text-space-success mb-1">
+          {{ syncedCount }}
+        </div>
+        <div class="text-xs text-space-text-muted font-nasa">Synchronisés</div>
+      </SpaceCard>
+
+      <SpaceCard
+        variant="warning"
+        :stars="false"
+        :decorated="true"
+        className="text-center cursor-pointer"
+        :hover="true"
+        @click="showOnlyUnsynced"
+        :class="{
+          'ring-2 ring-space-warning/50': filterStatus === 'unsynced',
+        }"
+      >
+        <div class="text-2xl font-bold text-space-warning mb-1">
+          {{ unsyncedCount }}
+        </div>
+        <div class="text-xs text-space-text-muted font-nasa">En attente</div>
+      </SpaceCard>
+    </div>
+
+    <!-- État de chargement -->
+    <div v-if="isLoading" class="flex justify-center items-center py-12">
+      <SpaceLoader size="lg" text="Chargement des données en cours..." />
+    </div>
+
+    <!-- Tables -->
+    <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+      <!-- Table des joueurs -->
+      <SpaceCard
+        variant="primary"
+        :stars="true"
+        :decorated="true"
+        className="overflow-hidden"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-primary-light"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                {{ filteredUsers.length }}
-              </span>
+                <path
+                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+                />
+              </svg>
+              <SpaceTitle size="lg">Players</SpaceTitle>
             </div>
+            <SpaceBadge variant="primary" size="lg">
+              {{ filteredPlayers.length }}
+            </SpaceBadge>
           </div>
+        </template>
 
-          <div class="p-4 sm:p-6 max-h-96 overflow-y-auto custom-scrollbar">
-            <div class="space-y-3">
-              <div
-                v-for="user in filteredUsers"
-                :key="user._id"
-                class="bg-gray-800/40 hover:bg-gray-800/60 rounded-xl p-4 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300"
-                :class="{
-                  'ring-2 ring-purple-500/50 bg-purple-900/20 border-purple-500/50':
-                    highlightedUserId === user._id,
-                }"
-              >
+        <div class="max-h-96 overflow-y-auto">
+          <div class="space-y-3 p-4">
+            <div
+              v-for="player in filteredPlayers"
+              :key="player._id"
+              class="group bg-space-bg-light/5 hover:bg-space-bg-light/10 rounded-lg p-4 border border-space-primary/20 hover:border-space-primary/50 transition-all duration-300 cursor-pointer"
+              :class="{
+                'ring-2 ring-space-primary/50 bg-space-primary/10 border-space-primary/50':
+                  highlightedPlayerId === player._id,
+              }"
+              @click="highlightPlayerAndUser(player)"
+            >
+              <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                    class="w-10 h-10 bg-gradient-to-r from-space-primary to-space-primary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-primary"
                   >
-                    {{ getInitials(user.username) }}
+                    {{ getInitials(player.username) }}
                   </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="text-white font-orbitron font-medium truncate">
-                      {{ user.username }}
+                  <div>
+                    <div class="text-space-text font-nasa font-medium">
+                      {{ player.username }}
                     </div>
-                    <div class="text-xs text-gray-400 font-mono truncate">
-                      {{ user.email }}
-                    </div>
-                    <div
-                      v-if="user.discordId"
-                      class="text-xs text-purple-300 font-mono"
-                    >
-                      Discord: {{ user.discordId }}
+                    <div class="text-xs text-space-text-muted font-mono">
+                      {{ player.discordId || "Pas de Discord ID" }}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div v-if="filteredUsers.length === 0" class="text-center py-12">
-                <div
-                  class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <div class="flex items-center gap-2">
+                  <!-- Badge de statut -->
+                  <SpaceBadge
+                    v-if="player.userId"
+                    variant="success"
+                    className="flex items-center"
+                    title="Synchronisé"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5 mr-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Sync
+                  </SpaceBadge>
+                  <SpaceBadge
+                    v-else
+                    variant="warning"
+                    className="flex items-center"
+                    title="Non synchronisé"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5 mr-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Attente
+                  </SpaceBadge>
+
+                  <SpaceButton
+                    @click.stop="editPlayerUsername(player)"
+                    variant="primary"
+                    size="sm"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Modifier
+                  </SpaceButton>
                 </div>
-                <p class="text-gray-400 font-orbitron">
-                  Aucun utilisateur trouvé
-                </p>
               </div>
             </div>
+
+            <SpaceTerminal
+              v-if="filteredPlayers.length === 0"
+              command="find --players"
+              title="Recherche de joueurs"
+              :showCursor="true"
+            >
+              <div class="text-space-text-muted">
+                Aucun joueur trouvé avec ces critères.
+              </div>
+            </SpaceTerminal>
           </div>
         </div>
-      </div>
+      </SpaceCard>
 
-      <!-- ✅ Actions améliorées -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <button
-          @click="synchronizePlayers"
-          :disabled="isLoading"
-          class="group bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 disabled:from-gray-600 disabled:via-gray-600 disabled:to-gray-600 text-white font-orbitron text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/50 hover:-translate-y-1 disabled:hover:translate-y-0 disabled:hover:shadow-xl transition-all duration-300 relative overflow-hidden min-w-[280px]"
-        >
-          <span class="relative z-10 flex items-center justify-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      <!-- Table des utilisateurs -->
+      <SpaceCard
+        variant="secondary"
+        :stars="true"
+        :decorated="true"
+        className="overflow-hidden"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-secondary-light"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                />
+              </svg>
+              <SpaceTitle size="lg">Users</SpaceTitle>
+            </div>
+            <SpaceBadge variant="secondary" size="lg">
+              {{ filteredUsers.length }}
+            </SpaceBadge>
+          </div>
+        </template>
+
+        <div class="max-h-96 overflow-y-auto">
+          <div class="space-y-3 p-4">
+            <div
+              v-for="user in filteredUsers"
+              :key="user._id"
+              class="bg-space-bg-light/5 hover:bg-space-bg-light/10 rounded-lg p-4 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300"
+              :class="{
+                'ring-2 ring-space-secondary/50 bg-space-secondary/10 border-space-secondary/50':
+                  highlightedUserId === user._id,
+              }"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            Synchroniser les joueurs
-          </span>
-          <div
-            class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"
-          ></div>
-        </button>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-r from-space-secondary to-space-secondary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-secondary"
+                >
+                  {{ getInitials(user.username) }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-space-text font-nasa font-medium truncate">
+                    {{ user.username }}
+                  </div>
+                  <div class="text-xs text-space-text-muted font-mono truncate">
+                    {{ user.email }}
+                  </div>
+                  <div
+                    v-if="user.discordId"
+                    class="text-xs text-space-secondary-light font-mono"
+                  >
+                    Discord: {{ user.discordId }}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <button
-          @click="fetchData"
-          class="bg-gray-700 hover:bg-gray-600 text-white font-orbitron px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
-        >
+            <SpaceTerminal
+              v-if="filteredUsers.length === 0"
+              command="find --users"
+              title="Recherche d'utilisateurs"
+              :showCursor="true"
+            >
+              <div class="text-space-text-muted">
+                Aucun utilisateur trouvé avec ces critères.
+              </div>
+            </SpaceTerminal>
+          </div>
+        </div>
+      </SpaceCard>
+    </div>
+
+    <!-- Actions -->
+    <div
+      class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+    >
+      <SpaceButton
+        @click="synchronizePlayers"
+        :disabled="isLoading"
+        variant="accent"
+        size="lg"
+        icon
+      >
+        <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"
             />
           </svg>
-          Actualiser
-        </button>
-      </div>
+        </template>
+        Synchroniser les joueurs
+      </SpaceButton>
 
-      <!-- Notifications -->
-      <Toast v-if="error" type="error" :message="error" />
-      <Toast v-if="success" type="success" :message="success" />
+      <SpaceButton @click="fetchData" variant="outline" size="md" icon>
+        <template #icon>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </template>
+        Actualiser
+      </SpaceButton>
     </div>
+
+    <!-- Notifications -->
+    <Toast v-if="error" type="error" :message="error" />
+    <Toast v-if="success" type="success" :message="success" />
   </div>
 </template>
 
