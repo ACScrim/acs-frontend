@@ -65,7 +65,16 @@
 import { computed } from "vue";
 
 interface Props {
-  variant?: "primary" | "secondary" | "accent" | "outline" | "ghost";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "outline"
+    | "ghost"
+    | "outline-error"
+    | "error"
+    | "success"
+    | "warning";
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
   loading?: boolean;
@@ -107,6 +116,14 @@ const variantClasses = computed(() => {
       return "bg-transparent hover:bg-space-bg-light border-space-primary text-space-primary hover:text-space-primary-light";
     case "ghost":
       return "bg-transparent hover:bg-space-bg-light border-transparent text-space-text hover:text-white";
+    case "outline-error":
+      return "bg-transparent hover:bg-space-error/10 border-space-error text-space-error hover:text-space-error-light";
+    case "error":
+      return "bg-space-error hover:bg-space-error-light border-space-error-dark text-white shadow-glow-error hover:shadow-lg";
+    case "success":
+      return "bg-space-success hover:bg-space-success-light border-space-success-dark text-white shadow-glow-success hover:shadow-lg";
+    case "warning":
+      return "bg-space-warning hover:bg-space-warning-light border-space-warning-dark text-space-bg shadow-glow-warning hover:shadow-lg";
     default:
       return "bg-space-primary hover:bg-space-primary-light border-space-primary-dark text-white";
   }
@@ -128,6 +145,18 @@ button {
 
 .shadow-glow-accent {
   box-shadow: var(--shadow-glow-accent);
+}
+
+.shadow-glow-error {
+  box-shadow: 0 0 15px rgba(var(--space-error-rgb), 0.5);
+}
+
+.shadow-glow-success {
+  box-shadow: 0 0 15px rgba(var(--space-success-rgb), 0.5);
+}
+
+.shadow-glow-warning {
+  box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.5);
 }
 
 .animate-orbit {

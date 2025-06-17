@@ -1,26 +1,28 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24">
-    <!-- En-tête avec style cyberpunk -->
-    <h1
-      class="text-3xl sm:text-4xl text-white mb-6 sm:mb-8 neon-text font-audiowide text-center"
-    >
-      Mes niveaux de jeux
-    </h1>
+    <!-- En-tête avec SpaceHeader -->
+    <SpaceHeader
+      title="NIVEAUX DE JEU"
+      :decorated="true"
+      mission="PLAYER-SKILLS-25"
+    />
 
-    <div
-      class="bg-black/75 backdrop-blur-sm rounded-lg p-6 sm:p-8 border border-pink-500 shadow-lg shadow-pink-500/30"
-    >
+    <SpaceCard variant="primary" :stars="true" className="mb-8 mt-6">
       <div v-if="loading" class="flex justify-center py-12">
-        <CyberpunkLoader />
+        <SpaceLoader text="Analyse des compétences en cours..." />
       </div>
 
       <template v-else>
         <!-- Section des jeux avec niveau défini -->
         <div v-if="playerLevels.length > 0" class="mb-10">
-          <h2 class="text-xl text-white font-audiowide mb-6 flex items-center">
+          <SpaceTitle
+            size="xl"
+            :decorated="true"
+            className="mb-6 flex items-center"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-cyan-400"
+              class="h-6 w-6 mr-2 text-space-primary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -30,25 +32,19 @@
                 clip-rule="evenodd"
               />
             </svg>
-            Mes niveaux actuels
-          </h2>
+            Niveaux de compétence actuels
+          </SpaceTitle>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
+            <SpaceCard
               v-for="level in playerLevels"
               :key="level._id"
-              class="cyber-card relative bg-gray-900/50 rounded-lg overflow-hidden border border-gray-800 hover:border-cyan-500/50 transition-all group"
+              variant="secondary"
+              :stars="true"
+              className="relative overflow-hidden transform transition-all hover:scale-105 duration-300"
             >
-              <!-- Lignes décoratives cyberpunk -->
-              <div
-                class="absolute top-0 left-6 h-3 w-[1px] bg-cyan-500/60"
-              ></div>
-              <div
-                class="absolute top-0 left-10 h-6 w-[1px] bg-pink-500/60"
-              ></div>
-
               <!-- En-tête avec image de jeu -->
-              <div class="relative h-32 overflow-hidden">
+              <div class="relative h-32 overflow-hidden rounded-t-lg">
                 <img
                   v-if="getGameImage(level)"
                   :src="getGameImage(level)"
@@ -58,11 +54,11 @@
                 />
                 <div
                   v-else
-                  class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-black"
+                  class="w-full h-full flex items-center justify-center bg-space-bg-light"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-16 w-16 text-gray-700"
+                    class="h-16 w-16 text-space-primary/50"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -74,34 +70,73 @@
 
                 <!-- Overlay gradient -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-gray-900/95 to-transparent"
+                  class="absolute inset-0 bg-gradient-to-t from-space-bg/95 to-transparent"
                 ></div>
 
-                <!-- Niveau sous forme de badge -->
+                <!-- Badge de niveau -->
                 <div class="absolute bottom-3 right-3">
-                  <span
-                    :class="getLevelClass(level.level)"
-                    class="px-3 py-1 rounded-full text-xs font-medium shadow-lg"
+                  <!-- Badge avec fond opaque et bordure -->
+                  <div
+                    class="bg-space-bg px-2 py-1 rounded-full shadow-lg border-2 flex items-center justify-center"
+                    :class="{
+                      'border-green-500':
+                        level.level.toLowerCase() === 'débutant',
+                      'border-[var(--space-primary)]':
+                        level.level.toLowerCase() === 'intermédiaire',
+                      'border-[var(--space-secondary)]':
+                        level.level.toLowerCase() === 'avancé',
+                      'border-[var(--space-accent)]':
+                        level.level.toLowerCase() === 'expert',
+                    }"
                   >
-                    {{ level.level }}
-                  </span>
+                    <span
+                      class="uppercase tracking-wide font-bold text-xs"
+                      :class="{
+                        'text-green-400':
+                          level.level.toLowerCase() === 'débutant',
+                        'text-[var(--space-primary-light)]':
+                          level.level.toLowerCase() === 'intermédiaire',
+                        'text-[var(--space-secondary-light)]':
+                          level.level.toLowerCase() === 'avancé',
+                        'text-[var(--space-accent-light)]':
+                          level.level.toLowerCase() === 'expert',
+                      }"
+                    >
+                      {{ level.level }}
+                    </span>
+                    <!-- Icône pour expert uniquement -->
+                    <svg
+                      v-if="level.level.toLowerCase() === 'expert'"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5 ml-1 text-yellow-500"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                  </div>
                 </div>
 
-                <!-- Nom du jeu en bas -->
-                <div class="absolute bottom-0 left-0 w-full p-3">
-                  <h3 class="text-lg text-white font-orbitron truncate">
+                <!-- Nom du jeu -->
+                <div class="absolute bottom-3 left-3 right-16">
+                  <h3 class="text-lg text-white font-nasa truncate">
                     {{ getGameName(level) }}
                   </h3>
                 </div>
               </div>
 
               <!-- Contenu -->
-              <div class="p-5 bg-gray-900/80">
+              <div class="p-4 space-y-3">
                 <!-- Pseudo dans le jeu -->
-                <div v-if="level.gameUsername" class="mb-3 flex items-center">
+                <div
+                  v-if="level.gameUsername"
+                  class="flex items-center space-x-2"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-cyan-400 mr-2"
+                    class="h-4 w-4 text-space-secondary-light flex-shrink-0"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -111,45 +146,54 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span class="text-sm text-gray-300 mr-2">Pseudo:</span>
-                  <span class="text-sm text-white">{{
-                    level.gameUsername
-                  }}</span>
+                  <div class="flex-1 min-w-0">
+                    <span class="text-space-text-muted text-sm mr-1"
+                      >Pseudo:</span
+                    >
+                    <span class="text-space-text text-sm font-mono truncate">{{
+                      level.gameUsername
+                    }}</span>
+                  </div>
                 </div>
 
                 <!-- Rang -->
                 <div
                   v-if="level.isRanked && level.rank"
-                  class="mb-3 flex items-center bg-gray-800/50 p-2 rounded"
+                  class="bg-space-bg-light/30 p-2 rounded-lg"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-yellow-400 mr-2"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span class="text-sm text-gray-300 mr-2">Rang:</span>
-                  <span
-                    :class="['text-sm font-medium', getRankClass(level.rank)]"
-                  >
-                    {{ level.rank }}
-                  </span>
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-space-accent-light flex-shrink-0"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <div class="flex-1 min-w-0">
+                      <span class="text-space-text-muted text-sm mr-1"
+                        >Rang:</span
+                      >
+                      <span class="text-space-accent-light text-sm font-mono">{{
+                        level.rank
+                      }}</span>
+                    </div>
+                  </div>
                 </div>
 
+                <!-- Rôles -->
                 <div
                   v-if="level.selectedRoles && level.selectedRoles.length > 0"
-                  class="mb-3 bg-gray-800/50 p-2 rounded"
+                  class="bg-space-bg-light/30 p-2 rounded-lg"
                 >
                   <div class="flex items-center mb-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-cyan-400 mr-2 flex-shrink-0"
+                      class="h-4 w-4 text-space-primary-light mr-2 flex-shrink-0"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -160,79 +204,95 @@
                         d="M12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                       />
                     </svg>
-                    <span class="text-sm text-gray-300">Rôles:</span>
+                    <span class="text-space-text-muted text-sm">Rôles:</span>
                   </div>
+
                   <div class="flex flex-wrap gap-1 mt-1">
-                    <span
+                    <SpaceBadge
                       v-for="roleName in level.selectedRoles"
                       :key="roleName"
-                      class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-gray-700/80 border border-gray-600 truncate max-w-[120px]"
+                      variant="primary"
+                      size="sm"
+                      className="max-w-[120px] overflow-hidden"
                       :style="getRoleStyle(level.game, roleName)"
                       :title="roleName"
                     >
                       <span class="truncate">{{ roleName }}</span>
-                    </span>
+                    </SpaceBadge>
                   </div>
                 </div>
 
                 <!-- Commentaire -->
                 <div
                   v-if="level.comment"
-                  class="mb-4 bg-gray-800/50 p-3 rounded"
+                  class="bg-space-bg-light/30 p-3 rounded-lg"
                 >
-                  <p class="text-sm text-gray-400 italic">
+                  <p class="text-sm text-space-text-muted italic">
                     « {{ level.comment }} »
                   </p>
                 </div>
 
                 <!-- Boutons d'action -->
-                <div class="flex justify-end space-x-3 mt-4 font-orbitron">
-                  <button
+                <div class="flex justify-end space-x-3 mt-4">
+                  <SpaceButton
                     @click="openEditModal(level)"
-                    class="cyberpunk-btn-cyan px-3 py-1.5 rounded-md text-sm flex items-center"
+                    variant="secondary"
+                    size="sm"
+                    className="flex items-center"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                      />
-                    </svg>
+                    <template #icon>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                        />
+                      </svg>
+                    </template>
                     Modifier
-                  </button>
-                  <button
+                  </SpaceButton>
+
+                  <SpaceButton
                     @click="confirmDelete(level)"
-                    class="cyberpunk-btn-red px-3 py-1.5 rounded-md text-sm flex items-center"
+                    variant="error"
+                    size="sm"
+                    className="flex items-center"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
+                    <template #icon>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </template>
                     Supprimer
-                  </button>
+                  </SpaceButton>
                 </div>
               </div>
-            </div>
+            </SpaceCard>
           </div>
         </div>
 
         <!-- Section pour ajouter un nouveau niveau -->
         <div>
-          <h2 class="text-xl text-white font-audiowide mb-6 flex items-center">
+          <SpaceTitle
+            size="xl"
+            :decorated="true"
+            className="mb-6 flex items-center"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-pink-400"
+              class="h-6 w-6 mr-2 text-space-accent-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -243,22 +303,19 @@
               />
             </svg>
             Ajouter un niveau
-          </h2>
+          </SpaceTitle>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Carte pour ajouter un nouveau niveau -->
-            <div
+            <SpaceCard
               @click="showGameSelector = true"
-              class="cyber-add-card bg-gray-900/30 rounded-lg border-2 border-dashed border-gray-700 hover:border-pink-500/50 p-8 flex flex-col items-center justify-center cursor-pointer transition-all hover:bg-gray-900/50 relative overflow-hidden"
+              variant="accent"
+              :stars="true"
+              className="border-2 border-dashed border-space-accent/30 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-space-accent/70 h-[320px]"
             >
-              <!-- Effet de scan -->
-              <div
-                class="absolute inset-0 w-full h-6 bg-pink-500/5 animate-scan"
-              ></div>
-
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-12 w-12 text-pink-500/70 mb-3"
+                class="h-16 w-16 text-space-accent/70 mb-4"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -268,422 +325,300 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <p class="text-pink-300 font-orbitron">
+              <p class="text-space-accent-light font-nasa text-lg">
                 Définir un nouveau niveau
               </p>
-
-              <!-- Bordures de style cyberpunk -->
-              <div
-                class="absolute top-0 left-0 w-8 h-[1px] bg-pink-500/70"
-              ></div>
-              <div
-                class="absolute top-0 left-0 w-[1px] h-8 bg-pink-500/70"
-              ></div>
-              <div
-                class="absolute bottom-0 right-0 w-8 h-[1px] bg-pink-500/70"
-              ></div>
-              <div
-                class="absolute bottom-0 right-0 w-[1px] h-8 bg-pink-500/70"
-              ></div>
-            </div>
+              <p
+                class="text-space-text-muted text-sm mt-2 max-w-xs text-center"
+              >
+                Ajouter vos compétences sur un jeu pour participer aux tournois
+              </p>
+            </SpaceCard>
           </div>
         </div>
       </template>
-    </div>
+    </SpaceCard>
 
     <!-- Modal pour sélectionner un jeu -->
-    <div
-      v-if="showGameSelector"
-      class="fixed inset-0 flex items-center justify-center z-50 px-4 py-6"
-    >
-      <div
-        class="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        @click="showGameSelector = false"
-      ></div>
-
-      <div
-        class="cyber-modal bg-gray-900 rounded-lg p-4 sm:p-6 w-full max-w-lg relative z-10 border border-cyan-500/50 shadow-lg shadow-cyan-500/30 max-h-[90vh] overflow-y-auto cyber-scrollbar"
-      >
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl text-white font-audiowide flex items-center">
+    <SpaceModal v-model="showGameSelector" title="SÉLECTION DU JEU">
+      <!-- Recherche de jeux -->
+      <div class="mb-5 relative">
+        <SpaceInput
+          v-model="gameSearch"
+          placeholder="Rechercher un jeu..."
+          :clearable="true"
+          className="pl-10"
+        >
+          <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-cyan-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-              />
-            </svg>
-            Sélectionner un jeu
-          </h3>
-          <button
-            @click="showGameSelector = false"
-            class="text-gray-400 hover:text-white hover:bg-gray-800/50 p-1 rounded-md transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Recherche de jeux -->
-        <div class="mb-5 relative">
-          <input
-            v-model="gameSearch"
-            type="text"
-            placeholder="Rechercher un jeu..."
-            class="w-full p-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 font-orbitron"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-400 absolute left-3 top-3.5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </div>
-
-        <!-- Liste de jeux avec niveau déjà défini affichés en grisé -->
-        <div class="max-h-96 overflow-y-auto mb-4 pr-2 cyber-scrollbar">
-          <div
-            v-if="filteredGames.length === 0"
-            class="text-gray-400 text-center py-8 bg-gray-800/50 rounded-lg"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mx-auto text-gray-500 mb-3"
+              class="h-5 w-5 text-space-text-muted"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
               <path
                 fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                 clip-rule="evenodd"
               />
             </svg>
-            <p v-if="gameSearch" class="font-orbitron">
-              Aucun jeu ne correspond à votre recherche
-            </p>
-            <p v-else class="font-orbitron">Aucun jeu disponible</p>
-          </div>
-
-          <div v-else>
-            <div
-              v-for="game in filteredGames"
-              :key="game._id"
-              @click="selectGame(game)"
-              :class="[
-                'p-4 rounded-lg mb-3 flex items-center cursor-pointer transition-all',
-                hasLevelForGame(game)
-                  ? 'bg-gray-800/70 hover:bg-gray-800/90 border border-gray-700'
-                  : 'cyber-game-item bg-gray-800/40 hover:bg-gray-700/70 border border-gray-700 hover:border-cyan-500/50',
-              ]"
-            >
-              <!-- Image du jeu -->
-              <div
-                class="w-14 h-14 rounded overflow-hidden bg-gray-900 flex-shrink-0"
-              >
-                <img
-                  v-if="game.imageUrl"
-                  :src="game.imageUrl"
-                  :alt="game.name"
-                  class="w-full h-full object-cover"
-                  @error="handleImageError"
-                />
-                <div
-                  v-else
-                  class="w-full h-full flex items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-gray-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Informations du jeu -->
-              <div class="ml-4 flex-grow">
-                <h4 class="text-white font-medium font-orbitron">
-                  {{ game.name }}
-                </h4>
-                <p
-                  v-if="game.description"
-                  class="text-gray-400 text-sm line-clamp-1"
-                >
-                  {{ game.description }}
-                </p>
-              </div>
-
-              <!-- Indicateur de niveau déjà défini -->
-              <div
-                v-if="hasLevelForGame(game)"
-                class="ml-3 px-2 py-1 rounded-full bg-gray-700/80 border border-gray-600 flex-shrink-0"
-              >
-                <span class="text-xs text-white font-orbitron">
-                  {{ getLevelForGame(game)?.level }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Boutons d'action -->
-        <div class="flex justify-end mt-4 border-t border-gray-800 pt-4">
-          <button
-            @click="showGameSelector = false"
-            class="cyberpunk-btn-gray px-4 py-2 rounded-md font-orbitron text-sm"
-          >
-            Annuler
-          </button>
-        </div>
+          </template>
+        </SpaceInput>
       </div>
-    </div>
 
-    <!-- Modal pour définir le niveau -->
-    <div
-      v-if="showLevelSelector"
-      class="fixed inset-0 flex items-center justify-center z-50 px-4 py-6"
-    >
-      <div
-        class="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        @click="cancelLevelEdit"
-      ></div>
-
-      <div
-        class="cyber-modal bg-gray-900 rounded-lg p-5 sm:p-6 w-full max-w-lg relative z-10 border border-cyan-500/50 shadow-lg shadow-cyan-500/30 max-h-[90vh] overflow-y-auto cyber-scrollbar"
+      <!-- État vide -->
+      <SpaceTerminal
+        v-if="filteredGames.length === 0"
+        command="search_games"
+        title="Recherche de jeux"
+        :showCursor="true"
+        className="mb-4"
       >
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl text-white font-audiowide flex items-center">
-            <img
-              v-if="selectedGame?.imageUrl"
-              :src="selectedGame.imageUrl"
-              :alt="selectedGame?.name"
-              class="w-8 h-8 rounded mr-3 object-cover"
-            />
-            <span>{{ selectedGame?.name }}</span>
-          </h3>
-          <button
-            @click="cancelLevelEdit"
-            class="text-gray-400 hover:text-white hover:bg-gray-800/50 p-1 rounded-md transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+        <div v-if="gameSearch" class="text-space-error">
+          Aucun jeu ne correspond à votre recherche "{{ gameSearch }}"
         </div>
+        <div v-else class="text-space-error">Aucun jeu disponible</div>
+        <div class="text-space-text-muted mt-2">
+          Contactez un administrateur pour ajouter de nouveaux jeux
+        </div>
+      </SpaceTerminal>
 
-        <form @submit.prevent="saveLevel" class="space-y-6">
-          <!-- Sélection du niveau -->
-          <div>
-            <label
-              class="block text-cyan-300 text-sm font-medium mb-3 font-orbitron"
-              >Niveau de jeu
-              <span class="text-pink-500 ml-1">*</span>
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Liste de jeux -->
+      <div v-else class="max-h-96 overflow-y-auto mb-4 pr-2 space-y-3">
+        <SpaceCard
+          v-for="game in filteredGames"
+          :key="game._id"
+          @click="selectGame(game)"
+          :variant="hasLevelForGame(game) ? 'dark' : 'primary'"
+          :className="[
+            'cursor-pointer transition-all hover:scale-[1.02] duration-300 overflow-hidden',
+            hasLevelForGame(game) ? 'opacity-50' : '',
+          ]"
+        >
+          <div class="flex items-center">
+            <!-- Image du jeu -->
+            <div
+              class="w-14 h-14 rounded overflow-hidden bg-space-bg-light flex-shrink-0 mr-3 border border-space-primary/30"
+            >
+              <img
+                v-if="game.imageUrl"
+                :src="game.imageUrl"
+                :alt="game.name"
+                class="w-full h-full object-cover"
+                @error="handleImageError"
+              />
               <div
-                v-for="levelOption in availableLevels"
-                :key="levelOption.value"
-                :class="[
-                  'p-3 border rounded-md cursor-pointer transition-all duration-300 flex items-center justify-between',
-                  selectedLevel === levelOption.value
-                    ? 'border-cyan-500 bg-cyan-900/30 shadow-inner shadow-cyan-500/20'
-                    : 'border-gray-700 hover:border-gray-500',
-                ]"
-                @click="selectedLevel = levelOption.value"
+                v-else
+                class="w-full h-full flex items-center justify-center"
               >
-                <div class="flex items-center">
-                  <div
-                    :class="getLevelClass(levelOption.value)"
-                    class="w-3 h-3 rounded-full mr-3"
-                  ></div>
-                  <span class="text-white font-orbitron text-sm">{{
-                    levelOption.label
-                  }}</span>
-                </div>
                 <svg
-                  v-if="selectedLevel === levelOption.value"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-cyan-500"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+                  class="h-8 w-8 text-space-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
                   <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
                   />
                 </svg>
               </div>
             </div>
-          </div>
 
-          <!-- Pseudo dans le jeu -->
-          <div>
-            <label
-              for="gameUsername"
-              class="block text-cyan-300 text-sm font-medium mb-2 font-orbitron"
-            >
-              Pseudo dans le jeu (optionnel)
-            </label>
-            <input
-              id="gameUsername"
-              v-model="gameUsername"
-              type="text"
-              placeholder="Votre pseudo dans ce jeu"
-              maxlength="30"
-              class="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white focus:border-cyan-500 focus:outline-none font-orbitron"
-            />
-            <div class="flex justify-between mt-1">
-              <p class="text-xs text-gray-400">
-                Par exemple: Votre pseudo League of Legends pour accéder à votre
-                OP.GG
+            <!-- Informations du jeu -->
+            <div class="flex-grow min-w-0">
+              <h4 class="text-white font-nasa">{{ game.name }}</h4>
+              <p
+                v-if="game.description"
+                class="text-space-text-muted text-sm line-clamp-1"
+              >
+                {{ game.description }}
               </p>
-              <p class="text-xs text-gray-400">{{ gameUsername.length }}/30</p>
+            </div>
+
+            <!-- Indicateur de niveau déjà défini -->
+            <div v-if="hasLevelForGame(game)" class="ml-3">
+              <SpaceBadge variant="outline" size="sm">
+                {{ getLevelForGame(game)?.level }}
+              </SpaceBadge>
             </div>
           </div>
+        </SpaceCard>
+      </div>
 
-          <!-- Classement -->
-          <div>
-            <div class="flex items-center mb-2">
-              <input
-                id="isRanked"
-                v-model="isRanked"
-                type="checkbox"
-                class="h-4 w-4 text-cyan-500 focus:ring-cyan-500 border-gray-700 rounded bg-gray-800"
-              />
-              <label
-                for="isRanked"
-                class="ml-2 block text-cyan-300 text-sm font-medium font-orbitron"
-              >
-                Je joue en classé
-              </label>
-            </div>
+      <template #footer>
+        <div class="flex justify-end">
+          <SpaceButton @click="showGameSelector = false" variant="ghost">
+            Annuler
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
 
-            <div v-if="isRanked" class="mt-3">
-              <label
-                for="rank"
-                class="block text-cyan-300 text-sm font-medium mb-2 font-orbitron"
-              >
-                Rang actuel
-                <span class="text-pink-500 ml-1">*</span>
-              </label>
+    <!-- Modal pour définir le niveau -->
+    <SpaceModal
+      v-model="showLevelSelector"
+      :title="
+        selectedGame?.name
+          ? `DÉFINIR NIVEAU: ${selectedGame.name}`
+          : 'DÉFINIR NIVEAU'
+      "
+    >
+      <form @submit.prevent="saveLevel" class="space-y-6">
+        <!-- Sélection du niveau -->
+        <div>
+          <label class="block text-space-primary-light text-sm font-nasa mb-3">
+            Niveau de jeu
+            <span class="text-space-error ml-1">*</span>
+          </label>
 
-              <input
-                id="rank"
-                v-model="rank"
-                type="text"
-                placeholder="Ex: Diamant 2, Master, Silver 3..."
-                maxlength="20"
-                :class="[
-                  'w-full p-3 bg-gray-800 border rounded-md text-white focus:outline-none font-orbitron',
-                  rankError
-                    ? 'border-pink-500 focus:border-pink-500 focus:ring-1 focus:ring-pink-500/50'
-                    : 'border-gray-700 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50',
-                ]"
-                required
-              />
-              <div class="flex justify-between mt-1">
-                <p v-if="rankError" class="text-xs text-pink-500 font-orbitron">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3 w-3 inline mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
-                  Veuillez indiquer votre rang actuel
-                </p>
-                <p v-else class="text-xs text-amber-400 italic font-orbitron">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3 w-3 inline mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Merci d'indiquer votre plus haut rang, pas un smurf
-                </p>
-                <p class="text-xs text-gray-400">{{ rank.length }}/20</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sélection des rôles si disponibles -->
-          <div
-            v-if="
-              selectedGame &&
-              selectedGame.roles &&
-              selectedGame.roles.length > 0
-            "
-            class="mb-6"
-          >
-            <label
-              class="flex items-center justify-between text-cyan-300 text-sm font-medium mb-2 font-orbitron"
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              v-for="levelOption in availableLevels"
+              :key="levelOption.value"
+              :class="[
+                'p-3 border rounded-md cursor-pointer transition-all duration-300 flex items-center justify-between',
+                selectedLevel === levelOption.value
+                  ? 'border-space-primary bg-space-primary/10 shadow-inner'
+                  : 'border-space-bg-light hover:border-space-primary/30',
+              ]"
+              @click="selectedLevel = levelOption.value"
             >
-              <span class="flex items-center">
-                Rôles préférés
-                <span class="text-pink-500 ml-1">*</span>
-              </span>
-              <div class="flex items-center gap-3">
-                <button
-                  @click="selectAllRoles"
-                  type="button"
-                  class="px-2 py-0.5 text-xs bg-cyan-900/50 hover:bg-cyan-800/60 text-cyan-300 rounded-md border border-cyan-700/50 transition-colors font-orbitron flex items-center"
+              <div class="flex items-center">
+                <div
+                  class="w-3 h-3 rounded-full mr-3"
+                  :class="getLevelColorClass(levelOption.value)"
+                ></div>
+                <span class="text-space-text font-nasa text-sm">{{
+                  levelOption.label
+                }}</span>
+              </div>
+              <svg
+                v-if="selectedLevel === levelOption.value"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-primary"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pseudo dans le jeu -->
+        <div>
+          <label
+            for="gameUsername"
+            class="block text-space-primary-light text-sm font-nasa mb-2"
+          >
+            Pseudo dans le jeu (optionnel)
+          </label>
+          <SpaceInput
+            id="gameUsername"
+            v-model="gameUsername"
+            placeholder="Votre pseudo dans ce jeu"
+            :maxlength="30"
+          />
+          <div class="flex justify-between mt-1">
+            <p class="text-xs text-space-text-muted">
+              Par exemple: Votre pseudo League of Legends pour accéder à votre
+              OP.GG
+            </p>
+            <p class="text-xs text-space-text-muted">
+              {{ gameUsername.length }}/30
+            </p>
+          </div>
+        </div>
+
+        <!-- Classement -->
+        <div>
+          <div class="flex items-center mb-2">
+            <input
+              id="isRanked"
+              v-model="isRanked"
+              type="checkbox"
+              class="h-4 w-4 text-space-primary focus:ring-space-primary border-space-bg-light rounded bg-space-bg"
+            />
+            <label
+              for="isRanked"
+              class="ml-2 block text-space-primary-light text-sm font-nasa"
+            >
+              Je joue en classé
+            </label>
+          </div>
+
+          <div v-if="isRanked" class="mt-3">
+            <label
+              for="rank"
+              class="block text-space-primary-light text-sm font-nasa mb-2"
+            >
+              Rang actuel
+              <span class="text-space-error ml-1">*</span>
+            </label>
+
+            <SpaceInput
+              id="rank"
+              v-model="rank"
+              placeholder="Ex: Diamant 2, Master, Silver 3..."
+              :maxlength="20"
+              :errorMessage="
+                rankError ? 'Veuillez indiquer votre rang actuel' : ''
+              "
+            />
+
+            <div class="flex justify-between mt-1">
+              <p v-if="!rankError" class="text-xs text-space-accent italic">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 inline mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Merci d'indiquer votre plus haut rang, pas un smurf
+              </p>
+              <p class="text-xs text-space-text-muted">{{ rank.length }}/20</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sélection des rôles si disponibles -->
+        <div
+          v-if="
+            selectedGame && selectedGame.roles && selectedGame.roles.length > 0
+          "
+        >
+          <label
+            class="flex items-center justify-between text-space-primary-light text-sm font-nasa mb-2"
+          >
+            <span class="flex items-center">
+              Rôles préférés
+              <span class="text-space-error ml-1">*</span>
+            </span>
+            <div class="flex items-center gap-3">
+              <SpaceButton
+                @click="selectAllRoles"
+                type="button"
+                variant="ghost"
+                size="xs"
+                className="flex items-center"
+              >
+                <template #icon>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-3 w-3 mr-1"
@@ -697,150 +632,204 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  Fill
-                </button>
-                <span class="text-xs text-amber-400">
-                  {{ selectedRoles.length }} /
-                  {{ selectedGame?.roles?.length || 0 }}
-                </span>
-              </div>
-            </label>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div
-                v-for="role in selectedGame.roles"
-                :key="role.name"
-                :class="[
-                  'flex items-center p-2 border rounded-md cursor-pointer transition-all duration-300 overflow-hidden',
-                  selectedRoles.includes(role.name)
-                    ? 'border-cyan-500 bg-cyan-900/30 shadow-inner shadow-cyan-500/20'
-                    : 'border-gray-700 hover:border-gray-500',
-                ]"
-                @click="toggleRole(role.name)"
-              >
-                <input
-                  type="checkbox"
-                  :id="`role-${role.name}`"
-                  :checked="selectedRoles.includes(role.name)"
-                  @change="toggleRole(role.name)"
-                  class="h-4 w-4 text-cyan-500 focus:ring-cyan-500 border-gray-700 rounded bg-gray-800 flex-shrink-0"
-                />
-                <label
-                  :for="`role-${role.name}`"
-                  class="ml-2 flex-grow cursor-pointer flex items-center truncate"
-                  :title="role.name"
-                >
-                  <div
-                    class="w-3 h-3 rounded-full mr-2 flex-shrink-0"
-                    :style="{ backgroundColor: role.color || '#6B7280' }"
-                  ></div>
-                  <span class="text-white font-orbitron text-sm truncate">{{
-                    role.name
-                  }}</span>
-                </label>
-              </div>
+                </template>
+                Tout sélectionner
+              </SpaceButton>
+              <SpaceBadge variant="primary" size="sm">
+                {{ selectedRoles.length }} /
+                {{ selectedGame?.roles?.length || 0 }}
+              </SpaceBadge>
             </div>
+          </label>
 
-            <p
-              v-if="roleError"
-              class="text-xs text-pink-500 font-orbitron mt-1"
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              v-for="role in selectedGame.roles"
+              :key="role.name"
+              :class="[
+                'flex items-center p-2 border rounded-md cursor-pointer transition-all duration-300 overflow-hidden',
+                selectedRoles.includes(role.name)
+                  ? 'border-space-primary bg-space-primary/10'
+                  : 'border-space-bg-light hover:border-space-primary/30',
+              ]"
+              @click="toggleRole(role.name)"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-3 w-3 inline mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <input
+                type="checkbox"
+                :id="`role-${role.name}`"
+                :checked="selectedRoles.includes(role.name)"
+                @change="toggleRole(role.name)"
+                class="h-4 w-4 text-space-primary focus:ring-space-primary border-space-bg-light rounded bg-space-bg flex-shrink-0"
+              />
+              <label
+                :for="`role-${role.name}`"
+                class="ml-2 flex-grow cursor-pointer flex items-center truncate"
+                :title="role.name"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              Veuillez sélectionner au moins un rôle
+                <div
+                  class="w-3 h-3 rounded-full mr-2 flex-shrink-0"
+                  :style="{ backgroundColor: role.color || '#6B7280' }"
+                ></div>
+                <span class="text-space-text font-nasa text-sm truncate">{{
+                  role.name
+                }}</span>
+              </label>
+            </div>
+          </div>
+
+          <p v-if="roleError" class="text-xs text-space-error mt-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3 w-3 inline mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            Veuillez sélectionner au moins un rôle
+          </p>
+        </div>
+
+        <!-- Commentaire -->
+        <div>
+          <label
+            for="comment"
+            class="block text-space-primary-light text-sm font-nasa mb-2"
+          >
+            Commentaire (optionnel)
+          </label>
+          <textarea
+            id="comment"
+            v-model="comment"
+            rows="3"
+            placeholder="Informations complémentaires, rôle préféré, etc."
+            maxlength="150"
+            class="w-full p-3 bg-space-bg-light border border-space-bg-light rounded-md text-space-text focus:border-space-primary focus:outline-none focus:ring-1 focus:ring-space-primary/30 font-mono resize-none"
+          ></textarea>
+          <div class="flex justify-end mt-1">
+            <p class="text-xs text-space-text-muted">
+              {{ comment.length }}/150
             </p>
           </div>
+        </div>
 
-          <!-- Commentaire -->
-          <div>
-            <label
-              for="comment"
-              class="block text-cyan-300 text-sm font-medium mb-2 font-orbitron"
-            >
-              Commentaire (optionnel)
-            </label>
-            <textarea
-              id="comment"
-              v-model="comment"
-              rows="3"
-              placeholder="Informations complémentaires, rôle préféré, etc."
-              maxlength="150"
-              class="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white focus:border-cyan-500 focus:outline-none font-orbitron"
-            ></textarea>
-            <div class="flex justify-end mt-1">
-              <p class="text-xs text-gray-400">{{ comment.length }}/150</p>
-            </div>
-          </div>
-
-          <!-- Boutons d'action -->
-          <div class="flex justify-end space-x-3 pt-3 border-t border-gray-800">
-            <button
-              type="button"
-              @click="cancelLevelEdit"
-              class="cyberpunk-btn-gray px-4 py-2 rounded-md font-orbitron text-sm"
-            >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              class="cyberpunk-btn-cyan px-4 py-2 rounded-md font-orbitron text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="!selectedLevel || isSaving"
-            >
-              <span v-if="isSaving" class="flex items-center">
-                <svg
-                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Enregistrement...
-              </span>
-              <span v-else>Enregistrer</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <!-- Boutons d'action -->
+        <div
+          class="flex justify-end space-x-3 pt-3 border-t border-space-bg-light"
+        >
+          <SpaceButton type="button" @click="cancelLevelEdit" variant="ghost">
+            Annuler
+          </SpaceButton>
+          <SpaceButton
+            type="submit"
+            variant="primary"
+            :disabled="!selectedLevel || isSaving"
+          >
+            <template v-if="isSaving">
+              <svg
+                class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Enregistrement...
+            </template>
+            <template v-else>Enregistrer</template>
+          </SpaceButton>
+        </div>
+      </form>
+    </SpaceModal>
 
     <!-- Modal de confirmation de suppression -->
-    <ConfirmationDialog
+    <SpaceModal
       v-if="showDeleteConfirmation"
-      title="Confirmer la suppression"
-      :message="`Êtes-vous sûr de vouloir supprimer votre niveau pour ${
-        levelToDelete ? getGameName(levelToDelete) : 'Jeu inconnu'
-      } ?`"
-      @confirm="deleteLevel"
-      @cancel="cancelDelete"
-    />
+      v-model="showDeleteConfirmation"
+      title="CONFIRMATION DE SUPPRESSION"
+      variant="error"
+    >
+      <div class="text-center mb-6 space-y-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-space-error mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          />
+        </svg>
 
-    <!-- Toast pour les notifications (en utilisant votre composant) -->
-    <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
+        <p class="text-space-text">
+          Êtes-vous sûr de vouloir supprimer votre niveau pour
+          <span class="text-space-primary-light font-nasa">
+            {{ levelToDelete ? getGameName(levelToDelete) : "Jeu inconnu" }}
+          </span>
+          ?
+        </p>
+
+        <p class="text-space-text-muted text-sm">
+          Cette action est irréversible.
+        </p>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-center space-x-4">
+          <SpaceButton @click="cancelDelete" variant="ghost">
+            Annuler
+          </SpaceButton>
+          <SpaceButton
+            @click="deleteLevel"
+            variant="error"
+            :loading="isDeleting"
+          >
+            Supprimer
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
+
+    <!-- Toast pour les notifications -->
+    <div
+      v-if="toast.show"
+      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
+      :class="[
+        toast.show ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
+        toast.type === 'success' ? 'bg-space-success/80' : 'bg-space-error/80',
+      ]"
+    >
+      <SpaceAlert
+        :variant="toast.type"
+        :dismissible="true"
+        @dismiss="toast.show = false"
+        className="backdrop-blur-sm"
+      >
+        {{ toast.message }}
+      </SpaceAlert>
+    </div>
   </div>
 </template>
 
@@ -948,6 +937,36 @@ const getGameName = (level: PlayerGameLevel): string => {
   return typeof level.game === "object" && level.game.name
     ? level.game.name
     : "Jeu inconnu";
+};
+
+const getLevelVariant = (level: string): string => {
+  switch (level.toLowerCase()) {
+    case "débutant":
+      return "success"; // Vert contrasté
+    case "intermédiaire":
+      return "primary"; // Violet
+    case "avancé":
+      return "secondary"; // Bleu vif
+    case "expert":
+      return "accent"; // Orange/doré
+    default:
+      return "primary";
+  }
+};
+
+const getLevelColorClass = (level: string): string => {
+  switch (level) {
+    case "débutant":
+      return "bg-green-500";
+    case "intermédiaire":
+      return "bg-blue-500";
+    case "avancé":
+      return "bg-purple-500";
+    case "expert":
+      return "bg-pink-500";
+    default:
+      return "bg-gray-500";
+  }
 };
 
 // Obtenir la classe CSS pour le niveau

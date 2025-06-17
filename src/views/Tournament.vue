@@ -1,10 +1,12 @@
 <template>
-  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24">
-    <div class="mb-6">
-      <!-- Bouton retour existant -->
-      <button
+  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+    <div class="mb-6 flex justify-between items-center">
+      <!-- Bouton retour -->
+      <SpaceButton
         @click="goBackToTournaments"
-        class="cyberpunk-btn-pink px-5 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 w-full sm:w-auto"
+        variant="secondary"
+        size="sm"
+        className="flex items-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -19,16 +21,17 @@
           />
         </svg>
         Retour aux tournois
-      </button>
+      </SpaceButton>
 
-      <!-- ✅ VERSION MOBILE (au-dessus comme avant) -->
-      <div v-if="hasNavigation" class="mt-4 sm:hidden">
-        <div class="flex items-center justify-between gap-2">
-          <!-- Bouton précédent mobile -->
-          <button
+      <!-- Navigation mobile entre tournois -->
+      <div v-if="hasNavigation" class="sm:hidden">
+        <div class="flex items-center gap-2">
+          <SpaceButton
             v-if="previousTournament"
             @click="navigateToTournament(previousTournament._id!)"
-            class="cyberpunk-btn-cyan p-2 rounded-md flex items-center justify-center shadow-lg transition-all duration-300"
+            variant="outline"
+            size="sm"
+            className="p-2"
             :title="previousTournament.name"
           >
             <svg
@@ -43,20 +46,18 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </button>
+          </SpaceButton>
 
-          <!-- Indicateur central mobile -->
-          <div
-            class="text-center text-white font-orbitron text-xs bg-black/50 px-3 py-2 rounded-md border border-pink-500/30"
-          >
+          <SpaceBadge variant="primary" size="md" className="px-3 py-1">
             {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
-          </div>
+          </SpaceBadge>
 
-          <!-- Bouton suivant mobile -->
-          <button
+          <SpaceButton
             v-if="nextTournament"
             @click="navigateToTournament(nextTournament._id!)"
-            class="cyberpunk-btn-cyan p-2 rounded-md flex items-center justify-center shadow-lg transition-all duration-300"
+            variant="outline"
+            size="sm"
+            className="p-2"
             :title="nextTournament.name"
           >
             <svg
@@ -71,141 +72,116 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </button>
+          </SpaceButton>
         </div>
       </div>
     </div>
     <div v-if="hasNavigation" class="hidden sm:block">
       <!-- Flèche précédent (côté gauche) -->
-      <button
+      <div
         v-if="previousTournament"
-        @click="navigateToTournament(previousTournament._id!)"
-        class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 group"
-        :title="`Tournoi précédent: ${previousTournament.name}`"
+        class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40"
       >
-        <div
-          class="tournament-nav-button tournament-nav-left flex items-center bg-black/80 backdrop-blur-sm border border-cyan-500/50 rounded-lg shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300"
+        <SpaceButton
+          @click="navigateToTournament(previousTournament._id!)"
+          variant="primary"
+          size="md"
+          className="group flex items-center space-nav-button"
+          :title="`Tournoi précédent: ${previousTournament.name}`"
         >
-          <!-- Icône flèche -->
-          <div class="p-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-cyan-400 group-hover:-translate-x-1 transition-transform duration-300"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-
-          <!-- Panneau d'information (apparaît au hover) -->
-          <div
-            class="tournament-nav-info overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-xs"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 mr-2 transition-transform duration-300 group-hover:-translate-x-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <div
-              class="px-4 py-3 border-l border-cyan-500/30 whitespace-nowrap"
-            >
-              <div class="text-xs text-cyan-300 font-orbitron opacity-70 mb-1">
-                Précédent
-              </div>
-              <div class="text-sm text-white font-orbitron font-medium">
-                {{ previousTournament.name }}
-              </div>
-              <div class="text-xs text-cyan-200 opacity-80 mt-1">
-                {{ formatLocalDate(previousTournament.date) }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </button>
+            <path
+              fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="hidden lg:block">Précédent</span>
+        </SpaceButton>
+      </div>
 
       <!-- Flèche suivant (côté droit) -->
-      <button
+      <div
         v-if="nextTournament"
-        @click="navigateToTournament(nextTournament._id!)"
-        class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 group"
-        :title="`Tournoi suivant: ${nextTournament.name}`"
+        class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40"
       >
-        <div
-          class="tournament-nav-button tournament-nav-right flex items-center bg-black/80 backdrop-blur-sm border border-cyan-500/50 rounded-lg shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 flex-row-reverse"
+        <SpaceButton
+          @click="navigateToTournament(nextTournament._id!)"
+          variant="primary"
+          size="md"
+          className="group flex items-center space-nav-button"
+          :title="`Tournoi suivant: ${nextTournament.name}`"
         >
-          <!-- Icône flèche -->
-          <div class="p-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-cyan-400 group-hover:translate-x-1 transition-transform duration-300"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-
-          <!-- Panneau d'information (apparaît au hover) -->
-          <div
-            class="tournament-nav-info overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-xs"
+          <span class="hidden lg:block">Suivant</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <div
-              class="px-4 py-3 border-r border-cyan-500/30 whitespace-nowrap text-right"
-            >
-              <div class="text-xs text-cyan-300 font-orbitron opacity-70 mb-1">
-                Suivant
-              </div>
-              <div class="text-sm text-white font-orbitron font-medium">
-                {{ nextTournament.name }}
-              </div>
-              <div class="text-xs text-cyan-200 opacity-80 mt-1">
-                {{ formatLocalDate(nextTournament.date) }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </button>
+            <path
+              fill-rule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </SpaceButton>
+      </div>
 
-      <!-- Indicateur de position (centré en bas) -->
+      <!-- Indicateur de position des tournois -->
       <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
-        <div
-          class="bg-black/80 backdrop-blur-sm border border-pink-500/50 rounded-lg px-4 py-2 shadow-lg shadow-pink-500/30"
-        >
-          <div class="text-center text-white font-orbitron">
-            <div class="text-xs text-pink-300 opacity-70">Tournoi</div>
-            <div class="text-sm font-medium">
+        <SpaceCard variant="dark" className="px-4 py-2">
+          <div class="text-center">
+            <div class="text-xs text-space-primary-light font-nasa">
+              TOURNOI
+            </div>
+            <div class="text-sm font-mono font-medium">
               {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
             </div>
           </div>
-        </div>
+        </SpaceCard>
       </div>
     </div>
+
     <!-- Loader durant le chargement -->
     <div v-if="isLoading" class="flex justify-center py-12">
-      <CyberpunkLoader />
+      <SpaceLoader text="Chargement des données du tournoi..." />
     </div>
 
     <!-- Message d'erreur si le tournoi n'existe pas -->
-    <CyberTerminal
+    <SpaceTerminal
       v-else-if="!tournament"
       command="get_tournament --id"
-      errorCode="404_TOURNAMENT_NOT_FOUND"
-      message="Ce tournoi n'existe pas ou a été supprimé."
-      class="my-8"
-    />
+      title="CONSOLE SYSTÈME"
+      :showCursor="true"
+      className="my-8"
+    >
+      <div class="text-space-error font-mono">
+        Erreur 404: Ce tournoi n'existe pas ou a été supprimé.
+      </div>
+      <div class="text-space-text-muted mt-2">
+        Vérifiez l'URL ou retournez à la liste des tournois disponibles.
+      </div>
+    </SpaceTerminal>
 
     <!-- Affichage du tournoi -->
-    <div v-else class="tournament-details">
+    <div v-else class="tournament-details flex flex-col gap-6">
       <!-- En-tête avec les informations principales -->
-      <div
-        class="bg-black/75 backdrop-blur-sm rounded-lg overflow-hidden border border-pink-500 shadow-lg shadow-pink-500/30 mb-8"
+      <SpaceCard
+        variant="primary"
+        :stars="true"
+        :decorated="true"
+        className="overflow-hidden"
       >
         <!-- Image de bannière du jeu -->
-        <div class="relative h-40 sm:h-56 md:h-72 overflow-hidden">
+        <div
+          class="relative h-40 sm:h-56 md:h-64 -mx-6 -mt-6 mb-6 overflow-hidden"
+        >
           <!-- Image du jeu si elle existe -->
           <template v-if="tournament.game.imageUrl && !imageError">
             <img
@@ -216,15 +192,15 @@
             />
           </template>
 
-          <!-- SVG de remplacement si pas d'image -->
+          <!-- Placeholder si pas d'image -->
           <div
             v-else
-            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-black"
+            class="w-full h-full flex items-center justify-center bg-space-bg-light"
           >
-            <div class="cyber-game-icon">
+            <div class="text-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-32 w-32 text-pink-500/60"
+                class="h-24 w-24 text-space-primary/60 mx-auto"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -232,58 +208,56 @@
                   d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
                 />
               </svg>
-              <div class="text-white text-xl font-audiowide mt-4 text-center">
+              <div class="text-space-text font-heading mt-2">
                 {{ tournament.game.name }}
               </div>
             </div>
           </div>
 
           <div
-            class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"
+            class="absolute inset-0 bg-gradient-to-t from-space-bg/90 to-transparent"
           ></div>
 
-          <!-- Badge "Terminé" reste inchangé -->
-          <div
-            v-if="tournament.finished"
-            class="absolute top-4 right-4 px-4 py-2 text-green-400 font-orbitron flex items-center bg-green-900/80 rounded-full border border-green-500/80 text-sm shadow-lg"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+          <!-- Badge "Terminé" -->
+          <div class="absolute top-4 right-4">
+            <SpaceBadge
+              v-if="tournament.finished"
+              variant="success"
+              size="md"
+              className="flex items-center gap-1"
             >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Tournoi terminé
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Tournoi terminé
+            </SpaceBadge>
           </div>
 
-          <!-- Titre et informations principales restent inchangés -->
+          <!-- Titre et informations principales -->
           <div class="absolute bottom-0 left-0 right-0 p-6">
-            <h1
-              class="text-3xl md:text-4xl text-white font-audiowide mb-2 neon-text"
-            >
+            <h1 class="text-3xl md:text-4xl text-white font-heading">
               {{ tournament.name }}
             </h1>
           </div>
         </div>
 
         <!-- Informations détaillées -->
-        <div
-          class="p-4 sm:p-6 bg-gray-900/50 font-orbitron grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Colonne 1: Date et jeu -->
-          <div class="space-y-3 sm:space-y-4">
-            <p
-              class="text-white flex items-start sm:items-center flex-wrap text-sm sm:text-base"
-            >
+          <div class="space-y-4">
+            <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-pink-500"
+                class="h-5 w-5 mt-0.5 text-space-primary flex-shrink-0"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -293,14 +267,18 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="font-semibold">Date:</span>
-              <span class="ml-2">{{ formatLocalDate(tournament.date) }}</span>
-            </p>
+              <div>
+                <div class="font-heading text-space-text-muted">Date</div>
+                <div class="text-space-text">
+                  {{ formatLocalDate(tournament.date) }}
+                </div>
+              </div>
+            </div>
 
-            <p class="text-white flex items-center">
+            <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-cyan-500"
+                class="h-5 w-5 mt-0.5 text-space-secondary flex-shrink-0"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -310,86 +288,88 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="font-semibold">Jeu:</span>
-              <span class="ml-2">{{ tournament.game.name }}</span>
-            </p>
-            <p
-              v-if="tournament.playerCap > 0"
-              class="text-white flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-cyan-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="font-semibold">Limite:</span>
-              <span class="ml-2">
-                {{ tournament.players.length }} /
-                {{ tournament.playerCap }} joueurs
-              </span>
-            </p>
-
-            <!-- Barre de progression pour les places -->
-            <div
-              v-if="tournament.playerCap > 0"
-              class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden"
-              title="Taux de remplissage du tournoi"
-            >
-              <div
-                class="bg-cyan-500 h-2.5 rounded-full transition-all duration-500"
-                :style="`width: ${Math.min(
-                  100,
-                  (tournament.players.length / tournament.playerCap) * 100
-                )}%`"
-              ></div>
+              <div>
+                <div class="font-heading text-space-text-muted">Jeu</div>
+                <div class="text-space-text">{{ tournament.game.name }}</div>
+              </div>
             </div>
 
-            <!-- Liste d'attente si applicable -->
-            <div
-              v-if="hasWaitlist"
-              class="mt-3 pt-2 border-t border-gray-700/50"
-            >
-              <p class="text-white flex items-center">
+            <div v-if="tournament.playerCap > 0" class="space-y-2">
+              <div class="flex items-start gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-pink-500"
+                  class="h-5 w-5 mt-0.5 text-space-accent flex-shrink-0"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="font-semibold">Liste d'attente:</span>
-                <span class="ml-2">{{ waitlistCount }} joueurs</span>
-              </p>
+                <div>
+                  <div class="font-heading text-space-text-muted">Places</div>
+                  <div class="text-space-text">
+                    {{ tournament.players.length }} / {{ tournament.playerCap }}
+                  </div>
+                </div>
+              </div>
 
-              <p
-                v-if="isUserInWaitlist"
-                class="text-sm text-pink-300 mt-1 font-orbitron"
+              <!-- Barre de progression pour les places -->
+              <div
+                class="w-full bg-space-bg-light/30 rounded-full h-2 overflow-hidden"
               >
-                Vous êtes en position
-                <span class="font-bold">{{ getUserWaitlistPosition }}</span>
-                dans la liste d'attente
-              </p>
+                <div
+                  class="bg-space-accent h-2 rounded-full transition-all duration-500"
+                  :style="`width: ${Math.min(
+                    100,
+                    (tournament.players.length / tournament.playerCap) * 100
+                  )}%`"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Liste d'attente si applicable -->
+            <div
+              v-if="hasWaitlist"
+              class="border-t border-space-bg-light/30 pt-3"
+            >
+              <div class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mt-0.5 text-space-warning flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <div>
+                  <div class="font-heading text-space-text-muted">
+                    Liste d'attente
+                  </div>
+                  <div class="text-space-text">{{ waitlistCount }} joueurs</div>
+                  <p
+                    v-if="isUserInWaitlist"
+                    class="text-sm text-space-warning mt-1"
+                  >
+                    Vous êtes en liste d'attente {{ getUserWaitlistPosition }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Colonne 2: Participants et Discord -->
           <div class="space-y-4">
-            <p class="text-white flex items-center">
+            <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-purple-500"
+                class="h-5 w-5 mt-0.5 text-space-primary flex-shrink-0"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -397,14 +377,18 @@
                   d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
                 />
               </svg>
-              <span class="font-semibold">Participants:</span>
-              <span class="ml-2">{{ getParticipantsCount() }}</span>
-            </p>
+              <div>
+                <div class="font-heading text-space-text-muted">
+                  Participants
+                </div>
+                <div class="text-space-text">{{ getParticipantsCount() }}</div>
+              </div>
+            </div>
 
-            <p class="text-white flex items-center">
+            <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-indigo-500"
+                class="h-5 w-5 mt-0.5 text-space-secondary flex-shrink-0"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -414,9 +398,13 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="font-semibold">Discord:</span>
-              <span class="ml-2">{{ tournament.discordChannelName }}</span>
-            </p>
+              <div>
+                <div class="font-heading text-space-text-muted">Discord</div>
+                <div class="text-space-text">
+                  {{ tournament.discordChannelName || "Non spécifié" }}
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Colonne 3: Actions (inscription/désinscription/check-in) -->
@@ -424,7 +412,8 @@
             v-if="!tournament.finished && user"
             class="flex flex-col space-y-3"
           >
-            <button
+            <!-- Inscription normale -->
+            <SpaceButton
               v-if="
                 !isUserRegistered && !isUserInWaitlist && !tournament.finished
               "
@@ -434,39 +423,51 @@
                   isTournamentFull ? 'waitlist' : 'register'
                 )
               "
-              :class="{
-                'cyberpunk-btn-amber': isTournamentFull,
-                'cyberpunk-btn-pink': !isTournamentFull,
-              }"
-              class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-md flex items-center justify-center font-orbitron text-xs sm:text-sm shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              :variant="isTournamentFull ? 'warning' : 'primary'"
+              className="w-full"
             >
-              <span v-if="isTournamentFull" class="mr-2 font-orbitron"
-                >Rejoindre la liste d'attente</span
-              >
-              <span v-else class="mr-2 font-orbitron">S'inscrire</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3H6a1 1 0 100 2h3v3a1 1 0 102 0v-3h3a1 1 0 100-2h-3V7z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
+              <template v-if="isTournamentFull">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Rejoindre la liste d'attente
+              </template>
+              <template v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                S'inscrire
+              </template>
+            </SpaceButton>
 
-            <button
+            <!-- Quitter la liste d'attente -->
+            <SpaceButton
               v-if="isUserInWaitlist && !tournament.finished"
               @click="openRegistrationPopup(tournament, 'unregister-waitlist')"
-              class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              variant="error"
+              className="w-full"
             >
-              <span class="mr-2">Quitter la liste d'attente</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                class="h-5 w-5 mr-2"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -476,70 +477,41 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </button>
+              Quitter la liste d'attente
+            </SpaceButton>
 
-            <!-- Groupe de boutons pour check-in + désinscription -->
-            <div
-              v-else-if="isUserRegistered && isCheckInAvailable"
-              class="flex flex-col space-y-3"
+            <!-- Check-in -->
+            <SpaceButton
+              v-if="isUserRegistered && isCheckInAvailable"
+              @click="checkIn(tournament._id ?? '', !isCheckedIn)"
+              :variant="isCheckedIn ? 'success' : 'accent'"
+              className="w-full"
             >
-              <!-- Bouton de check-in -->
-              <button
-                @click="checkIn(tournament._id ?? '', !isCheckedIn)"
-                :class="{
-                  'cyberpunk-btn-green': isCheckedIn,
-                  'cyberpunk-btn-amber': !isCheckedIn,
-                }"
-                class="px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <span class="mr-2">
-                  {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
+            </SpaceButton>
 
-              <!-- Bouton de désinscription -->
-              <button
-                @click="openRegistrationPopup(tournament, 'unregister')"
-                class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-              >
-                <span class="mr-2">Se désinscrire</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Bouton de désinscription standard (cas non-check-in) -->
-            <button
-              v-else-if="isUserRegistered && !isCheckInAvailable"
+            <!-- Désinscription -->
+            <SpaceButton
+              v-if="isUserRegistered"
               @click="openRegistrationPopup(tournament, 'unregister')"
-              class="cyberpunk-btn-gray px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              variant="outline-error"
+              className="w-full"
             >
-              <span class="mr-2">Se désinscrire</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                class="h-5 w-5 mr-2"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -549,20 +521,23 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </button>
-            <button
+              Se désinscrire
+            </SpaceButton>
+
+            <!-- Définir niveau de jeu -->
+            <SpaceButton
               v-if="
                 isUserRegistered &&
                 !hasPlayerLevelForGame &&
                 !tournament.finished
               "
-              @click.stop="redirectToPlayerLevel"
-              class="cyberpunk-btn-cyan px-6 py-2.5 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 mt-3"
+              @click="redirectToPlayerLevel"
+              variant="secondary"
+              className="w-full mt-2"
             >
-              <span class="mr-2">Définir votre niveau</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                class="h-5 w-5 mr-2"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -572,27 +547,27 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </button>
+              Définir votre niveau
+            </SpaceButton>
           </div>
         </div>
-      </div>
+      </SpaceCard>
 
       <!-- Contenu principal du tournoi en onglets -->
-      <div
-        class="bg-black/75 backdrop-blur-sm rounded-lg overflow-hidden border border-pink-500 shadow-lg shadow-pink-500/30"
-      >
+      <SpaceCard variant="dark" :stars="true" className="overflow-hidden">
         <!-- Navigation des onglets -->
         <div
-          class="tournament-tabs flex flex-wrap justify-start border-b border-gray-700/50 bg-gray-900/50"
+          class="space-tabs flex flex-wrap border-b border-space-bg-light/30 overflow-x-auto"
         >
           <!-- Onglet Description -->
           <button
             @click="activeTab = 'description'"
-            :class="{
-              'active-tab': activeTab === 'description',
-              'inactive-tab': activeTab !== 'description',
-            }"
-            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
+            :class="[
+              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              activeTab === 'description'
+                ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
+                : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -612,11 +587,12 @@
           <!-- Onglet Participants -->
           <button
             @click="activeTab = 'participants'"
-            :class="{
-              'active-tab': activeTab === 'participants',
-              'inactive-tab': activeTab !== 'participants',
-            }"
-            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
+            :class="[
+              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              activeTab === 'participants'
+                ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
+                : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -638,13 +614,13 @@
           <button
             v-if="shouldShowTwitchTab"
             @click="activeTab = 'twitch'"
-            :class="{
-              'active-tab-twitch': activeTab === 'twitch',
-              'inactive-tab-twitch': activeTab !== 'twitch',
-            }"
-            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all relative"
+            :class="[
+              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              activeTab === 'twitch'
+                ? 'text-space-accent-light bg-space-bg-light/20 border-b-2 border-space-accent'
+                : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
+            ]"
           >
-            <!-- Icône Twitch -->
             <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.429h-3.429l-3 3v-3H6.857V1.714h13.714Z"
@@ -652,15 +628,17 @@
             </svg>
             Streams Live
           </button>
+
           <!-- Onglet Résultats (pour les tournois terminés) -->
           <button
             v-if="tournament.finished"
             @click="activeTab = 'results'"
-            :class="{
-              'active-tab-green': activeTab === 'results',
-              'inactive-tab-green': activeTab !== 'results',
-            }"
-            class="cyber-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-orbitron transition-all"
+            :class="[
+              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              activeTab === 'results'
+                ? 'text-space-success-light bg-space-bg-light/20 border-b-2 border-space-success'
+                : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -699,18 +677,18 @@
         </div>
 
         <!-- Contenu des onglets -->
-        <div class="tournament-content p-6 bg-black/80">
+        <div class="p-6">
           <!-- Onglet Description -->
           <div
             v-if="activeTab === 'description'"
-            class="min-h-[150px] animate__animated animate__fadeIn"
+            class="min-h-[150px] space-fade-in"
           >
             <h3
-              class="text-xl text-white font-audiowide mb-4 flex items-center"
+              class="text-xl text-space-text font-heading mb-4 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-pink-400"
+                class="h-6 w-6 mr-2 text-space-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -722,20 +700,19 @@
               </svg>
               Détails du tournoi
             </h3>
-            <div
-              class="cyber-panel bg-gray-800/80 p-4 rounded-lg border border-cyan-900/50 shadow-lg shadow-cyan-900/20"
-            >
+            <SpaceCard variant="dark" className="p-4">
               <p
                 v-if="tournament.description"
-                class="text-white leading-relaxed description-text"
+                class="text-space-text leading-relaxed"
                 v-html="formatDescription(tournament.description)"
               ></p>
-              <p v-else class="text-gray-400 italic font-orbitron">
+              <p v-else class="text-space-text-muted italic">
                 Pas de description disponible pour ce tournoi.
               </p>
-            </div>
+            </SpaceCard>
           </div>
 
+          <!-- Onglet Twitch Streams -->
           <TwitchStreams
             v-if="activeTab === 'twitch'"
             :tournament-id="tournamentId"
@@ -745,14 +722,14 @@
           <!-- Onglet Participants -->
           <div
             v-if="activeTab === 'participants'"
-            class="min-h-[150px] animate__animated animate__fadeIn"
+            class="min-h-[150px] space-fade-in"
           >
             <h3
-              class="text-xl text-white font-audiowide mb-4 flex items-center"
+              class="text-xl text-space-text font-heading mb-4 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-pink-400"
+                class="h-6 w-6 mr-2 text-space-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -764,32 +741,34 @@
             </h3>
 
             <!-- Vue des équipes si toutes ont au moins un joueur -->
-            <div
+            <SpaceAlert
               v-if="
                 tournament.teams &&
                 tournament.teams.length > 0 &&
                 !tournament.teamsPublished &&
                 !tournament.finished
               "
-              class="bg-gray-800/80 p-4 rounded-lg border border-amber-500/50 shadow-lg shadow-amber-500/20 mb-6"
+              variant="warning"
+              className="mb-6"
             >
-              <div class="flex items-center text-amber-400">
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2"
+                  class="h-6 w-6"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
                     clip-rule="evenodd"
                   />
                 </svg>
-                <p class="font-orbitron">Équipes en cours de création...</p>
-              </div>
-            </div>
+              </template>
+              <p>Équipes en cours de création...</p>
+            </SpaceAlert>
 
+            <!-- Affichage des équipes -->
             <div
               v-if="
                 tournament.teams &&
@@ -797,128 +776,79 @@
                 (tournament.teamsPublished || tournament.finished) &&
                 !hasEmptyTeams
               "
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
             >
-              <div
+              <SpaceCard
                 v-for="team in tournament.teams"
                 :key="team._id"
-                class="bg-gray-800/80 p-3 sm:p-4 rounded-lg border border-purple-500/50 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all"
+                variant="secondary"
+                className="p-3"
               >
                 <h4
-                  class="text-base sm:text-lg text-white font-orbitron border-b border-purple-500/50 pb-2 mb-2 truncate"
-                  :title="team.name"
+                  class="text-lg text-space-text font-heading border-b border-space-bg-light/30 pb-2 mb-2 truncate"
                 >
                   {{ team.name }}
                 </h4>
                 <ul class="space-y-1">
                   <li
-                    v-for="player in team.players"
-                    :key="player._id"
-                    class="text-white flex items-center p-1.5 sm:p-2 bg-gray-900/50 rounded-md border-l-2 border-purple-400/50 text-xs sm:text-sm"
+                    v-for="teamPlayer in team.players"
+                    :key="teamPlayer._id"
+                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-sm"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 flex-shrink-0 text-purple-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                    <router-link
+                      v-if="teamPlayer._id"
+                      :to="{ name: 'Profil', params: { id: teamPlayer._id } }"
+                      class="text-space-text hover:text-space-secondary-light transition-colors truncate"
                     >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <div class="flex-1 flex items-center min-w-0">
-                      <router-link
-                        v-if="player._id"
-                        :to="{ name: 'Profil', params: { id: player._id } }"
-                        class="text-purple-100 text-sm font-orbitron truncate hover:text-pink-400 transition-colors"
-                        :title="player.username"
-                      >
-                        {{ player.username }}
-                      </router-link>
-                      <span
-                        v-else
-                        class="text-purple-100 text-sm font-orbitron truncate"
-                        :title="player.username"
-                      >
-                        {{ player.username }}
-                      </span>
+                      {{ teamPlayer.username }}
+                    </router-link>
+                    <span v-else class="text-space-text truncate">
+                      {{ teamPlayer.username || "Joueur inconnu" }}
+                    </span>
 
-                      <!--  Icône live avec lien Twitch -->
+                    <!-- Badge pour les streams live -->
+                    <div class="flex items-center gap-2 ml-auto">
                       <a
-                        v-if="getPlayerLiveStatus(player)"
+                        v-if="getPlayerLiveStatus(teamPlayer)"
                         :href="`https://twitch.tv/${getPlayerTwitchUsername(
-                          player
+                          teamPlayer
                         )}`"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="ml-2 group relative"
-                        :title="`${player.username} est en live sur Twitch`"
                       >
-                        <!-- Badge LIVE animé -->
-                        <div class="relative flex items-center">
-                          <div
-                            class="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75"
-                          ></div>
-                          <div
-                            class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border border-red-400 animate-pulse"
-                          >
-                            LIVE
-                          </div>
-                        </div>
-
-                        <!-- Tooltip au hover -->
-                        <div
-                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-orbitron rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none"
+                        <SpaceBadge
+                          variant="accent"
+                          size="xs"
+                          className="animate-pulse"
                         >
-                          Regarder sur Twitch
-                        </div>
+                          LIVE
+                        </SpaceBadge>
                       </a>
-                    </div>
 
-                    <!-- Icône de check-in si le joueur a fait son check-in -->
-                    <div
-                      v-if="player._id && tournament?.checkIns?.[player._id]"
-                      class="ml-2"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-green-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                      <!-- Badge check-in -->
+                      <span
+                        v-if="
+                          teamPlayer._id &&
+                          tournament?.checkIns?.[teamPlayer._id]
+                        "
                       >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </div>
-
-                    <!-- Icône d'attente si le joueur n'a pas fait son check-in -->
-                    <div v-else-if="isCheckInAvailable" class="ml-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-yellow-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                        <SpaceBadge variant="success" size="xs">
+                          Check-in
+                        </SpaceBadge>
+                      </span>
+                      <span v-else-if="isCheckInAvailable">
+                        <SpaceBadge variant="error" size="xs">
+                          En attente
+                        </SpaceBadge>
+                      </span>
                     </div>
                   </li>
                 </ul>
-              </div>
+              </SpaceCard>
             </div>
 
-            <!-- ✅ MODIFIÉ : Vue des joueurs individuels avec icônes live -->
-
-            <ul
+            <!-- Liste des joueurs individuels -->
+            <div
               v-else-if="
                 tournament.players &&
                 tournament.players.length > 0 &&
@@ -928,146 +858,103 @@
                   tournament.teams.length > 0
                 )
               "
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
             >
-              <li
-                v-for="player in tournament.players"
-                :key="player._id"
-                class="text-white bg-gray-800/80 p-2 sm:p-3 rounded-lg flex items-center border-l-2 border-pink-400/50 hover:bg-gray-700/80 transition-all text-xs sm:text-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-2 flex-shrink-0 text-pink-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div
+                  v-for="player in tournament.players"
+                  :key="player._id"
+                  class="flex items-center p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 text-sm"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <router-link
-                  v-if="player._id"
-                  :to="{ name: 'Profil', params: { id: player._id } }"
-                  class="truncate hover:text-pink-400 transition-colors"
-                  :title="player.username"
-                >
-                  {{ player.username }}
-                </router-link>
-                <span v-else class="truncate" :title="player.username">
-                  {{ player.username }}
-                </span>
+                  <router-link
+                    v-if="player._id"
+                    :to="{ name: 'Profil', params: { id: player._id } }"
+                    class="text-space-text hover:text-space-primary-light transition-colors truncate"
+                  >
+                    {{ player.username }}
+                  </router-link>
+                  <span v-else class="text-space-text truncate">
+                    {{ player.username || "Joueur inconnu" }}
+                  </span>
 
-                <a
-                  v-if="getPlayerLiveStatus(player)"
-                  :href="`https://twitch.tv/${getPlayerTwitchUsername(player)}`"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="ml-2 group relative"
-                  :title="`${player.username} est en live sur Twitch`"
-                >
-                  <!-- Badge LIVE animé -->
-                  <div class="relative flex items-center">
-                    <div
-                      class="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75"
-                    ></div>
-                    <div
-                      class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border border-red-400 animate-pulse"
+                  <!-- Badge pour les streams live -->
+                  <a
+                    v-if="getPlayerLiveStatus(player)"
+                    :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                      player
+                    )}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ml-2"
+                  >
+                    <SpaceBadge
+                      variant="accent"
+                      size="xs"
+                      className="animate-pulse"
                     >
                       LIVE
-                    </div>
-                  </div>
+                    </SpaceBadge>
+                  </a>
 
-                  <!-- Tooltip au hover -->
-                  <div
-                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-orbitron rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none"
+                  <!-- Badge check-in -->
+                  <span
+                    v-if="player._id && tournament?.checkIns?.[player._id]"
+                    class="ml-auto"
                   >
-                    Regarder sur Twitch
-                  </div>
-                </a>
-
-                <!-- Icône de check-in si le joueur a fait son check-in -->
-                <div
-                  v-if="player._id && tournament?.checkIns?.[player._id]"
-                  class="ml-2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-green-500"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
+                    <SpaceBadge variant="success" size="xs">
+                      Check-in
+                    </SpaceBadge>
+                  </span>
+                  <span v-else-if="isCheckInAvailable" class="ml-auto">
+                    <SpaceBadge variant="error" size="xs">
+                      En attente
+                    </SpaceBadge>
+                  </span>
                 </div>
+              </div>
+            </div>
 
-                <!-- Icône d'attente si le joueur n'a pas fait son check-in -->
-                <div v-else-if="isCheckInAvailable" class="ml-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-yellow-500"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </li>
-            </ul>
-            <p
+            <!-- Message si aucun participant -->
+            <SpaceAlert
               v-else
-              class="text-gray-400 italic py-4 text-center font-orbitron"
+              variant="info"
+              className="bg-space-bg-light/10 text-center py-6"
             >
-              Aucun participant inscrit pour ce tournoi.
-            </p>
+              <p class="text-space-text-muted italic">
+                Aucun participant inscrit pour ce tournoi.
+              </p>
+            </SpaceAlert>
 
-            <!-- Section Liste d'attente avec design responsive amélioré -->
-            <div
-              v-if="hasWaitlist"
-              class="mt-6 sm:mt-8 animate__animated animate__fadeIn"
-            >
+            <!-- Section Liste d'attente -->
+            <div v-if="hasWaitlist" class="mt-8 space-fade-in">
               <h3
-                class="text-lg sm:text-xl text-pink-400 font-audiowide mb-3 sm:mb-4 flex flex-wrap items-center"
+                class="text-xl text-space-text font-heading mb-4 flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2 text-pink-400 flex-shrink-0"
+                  class="h-6 w-6 mr-2 text-space-warning"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="mr-2">Liste d'attente</span>
-                <span
-                  class="text-base bg-pink-900/50 px-2 py-0.5 rounded-full border border-pink-500/30"
-                >
-                  {{ waitlistCount }} joueurs
-                </span>
+                Liste d'attente
+                <SpaceBadge variant="warning" size="sm" className="ml-2">
+                  {{ waitlistCount }}
+                </SpaceBadge>
               </h3>
 
-              <div
-                class="bg-gray-800/80 p-3 sm:p-4 rounded-lg border border-pink-500/30 shadow-lg shadow-pink-500/10"
-              >
+              <SpaceCard variant="warning" className="p-3">
                 <!-- En-tête du tableau -->
                 <div
-                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-sm font-orbitron text-pink-200 border-b border-pink-500/20 pb-2"
+                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-sm font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
                 >
-                  <div class="font-semibold">Position</div>
-                  <div class="font-semibold">Joueur</div>
-                  <div class="font-semibold">En attente depuis</div>
+                  <div>Position</div>
+                  <div>Joueur</div>
+                  <div>En attente depuis</div>
                 </div>
 
                 <!-- Liste des joueurs en attente -->
@@ -1075,115 +962,47 @@
                   <li
                     v-for="(player, index) in waitlistPlayers"
                     :key="player._id"
-                    :class="{
-                      'bg-pink-900/20': index === getUserWaitlistPosition - 1,
-                    }"
-                    class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-2 rounded-md text-white transition-colors hover:bg-gray-700/50"
+                    class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-2 rounded-md text-space-text hover:bg-space-bg-light/10 transition-colors"
                   >
-                    <!-- Position - Responsive sur mobile -->
-                    <div
-                      class="flex items-center justify-between sm:justify-start"
-                    >
-                      <div class="flex items-center">
-                        <span
-                          class="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center bg-pink-900/50 text-pink-300 rounded-full mr-2 text-xs font-semibold"
-                        >
-                          {{ index + 1 }}
-                        </span>
-                        <span class="sm:hidden text-xs text-pink-200"
-                          >Position</span
-                        >
-                      </div>
+                    <div class="sm:text-center">
+                      <SpaceBadge variant="warning" size="xs">
+                        {{ index + 1 }}
+                      </SpaceBadge>
                     </div>
-
-                    <!-- Nom du joueur - Avec optimisation pour éviter les débordements -->
-                    <div class="flex items-center truncate">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 flex-shrink-0 text-pink-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                    <div>
+                      <router-link
+                        v-if="player._id"
+                        :to="{ name: 'Profil', params: { id: player._id } }"
+                        class="text-space-text hover:text-space-primary-light transition-colors"
                       >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <div
-                        class="flex flex-col sm:flex-row sm:items-center truncate"
-                      >
-                        <router-link
-                          v-if="typeof player === 'object' && player._id"
-                          :to="{ name: 'Profil', params: { id: player._id } }"
-                          class="truncate hover:text-pink-400 transition-colors"
-                          :title="
-                            typeof player === 'object' ? player.username : ''
-                          "
-                        >
-                          {{
-                            typeof player === "object"
-                              ? player.username
-                              : "Joueur inconnu"
-                          }}
-                        </router-link>
-                        <span v-else class="truncate">
-                          {{
-                            typeof player === "object"
-                              ? player.username
-                              : "Joueur inconnu"
-                          }}
-                        </span>
-
-                        <span
-                          v-if="
-                            typeof player === 'object' &&
-                            player.userId === user?._id
-                          "
-                          class="mt-1 sm:mt-0 sm:ml-2 text-xs font-semibold bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
-                        >
-                          Vous
-                        </span>
-                      </div>
+                        {{ player.username }}
+                      </router-link>
+                      <span v-else>{{
+                        player.username || "Joueur inconnu"
+                      }}</span>
                     </div>
-
-                    <!-- Temps d'attente - Caché sur mobile, visible uniquement sur SM+ -->
-                    <div class="hidden sm:block text-sm text-pink-200">
+                    <div class="text-space-text-muted text-sm">
                       {{
                         player._id
                           ? formatWaitingTime(player._id)
                           : "ID inconnu"
                       }}
                     </div>
-
-                    <!-- Temps d'attente pour mobile seulement -->
-                    <div class="flex justify-between sm:hidden mt-1">
-                      <span class="text-xs text-pink-200"
-                        >En attente depuis:</span
-                      >
-                      <span class="text-xs text-pink-200">
-                        {{
-                          player._id
-                            ? formatWaitingTime(player._id)
-                            : "ID inconnu"
-                        }}
-                      </span>
-                    </div>
                   </li>
                 </ul>
 
-                <!-- Message si la liste est vide (cas qui ne devrait pas arriver) -->
-                <p v-else class="text-gray-400 italic text-center py-4">
+                <!-- Message si liste vide -->
+                <p v-else class="text-space-text-muted italic text-center py-4">
                   Liste d'attente vide
                 </p>
-              </div>
+              </SpaceCard>
             </div>
           </div>
 
-          <!-- Onglet Résultats (si tournoi terminé) -->
+          <!-- Onglet Résultats -->
           <div
             v-if="tournament.finished && activeTab === 'results'"
-            class="min-h-[150px] animate__animated animate__fadeIn"
+            class="min-h-[150px] space-fade-in"
           >
             <tournament-podium
               :tournament="tournament"
@@ -1192,209 +1011,116 @@
             />
           </div>
         </div>
-      </div>
+      </SpaceCard>
 
-      <!-- Section des derniers gagnants (si disponible) - Style optimisé -->
-      <div
+      <!-- Section des derniers gagnants -->
+      <SpaceCard
         v-if="
           lastFinishedTournament &&
           lastFinishedTournament.teams &&
           !tournament.finished
         "
-        class="mt-8 overflow-hidden"
+        variant="accent"
+        className="overflow-hidden"
       >
-        <!-- En-tête stylisé avec angle coupé -->
-        <div class="cyber-header-container relative mb-1">
-          <div
-            class="cyber-header bg-gradient-to-r from-purple-900/80 via-fuchsia-900/70 to-pink-900/80 text-white py-3 pl-5 pr-8"
+        <!-- En-tête -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4"
+        >
+          <h3
+            class="text-xl font-heading flex items-center text-space-text mb-2 sm:mb-0"
           >
-            <div
-              class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
-              <h3
-                class="text-lg font-audiowide flex items-center text-purple-200 mb-2 sm:mb-0"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-purple-300"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <span class="cyber-glitch-1"
-                  >Gagnants du tournoi précédent</span
-                >
-              </h3>
+              <path
+                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+              />
+            </svg>
+            <span>Gagnants du tournoi précédent</span>
+          </h3>
 
-              <!-- Date du tournoi précédent avec style amélioré -->
-              <div
-                class="cyber-date-badge flex items-center bg-purple-900/70 px-3 py-1 rounded-sm border-l-2 border-purple-400"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1 text-purple-300"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <span class="text-purple-200 text-sm font-orbitron">
-                  {{ formatLocalDate(lastFinishedTournament.date) }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Petit badge/pill avec le nom du tournoi -->
-            <div class="mt-2 sm:mt-0">
-              <span
-                class="inline-block bg-purple-500/20 text-purple-200 text-xs font-orbitron px-2 py-1 rounded-sm border border-purple-500/40"
-              >
-                {{ lastFinishedTournament.name }}
-              </span>
-            </div>
+          <div class="flex items-center space-x-2">
+            <SpaceBadge variant="primary" size="sm">
+              {{ formatLocalDate(lastFinishedTournament.date) }}
+            </SpaceBadge>
+            <SpaceBadge variant="secondary" size="sm">
+              {{ lastFinishedTournament.name }}
+            </SpaceBadge>
           </div>
         </div>
 
-        <!-- Corps avec fond translucide et bordure -->
+        <!-- Équipes gagnantes -->
         <div
-          class="cyber-panel-container p-5 bg-black/75 backdrop-blur-sm border border-purple-500/50 rounded-sm shadow-lg shadow-purple-500/20"
+          class="grid grid-cols-1 gap-4"
+          :class="{
+            'max-w-2xl mx-auto':
+              getWinningTeams(lastFinishedTournament).length === 1,
+          }"
         >
-          <!-- Gagnants avec style amélioré -->
-          <div
-            class="winners-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            :class="{
-              'justify-items-center':
-                getWinningTeams(lastFinishedTournament).length === 1,
-            }"
+          <SpaceCard
+            v-for="team in getWinningTeams(lastFinishedTournament)"
+            :key="team._id"
+            variant="success"
+            className="p-0 overflow-hidden"
           >
-            <!-- Équipes gagnantes (1er rang) -->
+            <!-- En-tête de l'équipe -->
             <div
-              v-for="team in getWinningTeams(lastFinishedTournament)"
-              :key="team._id"
-              class="winner-card relative overflow-hidden"
-              :class="{
-                'sm:col-span-2 lg:col-span-1':
-                  getWinningTeams(lastFinishedTournament).length === 1,
-              }"
+              class="p-3 bg-space-success/20 flex items-center justify-between"
             >
-              <!-- Ligne verticale décorative -->
-              <div
-                class="absolute top-0 left-4 h-full w-1 bg-gradient-to-b from-yellow-500/0 via-yellow-500/70 to-yellow-500/0"
-              ></div>
-
-              <!-- En-tête de l'équipe avec effet coupé -->
-              <div
-                class="cyber-winner-header bg-gradient-to-r from-purple-900/80 to-fuchsia-900/70 px-6 py-3 flex items-center justify-between"
-              >
-                <div class="flex items-center">
-                  <div
-                    class="rank-badge w-8 h-8 flex items-center justify-center bg-yellow-500/20 text-yellow-300 rounded-sm border border-yellow-500/60 font-bold mr-3 relative overflow-hidden"
-                  >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
-                    ></div>
-                    <span class="relative z-10">1</span>
-                  </div>
-                  <h5
-                    class="text-white font-orbitron text-sm cyber-text-shadow"
-                  >
-                    {{ team.name }}
-                  </h5>
-                </div>
-                <div class="trophy-icon">
-                  <!-- Nouveau trophée plus stylisé -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="h-7 w-7 text-yellow-500 animate-pulse-slow"
-                  >
-                    <path d="M11.25 1.5V8.25H12.75V1.5H11.25Z" />
-                    <path
-                      d="M13.5 11.25C13.5 11.6642 13.1642 12 12.75 12H11.25C10.8358 12 10.5 11.6642 10.5 11.25V9.75H7.5V10.3153C7.5 11.3824 8.06058 12.3647 8.99977 12.8478L13.4998 15.125V20.25H14.9998V21.75H8.99977V20.25H10.4998V16.375L7.48314 14.8438C5.94165 14.0578 5 12.4774 5 10.7775V9.75H3C2.58579 9.75 2.25 9.41421 2.25 9V4.5C2.25 4.08579 2.58579 3.75 3 3.75H7.5V3H3C1.75736 3 0.75 4.00736 0.75 5.25V8.25C0.75 9.49264 1.75736 10.5 3 10.5H3.75V10.7775C3.75 13.0108 4.9791 15.0528 6.9829 16.0437L9.74977 17.3738V21.75H6.75C6.33579 21.75 6 22.0858 6 22.5C6 22.9142 6.33579 23.25 6.75 23.25H17.25C17.6642 23.25 18 22.9142 18 22.5C18 22.0858 17.6642 21.75 17.25 21.75H14.25V17.3738L17.0166 16.0437C19.0204 15.0528 20.25 13.0108 20.25 10.7775V10.5H21C22.2426 10.5 23.25 9.49264 23.25 8.25V5.25C23.25 4.00736 22.2426 3 21 3H16.5V3.75H21C21.4142 3.75 21.75 4.08579 21.75 4.5V9C21.75 9.41421 21.4142 9.75 21 9.75H19V10.7775C19 12.4774 18.0584 14.0578 16.5169 14.8438L13.5 16.375V11.25Z"
-                    />
-                  </svg>
-                </div>
+              <div class="flex items-center">
+                <SpaceBadge variant="accent" size="sm" className="mr-3">
+                  1
+                </SpaceBadge>
+                <h5 class="text-space-text font-heading">
+                  {{ team.name }}
+                </h5>
               </div>
-
-              <!-- Liste des joueurs avec style amélioré -->
-              <div
-                class="cyber-winner-body p-4 bg-gray-900/80 border-l border-r border-b border-purple-500/30"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-space-success"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <div class="players-list space-y-2">
-                  <div
-                    v-for="(player, playerIndex) in team.players"
-                    :key="player._id"
-                    class="player-item flex items-center p-2 bg-purple-900/20 hover:bg-purple-900/30 transition-colors duration-300 border-l-2 border-purple-500/40"
-                  >
-                    <div
-                      class="player-number w-5 h-5 flex items-center justify-center text-xs text-purple-300 bg-purple-900/40 rounded-full mr-2 font-mono"
-                    >
-                      {{ playerIndex + 1 }}
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-purple-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <span class="text-purple-100 text-sm font-orbitron">{{
-                      player.username
-                    }}</span>
-                    <!-- Icône de check-in si le joueur a fait son check-in -->
-                  </div>
-                </div>
-              </div>
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </div>
 
-            <!-- Message si pas d'équipe gagnante avec style amélioré -->
-            <div
-              v-if="!getWinningTeams(lastFinishedTournament).length"
-              class="cyber-no-winner col-span-full py-6 px-4 bg-gray-900/50 border border-purple-500/30"
-            >
-              <div
-                class="flex flex-col items-center justify-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 text-purple-400/50 mb-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            <!-- Liste des joueurs -->
+            <div class="p-3">
+              <div class="space-y-2">
+                <div
+                  v-for="player in team.players"
+                  :key="player._id"
+                  class="flex items-center p-2 bg-space-bg-light/10 hover:bg-space-bg-light/20 transition-colors rounded-md"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <p class="text-purple-200 font-orbitron text-sm">
-                  Aucun gagnant désigné pour ce tournoi.
-                </p>
+                  <router-link
+                    v-if="player._id"
+                    :to="{ name: 'Profil', params: { id: player._id } }"
+                    class="text-space-text hover:text-space-primary-light transition-colors"
+                  >
+                    {{ player.username }}
+                  </router-link>
+                  <span v-else class="text-space-text">
+                    {{ player.username || "Joueur inconnu" }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </SpaceCard>
+        </div>
 
-          <!-- Bouton pour voir le détail avec style amélioré -->
-          <div class="mt-5 text-center">
-            <router-link
-              :to="`/tournois/${lastFinishedTournament._id}`"
-              class="cyber-link-button inline-flex items-center justify-center px-5 py-2 bg-gradient-to-r from-purple-900/70 to-fuchsia-800/70 text-white font-orbitron text-sm border border-purple-500/50 hover:border-purple-400 shadow-md hover:shadow-purple-500/40 transition-all duration-300"
-            >
+        <!-- Bouton pour voir le détail -->
+        <div class="mt-4 text-center">
+          <router-link :to="`/tournois/${lastFinishedTournament._id}`">
+            <SpaceButton variant="secondary" size="sm">
               <span>Voir le détail du tournoi</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1408,65 +1134,167 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </router-link>
-          </div>
+            </SpaceButton>
+          </router-link>
         </div>
-      </div>
+      </SpaceCard>
 
-      <!-- Bouton de retour en haut de page (fixe) -->
-      <button
-        @click="scrollToTop"
-        class="cyberpunk-btn-pink fixed bottom-4 sm:bottom-6 right-4 sm:right-6 text-white rounded-full p-2 sm:p-3 shadow-lg shadow-pink-500/30 z-50 transition-all duration-300 transform hover:scale-110"
-        title="Retour en haut de page"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <!-- Bouton de retour en haut de page -->
+      <div class="fixed bottom-4 right-4 z-50">
+        <SpaceButton
+          @click="scrollToTop"
+          variant="primary"
+          size="sm"
+          className="rounded-full p-2"
+          :title="'Retour en haut de page'"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 10l7-7m0 0l7 7m-7-7v18"
-          />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </SpaceButton>
+      </div>
     </div>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
 
-    <!-- Modal de confirmation pour inscription/désinscription -->
-    <ConfirmationDialog
-      v-if="showPopup"
-      :title="'Confirmation'"
-      :message="`Voulez-vous ${
-        actionType === 'register'
-          ? 'vous inscrire'
-          : actionType === 'waitlist'
-          ? 'rejoindre la liste d\'attente'
-          : actionType === 'unregister-waitlist'
-          ? 'quitter la liste d\'attente'
-          : 'vous désinscrire'
-      } au tournoi ${selectedTournament?.name} en tant que ${user?.username} ?`"
-      @confirm="confirmAction"
-      @cancel="closePopup"
-    />
+    <!-- Modales -->
+    <SpaceModal
+      v-model="showPopup"
+      :title="`CONFIRMATION D'${
+        actionType === 'register' || actionType === 'waitlist'
+          ? 'INSCRIPTION'
+          : 'ANNULATION'
+      }`"
+    >
+      <div class="space-y-4">
+        <p class="text-space-text">
+          Voulez-vous
+          <span class="text-space-primary-light font-bold">
+            {{
+              actionType === "register"
+                ? "vous inscrire"
+                : actionType === "waitlist"
+                ? "rejoindre la liste d'attente"
+                : actionType === "unregister-waitlist"
+                ? "quitter la liste d'attente"
+                : "vous désinscrire"
+            }}
+          </span>
+          au tournoi
+          <span class="text-space-secondary-light font-bold">
+            {{ selectedTournament?.name }}
+          </span>
+          ?
+        </p>
 
-    <LevelPromptModal
-      :show="showLevelPrompt"
-      :game-name="levelPromptGameName"
-      @confirm="goToLevelDefinition"
-      @close="closeLevelPrompt"
-      @register-without-level="registerWithoutLevel"
-    />
+        <SpaceAlert
+          v-if="actionType === 'register' || actionType === 'waitlist'"
+          variant="info"
+          className="mb-4"
+        >
+          <p class="text-sm">
+            <span v-if="actionType === 'register'">
+              N'oubliez pas de venir vous check-in 24h avant le début du tournoi
+              pour confirmer votre participation.
+            </span>
+            <span v-else>
+              Vous serez automatiquement inscrit si des places se libèrent.
+            </span>
+          </p>
+        </SpaceAlert>
+
+        <SpaceAlert
+          v-if="
+            actionType === 'unregister' || actionType === 'unregister-waitlist'
+          "
+          variant="warning"
+          className="mb-4"
+        >
+          <p class="text-sm">
+            <span v-if="actionType === 'unregister'">
+              Attention: Si vous vous désinscrivez, votre place sera attribuée à
+              une personne en liste d'attente.
+            </span>
+            <span v-else>
+              Vous ne serez plus contacté si des places se libèrent.
+            </span>
+          </p>
+        </SpaceAlert>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <SpaceButton @click="closePopup" variant="outline" size="sm">
+            Annuler
+          </SpaceButton>
+          <SpaceButton
+            @click="confirmAction"
+            :variant="
+              actionType === 'unregister' ||
+              actionType === 'unregister-waitlist'
+                ? 'error'
+                : 'primary'
+            "
+          >
+            Confirmer
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
+
+    <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
+      <div class="space-y-4">
+        <p class="text-space-text">
+          Vous n'avez pas encore défini votre niveau pour
+          <span class="text-space-primary-light font-bold">{{
+            levelPromptGameName
+          }}</span
+          >.
+        </p>
+        <p class="text-space-text-muted">
+          Définir votre niveau aide à l'organisation des tournois et au
+          matchmaking. Vous pouvez:
+        </p>
+        <div class="space-y-3 mt-4">
+          <SpaceButton
+            @click="goToLevelDefinition"
+            variant="primary"
+            className="w-full"
+          >
+            Définir mon niveau maintenant
+          </SpaceButton>
+          <SpaceButton
+            @click="registerWithoutLevel"
+            variant="outline"
+            className="w-full"
+          >
+            S'inscrire sans définir de niveau
+          </SpaceButton>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex justify-end">
+          <SpaceButton @click="closeLevelPrompt" variant="ghost" size="sm">
+            Annuler
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
   </div>
 </template>
-
 <script setup lang="ts">
 // ========================================
 // IMPORTS ET DÉPENDANCES
@@ -1476,11 +1304,7 @@ import { useRoute, useRouter } from "vue-router";
 import playerService from "../services/playerService";
 import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
-import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
 import TournamentPodium from "@/components/tournois-a-venir/TournamentPodium.vue";
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
-import CyberTerminal from "@/shared/CyberTerminal.vue";
-import LevelPromptModal from "@/shared/LevelPromptModal.vue";
 import TwitchStreams from "@/components/tournois-a-venir/TwitchStreams.vue";
 import type { Tournament, UserWithTwitch } from "../types";
 import tournamentService from "../services/tournamentService";
@@ -2293,137 +2117,8 @@ watch(activeTab, (newTab) => {
 </script>
 
 <style scoped>
-/* Copiez les styles pertinents depuis TournamentCard.vue */
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
-}
-
-.neon-text {
-  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7), 0 0 10px rgba(236, 72, 153, 0.5);
-}
-
-/* Styles pour les onglets */
-.tournament-tabs {
-  position: relative;
-  overflow: hidden;
-}
-
-.tournament-tabs::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(236, 72, 153, 0.5),
-    transparent
-  );
-}
-
-.cyber-tab {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.cyber-tab::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  transform: translateX(-50%);
-  transition: width 0.3s ease;
-  z-index: 1;
-}
-
-.active-tab {
-  color: #ec4899; /* Pink-500 */
-  background-color: rgba(236, 72, 153, 0.1);
-  border-bottom: 2px solid #ec4899;
-}
-
-.inactive-tab {
-  color: #9ca3af; /* Gray-400 */
-  border-bottom: 2px solid transparent;
-}
-
-.inactive-tab:hover {
-  color: #d1d5db; /* Gray-300 */
-  background-color: rgba(156, 163, 175, 0.1);
-}
-
-.active-tab-green {
-  color: #4ade80; /* Green-400 */
-  background-color: rgba(74, 222, 128, 0.1);
-  border-bottom: 2px solid #4ade80;
-}
-
-.inactive-tab-green {
-  color: #9ca3af; /* Gray-400 */
-  border-bottom: 2px solid transparent;
-}
-
-.inactive-tab-green:hover {
-  color: #4ade80; /* Green-400 */
-  background-color: rgba(74, 222, 128, 0.1);
-}
-
-/* Animation pour déplacer une lueur en arrière-plan des onglets actifs */
-@keyframes tab-glow {
-  0%,
-  100% {
-    background-position: -100% 0;
-  }
-  50% {
-    background-position: 200% 0;
-  }
-}
-
-.active-tab,
-.active-tab-green {
-  position: relative;
-}
-
-.active-tab::before,
-.active-tab-green::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(236, 72, 153, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-  z-index: -1;
-  animation: tab-glow 3s linear infinite;
-}
-
-.active-tab-green::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(74, 222, 128, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-}
-
-/* Animation pour les transitions */
-.animate__fadeIn {
+/* Animation pour les transitions entre onglets */
+.space-fade-in {
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2438,510 +2133,7 @@ watch(activeTab, (newTab) => {
   }
 }
 
-/* Styles pour le contenu de la description */
-.description-text {
-  font-family: "Roboto", "Arial", sans-serif;
-  line-height: 1.6;
-  letter-spacing: 0.3px;
-  font-size: 0.95rem;
-  font-weight: 300;
-  text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
-  position: relative;
-}
-
-.cyber-panel {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  background-color: rgba(15, 23, 42, 0.8);
-  position: relative;
-  overflow: hidden;
-}
-
-.cyber-game-icon {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 3s infinite ease-in-out;
-}
-
-.cyber-game-icon::before {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  right: -20px;
-  bottom: -20px;
-  background: radial-gradient(
-    circle,
-    rgba(236, 72, 153, 0.2) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  z-index: -1;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.9;
-  }
-}
-/* Styles pour la section des gagnants du dernier tournoi */
-.cyber-header-container {
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 15px),
-    calc(100% - 15px) 100%,
-    0 100%
-  );
-  border-left: 2px solid rgba(168, 85, 247, 0.5);
-  border-top: 2px solid rgba(168, 85, 247, 0.5);
-  position: relative;
-}
-
-.cyber-header {
-  position: relative;
-  overflow: hidden;
-}
-
-@keyframes cyber-header-shine {
-  0% {
-    transform: translateX(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(45deg);
-  }
-}
-
-.cyber-panel-container {
-  clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);
-  position: relative;
-}
-
-.cyber-panel-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(168, 85, 247, 0.7),
-    transparent
-  );
-}
-
-.cyber-panel-container::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(168, 85, 247, 0.7),
-    transparent
-  );
-}
-
-.winner-card {
-  background: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-}
-
-.winner-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
-  border-color: rgba(168, 85, 247, 0.5);
-}
-
-.cyber-winner-body {
-  position: relative;
-  min-height: 120px;
-}
-
-.cyber-text-shadow {
-  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-}
-
-.cyber-glitch-1 {
-  position: relative;
-  animation: cyber-glitch 5s infinite;
-}
-
-@keyframes cyber-glitch {
-  0%,
-  90%,
-  100% {
-    transform: translate(0, 0);
-    text-shadow: 0 0 4px rgba(168, 85, 247, 0.7);
-  }
-  92% {
-    transform: translate(-2px, 1px);
-    text-shadow: -1px 0 #a855f7, 1px 0 #ec4899;
-  }
-  94% {
-    transform: translate(2px, -1px);
-    text-shadow: 1px 0 #a855f7, -1px 0 #ec4899;
-  }
-  96% {
-    transform: translate(-1px, -1px);
-    text-shadow: 0 -1px #a855f7, 0 1px #ec4899;
-  }
-  98% {
-    transform: translate(1px, 1px);
-    text-shadow: 0 0 8px rgba(236, 72, 153, 0.7);
-  }
-}
-
-.cyber-link-button {
-  position: relative;
-  overflow: hidden;
-  clip-path: polygon(
-    10px 0,
-    100% 0,
-    100% calc(100% - 10px),
-    calc(100% - 10px) 100%,
-    0 100%,
-    0 10px
-  );
-}
-
-.cyber-link-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(168, 85, 247, 0.2) 50%,
-    transparent 100%
-  );
-  transition: all 0.5s ease;
-}
-
-.cyber-link-button:hover::before {
-  left: 100%;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s infinite;
-}
-
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.1);
-  }
-}
-
-.cyber-date-badge {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  position: relative;
-}
-
-.rank-badge {
-  position: relative;
-  overflow: hidden;
-}
-
-.rank-badge::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 0%,
-    rgba(251, 191, 36, 0.3) 50%,
-    transparent 100%
-  );
-  transform: rotate(45deg);
-  animation: badge-shine 2s linear infinite;
-}
-
-@keyframes badge-shine {
-  0% {
-    transform: translateX(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(45deg);
-  }
-}
-
-.player-item {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.player-item:hover {
-  transform: translateX(3px);
-}
-
-.player-item::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(168, 85, 247, 0.3),
-    transparent
-  );
-}
-
-.player-item:last-child::after {
-  display: none;
-}
-.winners-grid.justify-items-center {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-.winners-grid.justify-items-center .winner-card {
-  max-width: 450px;
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .winners-grid.justify-items-center {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .winners-grid.justify-items-center .winner-card {
-    grid-column: 1 / span 2;
-  }
-}
-
-@media (min-width: 1024px) {
-  .winners-grid.justify-items-center {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .winners-grid.justify-items-center .winner-card {
-    grid-column: 2 / span 1;
-  }
-}
-
-/* Styles améliorés pour le trophée */
-.trophy-icon {
-  position: relative;
-}
-
-.cyber-winner-header {
-  position: relative;
-  overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-}
-
-.cyber-winner-header::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background: rgba(236, 72, 153, 0.3);
-  clip-path: polygon(0 0, 100% 0, 100% 100%);
-}
-
-@media (max-width: 640px) {
-  .tournament-tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-
-  .tournament-tabs::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
-  }
-
-  .cyber-tab {
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .neon-text {
-    font-size: 1.75rem;
-  }
-
-  /* Optimisations pour le podium et les sections de résultats */
-  .cyber-header-container {
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - 10px),
-      calc(100% - 10px) 100%,
-      0 100%
-    );
-  }
-
-  .cyber-panel-container {
-    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
-  }
-
-  /* Optimiser les espaces sur petit écran */
-  .p-8 {
-    padding: 1rem;
-  }
-
-  .tournament-content {
-    padding: 1rem;
-  }
-}
-
-/* Améliorer la transition entre les tailles d'écran */
-@media (min-width: 641px) and (max-width: 768px) {
-  .neon-text {
-    font-size: 2rem;
-  }
-}
-
-router-link.truncate {
-  position: relative;
-}
-
-router-link.truncate::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: -1px;
-  left: 0;
-  background-image: linear-gradient(to right, #ec4899, #8b5cf6);
-  transition: width 0.3s ease-in-out;
-}
-
-router-link.truncate:hover::after {
-  width: 100%;
-}
-
-.tournament-nav-button {
-  cursor: pointer;
-  transform-origin: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tournament-nav-button:hover {
-  transform: scale(1.02);
-  border-color: rgba(34, 211, 238, 0.8);
-  box-shadow: 0 8px 32px rgba(34, 211, 238, 0.4);
-}
-
-.tournament-nav-button:active {
-  transform: scale(0.98);
-}
-
-/* Animation pour l'apparition du panneau d'information */
-.tournament-nav-left .tournament-nav-info {
-  transform-origin: left center;
-}
-
-.tournament-nav-right .tournament-nav-info {
-  transform-origin: right center;
-}
-
-/* Effet de lueur cyberpunk */
-.tournament-nav-button::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(34, 211, 238, 0.3),
-    transparent
-  );
-  border-radius: 10px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.tournament-nav-button:hover::before {
-  opacity: 1;
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.02);
-  }
-}
-
-/* Responsive - cacher sur tablette si nécessaire */
-@media (max-width: 1024px) {
-  .tournament-nav-button {
-    transform: scale(0.9);
-  }
-
-  .tournament-nav-info {
-    display: none;
-  }
-}
-
-/* Responsive - ajustements pour les petits écrans desktop */
-@media (max-width: 1200px) {
-  .fixed.left-4 {
-    left: 0.5rem;
-  }
-
-  .fixed.right-4 {
-    right: 0.5rem;
-  }
-}
-
-/* Style pour l'indicateur de position en bas */
-.fixed.bottom-8 {
-  animation: fade-in-up 0.5s ease-out;
-}
-
+/* Animation pour l'indicateur de position */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -2953,218 +2145,27 @@ router-link.truncate:hover::after {
   }
 }
 
-/* Assurer que les boutons restent visibles même avec du contenu défilant */
-.tournament-nav-button {
-  min-height: 60px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Style d'animation pour l'indicateur de position */
+.fixed.bottom-8 {
+  animation: fade-in-up 0.5s ease-out;
 }
 
-/* Animation d'entrée pour les boutons latéraux */
-.tournament-nav-left {
-  animation: slide-in-left 0.6s ease-out;
-}
-
-.tournament-nav-right {
-  animation: slide-in-right 0.6s ease-out;
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Effet de survol pour les icônes */
-.tournament-nav-button svg {
-  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5));
-}
-
-.tournament-nav-button:hover svg {
-  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.8));
-}
-
-/* Style pour éviter les conflits avec le bouton "retour en haut" */
-.cyberpunk-btn-pink.fixed.bottom-4 {
-  bottom: 6rem; /* Décaler vers le haut pour éviter le conflit avec l'indicateur */
-}
-
-/* Version compacte pour les écrans moyens */
-@media (max-width: 1400px) {
-  .tournament-nav-info {
-    max-width: 250px;
-  }
-
-  .tournament-nav-info div {
-    padding: 0.5rem;
-  }
-
-  .tournament-nav-info .text-sm {
-    font-size: 0.8rem;
-  }
-}
-
-/*  Styles pour l'onglet Twitch */
-.active-tab-twitch {
-  color: #a855f7; /* Purple-500 */
-  background-color: rgba(168, 85, 247, 0.1);
-  border-bottom: 2px solid #a855f7;
-}
-
-.inactive-tab-twitch {
-  color: #9ca3af; /* Gray-400 */
-  border-bottom: 2px solid transparent;
-}
-
-.inactive-tab-twitch:hover {
-  color: #a855f7; /* Purple-500 */
-  background-color: rgba(168, 85, 247, 0.1);
-}
-
-/* Style pour le scrollbar personnalisé */
-.custom-scrollbar {
+/* Améliore la présentation des onglets */
+.space-tabs {
   scrollbar-width: thin;
-  scrollbar-color: rgba(168, 85, 247, 0.5) rgba(55, 65, 81, 0.3);
+  scrollbar-color: var(--space-bg-light) transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+.space-tabs::-webkit-scrollbar {
+  height: 4px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(55, 65, 81, 0.3);
-  border-radius: 3px;
+.space-tabs::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.5);
-  border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(168, 85, 247, 0.7);
-}
-
-/* Animation pour l'onglet Twitch actif */
-.active-tab-twitch::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(168, 85, 247, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-  z-index: -1;
-  animation: tab-glow 3s linear infinite;
-}
-
-/* Responsive pour l'interface de streams */
-@media (max-width: 1024px) {
-  .lg\:col-span-3,
-  .lg\:col-span-1 {
-    grid-column: span 1;
-  }
-
-  .grid-cols-1.lg\:grid-cols-4 {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
-/*  Styles pour les badges LIVE */
-@keyframes live-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-.animate-pulse {
-  animation: live-pulse 2s infinite;
-}
-
-/* Style pour les tooltips */
-.group:hover .group-hover\:opacity-100 {
-  opacity: 1;
-}
-
-/* Amélioration de la position des badges live */
-.relative .absolute {
-  z-index: 10;
-}
-
-/* Animation pour l'apparition des badges live */
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Badge live compact pour liste d'attente */
-.scale-75 {
-  transform: scale(0.75);
-}
-
-/* Responsive adjustments pour les badges */
-@media (max-width: 640px) {
-  /* Réduire la taille des badges sur mobile */
-  .relative .bg-red-500 {
-    font-size: 0.7rem;
-    padding: 0.125rem 0.375rem;
-  }
-}
-
-/* Effet de brillance sur les badges live */
-@keyframes badge-shine {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
-}
-
-.bg-red-500 {
-  background: linear-gradient(45deg, #ef4444, #dc2626, #ef4444);
-  background-size: 200% 100%;
-  animation: badge-shine 3s linear infinite;
-}
-
-/* Hover effect pour les liens Twitch */
-a[href*="twitch.tv"]:hover .bg-red-500 {
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
-  border-color: rgba(220, 38, 38, 0.8);
+.space-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--space-bg-light);
+  border-radius: 4px;
 }
 </style>

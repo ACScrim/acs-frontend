@@ -41,6 +41,23 @@
   --space-error: #f87171;
   --space-info: #60a5fa;
 
+  --space-primary-rgb: 109, 40, 217;
+  --space-primary-light-rgb: 139, 92, 246;
+  --space-primary-dark-rgb: 76, 29, 149;
+
+  --space-secondary-rgb: 2, 132, 199;
+  --space-secondary-light-rgb: 56, 189, 248;
+  --space-secondary-dark-rgb: 12, 74, 110;
+
+  --space-accent-rgb: 251, 146, 60;
+  --space-accent-light-rgb: 253, 186, 116;
+  --space-accent-dark-rgb: 194, 65, 12;
+
+  --space-success-rgb: 74, 222, 128;
+  --space-warning-rgb: 250, 204, 21;
+  --space-error-rgb: 248, 113, 113;
+  --space-info-rgb: 96, 165, 250;
+
   /* Ombres */
   --shadow-glow-primary: 0 0 15px rgba(109, 40, 217, 0.4);
   --shadow-glow-secondary: 0 0 15px rgba(2, 132, 199, 0.4);
