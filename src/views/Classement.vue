@@ -1,485 +1,480 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
-    <div class="relative mb-6">
-      <h1
-        class="text-3xl sm:text-4xl neon-text text-white font-audiowide text-center"
-      >
-        Classement des joueurs
-      </h1>
+    <!-- En-tête de la page avec style NASA -->
+    <div class="nasa-header mb-8">
+      <SpaceTitle size="3xl" :decorated="true" class="mx-auto nasa-title">
+        CLASSEMENT
+      </SpaceTitle>
 
-      <!-- Bouton d'export repositionné -->
-      <button
-        @click="exportCSV"
-        class="cyberpunk-btn-purple absolute top-0 right-0 transform translate-y-1 px-3 py-1.5 text-xs font-orbitron rounded-md"
-      >
-        <span class="relative z-10 flex items-center gap-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>CSV</span>
-        </span>
-      </button>
-    </div>
-
-    <!-- Sélecteurs de filtres: Jeu et Saison -->
-    <div
-      class="cyberpunk-panel-purple bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500/70 shadow-lg shadow-purple-500/30 p-4 sm:p-6 mb-6 sm:mb-8"
-    >
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Sélecteur de jeux -->
-        <div>
-          <label
-            for="game"
-            class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-purple-400 mb-3 cyberpunk-label-purple"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span>FILTRER PAR JEU</span>
-            <div
-              class="h-px flex-grow bg-gradient-to-r from-purple-500 to-transparent mx-2 opacity-70"
-            ></div>
-          </label>
-          <div class="relative group">
-            <select
-              id="game"
-              v-model="selectedGame"
-              @change="fetchRankingsByFilter"
-              class="cyberpunk-select-purple w-full p-2.5 sm:p-3 text-purple-300 bg-gray-900/80 border-2 border-purple-500/70 rounded-md font-orbitron focus:outline-none focus:border-purple-400 transition-all appearance-none cursor-pointer"
-            >
-              <option value="">Tous les jeux</option>
-              <option
-                v-for="game in rankingStore.games"
-                :key="game._id"
-                :value="game._id"
-              >
-                {{ game.name }}
-              </option>
-            </select>
-
-            <!-- Effet de contour néon sur hover -->
-            <div
-              class="cyberpunk-select-glow-purple absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-            ></div>
-
-            <!-- Icône personnalisée -->
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-purple-400 cyberpunk-icon-purple"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sélecteur de saisons -->
-        <div>
-          <label
-            for="season"
-            class="relative flex items-center gap-2 font-orbitron text-base sm:text-lg text-cyan-400 mb-3 cyberpunk-label-cyan"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span>FILTRER PAR SAISON</span>
-            <div
-              class="h-px flex-grow bg-gradient-to-r from-cyan-500 to-transparent mx-2 opacity-70"
-            ></div>
-          </label>
-          <div class="relative group">
-            <select
-              id="season"
-              v-model="selectedSeason"
-              @change="fetchRankingsByFilter"
-              class="cyberpunk-select-cyan w-full p-2.5 sm:p-3 text-cyan-300 bg-gray-900/80 border-2 border-cyan-500/70 rounded-md font-orbitron focus:outline-none focus:border-cyan-400 transition-all appearance-none cursor-pointer"
-            >
-              <option value="">Classement général</option>
-              <option
-                v-for="season in seasons"
-                :key="season._id"
-                :value="season._id"
-                :selected="season._id === seasons[0]?._id"
-              >
-                {{
-                  season.numero === 0
-                    ? "Alors ça chill"
-                    : `Saison ${season.numero}`
-                }}
-              </option>
-            </select>
-
-            <!-- Effet de contour néon sur hover -->
-            <div
-              class="cyberpunk-select-glow-cyan absolute inset-0 rounded-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-            ></div>
-
-            <!-- Icône personnalisée -->
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-cyan-400 cyberpunk-icon-cyan"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+      <!-- Coordonnées stellaires -->
+      <div class="nasa-coordinates">
+        <span class="nasa-coordinates-label">MISSION:</span> EXPLORER-{{
+          new Date().getFullYear()
+        }}
+        <span class="nasa-coordinates-separator">|</span>
+        <span class="nasa-coordinates-label">STAR DATE:</span>
+        {{ formatStarDate() }}
       </div>
     </div>
 
-    <!-- État de chargement avec CyberpunkLoader -->
-    <div
-      v-if="isLoading"
-      class="flex flex-col items-center justify-center p-6 bg-black/50 border border-pink-500/30 rounded-lg"
-      role="status"
-      aria-live="polite"
-    >
-      <CyberpunkLoader />
-    </div>
-
-    <CyberTerminal
-      v-else-if="sortedRankings.length === 0"
-      :command="`search_players ${
-        selectedGame ? '-g game_id:' + selectedGame : ''
-      } ${selectedSeason ? '-s season_id:' + selectedSeason : ''}`"
-      errorCode="404_NO_DATA"
-      message="Aucun joueur n'a été trouvé pour cette recherche."
-      class="my-8"
-    />
-
-    <!-- Tableau pour écrans moyens et grands -->
-    <div
-      v-else
-      class="bg-black/75 backdrop-blur-sm rounded-lg border border-purple-500 shadow-lg shadow-purple-500/30 overflow-hidden"
-    >
-      <!-- Version desktop du tableau (caché sur mobile) -->
-      <table class="min-w-full text-white hidden md:table">
-        <thead>
-          <tr class="bg-gray-800/80 border-b border-pink-500/50">
-            <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              Rang
-            </th>
-            <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              <div class="flex items-center justify-center">
-                <span>Joueur</span>
-                <button
-                  @click="sortBy('username')"
-                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
-                  :class="
-                    sortKey === 'username' ? 'cyberpunk-btn-cyan' : 'opacity-60'
-                  "
-                >
-                  <span v-if="sortKey === 'username' && sortOrder === 'asc'"
-                    >▲</span
-                  >
-                  <span
-                    v-else-if="sortKey === 'username' && sortOrder === 'desc'"
-                    >▼</span
-                  >
-                  <span v-else>▼</span>
-                </button>
-              </div>
-            </th>
-
-            <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              <div class="flex items-center justify-center">
-                <span>Tournois</span>
-                <button
-                  @click="sortBy('totalTournaments')"
-                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
-                  :class="
-                    sortKey === 'totalTournaments'
-                      ? 'cyberpunk-btn-cyan'
-                      : 'opacity-60'
-                  "
-                >
-                  <span
-                    v-if="sortKey === 'totalTournaments' && sortOrder === 'asc'"
-                    >▲</span
-                  >
-                  <span
-                    v-else-if="
-                      sortKey === 'totalTournaments' && sortOrder === 'desc'
-                    "
-                    >▼</span
-                  >
-                  <span v-else>▼</span>
-                </button>
-              </div>
-            </th>
-
-            <th class="py-4 px-4 text-center font-audiowide text-pink-400">
-              <div class="flex items-center justify-center">
-                <span>Victoires</span>
-                <button
-                  @click="sortBy('totalVictories')"
-                  class="cyberpunk-btn-gray p-1 ml-1 text-xs rounded-full h-6 w-6 items-center justify-center inline-flex"
-                  :class="
-                    sortKey === 'totalVictories'
-                      ? 'cyberpunk-btn-cyan'
-                      : 'opacity-60'
-                  "
-                >
-                  <span
-                    v-if="sortKey === 'totalVictories' && sortOrder === 'asc'"
-                    >▲</span
-                  >
-                  <span
-                    v-else-if="
-                      sortKey === 'totalVictories' && sortOrder === 'desc'
-                    "
-                    >▼</span
-                  >
-                  <span v-else>▼</span>
-                </button>
-              </div>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            v-for="(ranking, index) in paginatedRankings"
-            :key="ranking.playerId"
-            :class="{
-              'bg-purple-900/20': index % 2 === 0,
-              'hover:bg-cyan-900/20': true,
-            }"
-            class="transition-colors border-b border-gray-700/50"
-          >
-            <td class="py-4 px-4 text-center font-orbitron">
-              <span
-                :class="{ 'rank-top': index < 3 }"
-                class="px-3 py-1 rounded-full"
-              >
-                {{ (currentPage - 1) * itemsPerPage + index + 1 }}
-              </span>
-            </td>
-            <td class="py-4 px-4 text-center">
-              <router-link
-                :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                class="text-white hover:text-pink-400 font-orbitron transition-colors player-link capitalize"
-              >
-                {{ ranking.username }}
-              </router-link>
-            </td>
-            <td class="py-4 px-4 text-center font-orbitron text-cyan-400">
-              {{ ranking.totalTournaments }}
-            </td>
-            <td class="py-4 px-4 text-center font-orbitron text-pink-400">
-              {{ ranking.totalVictories }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Version mobile du tableau (affichée uniquement sur mobile) -->
-      <div class="md:hidden">
-        <!-- Barre de tri pour mobile -->
-        <div
-          class="flex justify-between items-center p-3 bg-gray-800/80 border-b border-pink-500/50"
+    <div class="flex flex-col gap-6">
+      <!-- En-tête de la page -->
+      <div class="relative flex justify-between items-center">
+        <!-- Bouton d'export -->
+        <SpaceButton
+          @click="exportCSV"
+          variant="secondary"
+          size="sm"
+          icon
+          class="absolute right-0"
         >
-          <div class="flex gap-2 items-center">
-            <span class="font-audiowide text-pink-400 text-sm">Trier par:</span>
-            <!-- Inverser l'ordre des filtres: Nom d'abord, puis Victoires -->
-            <button
-              @click="sortBy('username')"
-              class="px-2 py-1 text-xs font-orbitron rounded"
-              :class="
-                sortKey === 'username'
-                  ? 'cyberpunk-btn-cyan'
-                  : 'cyberpunk-btn-gray opacity-70'
-              "
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
-              Nom
-              <span v-if="sortKey === 'username'" class="ml-1">
-                {{ sortOrder === "asc" ? "▲" : "▼" }}
-              </span>
-            </button>
-            <button
-              @click="sortBy('totalVictories')"
-              class="px-2 py-1 text-xs font-orbitron rounded"
-              :class="
-                sortKey === 'totalVictories'
-                  ? 'cyberpunk-btn-cyan'
-                  : 'cyberpunk-btn-gray opacity-70'
-              "
-            >
-              Victoires
-              <span v-if="sortKey === 'totalVictories'" class="ml-1">
-                {{ sortOrder === "asc" ? "▲" : "▼" }}
-              </span>
-            </button>
+              <path
+                fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          CSV
+        </SpaceButton>
+      </div>
+
+      <!-- Filtres -->
+      <SpaceCard variant="primary" :stars="true" className="overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Sélecteur de jeux -->
+          <div>
+            <label for="game" class="mb-3 flex items-center gap-2">
+              <div
+                class="font-heading text-space-primary-light flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Filtrer par jeu
+              </div>
+            </label>
+            <div class="relative">
+              <select
+                id="game"
+                v-model="selectedGame"
+                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+              >
+                <option value="">Tous les jeux</option>
+                <option v-for="game in games" :key="game._id" :value="game._id">
+                  {{ game.name }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-space-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sélecteur de saisons -->
+          <div>
+            <label for="season" class="mb-3 flex items-center gap-2">
+              <div
+                class="font-heading text-space-secondary-light flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Filtrer par saison
+              </div>
+            </label>
+            <div class="relative">
+              <select
+                id="season"
+                v-model="selectedSeason"
+                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
+              >
+                <option value="">Classement général</option>
+                <option
+                  v-for="season in seasons"
+                  :key="season._id"
+                  :value="season._id"
+                >
+                  {{
+                    season.numero === 0
+                      ? "Alors ça chill"
+                      : `Saison ${season.numero}`
+                  }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-space-secondary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
+      </SpaceCard>
 
-        <!-- Liste des joueurs version mobile -->
-        <div class="divide-y divide-gray-700/50">
-          <div
-            v-for="(ranking, index) in paginatedRankings"
-            :key="ranking.playerId"
-            :class="{
-              'bg-purple-900/20': index % 2 === 0,
-            }"
-            class="p-3 transition-colors"
-          >
-            <!-- Structure modifiée pour avoir rang - joueur - victoires alignés horizontalement -->
-            <div class="flex items-center">
-              <!-- Rang - maintenant avec une meilleure visibilité -->
-              <div class="w-12 flex justify-center">
-                <span
-                  :class="{ 'rank-top': calculateGlobalRank(index) <= 3 }"
-                  class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 border border-purple-500/50 font-orbitron text-white text-sm"
+      <!-- État de chargement -->
+      <div v-if="isLoading" class="flex justify-center py-12">
+        <SpaceLoader text="Chargement du classement..." />
+      </div>
+
+      <!-- Message si aucun résultat -->
+      <SpaceTerminal
+        v-else-if="sortedRankings.length === 0"
+        :command="`search_players ${
+          selectedGame ? '-g game_id:' + selectedGame : ''
+        } ${selectedSeason ? '-s season_id:' + selectedSeason : ''}`"
+        title="Console de recherche"
+        showCursor
+        className="my-8"
+      >
+        <div class="text-space-error font-mono">
+          Erreur 404: Aucun joueur n'a été trouvé pour cette recherche.
+        </div>
+        <div class="text-space-text-muted mt-2">
+          Essayez de modifier vos critères de recherche.
+        </div>
+      </SpaceTerminal>
+
+      <!-- Tableau de classement -->
+      <SpaceCard
+        v-else
+        variant="dark"
+        :stars="true"
+        className="overflow-hidden"
+      >
+        <!-- Version desktop du tableau (caché sur mobile) -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-space-bg-light/30">
+            <thead class="bg-space-bg-light/20">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
-                  {{ (currentPage - 1) * itemsPerPage + index + 1 }}
-                </span>
-              </div>
-
-              <!-- Joueur -->
-              <div class="flex-grow">
-                <router-link
-                  :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                  class="text-white hover:text-pink-400 font-orbitron transition-colors player-link capitalize text-sm"
+                  Rang
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
-                  {{ ranking.username }}
-                </router-link>
-              </div>
-
-              <!-- Victoires (déplacé au centre) - sur une seule ligne -->
-              <div class="flex items-center ml-auto">
-                <div class="flex items-center">
-                  <span class="font-orbitron text-pink-400 text-sm mr-1">
+                  <div class="flex items-center">
+                    <span>Joueur</span>
+                    <button
+                      @click="sortBy('username')"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
+                      :class="{ 'bg-space-primary/20': sortKey === 'username' }"
+                    >
+                      <span v-if="sortKey === 'username' && sortOrder === 'asc'"
+                        >▲</span
+                      >
+                      <span
+                        v-else-if="
+                          sortKey === 'username' && sortOrder === 'desc'
+                        "
+                        >▼</span
+                      >
+                      <span v-else>▼</span>
+                    </button>
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                >
+                  <div class="flex items-center">
+                    <span>Tournois</span>
+                    <button
+                      @click="sortBy('totalTournaments')"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
+                      :class="{
+                        'bg-space-primary/20': sortKey === 'totalTournaments',
+                      }"
+                    >
+                      <span
+                        v-if="
+                          sortKey === 'totalTournaments' && sortOrder === 'asc'
+                        "
+                        >▲</span
+                      >
+                      <span
+                        v-else-if="
+                          sortKey === 'totalTournaments' && sortOrder === 'desc'
+                        "
+                        >▼</span
+                      >
+                      <span v-else>▼</span>
+                    </button>
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                >
+                  <div class="flex items-center">
+                    <span>Victoires</span>
+                    <button
+                      @click="sortBy('totalVictories')"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
+                      :class="{
+                        'bg-space-primary/20': sortKey === 'totalVictories',
+                      }"
+                    >
+                      <span
+                        v-if="
+                          sortKey === 'totalVictories' && sortOrder === 'asc'
+                        "
+                        >▲</span
+                      >
+                      <span
+                        v-else-if="
+                          sortKey === 'totalVictories' && sortOrder === 'desc'
+                        "
+                        >▼</span
+                      >
+                      <span v-else>▼</span>
+                    </button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-space-bg-light/20">
+              <tr
+                v-for="(ranking, index) in paginatedRankings"
+                :key="ranking.playerId"
+                class="hover:bg-space-bg-light/10 transition-colors duration-200"
+              >
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <SpaceBadge
+                      v-if="calculateGlobalRank(index) <= 3"
+                      :variant="
+                        getRankBadgeVariant(calculateGlobalRank(index) - 1)
+                      "
+                      class="mr-2"
+                    >
+                      {{ calculateGlobalRank(index) }}
+                    </SpaceBadge>
+                    <span v-else class="text-space-text-muted">{{
+                      calculateGlobalRank(index)
+                    }}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <router-link
+                    :to="{ name: 'Profil', params: { id: ranking.playerId } }"
+                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300"
+                  >
+                    {{ ranking.username }}
+                  </router-link>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div
+                    class="text-sm font-mono font-semibold text-space-secondary-light"
+                  >
+                    {{ ranking.totalTournaments }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div
+                    class="text-sm font-mono font-semibold text-space-accent-light"
+                  >
                     {{ ranking.totalVictories }}
-                  </span>
-                  <span class="text-xs text-gray-400">victoires</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Version mobile du tableau (affichée uniquement sur mobile) -->
+        <div class="md:hidden">
+          <!-- Barre de tri pour mobile -->
+          <div
+            class="flex justify-between items-center p-3 bg-space-bg-light/20 border-b border-space-bg-light/30"
+          >
+            <div class="flex gap-2 items-center">
+              <span class="font-heading text-space-text-muted text-sm"
+                >Trier par:</span
+              >
+              <!-- Boutons de tri -->
+              <SpaceButton
+                @click="sortBy('username')"
+                variant="ghost"
+                size="sm"
+                :className="sortKey === 'username' ? 'bg-space-primary/20' : ''"
+              >
+                Nom
+                {{
+                  sortKey === "username"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""
+                }}
+              </SpaceButton>
+              <SpaceButton
+                @click="sortBy('totalVictories')"
+                variant="ghost"
+                size="sm"
+                :className="
+                  sortKey === 'totalVictories' ? 'bg-space-primary/20' : ''
+                "
+              >
+                Victoires
+                {{
+                  sortKey === "totalVictories"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""
+                }}
+              </SpaceButton>
+            </div>
+          </div>
+
+          <!-- Liste des joueurs version mobile -->
+          <div class="divide-y divide-space-bg-light/20">
+            <div
+              v-for="(ranking, index) in paginatedRankings"
+              :key="ranking.playerId"
+              class="p-3 transition-colors hover:bg-space-bg-light/10"
+            >
+              <div class="flex items-center">
+                <!-- Rang -->
+                <div class="w-12 flex justify-center">
+                  <SpaceBadge
+                    v-if="calculateGlobalRank(index) <= 3"
+                    :variant="
+                      getRankBadgeVariant(calculateGlobalRank(index) - 1)
+                    "
+                  >
+                    {{ calculateGlobalRank(index) }}
+                  </SpaceBadge>
+                  <span v-else class="text-space-text-muted">{{
+                    calculateGlobalRank(index)
+                  }}</span>
+                </div>
+
+                <!-- Joueur -->
+                <div class="flex-grow">
+                  <router-link
+                    :to="{ name: 'Profil', params: { id: ranking.playerId } }"
+                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300"
+                  >
+                    {{ ranking.username }}
+                  </router-link>
+                </div>
+
+                <!-- Victoires -->
+                <div class="flex items-center ml-auto">
+                  <div class="flex items-center">
+                    <span class="font-mono text-space-accent-light mr-1">
+                      {{ ranking.totalVictories }}
+                    </span>
+                    <span class="text-xs text-space-text-muted">victoires</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Pagination -->
-    <CyberpunkPagination
-      :current-page="currentPage"
-      :total-pages="totalPages"
-      prev-label="&laquo; Précédent"
-      next-label="Suivant &raquo;"
-      color="cyan"
-      :show-dots="totalPages > 5"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-      @page-select="currentPage = $event"
-    />
+        <!-- Pagination -->
+        <div class="py-4 px-6">
+          <SpacePagination
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @prev-page="prevPage"
+            @next-page="nextPage"
+            @page-select="currentPage = $event"
+          />
+        </div>
+      </SpaceCard>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 
-//-------------------------------------------------------
-// SECTION: Imports et services
-//-------------------------------------------------------
-
-// Store pour la gestion des données
-import { useRankingStore } from "../stores/rankingStore";
-
 // Types pour le typage fort
-import type { PlayerRanking, Season } from "../types";
+import type { PlayerRanking, Season, Game } from "../types";
 
-// Composants
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
-import CyberpunkPagination from "@/shared/CyberpunkPagination.vue";
-import CyberTerminal from "@/shared/CyberTerminal.vue";
-
-// Importation du service pour les saisons
+// Services
 import seasonService from "../services/seasonService";
+import gameService from "../services/gameService";
+import playerService from "../services/playerService";
 
-//-------------------------------------------------------
-// SECTION: Constantes et configuration
-//-------------------------------------------------------
+// État du composant
+const isLoading = ref(true);
+const games = ref<Game[]>([]);
+const seasons = ref<Season[]>([]);
+const rankings = ref<PlayerRanking[]>([]);
 
-/**
- * Valeurs par défaut pour le tri du classement
- */
-const DEFAULT_SORT_KEY: keyof PlayerRanking = "totalVictories";
-const DEFAULT_SORT_ORDER = "desc";
+// État du tri
+const sortKey = ref<keyof PlayerRanking>("totalVictories");
+const sortOrder = ref<"asc" | "desc">("desc");
 
-//-------------------------------------------------------
-// SECTION: État du composant
-//-------------------------------------------------------
-
-// Initialisation du store
-const rankingStore = useRankingStore();
-
-/**
- * État du tri
- */
-const sortKey = ref<keyof PlayerRanking>(DEFAULT_SORT_KEY);
-const sortOrder = ref<string>(DEFAULT_SORT_ORDER);
-
-/**
- * État de la pagination
- */
+// État de la pagination
 const currentPage = ref(1);
 const itemsPerPage = 10; // Nombre d'éléments par page
 
-/**
- * Filtres
- */
+// Filtres
 const selectedGame = ref<string>("");
 const selectedSeason = ref<string>("");
-const seasons = ref<Season[]>([]);
 
 //-------------------------------------------------------
 // SECTION: Récupération des données et actions
@@ -490,10 +485,20 @@ const seasons = ref<Season[]>([]);
  */
 const fetchSeasons = async () => {
   try {
-    const result = await seasonService.getAllSeasons();
-    seasons.value = result;
+    seasons.value = await seasonService.getAllSeasons();
   } catch (error) {
     console.error("Erreur lors de la récupération des saisons:", error);
+  }
+};
+
+/**
+ * Récupère les jeux disponibles
+ */
+const fetchGames = async () => {
+  try {
+    games.value = await gameService.getGames();
+  } catch (error) {
+    console.error("Erreur lors de la récupération des jeux:", error);
   }
 };
 
@@ -501,30 +506,33 @@ const fetchSeasons = async () => {
  * Met à jour le classement selon les filtres sélectionnés (jeu et saison)
  */
 const fetchRankingsByFilter = async () => {
+  isLoading.value = true;
   currentPage.value = 1; // Réinitialiser à la première page
 
   try {
     if (selectedSeason.value) {
       // Récupérer le classement par saison
-      await rankingStore.fetchSeasonRankings(
+      const result = await seasonService.getSeasonRanking(
         selectedSeason.value,
         selectedGame.value
       );
+      rankings.value = result.rankings || [];
     } else {
-      // Récupérer le classement général (comme avant)
-      await rankingStore.fetchRankingsByGame(selectedGame.value);
+      // Récupérer le classement général
+      if (selectedGame.value) {
+        rankings.value = await playerService.getPlayerRankingsByGame(
+          selectedGame.value
+        );
+      } else {
+        rankings.value = await playerService.getPlayerRankings();
+      }
     }
   } catch (error) {
     console.error("Erreur lors de la récupération du classement:", error);
+    rankings.value = [];
+  } finally {
+    isLoading.value = false;
   }
-};
-
-/**
- * Met à jour le classement selon le jeu sélectionné
- */
-const fetchRankingsByGame = async () => {
-  currentPage.value = 1; // Réinitialiser à la première page
-  await rankingStore.fetchRankingsByGame(selectedGame.value);
 };
 
 /**
@@ -566,7 +574,7 @@ const exportCSV = () => {
   // Ajouter info sur le jeu
   if (selectedGame.value) {
     const gameName =
-      rankingStore.games.find((g) => g._id === selectedGame.value)?.name ||
+      games.value.find((g) => g._id === selectedGame.value)?.name ||
       "jeu-specifique";
     fileName += `-${gameName}`;
   } else {
@@ -590,10 +598,7 @@ const exportCSV = () => {
 //-------------------------------------------------------
 
 /**
- * Gère le tri du tableau de classement avec un comportement plus prévisible:
- * - Premier clic: tri ascendant
- * - Deuxième clic sur la même colonne: tri descendant
- * - Troisième clic: retour au tri par défaut (mais uniquement si c'est une colonne différente de la colonne par défaut)
+ * Gère le tri du tableau de classement
  * @param key - Clé de colonne sur laquelle effectuer le tri
  */
 const sortBy = (key: string) => {
@@ -601,51 +606,52 @@ const sortBy = (key: string) => {
 
   // Si on clique sur la même colonne
   if (sortKey.value === typedKey) {
-    // Si on est en ordre ascendant, passer en descendant
-    if (sortOrder.value === "asc") {
-      sortOrder.value = "desc";
-    }
-    // Si on est en ordre descendant...
-    else {
-      // Si c'est la colonne par défaut (totalVictories), on alterne simplement entre asc/desc
-      if (typedKey === DEFAULT_SORT_KEY) {
-        sortOrder.value = "asc";
-      }
-      // Sinon, on revient au tri par défaut
-      else {
-        sortKey.value = DEFAULT_SORT_KEY;
-        sortOrder.value = DEFAULT_SORT_ORDER;
-      }
-    }
-  }
-  // Si on clique sur une nouvelle colonne
-  else {
+    // Inverser l'ordre de tri
+    sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  } else {
+    // Nouvelle colonne: définir la clé et commencer par ordre ascendant
     sortKey.value = typedKey;
-    sortOrder.value = "asc"; // Commencer en ordre ascendant
+    sortOrder.value = "asc";
   }
 
   // Revenir à la première page après un tri
   currentPage.value = 1;
 };
+
+/**
+ * Détermine la variante de badge pour les rangs 1, 2 et 3
+ */
+const getRankBadgeVariant = (index: number) => {
+  switch (index) {
+    case 0:
+      return "accent"; // 1er place (Or)
+    case 1:
+      return "secondary"; // 2ème place (Argent)
+    case 2:
+      return "primary"; // 3ème place (Bronze)
+    default:
+      return "primary";
+  }
+};
+
 //-------------------------------------------------------
 // SECTION: Propriétés calculées
 //-------------------------------------------------------
 
 /**
  * Propriété calculée qui retourne le classement trié selon les critères actuels
- * avec un tri secondaire par tournois en cas d'égalité des victoires
  */
 const sortedRankings = computed(() => {
-  return [...rankingStore.rankings].sort((a, b) => {
+  return [...rankings.value].sort((a, b) => {
     const valueA = a[sortKey.value];
     const valueB = b[sortKey.value];
 
     let result;
-    // Tri spécifique pour les chaînes de caractères (utiliser localeCompare)
+    // Tri spécifique pour les chaînes de caractères
     if (typeof valueA === "string" && typeof valueB === "string") {
       result = valueA.localeCompare(valueB);
     }
-    // Tri pour les autres types de données (nombres, etc.)
+    // Tri pour les autres types de données
     else {
       result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     }
@@ -677,11 +683,6 @@ const paginatedRankings = computed(() => {
   const end = Math.min(start + itemsPerPage, sortedRankings.value.length);
   return sortedRankings.value.slice(start, end);
 });
-
-/**
- * Propriété d'état pour savoir si on est en train de charger
- */
-const isLoading = computed(() => rankingStore.loading);
 
 //-------------------------------------------------------
 // SECTION: Méthodes de pagination
@@ -716,435 +717,76 @@ const calculateGlobalRank = (index: number): number => {
 // SECTION: Cycle de vie et watchers
 //-------------------------------------------------------
 
-// Synchroniser avec la valeur du gameId dans le store
-watch(
-  () => rankingStore.currentGameId,
-  (newGameId) => {
-    selectedGame.value = newGameId;
-  }
-);
-
-// Observer les changements de selectedGame
-watch(
-  () => selectedGame.value,
-  (newGameId) => {
-    if (newGameId !== rankingStore.currentGameId) {
-      fetchRankingsByGame();
-    }
-  }
-);
 // Observer les changements de selectedGame et selectedSeason
 watch([() => selectedGame.value, () => selectedSeason.value], () => {
   fetchRankingsByFilter();
 });
 
-// Synchroniser avec la valeur du gameId dans le store
-watch(
-  () => rankingStore.currentGameId,
-  (newGameId) => {
-    selectedGame.value = newGameId;
-  }
-);
-
 /**
  * Initialisation du composant au montage
  */
 onMounted(async () => {
-  // Initialiser le jeu sélectionné avec la valeur stockée dans le store
-  selectedGame.value = rankingStore.currentGameId;
+  isLoading.value = true;
+  try {
+    // Charger les saisons et les jeux
+    await Promise.all([fetchSeasons(), fetchGames()]);
 
-  // Charger les saisons
-  await fetchSeasons();
+    // Définir la saison actuelle comme valeur par défaut si elle existe
+    if (seasons.value.length > 0) {
+      // Les saisons sont déjà triées par numéro décroissant, donc la première est la plus récente
+      selectedSeason.value = seasons.value[0]._id;
+    }
 
-  // Charger les jeux
-  await rankingStore.fetchGames();
-
-  // Définir la saison actuelle comme valeur par défaut si elle existe
-  if (seasons.value.length > 0) {
-    // Les saisons sont déjà triées par numéro décroissant, donc la première est la plus récente
-    selectedSeason.value = seasons.value[0]._id;
+    // Charger le classement initial
+    await fetchRankingsByFilter();
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation:", error);
+  } finally {
+    isLoading.value = false;
   }
-
-  // Charger le classement selon le filtre par défaut
-  await fetchRankingsByFilter();
 });
+
+// Fonction pour générer une "star date" à la Star Trek
+const formatStarDate = () => {
+  const now = new Date();
+  const year = now.getFullYear().toString().substr(2);
+  const dayOfYear = Math.floor(
+    (now - new Date(now.getFullYear(), 0, 0)) / 86400000
+  );
+  return `${year}${dayOfYear}.${now.getHours()}${now.getMinutes()}`;
+};
 </script>
 
-<style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.rank-top {
-  font-weight: bold;
-  background: linear-gradient(to right, #4a0072, #9900ff);
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
-  text-shadow: 0 0 5px #fff;
-}
-
-.transition-colors {
-  transition: background-color 0.3s ease;
-}
-
-.cyberpunk-select {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  background: linear-gradient(
-    135deg,
-    rgba(8, 8, 16, 0.95),
-    rgba(14, 23, 36, 0.95)
-  );
-  box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
-    0 0 5px rgba(6, 182, 212, 0.3);
-  text-shadow: 0 0 3px rgba(6, 182, 212, 0.7);
-  caret-color: #06b6d4;
+<style>
+.nasa-header {
   position: relative;
-  z-index: 1;
-  letter-spacing: 0.5px;
-  padding-right: 2.5rem !important;
-  color: #06b6d4; /* Ajout de la couleur du texte */
-  border: 2px solid rgba(6, 182, 212, 0.7); /* Bordure cyan */
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Styles pour les options du select */
-.cyberpunk-select option {
-  background-color: #0f172a; /* Fond sombre */
-  color: #67e8f9; /* Texte cyan clair */
-  font-family: "Orbitron", sans-serif;
+.nasa-title {
+  font-family: var(--font-nasa); /* Utilisation de la variable */
+  text-transform: uppercase;
+  letter-spacing: 3px;
 }
 
-/* Style au focus */
-.cyberpunk-select:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.5);
-}
-
-.cyberpunk-select-glow {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
-  border: 2px solid rgba(6, 182, 212, 0.8);
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  transform: scale(1.01);
-  z-index: 0;
-}
-
-.cyberpunk-icon {
-  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
-  transition: transform 0.3s ease;
-}
-
-.cyberpunk-select:focus + .cyberpunk-select-glow + div .cyberpunk-icon,
-.group:hover .cyberpunk-icon {
-  transform: translateY(2px);
-  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.9));
-}
-
-.cyberpunk-label {
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
-  letter-spacing: 1px;
-}
-
-.cyberpunk-label svg {
-  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
-}
-
-.cyberpunk-panel-purple {
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 15px),
-    calc(100% - 15px) 100%,
-    0 100%
-  );
-  background: radial-gradient(
-      circle at top right,
-      rgba(126, 34, 206, 0.2),
-      transparent 60%
-    ),
-    linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(15, 23, 42, 0.9));
-  position: relative;
-}
-
-.cyberpunk-panel-purple::before {
-  content: "";
-  position: absolute;
-  right: 15px;
-  bottom: 0;
-  width: 30px;
-  height: 2px;
-  background: rgba(139, 92, 246, 0.7);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
-}
-
-.cyberpunk-panel-purple::after {
-  content: "";
+.nasa-coordinates {
   position: absolute;
   right: 0;
-  bottom: 15px;
-  width: 2px;
-  height: 30px;
-  background: rgba(139, 92, 246, 0.7);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+  bottom: 10px;
+  font-family: var(--font-mono); /* Utilisation de la variable */
+  font-size: 0.75rem;
+  color: var(--space-text-muted);
 }
 
-/* Label avec teinte violette */
-.cyberpunk-label-purple {
-  text-shadow: 0 0 5px rgba(139, 92, 246, 0.7);
-  letter-spacing: 1px;
+.nasa-coordinates-label {
+  font-family: var(--font-nasa); /* Utilisation de la variable */
+  color: var(--space-secondary);
 }
 
-.cyberpunk-label-purple svg {
-  filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.7));
-}
-
-/* Select avec style violet */
-.cyberpunk-select-purple {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  background: linear-gradient(
-    135deg,
-    rgba(8, 8, 16, 0.95),
-    rgba(14, 23, 36, 0.95)
-  );
-  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
-    0 0 5px rgba(139, 92, 246, 0.3);
-  text-shadow: 0 0 3px rgba(139, 92, 246, 0.7);
-  caret-color: #a855f7;
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.5px;
-  padding-right: 2.5rem !important;
-  color: #a855f7; /* Couleur du texte violette */
-  border: 2px solid rgba(139, 92, 246, 0.7); /* Bordure violette */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-/* Style au focus */
-.cyberpunk-select-purple:focus {
-  outline: none;
-  border-color: #a855f7;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
-  animation: pulse-glow-purple 2s infinite;
-}
-
-/* Effet de lueur violet sur survol */
-.cyberpunk-select-glow-purple {
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
-  border: 2px solid rgba(139, 92, 246, 0.8);
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  transform: scale(1.01);
-  z-index: 0;
-}
-
-/* Icône avec effet violet */
-.cyberpunk-icon-purple {
-  filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.7));
-  transition: transform 0.3s ease;
-}
-
-.cyberpunk-select-purple:focus
-  + .cyberpunk-select-glow-purple
-  + div
-  .cyberpunk-icon-purple,
-.group:hover .cyberpunk-icon-purple {
-  transform: translateY(2px);
-  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.9));
-}
-
-/* Styles pour les options du select */
-.cyberpunk-select-purple option {
-  background-color: #0f172a; /* Fond sombre */
-  color: #c4b5fd; /* Texte violet clair */
-  font-family: "Orbitron", sans-serif;
-}
-
-/* Animation de pulsation violette */
-@keyframes pulse-glow-purple {
-  0% {
-    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
-      0 0 5px rgba(139, 92, 246, 0.3);
-  }
-  50% {
-    box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.4),
-      0 0 10px rgba(139, 92, 246, 0.4);
-  }
-  100% {
-    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3),
-      0 0 5px rgba(139, 92, 246, 0.3);
-  }
-}
-
-.cyber-terminal {
-  font-family: "Courier New", monospace;
-  position: relative;
-  overflow: hidden;
-}
-
-.cyber-terminal::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(6, 182, 212, 0.5) 25%,
-    rgba(6, 182, 212, 0.5) 75%,
-    transparent 100%
-  );
-}
-
-.cyber-terminal-header {
-  font-size: 0.7rem;
-  color: #94a3b8;
-  letter-spacing: 1px;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(6, 182, 212, 0.3);
-  text-align: center;
-}
-
-.cyber-terminal-content {
-  line-height: 1.6;
-}
-
-.blink {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .rank-top {
-    background: linear-gradient(to right, #4a0072, #9900ff);
-    box-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
-    color: white !important;
-    border-color: rgba(236, 72, 153, 0.7) !important;
-  }
-}
-
-.cyberpunk-label-cyan {
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
-  letter-spacing: 1px;
-}
-
-.cyberpunk-label-cyan svg {
-  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
-}
-
-.cyberpunk-select-cyan {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  background: linear-gradient(
-    135deg,
-    rgba(8, 8, 16, 0.95),
-    rgba(14, 23, 36, 0.95)
-  );
-  box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
-    0 0 5px rgba(6, 182, 212, 0.3);
-  text-shadow: 0 0 3px rgba(6, 182, 212, 0.7);
-  caret-color: #06b6d4;
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.5px;
-  padding-right: 2.5rem !important;
-  color: #06b6d4;
-  border: 2px solid rgba(6, 182, 212, 0.7);
-}
-
-.cyberpunk-select-cyan:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.5);
-  animation: pulse-glow-cyan 2s infinite;
-}
-
-.cyberpunk-select-glow-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
-  border: 2px solid rgba(6, 182, 212, 0.8);
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  transform: scale(1.01);
-  z-index: 0;
-}
-
-.cyberpunk-icon-cyan {
-  filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.7));
-  transition: transform 0.3s ease;
-}
-
-.cyberpunk-select-cyan:focus
-  + .cyberpunk-select-glow-cyan
-  + div
-  .cyberpunk-icon-cyan,
-.group:hover .cyberpunk-icon-cyan {
-  transform: translateY(2px);
-  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.9));
-}
-
-@keyframes pulse-glow-cyan {
-  0% {
-    box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
-      0 0 5px rgba(6, 182, 212, 0.3);
-  }
-  50% {
-    box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.4),
-      0 0 10px rgba(6, 182, 212, 0.4);
-  }
-  100% {
-    box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.3),
-      0 0 5px rgba(6, 182, 212, 0.3);
-  }
+.nasa-coordinates-separator {
+  margin: 0 8px;
+  color: var(--space-primary);
 }
 </style>
