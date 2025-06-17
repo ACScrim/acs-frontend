@@ -1,21 +1,7 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
     <!-- En-tête de la page avec style NASA -->
-    <div class="nasa-header mb-8">
-      <SpaceTitle size="3xl" :decorated="true" class="mx-auto nasa-title">
-        CLASSEMENT
-      </SpaceTitle>
-
-      <!-- Coordonnées stellaires -->
-      <div class="nasa-coordinates">
-        <span class="nasa-coordinates-label">MISSION:</span> EXPLORER-{{
-          new Date().getFullYear()
-        }}
-        <span class="nasa-coordinates-separator">|</span>
-        <span class="nasa-coordinates-label">STAR DATE:</span>
-        {{ formatStarDate() }}
-      </div>
-    </div>
+    <SpaceHeader title="CLASSEMENT" />
 
     <div class="flex flex-col gap-6">
       <!-- En-tête de la page -->
@@ -745,16 +731,6 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
-
-// Fonction pour générer une "star date" à la Star Trek
-const formatStarDate = () => {
-  const now = new Date();
-  const year = now.getFullYear().toString().substr(2);
-  const dayOfYear = Math.floor(
-    (now - new Date(now.getFullYear(), 0, 0)) / 86400000
-  );
-  return `${year}${dayOfYear}.${now.getHours()}${now.getMinutes()}`;
-};
 </script>
 
 <style>

@@ -32,15 +32,17 @@
       aria-hidden="true"
     >
       <video
+        v-if="!isLightMode"
         autoplay
         muted
         loop
+        class="fixed inset-0 w-full h-full object-cover opacity-100 z-10"
+        aria-hidden="true"
         playsinline
-        class="video-background__media"
-        id="background-video"
         preload="auto"
       >
         <source src="@/assets/space.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
       </video>
 
       <!-- Overlay pour ajuster la luminosité/contraste si nécessaire -->

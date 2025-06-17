@@ -11,6 +11,7 @@ import Card from "@/components/ui/molecules/Card.vue";
 import Alert from "@/components/ui/molecules/Alert.vue";
 import Modal from "@/components/ui/molecules/Modal.vue";
 import Loader from "@/components/ui/molecules/Loader.vue";
+import Header from "@/components/ui/molecules/Header.vue";
 
 // Composants organismes
 import Pagination from "@/components/ui/organisms/Pagination.vue";
@@ -29,6 +30,7 @@ const components = {
   SpaceCard: Card,
   SpaceAlert: Alert,
   SpaceModal: Modal,
+  SpaceHeader: Header,
 
   // Organisms
   SpacePagination: Pagination,
