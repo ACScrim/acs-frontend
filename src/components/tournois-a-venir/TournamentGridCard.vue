@@ -1,30 +1,41 @@
 <template>
-  <div
-    class="tournament-grid-card bg-black/75 backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-300 hover:translate-y-[-3px] relative shadow-lg cursor-pointer"
-    :class="{
-      'border border-green-500 shadow-green-500/30': tournament.finished,
-      'border border-pink-500 shadow-pink-500/30': !tournament.finished,
-    }"
+  <SpaceCard
+    :variant="tournament.finished ? 'success' : 'primary'"
+    :stars="true"
+    :interactive="true"
+    :hover="true"
+    :decorated="true"
+    :className="[
+      'tournament-grid-card h-full',
+      tournament.finished ? 'finished-tournament' : '',
+    ]"
     @click="navigateToTournamentDetails"
   >
-    <!-- Image du jeu ou SVG par défaut -->
-    <div class="aspect-[16/9] overflow-hidden relative group">
-      <template v-if="tournament.game.imageUrl && !imageError">
+    <!-- Image du jeu ou placeholder avec effet spatial -->
+    <div class="aspect-[16/9] overflow-hidden relative -mx-6 -mt-6 mb-4">
+      <div
+        v-if="tournament.game.imageUrl && !imageError"
+        class="w-full h-full overflow-hidden"
+      >
         <img
           :src="tournament.game.imageUrl"
           :alt="tournament.game.name"
-          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
           @error="handleImageError"
         />
-      </template>
+        <!-- Overlay pour améliorer la visibilité du texte -->
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-space-bg via-transparent to-transparent opacity-80"
+        ></div>
+      </div>
       <div
         v-else
-        class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50"
+        class="w-full h-full bg-space-bg-light/30 flex items-center justify-center"
       >
-        <!-- Jolie icône SVG de jeu comme placeholder -->
+        <!-- Icône de jeu comme placeholder -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-20 w-20 text-pink-500/70"
+          class="h-20 w-20 text-space-primary/70"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -34,42 +45,49 @@
         </svg>
       </div>
 
-      <!-- Badge "Terminé" -->
-      <div
-        v-if="tournament.finished"
-        class="absolute top-2 right-2 px-3 py-1 text-green-400 font-orbitron flex items-center bg-green-900/80 rounded-full border border-green-500/80 text-xs shadow-lg"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-1"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+      <!-- Badge statut du tournoi avec meilleure visibilité -->
+      <div class="absolute top-3 right-3">
+        <SpaceBadge
+          v-if="tournament.finished"
+          variant="success"
+          size="sm"
+          className="flex items-center gap-1 font-bold shadow-md"
+          style="
+            background-color: rgba(var(--space-success-rgb), 0.9);
+            padding: 0.35rem 0.7rem;
+          "
         >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        Terminé
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Terminé
+        </SpaceBadge>
       </div>
     </div>
 
-    <!-- Reste du contenu inchangé -->
     <!-- Informations du tournoi -->
-    <div class="p-4">
+    <div class="tournament-info space-y-4">
       <!-- Nom du tournoi -->
-      <h3 class="text-xl text-white font-audiowide mb-2 line-clamp-1 neon-text">
+      <h3 class="text-xl font-heading text-space-text line-clamp-1">
         {{ tournament.name }}
       </h3>
 
-      <!-- Infos du tournoi -->
-      <div class="font-orbitron text-sm space-y-2 mb-4">
-        <!-- Date -->
-        <div class="text-white flex items-center mb-2">
+      <!-- Détails du tournoi -->
+      <div class="space-y-2 text-sm">
+        <!-- Date et heure -->
+        <div class="flex items-center text-space-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-pink-500"
+            class="h-4 w-4 mr-2 text-space-primary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -79,21 +97,19 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span class="flex items-center">
-            <span
-              class="py-0.5 px-2 mr-2 text-xs font-medium text-cyan-300 bg-cyan-900/60 border border-cyan-500/50 rounded-md font-orbitron"
-            >
+          <div class="flex items-center">
+            <SpaceBadge variant="secondary" size="sm" className="mr-2">
               {{ getWeekday(tournament.date) }}
-            </span>
+            </SpaceBadge>
             <span>{{ formatLocalDate(tournament.date) }}</span>
-          </span>
+          </div>
         </div>
 
         <!-- Jeu -->
-        <p class="text-white flex items-center">
+        <div class="flex items-center text-space-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-cyan-500"
+            class="h-4 w-4 mr-2 text-space-secondary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -103,14 +119,14 @@
               clip-rule="evenodd"
             />
           </svg>
-          {{ tournament.game.name }}
-        </p>
+          <span>{{ tournament.game.name }}</span>
+        </div>
 
         <!-- Participants -->
-        <p class="flex items-center">
+        <div class="flex items-center text-space-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-purple-500"
+            class="h-4 w-4 mr-2 text-space-accent"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -118,41 +134,34 @@
               d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
             />
           </svg>
-          <!-- Appliquer la classe uniquement au texte -->
           <span :class="participantsTextClass">{{ formatParticipants() }}</span>
-          <span
+          <SpaceBadge
             v-if="isTournamentFull"
-            class="ml-2 text-xs bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full"
+            variant="error"
+            size="sm"
+            className="ml-2"
           >
             COMPLET
-          </span>
-        </p>
+          </SpaceBadge>
+        </div>
       </div>
 
       <!-- Boutons d'action -->
       <div
         v-if="!tournament.finished && user"
-        class="flex flex-col space-y-2 mt-4"
+        class="flex flex-col space-y-2 mt-6"
         @click.stop
       >
-        <!-- Bouton inscription / liste d'attente  -->
-        <button
+        <!-- Bouton inscription / liste d'attente -->
+        <SpaceButton
           v-if="!isUserRegistered && !isUserInWaitlist"
           @click="handleRegistration"
-          :class="{
-            'cyberpunk-btn-amber': isTournamentFull,
-            'cyberpunk-btn-pink': !isTournamentFull,
-          }"
-          class="px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+          :variant="isTournamentFull ? 'secondary' : 'primary'"
+          className="w-full"
         >
-          <span class="mr-2 font-orbitron">
-            {{
-              isTournamentFull ? "Rejoindre la liste d'attente" : "S'inscrire"
-            }}
-          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-4 w-4 mr-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -162,18 +171,19 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
+          {{ isTournamentFull ? "Rejoindre la liste d'attente" : "S'inscrire" }}
+        </SpaceButton>
 
         <!-- Bouton quitter la liste d'attente -->
-        <button
+        <SpaceButton
           v-else-if="isUserInWaitlist"
           @click="$emit('open-registration', tournament, 'unregister-waitlist')"
-          class="cyberpunk-btn-gray px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+          variant="outline"
+          className="w-full"
         >
-          <span class="mr-2">Quitter la liste d'attente</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-4 w-4 mr-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -183,23 +193,19 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
+          Quitter la liste d'attente
+        </SpaceButton>
 
-        <button
+        <!-- Bouton check-in -->
+        <SpaceButton
           v-else-if="isCheckInAvailable && isUserRegistered"
           @click="$emit('check-in', tournament._id, !isCheckedIn)"
-          :class="{
-            'cyberpunk-btn-green': isCheckedIn,
-            'cyberpunk-btn-amber': !isCheckedIn,
-          }"
-          class="px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+          :variant="isCheckedIn ? 'success' : 'accent'"
+          className="w-full"
         >
-          <span class="mr-2">
-            {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
-          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-4 w-4 mr-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -209,17 +215,19 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
+          {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
+        </SpaceButton>
 
-        <button
+        <!-- Bouton désinscription -->
+        <SpaceButton
           v-else-if="isUserRegistered"
           @click="$emit('open-registration', tournament, 'unregister')"
-          class="cyberpunk-btn-gray px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm"
+          variant="outline"
+          className="w-full"
         >
-          <span class="mr-2">Se désinscrire</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-4 w-4 mr-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -229,18 +237,21 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
-        <button
+          Se désinscrire
+        </SpaceButton>
+
+        <!-- Bouton définir niveau -->
+        <SpaceButton
           v-if="
             isUserRegistered && !hasPlayerLevelForGame && !tournament.finished
           "
           @click.stop="redirectToPlayerLevel"
-          class="cyberpunk-btn-cyan px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-sm mt-2"
+          variant="secondary"
+          className="w-full mt-2"
         >
-          <span class="mr-2">Définir votre niveau</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-4 w-4 mr-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -250,13 +261,30 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
+          Définir votre niveau
+        </SpaceButton>
       </div>
     </div>
-  </div>
+
+    <!-- Éléments décoratifs spatiaux pour le tournoi fini -->
+    <div
+      v-if="tournament.finished"
+      class="absolute -bottom-3 -right-3 transform rotate-45 w-20 h-20 pointer-events-none opacity-30"
+    >
+      <svg
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+        class="text-space-success"
+      >
+        <polygon
+          points="50,0 61,35 97,35 68,57 79,91 50,70 21,91 32,57 3,35 39,35"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
+  </SpaceCard>
 </template>
 
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\tournois-a-venir\TournamentGridCard.vue -->
 <script setup lang="ts">
 // ================================================
 // #region 1. IMPORTS ET CONFIGURATION DE BASE
@@ -539,7 +567,7 @@ const formatParticipants = () => {
  */
 const participantsTextClass = computed(() => {
   if (!props.tournament.playerCap || props.tournament.playerCap <= 0) {
-    return "text-white";
+    return "text-space-text";
   }
 
   const playerCount = props.tournament.players
@@ -547,10 +575,10 @@ const participantsTextClass = computed(() => {
     : 0;
   const ratio = playerCount / props.tournament.playerCap;
 
-  if (ratio >= 1) return "text-pink-300 font-semibold"; // Complet
-  if (ratio >= 0.75) return "text-amber-300 font-semibold"; // Presque plein
-  if (ratio >= 0.5) return "text-lime-300"; // À moitié plein
-  return "text-gray-200"; // Peu rempli
+  if (ratio >= 1) return "text-space-error font-medium"; // Complet
+  if (ratio >= 0.75) return "text-space-warning font-medium"; // Presque plein
+  if (ratio >= 0.5) return "text-space-success"; // À moitié plein
+  return "text-space-text-muted"; // Peu rempli
 });
 // #endregion
 
@@ -590,29 +618,85 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Styles inchangés */
-.font-audiowide {
-  font-family: "Audiowide", cursive;
+.tournament-grid-card {
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
 }
 
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
+.tournament-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.neon-text {
-  text-shadow: 0 0 5px rgba(236, 72, 153, 0.7), 0 0 10px rgba(236, 72, 153, 0.5);
+/* Effet de scan spatial */
+@keyframes scan-line {
+  0% {
+    top: 0;
+    opacity: 0.5;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
-/* Limiter les lignes de texte */
+.tournament-grid-card:hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-primary-light),
+    transparent
+  );
+  animation: scan-line 2s ease-out;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Limiteur de lignes */
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Animation pour l'effet hover */
-.tournament-grid-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.4);
+/* Effet de scintillement pour les étoiles */
+.star-effect {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background-color: white;
+  border-radius: 50%;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.5);
+  }
+}
+
+/* Ajustements responsive */
+@media (max-width: 640px) {
+  .tournament-grid-card {
+    min-height: 400px;
+  }
+}
+
+.finished-tournament {
+  border: 2px solid var(--space-success) !important;
+  box-shadow: 0 0 10px rgba(var(--space-success-rgb), 0.3) !important;
 }
 </style>

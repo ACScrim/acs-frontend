@@ -476,14 +476,6 @@ const handleSearch = () => {
   }, 300);
 };
 
-/**
- * Efface la recherche
- */
-const clearSearch = () => {
-  searchTerm.value = "";
-  currentPage.value = 1;
-};
-
 // Propositions filtrées selon la recherche
 const filteredProposals = computed(() => {
   let result = proposals.value;
