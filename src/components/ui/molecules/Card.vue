@@ -32,7 +32,7 @@
     <!-- Contenu principal -->
     <div :class="['relative z-10', contentPadding ? 'p-6' : '']">
       <!-- En-tête -->
-      <div v-if="$slots.header" class="space-card-header mb-4">
+      <div v-if="$slots.header" class="space-card-header">
         <slot name="header"></slot>
       </div>
 

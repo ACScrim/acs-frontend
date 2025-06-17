@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative max-w-7xl">
     <div class="mb-6 flex justify-between items-center">
       <!-- Bouton retour -->
       <SpaceButton
@@ -140,7 +140,7 @@
             <div class="text-xs text-space-primary-light font-nasa">
               TOURNOI
             </div>
-            <div class="text-sm font-mono font-medium">
+            <div class="text-xl font-mono font-medium">
               {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
             </div>
           </div>
@@ -251,7 +251,7 @@
         </div>
 
         <!-- Informations détaillées -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-lg">
           <!-- Colonne 1: Date et jeu -->
           <div class="space-y-4">
             <div class="flex items-start gap-2">
@@ -355,7 +355,7 @@
                   <div class="text-space-text">{{ waitlistCount }} joueurs</div>
                   <p
                     v-if="isUserInWaitlist"
-                    class="text-sm text-space-warning mt-1"
+                    class="text-xl text-space-warning mt-1"
                   >
                     Vous êtes en liste d'attente {{ getUserWaitlistPosition }}
                   </p>
@@ -563,7 +563,7 @@
           <button
             @click="activeTab = 'description'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              'space-tab px-4 py-3 font-heading text-xl flex items-center',
               activeTab === 'description'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -588,7 +588,7 @@
           <button
             @click="activeTab = 'participants'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              'space-tab px-4 py-3 font-heading text-xl flex items-center',
               activeTab === 'participants'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -605,7 +605,7 @@
               />
             </svg>
             Participants
-            <span class="ml-1 text-sm opacity-80">
+            <span class="ml-1 text-xl opacity-80">
               ({{ getParticipantsCount() }})
             </span>
           </button>
@@ -615,7 +615,7 @@
             v-if="shouldShowTwitchTab"
             @click="activeTab = 'twitch'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              'space-tab px-4 py-3 font-heading text-xl flex items-center',
               activeTab === 'twitch'
                 ? 'text-space-accent-light bg-space-bg-light/20 border-b-2 border-space-accent'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -634,7 +634,7 @@
             v-if="tournament.finished"
             @click="activeTab = 'results'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-sm flex items-center',
+              'space-tab px-4 py-3 font-heading text-xl flex items-center',
               activeTab === 'results'
                 ? 'text-space-success-light bg-space-bg-light/20 border-b-2 border-space-success'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -793,7 +793,7 @@
                   <li
                     v-for="teamPlayer in team.players"
                     :key="teamPlayer._id"
-                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-sm"
+                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-xl"
                   >
                     <router-link
                       v-if="teamPlayer._id"
@@ -863,7 +863,7 @@
                 <div
                   v-for="player in tournament.players"
                   :key="player._id"
-                  class="flex items-center p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 text-sm"
+                  class="flex items-center p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-xl"
                 >
                   <router-link
                     v-if="player._id"
@@ -950,7 +950,7 @@
               <SpaceCard variant="warning" className="p-3">
                 <!-- En-tête du tableau -->
                 <div
-                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-sm font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
+                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-xl font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
                 >
                   <div>Position</div>
                   <div>Joueur</div>
@@ -981,7 +981,7 @@
                         player.username || "Joueur inconnu"
                       }}</span>
                     </div>
-                    <div class="text-space-text-muted text-sm">
+                    <div class="text-space-text-muted text-xl">
                       {{
                         player._id
                           ? formatWaitingTime(player._id)
@@ -1205,7 +1205,7 @@
           variant="info"
           className="mb-4"
         >
-          <p class="text-sm">
+          <p class="text-xl">
             <span v-if="actionType === 'register'">
               N'oubliez pas de venir vous check-in 24h avant le début du tournoi
               pour confirmer votre participation.
@@ -1223,7 +1223,7 @@
           variant="warning"
           className="mb-4"
         >
-          <p class="text-sm">
+          <p class="text-xl">
             <span v-if="actionType === 'unregister'">
               Attention: Si vous vous désinscrivez, votre place sera attribuée à
               une personne en liste d'attente.

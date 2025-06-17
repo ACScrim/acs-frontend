@@ -179,6 +179,8 @@ const router = createRouter({
 
 // Garde de navigation pour vérifier l'authentification
 router.beforeEach(async (to, _, next) => {
+  window.scrollTo(0, 0);
+
   const userStore = useUserStore();
 
   if (to.meta.title) {

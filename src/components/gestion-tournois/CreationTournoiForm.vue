@@ -1,55 +1,82 @@
 <template>
-  <div class="tournament-form-container">
-    <div class="tab-selector-container">
-      <div class="tab-selector">
-        <button
-          @click="activeTab = 'create'"
-          :class="['tab-button', { active: activeTab === 'create' }]"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+  <div class="container mx-auto">
+    <!-- Sélecteur d'onglets -->
+    <SpaceCard variant="dark" :decorated="true" className="mb-8">
+      <div class="flex flex-col">
+        <!-- Boutons d'onglets -->
+        <div class="flex flex-wrap md:flex-nowrap justify-center gap-4">
+          <SpaceButton
+            @click="activeTab = 'create'"
+            :variant="activeTab === 'create' ? 'primary' : 'outline'"
+            size="md"
+            className="flex-1 max-w-xs"
+            icon
           >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Créer un Tournoi
-        </button>
-        <button
-          @click="activeTab = 'edit'"
-          :class="['tab-button', { active: activeTab === 'edit' }]"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-            />
-          </svg>
-          Modifier un Tournoi
-        </button>
-      </div>
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Créer un Tournoi
+          </SpaceButton>
 
-      <!-- Indicateur d'onglet actif -->
-      <div class="tab-indicator-container">
+          <SpaceButton
+            @click="activeTab = 'edit'"
+            :variant="activeTab === 'edit' ? 'secondary' : 'outline'"
+            size="md"
+            className="flex-1 max-w-xs"
+            icon
+          >
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                />
+              </svg>
+            </template>
+            Modifier un Tournoi
+          </SpaceButton>
+        </div>
+
+        <!-- Indicateur d'onglet actif -->
         <div
-          class="tab-indicator"
-          :class="{ right: activeTab === 'edit' }"
-        ></div>
+          class="relative h-1 mt-4 bg-space-bg-light/30 rounded-full overflow-hidden"
+        >
+          <div
+            class="absolute top-0 left-0 h-full transition-all duration-300 ease-in-out rounded-full"
+            :class="[
+              activeTab === 'create'
+                ? 'bg-space-primary w-1/2 transform translate-x-0'
+                : 'bg-space-secondary w-1/2 transform translate-x-full',
+            ]"
+            :style="{
+              boxShadow:
+                activeTab === 'create'
+                  ? '0 0 10px rgba(var(--space-primary-rgb), 0.7)'
+                  : '0 0 10px rgba(var(--space-secondary-rgb), 0.7)',
+            }"
+          ></div>
+        </div>
       </div>
-    </div>
+    </SpaceCard>
 
     <!-- Contenu de l'onglet actif avec animation de transition -->
     <div class="tab-content-wrapper">
-      <transition name="tab-fade" mode="out-in">
+      <transition name="space-fade" mode="out-in" appear>
         <component :is="activeTabComponent" :key="activeTab"></component>
       </transition>
     </div>
