@@ -2,284 +2,409 @@
   <div
     class="relative flex items-center justify-center min-h-screen p-4 overflow-hidden"
   >
+    <!-- Grille spatiale en arrière-plan -->
+    <div
+      class="space-grid absolute inset-0 opacity-10 pointer-events-none"
+    ></div>
+
+    <!-- Étoiles en arrière-plan -->
+    <div
+      v-for="n in 25"
+      :key="`star-${n}`"
+      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
+      :style="{
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 5}s`,
+        animationDuration: `${Math.random() * 3 + 2}s`,
+        opacity: Math.random() * 0.7 + 0.3,
+      }"
+    ></div>
+
+    <!-- "Planète" décorative en arrière-plan -->
+    <div
+      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-space-primary-dark/10 to-space-primary/5 opacity-30 blur-xl pointer-events-none"
+    ></div>
+    <div
+      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-space-accent-dark/10 to-space-accent/5 opacity-20 blur-xl pointer-events-none"
+    ></div>
+
     <div
       class="w-full max-w-6xl z-10 px-4"
       :class="
         user ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' : 'flex justify-center'
       "
     >
-      <!-- Colonne de gauche - Contenu existant -->
+      <!-- Colonne de gauche - Contenu principal -->
       <div
         class="flex flex-col items-center justify-center"
         :class="!user ? 'max-w-md' : ''"
       >
-        <!-- Remplacer la section du titre avec effet de glitch -->
-        <div class="title-container">
-          <h1 class="cyber-main-title">
-            <span class="neon-text-title">
-              Alors, <br />
-              ça scrim ?
-            </span>
-          </h1>
-          <div class="cyber-line-h pink"></div>
+        <!-- Titre principal avec effet spatial -->
+        <div class="title-container relative">
+          <SpaceTitle
+            size="4xl"
+            :glitch="true"
+            className="mb-6 tracking-wider text-center leading-tight"
+          >
+            Alors, <br />ça scrim ?
+          </SpaceTitle>
+
+          <!-- Ligne décorative -->
+          <div
+            class="w-48 h-0.5 mx-auto bg-gradient-to-r from-transparent via-space-accent to-transparent relative"
+          >
+            <div
+              class="absolute inset-0 animate-pulse-slow opacity-70 bg-gradient-to-r from-transparent via-space-accent-light to-transparent"
+            ></div>
+          </div>
         </div>
 
         <!-- Logo -->
-        <div class="relative my-8 flex items-center justify-center">
+        <div class="relative my-8 flex items-center justify-center group">
+          <div
+            class="absolute inset-0 rounded-full bg-space-primary/10 filter blur-xl group-hover:bg-space-primary/20 transition-all duration-500 opacity-70"
+          ></div>
           <img
             src="../assets/logo.svg"
-            class="h-48 w-auto transition-all duration-500 filter hover:scale-105 hover:rotate-2 animate-float logo-shadow"
+            class="h-48 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
             alt="Logo"
           />
         </div>
 
         <!-- Bouton de connexion Discord -->
-        <button
+        <SpaceButton
           v-if="!user"
           @click="loginWithDiscord"
-          class="flex items-center justify-center mt-8 px-8 py-3 bg-gradient-to-r from-pink-700 to-pink-600 text-white border-2 border-pink-700 rounded shadow-glow-discord font-orbitron text-base font-semibold tracking-wider uppercase transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-discord-hover relative overflow-hidden group"
+          variant="primary"
+          size="lg"
+          className="mt-8 space-discord-button"
         >
-          <img
-            src="../assets/discord-Logo.png"
-            alt="Discord Logo"
-            class="h-6 w-10 mr-2"
-          />
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 mr-2"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+              />
+            </svg>
+          </template>
           Connexion via Discord
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-shine"
-          ></div>
-        </button>
+        </SpaceButton>
 
         <!-- Badge de bienvenue -->
-        <div
+        <SpaceCard
           v-else
-          class="flex items-center mt-8 px-8 py-3 bg-gradient-to-r from-cyan-700 to-cyan-600 text-white border-2 border-cyan-600 rounded shadow-glow-welcome font-orbitron text-base font-semibold tracking-wider animate-pulse-subtle"
+          variant="secondary"
+          className="mt-8 max-w-sm border-space-secondary-light/50 animate-float-subtle"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <p class="capitalize">Bienvenue, {{ user.username }}!</p>
-        </div>
+          <div class="flex items-center justify-center p-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 mr-2 text-space-secondary-light"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <p class="capitalize font-nasa">Bienvenue, {{ user.username }}!</p>
+          </div>
+        </SpaceCard>
       </div>
 
-      <!-- Colonne de droite -->
+      <!-- Colonne de droite - Informations sur les tournois -->
       <div v-if="user" class="flex flex-col space-y-6">
         <!-- Prochain tournoi -->
-        <div
-          class="cyberpunk-card p-6 bg-black/80 backdrop-blur-sm rounded-lg shadow-lg transition-transform duration-300 hover:-translate-y-1.5"
+        <SpaceCard
+          variant="primary"
+          :stars="true"
+          :decorated="true"
+          className="relative overflow-hidden"
         >
-          <div class="cyber-corners"></div>
-
-          <h2
-            class="text-2xl font-audiowide text-white mb-4 flex items-center relative"
-          >
-            <span class="neon-text-cyan mr-2">PROCHAIN TOURNOI</span>
-            <span
-              class="cyber-badge"
-              :class="{ live: isTournamentLive, soon: !isTournamentLive }"
-            >
-              {{ isTournamentLive ? "LIVE" : "BIENTÔT" }}
-            </span>
-          </h2>
+          <template #header>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-3 text-space-primary-light"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                <SpaceTitle size="xl">PROCHAIN TOURNOI</SpaceTitle>
+              </div>
+              <SpaceBadge
+                :variant="isTournamentLive ? 'error' : 'warning'"
+                size="md"
+                className="animate-pulse-slow"
+              >
+                {{ isTournamentLive ? "LIVE" : "BIENTÔT" }}
+              </SpaceBadge>
+            </div>
+          </template>
 
           <div v-if="isLoading">
-            <CyberpunkLoader />
+            <SpaceLoader text="Chargement des données..." />
           </div>
 
-          <div v-else-if="nextTournament" class="relative">
-            <div class="cyber-line-h"></div>
-            <div class="mb-4">
-              <h3 class="text-xl font-orbitron text-pink-300 mb-1 truncate">
+          <div v-else-if="nextTournament" class="space-y-4">
+            <div>
+              <h3
+                class="text-xl font-nasa text-space-primary-light mb-1 truncate"
+              >
                 {{ nextTournament.name }}
               </h3>
-              <div class="text-sm text-cyan-300 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span>{{ formatDate(nextTournament.date) }}</span>
-              </div>
+              <div class="flex flex-wrap gap-y-2 gap-x-4">
+                <div class="text-sm text-space-text flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1 text-space-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{{ formatDate(nextTournament.date) }}</span>
+                </div>
 
-              <div class="flex items-center text-sm text-cyan-300 mt-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span>{{ formatTime(nextTournament.date) }}</span>
+                <div class="text-sm text-space-text flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1 text-space-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>{{ formatTime(nextTournament.date) }}</span>
+                </div>
               </div>
             </div>
 
-            <div class="flex justify-between items-center">
-              <div class="text-white font-orbitron">
-                <div class="flex items-center mb-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 text-pink-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  <span class="text-sm">
-                    {{
-                      nextTournament.players ? nextTournament.players.length : 0
-                    }}
-                    joueurs inscrits</span
-                  >
-                </div>
-                <div class="flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 text-pink-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-                    />
-                  </svg>
-                  <span class="text-sm">{{
-                    nextTournament.game
-                      ? nextTournament.game.name
-                      : "Jeu non spécifié"
-                  }}</span>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div class="text-space-text font-mono">
+                  <div class="flex items-center mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    <span class="text-sm">
+                      {{
+                        nextTournament.players
+                          ? nextTournament.players.length
+                          : 0
+                      }}
+                      joueurs inscrits</span
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-2 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                      />
+                    </svg>
+                    <span class="text-sm">{{
+                      nextTournament.game
+                        ? nextTournament.game.name
+                        : "Jeu non spécifié"
+                    }}</span>
+                  </div>
                 </div>
               </div>
 
-              <router-link
-                :to="
-                  nextTournament
-                    ? `/tournois/${nextTournament._id}`
-                    : { name: 'TournoisAVenir' }
-                "
-                class="px-4 py-1 bg-pink-600 hover:bg-pink-700 text-white rounded-md font-orbitron text-sm transition-all duration-300 hover:shadow-glow-pink flex items-center"
-              >
-                <span>{{ nextTournament ? "Voir" : "Tous les tournois" }}</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              <div class="flex justify-end items-center">
+                <router-link
+                  :to="
+                    nextTournament
+                      ? `/tournois/${nextTournament._id}`
+                      : { name: 'TournoisAVenir' }
+                  "
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </router-link>
+                  <SpaceButton variant="secondary" size="sm">
+                    <template #icon>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
+                      </svg>
+                    </template>
+                    {{ nextTournament ? "Voir" : "Tous les tournois" }}
+                  </SpaceButton>
+                </router-link>
+              </div>
             </div>
 
             <!-- Timer animé -->
-            <div class="mt-4 border-t border-pink-500/30 pt-3">
-              <div class="text-xs text-white mb-1 font-orbitron">
+            <SpaceCard variant="dark" className="mt-4">
+              <div class="text-xs text-space-text-muted mb-2 font-nasa">
                 Commence dans:
               </div>
-              <div class="countdown-timer flex justify-between text-center">
+              <div class="countdown-timer grid grid-cols-4 gap-2 text-center">
                 <div
                   v-for="(unit, i) in countdownUnits"
                   :key="i"
-                  class="flex flex-col"
+                  class="bg-space-bg-light/50 p-2 rounded-lg border border-space-primary/30 relative overflow-hidden"
                 >
-                  <span class="text-lg font-bold text-cyan-400">{{
-                    unit.value
+                  <div
+                    class="absolute inset-0 bg-space-primary/5 pulse-animation"
+                  ></div>
+                  <span
+                    class="text-lg font-bold text-space-primary-light font-mono block"
+                    >{{ unit.value }}</span
+                  >
+                  <span class="text-xs text-space-text-muted block">{{
+                    unit.label
                   }}</span>
-                  <span class="text-xs text-gray-400">{{ unit.label }}</span>
                 </div>
               </div>
-            </div>
+            </SpaceCard>
           </div>
 
-          <div v-else class="text-center py-6">
-            <div class="text-pink-400 text-lg font-orbitron">
-              Aucun tournoi à venir
-            </div>
-            <p class="text-gray-400 text-sm mt-2">
-              Consultez la page des tournois pour plus d'informations
-            </p>
-          </div>
+          <div v-else>
+            <SpaceTerminal
+              command="find_next_tournament"
+              title="SYSTÈME DE TOURNOIS"
+              :showCursor="true"
+              className="mb-4"
+            >
+              <div class="text-space-primary-light">
+                Aucun tournoi à venir n'a été trouvé dans la base de données.
+              </div>
+              <div class="text-space-text-muted mt-2">
+                Consultez la page des tournois pour plus d'informations.
+              </div>
+            </SpaceTerminal>
 
-          <div class="cyber-scanline"></div>
-        </div>
+            <div class="flex justify-center mt-4">
+              <router-link :to="{ name: 'TournoisAVenir' }">
+                <SpaceButton variant="secondary" size="sm">
+                  Voir tous les tournois
+                </SpaceButton>
+              </router-link>
+            </div>
+          </div>
+        </SpaceCard>
 
         <!-- Dernier tournoi terminé -->
-        <div
-          class="cyberpunk-card relative overflow-hidden p-6 border border-cyan-500 bg-black/80 backdrop-blur-sm rounded-lg shadow-lg shadow-cyan-500/30 transform transition-all hover:translate-y-[-5px] hover:shadow-xl hover:shadow-cyan-500/40"
+        <SpaceCard
+          variant="secondary"
+          :stars="true"
+          :decorated="true"
+          className="relative overflow-hidden"
         >
-          <div class="cyber-corners cyan"></div>
-
-          <h2 class="text-2xl font-audiowide text-white mb-4 flex items-center">
-            <span class="neon-text-pink mr-2">DERNIER TOURNOI</span>
-            <span class="cyber-badge cyan">TERMINÉ</span>
-          </h2>
+          <template #header>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-3 text-space-secondary-light"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <SpaceTitle size="xl">DERNIER TOURNOI</SpaceTitle>
+              </div>
+              <SpaceBadge variant="success" size="md"> TERMINÉ </SpaceBadge>
+            </div>
+          </template>
 
           <div v-if="isLoading">
-            <CyberpunkLoader />
+            <SpaceLoader text="Chargement des résultats..." />
           </div>
 
-          <div v-else-if="lastFinishedTournament" class="relative">
-            <div class="cyber-line-h cyan"></div>
-            <h3 class="text-xl font-orbitron text-cyan-300 mb-2 truncate">
+          <div v-else-if="lastFinishedTournament" class="space-y-4">
+            <h3
+              class="text-xl font-nasa text-space-secondary-light mb-2 truncate"
+            >
               {{ lastFinishedTournament.name }}
             </h3>
 
             <!-- Podium -->
-            <div class="mb-4">
-              <div class="text-sm text-white mb-2 font-orbitron">Podium:</div>
+            <div class="space-y-3">
+              <div class="text-sm text-space-text font-nasa mb-2">Podium:</div>
               <div class="space-y-2">
-                <div
+                <SpaceCard
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
-                  class="p-2 rounded bg-gradient-to-r from-yellow-900/30 to-yellow-700/30 border border-yellow-500/50"
+                  variant="dark"
+                  className="border-space-accent/40 hover:border-space-accent/60 transition-all duration-300"
                 >
                   <div class="flex items-center">
                     <div
-                      class="h-8 w-8 rounded-full flex items-center justify-center mr-3 bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-glow-gold"
+                      class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-space-accent/20 border border-space-accent/50"
                     >
-                      <span class="text-black font-bold">{{ index + 1 }}</span>
+                      <SpaceBadge
+                        :variant="getRankBadgeVariant(index)"
+                        size="md"
+                      >
+                        {{ index + 1 }}
+                      </SpaceBadge>
                     </div>
-                    <div class="flex-1 truncate font-orbitron text-yellow-400">
+                    <div
+                      class="flex-1 truncate font-nasa text-space-accent-light"
+                    >
                       {{ team.name }}
                     </div>
                   </div>
@@ -287,14 +412,18 @@
                   <!-- Liste des joueurs de l'équipe -->
                   <div
                     v-if="team.players && team.players.length > 0"
-                    class="mt-2 pl-11"
+                    class="mt-2 pl-12"
                   >
-                    <div class="text-xs text-gray-400 mb-1">Membres:</div>
+                    <div class="text-xs text-space-text-muted mb-1">
+                      Membres:
+                    </div>
                     <div class="flex flex-wrap gap-1">
-                      <span
+                      <SpaceBadge
                         v-for="player in team.players"
                         :key="player._id"
-                        class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-900/40 text-yellow-300 border border-yellow-500/50"
+                        variant="accent"
+                        size="xs"
+                        className="flex items-center"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -309,50 +438,18 @@
                           />
                         </svg>
                         {{ player.username || "Joueur" }}
-                      </span>
+                      </SpaceBadge>
                     </div>
                   </div>
-                </div>
+                </SpaceCard>
               </div>
             </div>
 
-            <div class="flex justify-end">
-              <router-link
-                :to="
-                  lastFinishedTournament
-                    ? `/tournois/${lastFinishedTournament._id}`
-                    : { name: 'TournoisAVenir' }
-                "
-                class="px-4 py-1 bg-pink-600 hover:bg-pink-700 text-white rounded-md font-orbitron text-sm transition-all duration-300 hover:shadow-glow-pink flex items-center"
-              >
-                <span>{{
-                  lastFinishedTournament ? "Détails" : "Tous les tournois"
-                }}</span>
+            <div class="flex justify-between items-center">
+              <div class="text-space-text-muted text-sm flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </router-link>
-            </div>
-
-            <div class="mt-4 border-t border-cyan-500/30 pt-3">
-              <div class="text-xs text-white mb-1 font-orbitron">
-                Terminé le:
-              </div>
-              <div class="text-cyan-300 text-sm flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
+                  class="h-4 w-4 mr-1 text-space-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -364,24 +461,63 @@
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                <span>{{ formatDate(lastFinishedTournament.date) }}</span>
+                <span
+                  >Terminé le:
+                  {{ formatDate(lastFinishedTournament.date) }}</span
+                >
               </div>
+
+              <router-link
+                :to="
+                  lastFinishedTournament
+                    ? `/tournois/${lastFinishedTournament._id}`
+                    : { name: 'TournoisAVenir' }
+                "
+              >
+                <SpaceButton variant="secondary" size="sm">
+                  <template #icon>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </template>
+                  {{ lastFinishedTournament ? "Détails" : "Tous les tournois" }}
+                </SpaceButton>
+              </router-link>
             </div>
           </div>
 
-          <div v-else class="text-center py-6">
-            <div class="text-cyan-400 text-lg font-orbitron">
-              Aucun tournoi terminé
-            </div>
-            <p class="text-gray-400 text-sm mt-2">
-              Les résultats des tournois seront affichés ici
-            </p>
+          <div v-else>
+            <SpaceTerminal
+              command="find_finished_tournaments"
+              title="SYSTÈME DE TOURNOIS"
+              :showCursor="true"
+              className="mb-4"
+            >
+              <div class="text-space-secondary-light">
+                Aucun tournoi terminé n'a été trouvé dans la base de données.
+              </div>
+              <div class="text-space-text-muted mt-2">
+                Les résultats des tournois seront affichés ici lorsqu'ils seront
+                disponibles.
+              </div>
+            </SpaceTerminal>
           </div>
-
-          <div class="cyber-scanline cyan"></div>
-        </div>
+        </SpaceCard>
       </div>
     </div>
+
+    <!-- Modale de check-in (réutilisée telle quelle) -->
     <CheckInReminderModal
       v-if="showCheckInReminder"
       :show="showCheckInReminder"
@@ -392,7 +528,23 @@
       @show-toast="handleShowToast"
     />
 
-    <Toast v-if="toastMessage" :type="toastType" :message="toastMessage" />
+    <!-- Toast pour les notifications -->
+    <div
+      v-if="toastMessage"
+      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
+      :class="
+        toastMessage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+      "
+    >
+      <SpaceAlert
+        :variant="toastType"
+        :dismissible="true"
+        @dismiss="toastMessage = ''"
+        className="backdrop-blur-sm"
+      >
+        {{ toastMessage }}
+      </SpaceAlert>
+    </div>
   </div>
 </template>
 
@@ -400,12 +552,10 @@
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
 import tournamentService from "../services/tournamentService";
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import type { User } from "../types/User";
 import type { Tournament } from "../types";
 import CheckInReminderModal from "@/components/CheckInReminderModal.vue";
 import playerService from "../services/playerService";
-import Toast from "@/shared/Toast.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant
@@ -815,6 +965,22 @@ const startCountdown = () => {
 };
 
 /**
+ * Détermine la variante de badge pour les rangs 1, 2 et 3
+ */
+const getRankBadgeVariant = (index: number) => {
+  switch (index) {
+    case 0:
+      return "accent"; // 1er place (Or)
+    case 1:
+      return "secondary"; // 2ème place (Argent)
+    case 2:
+      return "primary"; // 3ème place (Bronze)
+    default:
+      return "primary";
+  }
+};
+
+/**
  * Formatte une date en format français
  */
 const formatDate = (dateString: string | Date): string => {
@@ -888,270 +1054,69 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.neon-text-cyan {
-  color: #06b6d4;
-  text-shadow: 0 0 10px #06b6d4, 0 0 15px #06b6d4, 0 0 20px #06b6d4;
-  letter-spacing: 1px;
+/* Grille spatiale en arrière-plan */
+.space-grid {
+  background-image: linear-gradient(
+      rgba(109, 40, 217, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
 }
 
-.neon-text-pink {
-  color: #ec4899;
-  text-shadow: 0 0 10px #ec4899, 0 0 15px #ec4899, 0 0 20px #ec4899;
-  letter-spacing: 1px;
-}
-
-/* Ombres avec effets spéciaux - remplaçables seulement par shadow-[...] verbose */
-.shadow-glow-pink {
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-}
-
-.shadow-glow-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-.shadow-glow-gold {
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.7);
-}
-
-.shadow-glow-discord {
-  box-shadow: 0 0 10px rgba(87, 101, 242, 0.7),
-    inset 0 0 10px rgba(87, 101, 242, 0.5);
-}
-
-.shadow-glow-discord-hover {
-  box-shadow: 0 0 20px rgba(87, 101, 242, 0.9),
-    inset 0 0 15px rgba(87, 101, 242, 0.5);
-}
-
-.shadow-glow-welcome {
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
-    inset 0 0 10px rgba(6, 182, 212, 0.5);
-}
-
-.logo-shadow {
-  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.7));
-}
-
-.logo-shadow:hover {
-  filter: drop-shadow(0 0 15px rgba(255, 0, 255, 1))
-    drop-shadow(0 0 30px rgba(255, 0, 255, 0.7));
-}
-
-/* Animations personnalisées */
-@keyframes float {
+/* Animation pulse lente */
+@keyframes pulse-slow {
   0%,
   100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes pulse-subtle {
-  0%,
-  100% {
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.7),
-      inset 0 0 10px rgba(6, 182, 212, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.9),
-      inset 0 0 15px rgba(6, 182, 212, 0.7);
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s infinite;
-}
-
-@keyframes shine {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-
-.animate-shine {
-  animation: shine 1.5s;
-}
-
-/* Éléments cyberpunk spécifiques */
-.cyberpunk-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.cyberpunk-card:nth-child(1) {
-  border-color: rgba(236, 72, 153, 0.5);
-}
-
-.cyberpunk-card:nth-child(2) {
-  border-color: rgba(6, 182, 212, 0.5);
-}
-
-.cyberpunk-card:hover {
-  box-shadow: 0 0 18px rgba(236, 72, 153, 0.7);
-  border-color: rgba(236, 72, 153, 0.9);
-}
-
-.cyberpunk-card:nth-child(2):hover {
-  box-shadow: 0 0 18px rgba(6, 182, 212, 0.7);
-  border-color: rgba(6, 182, 212, 0.9);
-}
-
-/* Effets des coins cyberpunk */
-.cyber-corners {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.cyber-corners::before,
-.cyber-corners::after {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: #ec4899;
-  border-style: solid;
-  border-width: 0;
-  z-index: 1;
-}
-
-.cyber-corners::before {
-  top: 0;
-  left: 0;
-  border-top-width: 2px;
-  border-left-width: 2px;
-  animation: corner-anim 4s infinite alternate;
-}
-
-.cyber-corners::after {
-  top: 0;
-  right: 0;
-  border-top-width: 2px;
-  border-right-width: 2px;
-  animation: corner-anim 4s 2s infinite alternate;
-}
-
-.cyber-corners.cyan::before,
-.cyber-corners.cyan::after {
-  border-color: #06b6d4;
-}
-
-@keyframes corner-anim {
-  0% {
-    opacity: 1;
-  }
-  50% {
     opacity: 0.5;
   }
-  100% {
+  50% {
     opacity: 1;
   }
 }
 
-/* Badges et éléments décoratifs spécifiques */
-.cyber-badge {
-  font-size: 0.65rem;
-  background: linear-gradient(90deg, #ec4899, #fb7185);
-  color: white;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  margin-left: 8px;
-  position: relative;
-  overflow: hidden;
-  animation: badge-pulse 2s infinite;
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.cyber-badge.cyan {
-  background: linear-gradient(90deg, #06b6d4, #0ea5e9);
-  animation: badge-pulse-cyan 2s infinite;
-}
-
-@keyframes badge-pulse {
+/* Animation de flottement subtile */
+@keyframes float-subtle {
   0%,
   100% {
-    box-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
+    transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 10px rgba(236, 72, 153, 0.9);
+    transform: translateY(-5px);
   }
 }
 
-@keyframes badge-pulse-cyan {
+.animate-float-subtle {
+  animation: float-subtle 5s ease-in-out infinite;
+}
+
+/* Animation pour les éléments du compteur */
+.pulse-animation {
+  animation: pulse-bg 2s infinite;
+}
+
+@keyframes pulse-bg {
   0%,
   100% {
-    box-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
+    opacity: 0.1;
   }
   50% {
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.9);
+    opacity: 0.3;
   }
 }
 
-/* Lignes et éléments de décoration */
-.cyber-line-h {
-  position: absolute;
-  top: 38px;
-  left: -20px;
-  width: calc(100% + 40px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #ec4899, transparent);
-  opacity: 0.5;
-}
-
-.cyber-line-h.cyan {
-  background: linear-gradient(90deg, transparent, #06b6d4, transparent);
-}
-
-.cyber-scanline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: rgba(236, 72, 153, 0.3);
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
-  animation: scan-move 4s linear infinite;
-  z-index: 2;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.cyber-scanline.cyan {
-  background-color: rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
-}
-
-@keyframes scan-move {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-
-/* Style du compteur */
-.countdown-timer > div {
+/* Style du bouton Discord */
+.space-discord-button {
   position: relative;
-  padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(236, 72, 153, 0.5);
-  border-radius: 4px;
-  box-shadow: 0 0 8px rgba(236, 72, 153, 0.3) inset;
   overflow: hidden;
 }
 
-.countdown-timer > div::after {
+.space-discord-button::after {
   content: "";
   position: absolute;
   top: -50%;
@@ -1161,230 +1126,44 @@ onUnmounted(() => {
   background: linear-gradient(
     45deg,
     transparent,
-    rgba(236, 72, 153, 0.1),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
   transform: rotate(45deg);
-  animation: timer-shine 6s linear infinite;
-}
-
-@keyframes timer-shine {
-  0% {
-    transform: rotate(45deg) translate(-100%, -100%);
-  }
-  100% {
-    transform: rotate(45deg) translate(100%, 100%);
-  }
-}
-
-/* Améliorer le bouton Discord */
-button[class*="discord"] {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 1;
-  backdrop-filter: blur(5px);
-}
-
-button[class*="discord"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(45deg, #5865f2, #eb459e, #5865f2);
-  background-size: 200% 200%;
-  z-index: -1;
+  transition: all 0.3s ease;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  animation: discord-gradient 3s ease infinite;
 }
 
-button[class*="discord"]:hover {
-  border-color: transparent;
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 10px 25px rgba(88, 101, 242, 0.5);
-}
-
-button[class*="discord"]:hover::before {
+.space-discord-button:hover::after {
+  animation: shine-effect 1.5s;
   opacity: 1;
 }
 
-@keyframes discord-gradient {
+@keyframes shine-effect {
   0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
+    transform: rotate(45deg) translateX(-100%);
   }
   100% {
-    background-position: 0% 50%;
+    transform: rotate(45deg) translateX(100%);
   }
 }
 
-/* Animation pour les titres */
-h2:hover .neon-text-cyan,
-h2:hover .neon-text-pink {
-  animation: text-glitch 0.3s ease-in-out;
+/* Style spécifique pour les badges de rang */
+.getRankBadgeVariant-0 {
+  background-color: rgba(251, 146, 60, 0.2);
+  color: var(--space-accent-light);
+  border-color: rgba(251, 146, 60, 0.5);
 }
 
-@keyframes text-glitch {
-  0%,
-  100% {
-    transform: translate(0);
-    text-shadow: 0 0 10px #06b6d4, 0 0 15px #06b6d4, 0 0 20px #06b6d4;
-  }
-  25% {
-    transform: translate(-2px, -2px);
-    text-shadow: -2px 0 #ec4899, 2px 2px #06b6d4;
-  }
-  50% {
-    transform: translate(2px, 2px);
-    text-shadow: 2px -2px #ec4899, -2px 0 #06b6d4;
-  }
-  75% {
-    transform: translate(-2px, 2px);
-    text-shadow: 0 -2px #ec4899, -2px 2px #06b6d4;
-  }
+.getRankBadgeVariant-1 {
+  background-color: rgba(2, 132, 199, 0.2);
+  color: var(--space-secondary-light);
+  border-color: rgba(2, 132, 199, 0.5);
 }
 
-/* Effet de passage de curseur sur les cartes */
-.cyberpunk-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(236, 72, 153, 0.1) 25%,
-    transparent 50%
-  );
-  transform: translateX(-100%);
-  transition: transform 0.6s;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.cyberpunk-card:hover::before {
-  transform: translateX(100%);
-}
-
-/* Conteneur du titre principal */
-.title-container {
-  position: relative;
-  width: 100%;
-  padding: 0.5rem 0;
-  margin-bottom: 1rem;
-  margin-top: 2.5rem; /* Augmentation de la marge supérieure pour tous les écrans */
-  text-align: center;
-  overflow: visible;
-}
-
-/* Style du titre principal */
-.cyber-main-title {
-  font-family: "Audiowide", cursive;
-  font-size: min(3rem, 12vw); /* Taille responsive */
-  line-height: 1.2;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  display: inline-block;
-  position: relative;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  z-index: 1;
-  white-space: nowrap; /* Empêche le retour à la ligne */
-}
-
-/* Remplacer l'animation actuelle du titre par un effet de glitch plus élaboré */
-.neon-text-title {
-  color: #ffffff;
-  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff,
-    0 0 20px #ff00ff;
-  position: relative;
-  display: inline-block;
-}
-
-/* Ligne horizontale décorative avec gradient */
-.cyber-line-h.pink {
-  position: absolute;
-  top: 90%;
-  left: 10%;
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #ec4899, transparent);
-  opacity: 0.7;
-}
-
-/* Animation de survol pour le titre */
-.cyber-main-title:hover .neon-text-title {
-  animation: title-glitch 0.3s ease-in-out;
-}
-
-/* Ajouter un effet de scanline au titre */
-.cyber-main-title::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(255, 0, 255, 0.1) 50%,
-    transparent 100%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-  animation: scanline 6s linear infinite;
-}
-
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
-}
-
-/* Styles responsifs spécifiques pour le titre */
-@media (max-width: 640px) {
-  .cyber-main-title {
-    font-size: 2rem;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem; /* Marge supplémentaire en haut du titre */
-  }
-
-  /* Augmenter l'espacement en haut de la page sur mobile */
-  .title-container {
-    margin-top: 3.5rem; /* Plus d'espace sur mobile */
-  }
-}
-
-/* Ajouter à votre section <style> pour animer l'entrée des éléments */
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.title-container {
-  animation: fade-up 0.8s ease-out forwards;
-}
-
-.cyberpunk-card:nth-child(1) {
-  animation: fade-up 0.8s ease-out 0.2s forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.cyberpunk-card:nth-child(2) {
-  animation: fade-up 0.8s ease-out 0.4s forwards;
-  opacity: 0;
-  transform: translateY(20px);
+.getRankBadgeVariant-2 {
+  background-color: rgba(109, 40, 217, 0.2);
+  color: var(--space-primary-light);
+  border-color: rgba(109, 40, 217, 0.5);
 }
 </style>
