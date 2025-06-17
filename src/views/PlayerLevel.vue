@@ -839,10 +839,6 @@ import { useUserStore } from "../stores/userStore";
 import playerGameLevelService from "../services/playerGameLevelService";
 import gameService from "../services/gameService";
 import type { Game, PlayerGameLevel } from "../types";
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
-import Toast from "@/shared/Toast.vue";
-import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
-import { getRankClass } from "../utils/rankHelper"; // Importez la fonction utilitaire
 import { useRoute, useRouter } from "vue-router";
 import tournamentService from "../services/tournamentService";
 // -----------------------------------------------
@@ -939,21 +935,6 @@ const getGameName = (level: PlayerGameLevel): string => {
     : "Jeu inconnu";
 };
 
-const getLevelVariant = (level: string): string => {
-  switch (level.toLowerCase()) {
-    case "débutant":
-      return "success"; // Vert contrasté
-    case "intermédiaire":
-      return "primary"; // Violet
-    case "avancé":
-      return "secondary"; // Bleu vif
-    case "expert":
-      return "accent"; // Orange/doré
-    default:
-      return "primary";
-  }
-};
-
 const getLevelColorClass = (level: string): string => {
   switch (level) {
     case "débutant":
@@ -967,20 +948,6 @@ const getLevelColorClass = (level: string): string => {
     default:
       return "bg-gray-500";
   }
-};
-
-// Obtenir la classe CSS pour le niveau
-const getLevelClass = (level: string): string => {
-  const classes = {
-    débutant: "bg-green-500/80 text-green-50",
-    intermédiaire: "bg-blue-500/80 text-blue-50",
-    avancé: "bg-purple-500/80 text-purple-50",
-    expert: "bg-pink-500/80 text-pink-50",
-  };
-
-  return (
-    classes[level as keyof typeof classes] || "bg-gray-500/80 text-gray-50"
-  );
 };
 
 // Gérer l'erreur de chargement d'image
@@ -1445,188 +1412,4 @@ onUnmounted(() => {
 // #endregion
 </script>
 
-<style scoped>
-.neon-text-cyan {
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.4);
-}
-
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
-}
-
-/* Style pour les cartes cyberpunk */
-.cyber-card {
-  position: relative;
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  transition: all 0.3s ease;
-}
-
-.cyber-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.3);
-}
-
-/* Style pour les modals cyberpunk */
-.cyber-modal {
-  clip-path: polygon(
-    10px 0,
-    100% 0,
-    100% calc(100% - 10px),
-    calc(100% - 10px) 100%,
-    0 100%,
-    0 10px
-  );
-  position: relative;
-}
-
-.cyber-modal-red {
-  border-color: rgba(239, 68, 68, 0.3);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
-}
-
-/* Style pour les scrollbars */
-.cyber-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.3) rgba(17, 24, 39, 0.8);
-}
-
-.cyber-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.cyber-scrollbar::-webkit-scrollbar-track {
-  background: rgba(17, 24, 39, 0.8);
-  border-radius: 10px;
-}
-
-.cyber-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(6, 182, 212, 0.3);
-  border-radius: 10px;
-}
-
-.cyber-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(6, 182, 212, 0.5);
-}
-
-/* Style pour la carte d'ajout */
-.cyber-add-card {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-}
-
-/* Style pour les jeux dans la liste */
-.cyber-game-item {
-  position: relative;
-  overflow: hidden;
-}
-
-.cyber-game-item::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 0;
-  background: rgb(6, 182, 212);
-  transition: height 0.3s ease;
-}
-
-.cyber-game-item:hover::before {
-  height: 100%;
-}
-
-/* Animation scan */
-@keyframes scan {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(300%);
-  }
-}
-
-.animate-scan {
-  animation: scan 3s linear infinite;
-}
-
-/* Effet de clignotement */
-@keyframes flash {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Style du panneau cyber */
-.cyber-panel {
-  position: relative;
-}
-
-/* Tronquer le texte */
-.line-clamp-1 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .cyber-modal {
-    clip-path: polygon(
-      5px 0,
-      100% 0,
-      100% calc(100% - 5px),
-      calc(100% - 5px) 100%,
-      0 100%,
-      0 5px
-    );
-  }
-
-  .cyber-card {
-    clip-path: polygon(
-      0 0,
-      calc(100% - 5px) 0,
-      100% 5px,
-      100% 100%,
-      5px 100%,
-      0 calc(100% - 5px)
-    );
-  }
-}
-
-/* Amélioration du défilement pour mobile */
-.max-h-modal {
-  max-height: 80vh;
-}
-
-/* Support tactile amélioré */
-@media (hover: none) {
-  .cyber-game-item:active::before {
-    height: 100%;
-  }
-
-  .cyber-card:active {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.3);
-  }
-}
-</style>
+<style scoped></style>

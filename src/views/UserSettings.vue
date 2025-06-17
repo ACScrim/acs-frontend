@@ -1,111 +1,92 @@
 <template>
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
-      <!-- ========================================
-           SECTION: EN-TÊTE DE LA PAGE
-           ======================================== -->
-      <div
-        class="bg-black/50 backdrop-blur-2xl rounded-lg p-6 mb-8 border border-purple-500 shadow-lg shadow-purple-500/30"
-      >
-        <div class="text-center">
-          <h1 class="text-4xl text-white font-audiowide mb-4">
-            <span class="neon-text-purple">Paramètres</span>
-          </h1>
-          <div
-            class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto"
-          ></div>
-        </div>
-      </div>
-
-      <!-- ========================================
-           SECTION: ÉTATS D'AFFICHAGE
-           ======================================== -->
-
-      <!-- État de chargement - Loader cyberpunk -->
-      <CyberpunkLoader v-if="loading" />
-
-      <!-- État d'erreur - Terminal cyberpunk -->
-      <CyberTerminal
-        v-else-if="error"
-        title="ERREUR SYSTÈME · ACS"
-        command="load_user_settings"
-        error-code="USER_001"
-        :message="error"
+      <!-- En-tête de la page -->
+      <SpaceHeader
+        title="PARAMÈTRES UTILISATEUR"
+        mission="SETTINGS-CONFIG-25"
+        :decorated="true"
+        className="mb-8"
       />
 
-      <!-- ========================================
-           SECTION: CONTENU PRINCIPAL - PARAMÈTRES
-           ======================================== -->
+      <!-- États d'affichage -->
+      <div v-if="loading" class="flex justify-center py-12">
+        <SpaceLoader text="Chargement des paramètres utilisateur..." />
+      </div>
+
+      <SpaceTerminal
+        v-else-if="error"
+        title="SYSTÈME · PARAMÈTRES"
+        command="load_user_settings"
+        :message="error"
+        className="my-8"
+      />
+
       <div v-else-if="user" class="space-y-8">
-        <!-- ========================================
-             SOUS-SECTION: PROFIL TWITCH
-             ======================================== -->
-        <div
-          class="bg-black/75 rounded-lg p-8 border border-purple-500 shadow-lg shadow-purple-500/30"
-        >
-          <!-- Titre de la section Twitch -->
-          <h2 class="text-2xl text-white mb-6 font-orbitron flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-3 text-purple-400"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
-              />
-            </svg>
-            Profil Twitch
-          </h2>
+        <!-- Section: Profil Twitch -->
+        <SpaceCard variant="primary" :stars="true" :decorated="true">
+          <template #header>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-3 text-space-primary-light"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+                />
+              </svg>
+              <SpaceTitle size="xl">Profil Twitch</SpaceTitle>
+            </div>
+          </template>
 
           <div class="space-y-4">
             <!-- Input nom d'utilisateur Twitch -->
             <div>
-              <label class="block text-sm font-orbitron text-gray-300 mb-2">
+              <label
+                class="block text-sm font-nasa text-space-primary-light mb-2"
+              >
                 Nom d'utilisateur Twitch
               </label>
               <div class="flex gap-3">
                 <div class="flex-1 relative">
-                  <input
+                  <SpaceInput
                     v-model="formData.twitchUsername"
-                    type="text"
                     placeholder="votre_nom_twitch"
-                    class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-3 py-2 pl-10 font-orbitron focus:outline-none focus:border-purple-500 transition-colors"
                     :disabled="isSaving"
-                  />
-                  <div
-                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-purple-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
-                      />
-                    </svg>
-                  </div>
+                    <template #prepend>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 text-space-primary-light"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+                        />
+                      </svg>
+                    </template>
+                  </SpaceInput>
                 </div>
               </div>
             </div>
 
             <!-- Aperçu du profil Twitch -->
-            <div
+            <SpaceCard
               v-if="formData.twitchUsername"
-              class="bg-gray-900/50 p-3 rounded-lg border border-gray-700"
+              variant="dark"
+              className="p-3"
             >
               <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="text-white font-orbitron text-sm">
-                    twitch.tv/{{ formData.twitchUsername }}
-                  </div>
+                <div class="text-space-text font-mono text-sm">
+                  twitch.tv/{{ formData.twitchUsername }}
                 </div>
                 <a
                   :href="`https://twitch.tv/${formData.twitchUsername}`"
                   target="_blank"
-                  class="text-purple-400 hover:text-purple-300 transition-colors"
+                  class="text-space-primary-light hover:text-space-primary transition-colors"
                   title="Ouvrir sur Twitch"
                 >
                   <svg
@@ -124,56 +105,48 @@
                   </svg>
                 </a>
               </div>
-            </div>
+            </SpaceCard>
           </div>
-        </div>
+        </SpaceCard>
 
-        <!-- ========================================
-             SOUS-SECTION: RÔLES DISCORD PAR JEU
-             ======================================== -->
-        <div
-          class="bg-black/75 rounded-lg p-8 border border-cyan-500 shadow-lg shadow-cyan-500/30"
-        >
-          <!-- Titre de la section Discord -->
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl text-white font-orbitron flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-3 text-cyan-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z"
-                />
-              </svg>
-              Rôles Discord par jeu
-            </h2>
+        <!-- Section: Rôles Discord par jeu -->
+        <SpaceCard variant="secondary" :stars="true" :decorated="true">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-3 text-space-secondary-light"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z"
+                  />
+                </svg>
+                <SpaceTitle size="xl">Rôles Discord par jeu</SpaceTitle>
+              </div>
 
-            <!-- ✅ MODIFIÉ : Compteur de jeux filtrés -->
-            <div
-              v-if="filteredGames.length > 0"
-              class="text-sm text-cyan-400 font-orbitron"
-            >
-              {{ filteredGames.length }} jeu{{
-                filteredGames.length > 1 ? "x" : ""
-              }}
-              disponible{{ filteredGames.length > 1 ? "s" : "" }}
+              <div v-if="filteredGames.length > 0">
+                <SpaceBadge variant="secondary" size="md">
+                  {{ filteredGames.length }} jeu{{
+                    filteredGames.length > 1 ? "x" : ""
+                  }}
+                </SpaceBadge>
+              </div>
             </div>
-          </div>
+          </template>
 
           <!-- Message d'aide pour les rôles Discord -->
-          <div
-            class="text-sm text-gray-400 bg-gray-900/30 p-4 rounded border border-cyan-700/50 mb-6"
-          >
+          <SpaceCard variant="dark" className="mb-6">
             <div class="flex items-start space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0"
+                class="h-5 w-5 text-space-secondary-light mt-0.5 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -186,10 +159,10 @@
                 />
               </svg>
               <div>
-                <div class="font-medium text-cyan-300 mb-2">
+                <div class="font-nasa text-space-secondary-light mb-2">
                   À propos des rôles Discord :
                 </div>
-                <ul class="space-y-1 text-gray-400">
+                <ul class="space-y-1 text-space-text-muted">
                   <li>
                     • En activant un rôle pour un jeu, vous pourrez être
                     mentionné (@ping) par d'autres membres
@@ -208,17 +181,17 @@
                 </ul>
               </div>
             </div>
-          </div>
+          </SpaceCard>
 
-          <!-- ✅ MODIFIÉ : Liste des jeux filtrés sans pagination -->
-          <div v-if="filteredGames.length > 0">
-            <!-- Liste des jeux principaux -->
-            <div class="space-y-3">
-              <div
-                v-for="game in filteredGames"
-                :key="game._id"
-                class="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-cyan-500/50 transition-colors"
-              >
+          <!-- Liste des jeux filtrés -->
+          <div v-if="filteredGames.length > 0" class="space-y-3">
+            <SpaceCard
+              v-for="game in filteredGames"
+              :key="game._id"
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
+              <div class="flex items-center justify-between">
                 <!-- Informations du jeu -->
                 <div class="flex items-center space-x-4">
                   <!-- Image du jeu -->
@@ -226,17 +199,16 @@
                     v-if="game.imageUrl"
                     :src="game.imageUrl"
                     :alt="game.name"
-                    class="w-12 h-12 rounded-lg object-cover border-2 border-cyan-500/50"
+                    class="w-12 h-12 rounded-lg object-cover border-2 border-space-secondary/50"
                     @error="handleImageError"
                   />
-                  <!-- Fallback si pas d'image -->
                   <div
                     v-else
-                    class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center border-2 border-cyan-500/50"
+                    class="w-12 h-12 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-secondary/50"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6 text-cyan-400"
+                      class="h-6 w-6 text-space-secondary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -252,25 +224,29 @@
 
                   <!-- Détails du jeu -->
                   <div>
-                    <h3 class="text-white font-orbitron text-sm mb-1">
+                    <h3 class="text-space-text font-nasa text-sm mb-1">
                       {{ game.name }}
                     </h3>
-                    <p class="text-gray-400 text-xs">
+                    <p class="text-space-text-muted text-xs">
                       Recevoir des mentions (@ping) pour {{ game.name }}
                     </p>
-                    <p class="text-cyan-400 text-xs mt-1">
+                    <p
+                      class="text-space-secondary-light text-xs mt-1 font-mono"
+                    >
                       Rôle Discord: @{{
                         game.name.replace(/\s+/g, "-").toLowerCase()
                       }}
                     </p>
                   </div>
+
+                  <!-- Indicateur de statut -->
                   <div
                     v-if="gameRoleStatus[game._id || '']"
                     class="flex items-center text-xs"
                   >
                     <div
                       v-if="gameRoleStatus[game._id || ''] === 'syncing'"
-                      class="flex items-center text-yellow-400"
+                      class="flex items-center text-space-warning"
                     >
                       <svg
                         class="animate-spin h-3 w-3 mr-1"
@@ -291,11 +267,11 @@
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Sync...
+                      <span class="font-mono">Syncing...</span>
                     </div>
                     <div
                       v-else-if="gameRoleStatus[game._id || ''] === 'success'"
-                      class="flex items-center text-green-400"
+                      class="flex items-center text-space-success"
                     >
                       <svg
                         class="h-3 w-3 mr-1"
@@ -308,11 +284,11 @@
                           clip-rule="evenodd"
                         ></path>
                       </svg>
-                      Synced
+                      <span class="font-mono">Synced</span>
                     </div>
                     <div
                       v-else-if="gameRoleStatus[game._id || ''] === 'error'"
-                      class="flex items-center text-red-400"
+                      class="flex items-center text-space-error"
                     >
                       <svg
                         class="h-3 w-3 mr-1"
@@ -325,15 +301,16 @@
                           clip-rule="evenodd"
                         ></path>
                       </svg>
-                      Error
+                      <span class="font-mono">Error</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <label class="toggle-container">
+                <div class="relative inline-block w-12 h-6 flex-shrink-0">
                   <input
                     type="checkbox"
+                    :id="'toggle-' + game._id"
                     :checked="isGameRoleEnabled(game._id || '')"
                     @change="
                       toggleGameRole(
@@ -341,39 +318,61 @@
                         ($event.target as HTMLInputElement).checked
                       )
                     "
-                    class="hidden"
+                    class="opacity-0 w-0 h-0 absolute"
                   />
-                  <div class="toggle-switch">
-                    <div class="toggle-circle"></div>
-                  </div>
-                </label>
+                  <label
+                    :for="'toggle-' + game._id"
+                    class="block w-full h-full cursor-pointer"
+                  >
+                    <span
+                      class="slider rounded-full absolute cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-300 border-2"
+                      :class="
+                        isGameRoleEnabled(game._id || '')
+                          ? 'bg-space-secondary/20 border-space-secondary'
+                          : 'bg-space-bg-light border-space-text-muted'
+                      "
+                    ></span>
+                    <span
+                      class="dot absolute h-4 w-4 rounded-full transition-all duration-300 top-1"
+                      :class="
+                        isGameRoleEnabled(game._id || '')
+                          ? 'bg-space-secondary-light left-7'
+                          : 'bg-space-text-muted left-1'
+                      "
+                    ></span>
+                  </label>
+                </div>
               </div>
-            </div>
+            </SpaceCard>
           </div>
 
-          <!-- ✅ NOUVEAU : État vide pour jeux filtrés -->
-          <CyberTerminal
+          <!-- État vide pour jeux filtrés -->
+          <SpaceTerminal
             v-else
             title="BASE DE DONNÉES · JEUX PRINCIPAUX"
             command="query_main_games"
-            error-code="GAME_FILTER_404"
-            message="Aucun des jeux principaux n'est disponible dans la base de données. Les jeux supportés sont : League of Legends, Rocket League, Valorant, The Finals, Counter Strike et Overwatch."
-          />
-        </div>
+            :showCursor="true"
+          >
+            <div class="text-space-error">
+              Aucun des jeux principaux n'est disponible dans la base de
+              données.
+            </div>
+            <div class="text-space-text-muted mt-2">
+              Les jeux supportés sont : League of Legends, Rocket League,
+              Valorant, The Finals, Counter Strike et Overwatch.
+            </div>
+          </SpaceTerminal>
+        </SpaceCard>
 
-        <!-- ========================================
-             SOUS-SECTION: ACTIONS DE SAUVEGARDE
-             ======================================== -->
-
-        <!-- Bouton de sauvegarde -->
-        <div class="text-center">
-          <button
+        <!-- Actions de sauvegarde -->
+        <div class="text-center pt-4">
+          <SpaceButton
             @click="saveSettings"
             :disabled="isSaving || !hasChanges"
-            class="cyberpunk-btn-purple px-8 py-3 rounded-lg font-orbitron text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            variant="primary"
+            size="lg"
           >
-            <!-- État de chargement avec spinner -->
-            <span v-if="isSaving" class="flex items-center">
+            <template v-if="isSaving">
               <svg
                 class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -395,38 +394,111 @@
                 ></path>
               </svg>
               Enregistrement en cours...
-            </span>
-            <!-- État normal -->
-            <span v-else-if="!hasChanges" class="opacity-60"
-              >Aucune modification</span
-            >
-            <span v-else>Enregistrer les paramètres</span>
-          </button>
+            </template>
+            <template v-else-if="!hasChanges">Aucune modification</template>
+            <template v-else>Enregistrer les paramètres</template>
+          </SpaceButton>
         </div>
       </div>
     </div>
 
-    <!-- ========================================
-         SECTION: TOAST DE NOTIFICATION
-         ======================================== -->
-    <Toast v-if="message" :type="messageType" :message="message" />
+    <!-- Toast de notification -->
+    <div
+      v-if="message"
+      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
+      :class="[
+        message ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
+      ]"
+    >
+      <SpaceAlert
+        :variant="messageType"
+        :dismissible="true"
+        @dismiss="message = ''"
+        className="backdrop-blur-sm"
+      >
+        {{ message }}
+      </SpaceAlert>
+    </div>
 
-    <ConfirmationDialog
+    <!-- Modal de confirmation pour modifications non sauvegardées -->
+    <SpaceModal
       v-if="showUnsavedChangesDialog"
-      title="Modifications non sauvegardées"
-      message="Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter cette page ? Vos changements seront perdus."
-      @confirm="confirmLeave"
-      @cancel="cancelLeave"
-    />
+      v-model="showUnsavedChangesDialog"
+      title="MODIFICATIONS NON SAUVEGARDÉES"
+    >
+      <div class="text-center mb-6 space-y-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-space-warning mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
 
-    <!-- ✅ NOUVEAU : Dialog de confirmation pour reset -->
-    <ConfirmationDialog
+        <p class="text-space-text">
+          Vous avez des modifications non sauvegardées. Voulez-vous vraiment
+          quitter cette page ? Vos changements seront perdus.
+        </p>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-center space-x-4">
+          <SpaceButton @click="cancelLeave" variant="ghost">
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="confirmLeave" variant="warning">
+            Quitter sans sauvegarder
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
+
+    <!-- Modal de confirmation pour réinitialisation -->
+    <SpaceModal
       v-if="showResetDialog"
-      title="Annuler les modifications"
-      message="Voulez-vous vraiment annuler toutes vos modifications ? Cette action ne peut pas être annulée."
-      @confirm="confirmReset"
-      @cancel="cancelReset"
-    />
+      v-model="showResetDialog"
+      title="RÉINITIALISER LES MODIFICATIONS"
+    >
+      <div class="text-center mb-6 space-y-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-space-secondary mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+
+        <p class="text-space-text">
+          Voulez-vous vraiment annuler toutes vos modifications ? Cette action
+          ne peut pas être annulée.
+        </p>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-center space-x-4">
+          <SpaceButton @click="cancelReset" variant="ghost">
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="confirmReset" variant="primary">
+            Réinitialiser
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
   </div>
 </template>
 
@@ -441,12 +513,6 @@ import profileService from "../services/profileService";
 import gameService from "../services/gameService";
 import type { Game } from "../types";
 import type { GameRoles } from "../types/User";
-
-// ✅ Import des composants shared
-import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
-import CyberTerminal from "../shared/CyberTerminal.vue";
-import Toast from "../shared/Toast.vue";
-import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 
 // ========================================
 // SECTION: STORES ET DONNÉES RÉACTIVES
@@ -865,73 +931,39 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* ========================================
-   SECTION: STYLES DES COMPOSANTS TOGGLE
-   ======================================== */
-.toggle-container {
-  position: relative;
+/* Styles pour le toggle switch */
+.slider {
+  background-color: rgba(17, 24, 39, 0.8);
 }
 
-.toggle-switch {
-  width: 40px;
-  height: 22px;
-  background: rgba(17, 24, 39, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  padding: 0 2px;
-  transition: all 0.3s;
-  cursor: pointer;
+.dot {
+  transition: 0.3s all ease;
+  box-shadow: 0 0 5px rgba(2, 132, 199, 0.5);
 }
 
-.toggle-circle {
-  width: 18px;
-  height: 18px;
-  background: linear-gradient(to right, #6366f1, #a855f7);
-  border-radius: 50%;
-  transition: transform 0.3s, background 0.3s;
+input:checked ~ .slider {
+  background-color: rgba(2, 132, 199, 0.2);
+  border-color: rgb(2, 132, 199);
 }
 
-/* État activé du toggle */
-input:checked + .toggle-switch {
-  border-color: rgba(6, 182, 212, 0.5);
-  background: rgba(6, 182, 212, 0.1);
+input:checked ~ .dot {
+  transform: translateX(16px);
+  background-color: rgb(56, 189, 248);
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.8);
 }
 
-input:checked + .toggle-switch .toggle-circle {
-  transform: translateX(18px);
-  background: linear-gradient(to right, #06b6d4, #0891b2);
+/* Animation pour synchronisation */
+@keyframes pulse-sync {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* Effets de survol */
-.toggle-switch:hover {
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
-}
-
-input:checked + .toggle-switch:hover {
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
-}
-
-/* ========================================
-   SECTION: STYLES DES BOUTONS
-   ======================================== */
-.cyberpunk-btn-purple {
-  background: linear-gradient(45deg, #8b5cf6, #a855f7);
-  border: 1px solid #a855f7;
-  transition: all 0.3s ease;
-}
-
-.cyberpunk-btn-purple:hover:not(:disabled) {
-  background: linear-gradient(45deg, #7c3aed, #8b5cf6);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-}
-
-/* ========================================
-   SECTION: EFFETS VISUELS
-   ======================================== */
-.neon-text-purple {
-  text-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7, 0 0 15px #a855f7;
+.animate-pulse-sync {
+  animation: pulse-sync 2s infinite;
 }
 </style>
