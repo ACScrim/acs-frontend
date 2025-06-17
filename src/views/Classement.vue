@@ -183,7 +183,7 @@
       >
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
-          <table class="min-w-full divide-y divide-space-bg-light/30">
+          <table class="min-w-full">
             <thead class="bg-space-bg-light/20">
               <tr>
                 <th
@@ -276,13 +276,14 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-space-bg-light/20">
+            <tbody>
               <tr
                 v-for="(ranking, index) in paginatedRankings"
                 :key="ranking.playerId"
-                class="hover:bg-space-bg-light/10 transition-colors duration-200"
+                class="transition-colors duration-200"
+                :class="[index % 2 === 0 ? 'row-even' : 'row-odd', 'row-hover']"
               >
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap">
                   <div class="flex items-center">
                     <SpaceBadge
                       v-if="calculateGlobalRank(index) <= 3"
@@ -298,7 +299,7 @@
                     }}</span>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
                     class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300"
@@ -306,14 +307,14 @@
                     {{ ranking.username }}
                   </router-link>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap">
                   <div
                     class="text-sm font-mono font-semibold text-space-secondary-light"
                   >
                     {{ ranking.totalTournaments }}
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap">
                   <div
                     class="text-sm font-mono font-semibold text-space-accent-light"
                   >
@@ -375,11 +376,12 @@
           </div>
 
           <!-- Liste des joueurs version mobile -->
-          <div class="divide-y divide-space-bg-light/20">
+          <div>
             <div
               v-for="(ranking, index) in paginatedRankings"
               :key="ranking.playerId"
-              class="p-3 transition-colors hover:bg-space-bg-light/10"
+              class="p-3 transition-colors duration-200"
+              :class="[index % 2 === 0 ? 'row-even' : 'row-odd', 'row-hover']"
             >
               <div class="flex items-center">
                 <!-- Rang -->
@@ -742,7 +744,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -769,5 +771,39 @@ onMounted(async () => {
   .space-card {
     overflow: hidden;
   }
+}
+
+th,
+td {
+  position: relative;
+}
+
+th:not(:last-child)::after,
+td:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  right: 0;
+  height: 60%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(109, 40, 217, 1),
+    transparent
+  );
+}
+
+/* Garder les styles existants pour les lignes alternées */
+.row-even {
+  background-color: transparent;
+}
+
+.row-odd {
+  background-color: rgba(109, 40, 217, 0.15);
+}
+
+.row-hover:hover {
+  background-color: rgba(109, 40, 217, 0.05);
 }
 </style>

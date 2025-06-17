@@ -540,19 +540,12 @@
 
         <!-- Classement -->
         <div>
-          <div class="flex items-center mb-2">
-            <input
-              id="isRanked"
+          <div class="mb-2">
+            <SpaceToggle
               v-model="isRanked"
-              type="checkbox"
-              class="h-4 w-4 text-space-primary focus:ring-space-primary border-space-bg-light rounded bg-space-bg"
+              label="Je joue en classé"
+              className="toggle-primary"
             />
-            <label
-              for="isRanked"
-              class="ml-2 block text-space-primary-light text-sm font-nasa"
-            >
-              Je joue en classé
-            </label>
           </div>
 
           <div v-if="isRanked" class="mt-3">

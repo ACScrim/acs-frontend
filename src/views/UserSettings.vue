@@ -307,41 +307,13 @@
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <div class="relative inline-block w-12 h-6 flex-shrink-0">
-                  <input
-                    type="checkbox"
-                    :id="'toggle-' + game._id"
-                    :checked="isGameRoleEnabled(game._id || '')"
-                    @change="
-                      toggleGameRole(
-                        game._id || '',
-                        ($event.target as HTMLInputElement).checked
-                      )
-                    "
-                    class="opacity-0 w-0 h-0 absolute"
-                  />
-                  <label
-                    :for="'toggle-' + game._id"
-                    class="block w-full h-full cursor-pointer"
-                  >
-                    <span
-                      class="slider rounded-full absolute cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-300 border-2"
-                      :class="
-                        isGameRoleEnabled(game._id || '')
-                          ? 'bg-space-secondary/20 border-space-secondary'
-                          : 'bg-space-bg-light border-space-text-muted'
-                      "
-                    ></span>
-                    <span
-                      class="dot absolute h-4 w-4 rounded-full transition-all duration-300 top-1"
-                      :class="
-                        isGameRoleEnabled(game._id || '')
-                          ? 'bg-space-secondary-light left-7'
-                          : 'bg-space-text-muted left-1'
-                      "
-                    ></span>
-                  </label>
-                </div>
+                <SpaceToggle
+                  :model-value="isGameRoleEnabled(game._id || '')"
+                  @update:model-value="toggleGameRole(game._id || '', $event)"
+                  size="sm"
+                  className="bg-space-secondary/20"
+                  :disabled="gameRoleStatus[game._id || ''] === 'syncing'"
+                />
               </div>
             </SpaceCard>
           </div>
@@ -931,27 +903,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Styles pour le toggle switch */
-.slider {
-  background-color: rgba(17, 24, 39, 0.8);
-}
-
-.dot {
-  transition: 0.3s all ease;
-  box-shadow: 0 0 5px rgba(2, 132, 199, 0.5);
-}
-
-input:checked ~ .slider {
-  background-color: rgba(2, 132, 199, 0.2);
-  border-color: rgb(2, 132, 199);
-}
-
-input:checked ~ .dot {
-  transform: translateX(16px);
-  background-color: rgb(56, 189, 248);
-  box-shadow: 0 0 8px rgba(2, 132, 199, 0.8);
-}
-
 /* Animation pour synchronisation */
 @keyframes pulse-sync {
   0%,

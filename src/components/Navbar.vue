@@ -108,38 +108,13 @@
       </div>
 
       <!-- Toggle mode allégé -->
-      <div class="hidden sm:flex items-center mr-6 relative group">
-        <label class="light-mode-toggle flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            @change="toggleLightMode"
-            :checked="isLightMode"
-            class="hidden"
-          />
-          <div class="toggle-track relative">
-            <div class="toggle-thumb"></div>
-            <div class="toggle-stars">
-              <div
-                v-for="i in 5"
-                :key="`toggle-star-${i}`"
-                class="toggle-star"
-                :style="{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  width: `${Math.random() * 2 + 1}px`,
-                  height: `${Math.random() * 2 + 1}px`,
-                  animationDelay: `${Math.random() * 2}s`,
-                }"
-              ></div>
-            </div>
-          </div>
-          <span class="ml-2 text-xs text-space-text-muted font-nasa"
-            >Mode allégé</span
-          >
-        </label>
-
-        <div class="tooltip-text">Activer/désactiver le fond vidéo</div>
-      </div>
+      <SpaceToggle
+        v-model="isLightMode"
+        @update:modelValue="toggleLightMode"
+        label="Mode allégé"
+        tooltip="Activer/désactiver le fond vidéo"
+        containerClassName="hidden sm:flex items-center mr-6"
+      />
 
       <!-- Menu utilisateur -->
       <div class="relative user-menu flex items-center">
@@ -469,17 +444,11 @@
                   </svg>
                   <span>Mode allégé</span>
                 </div>
-                <label class="toggle-mobile flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    @change="toggleLightMode"
-                    :checked="isLightMode"
-                    class="hidden"
-                  />
-                  <div class="toggle-track-mobile">
-                    <div class="toggle-thumb-mobile"></div>
-                  </div>
-                </label>
+                <SpaceToggle
+                  v-model="isLightMode"
+                  @update:modelValue="toggleLightMode"
+                  size="sm"
+                />
               </div>
             </div>
 

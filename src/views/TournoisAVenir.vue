@@ -75,43 +75,11 @@
             <div class="space-y-3">
               <!-- Option 1: Afficher les tournois passés -->
               <div class="flex items-center gap-3">
-                <button
-                  type="button"
-                  class="group relative inline-flex h-7 w-14 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-space-primary/20"
-                  :class="[
-                    showFinished ? 'bg-space-secondary' : 'bg-space-bg-light',
-                  ]"
-                  @click="toggleShowFinished"
-                  aria-pressed="false"
-                  role="switch"
-                >
-                  <!-- Track (fond) -->
-                  <span
-                    class="absolute inset-0 rounded-full border transition-colors duration-300"
-                    :class="[
-                      showFinished
-                        ? 'border-space-secondary shadow-inner shadow-space-secondary/30'
-                        : 'border-space-secondary/30',
-                    ]"
-                  ></span>
-
-                  <!-- Thumb (curseur) -->
-                  <span
-                    class="z-10 inline-block h-5 w-5 transform rounded-full shadow-md transition-transform duration-300 ease-in-out"
-                    :class="[
-                      showFinished
-                        ? 'translate-x-8 bg-white'
-                        : 'translate-x-1 bg-space-secondary/90',
-                    ]"
-                  ></span>
-
-                  <!-- Input caché -->
-                  <input
-                    type="checkbox"
-                    v-model="showFinished"
-                    class="sr-only"
-                  />
-                </button>
+                <SpaceToggle
+                  v-model="showFinished"
+                  @update:modelValue="toggleShowFinished"
+                  className="bg-space-secondary/20"
+                />
                 <span class="text-space-text text-sm">
                   Afficher uniquement les tournois terminés
                 </span>
@@ -119,43 +87,11 @@
 
               <!-- Option 2: Ordre chronologique -->
               <div class="flex items-center gap-3">
-                <button
-                  type="button"
-                  class="group relative inline-flex h-7 w-14 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-space-primary/20"
-                  :class="[
-                    sortAscending ? 'bg-space-secondary' : 'bg-space-bg-light',
-                  ]"
-                  @click="toggleSortAscending"
-                  aria-pressed="false"
-                  role="switch"
-                >
-                  <!-- Track (fond) -->
-                  <span
-                    class="absolute inset-0 rounded-full border transition-colors duration-300"
-                    :class="[
-                      sortAscending
-                        ? 'border-space-secondary shadow-inner shadow-space-secondary/30'
-                        : 'border-space-secondary/30',
-                    ]"
-                  ></span>
-
-                  <!-- Thumb (curseur) -->
-                  <span
-                    class="z-10 inline-block h-5 w-5 transform rounded-full shadow-md transition-transform duration-300 ease-in-out"
-                    :class="[
-                      sortAscending
-                        ? 'translate-x-8 bg-white'
-                        : 'translate-x-1 bg-space-secondary/90',
-                    ]"
-                  ></span>
-
-                  <!-- Input caché -->
-                  <input
-                    type="checkbox"
-                    v-model="sortAscending"
-                    class="sr-only"
-                  />
-                </button>
+                <SpaceToggle
+                  v-model="sortAscending"
+                  @update:modelValue="toggleSortAscending"
+                  className="bg-space-secondary/20"
+                />
                 <span class="text-space-text text-sm">
                   Ordre chronologique
                   <span class="text-xs text-space-text-muted ml-1">
