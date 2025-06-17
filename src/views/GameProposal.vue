@@ -1,151 +1,100 @@
 <template>
-  <div class="container mx-auto p-8 sm:p-8 pt-20 sm:pt-24 pb-16 relative">
-    <div class="max-w-5xl mx-auto">
-      <!-- En-tête -->
-      <div class="mb-8 text-center relative">
-        <!-- Lignes déco horizontales -->
-        <div
-          class="hidden sm:block absolute top-1/2 left-0 w-1/6 h-0.5 bg-gradient-to-r from-transparent to-pink-500"
-        ></div>
-        <div
-          class="hidden sm:block absolute top-1/2 right-0 w-1/6 h-0.5 bg-gradient-to-l from-transparent to-pink-500"
-        ></div>
+  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+    <!-- En-tête de la page -->
+    <SpaceHeader
+      title="PROPOSITIONS DE JEUX"
+      mission="GAMES-DISCOVERY"
+      :showMissionInfo="true"
+    >
+      <template #badge v-if="proposals.length > 0">
+        <SpaceBadge variant="accent" size="lg">{{
+          proposals.length
+        }}</SpaceBadge>
+      </template>
+    </SpaceHeader>
 
-        <!-- Titre principal avec effet néon -->
-        <h1
-          class="text-4xl text-white mb-8 neon-text font-audiowide text-center"
-        >
-          Propositions de jeux
-        </h1>
-        <p
-          class="text-gray-300 max-w-2xl mx-auto font-orbitron text-sm bg-black/80 backdrop-blur-sm rounded-xl border border-pink-500/70 shadow-lg shadow-pink-500/30 p-4 transition-all duration-300 hover:shadow-pink-500/50 hover:border-pink-400 transform hover:-translate-y-1"
-        >
-          Seuls les jeux approuvés par les administrateurs seront votables.<br />
-          Les propositions rejetées seront supprimées après un certain délai.
+    <div class="flex flex-col gap-6 mt-6">
+      <!-- Description/Introduction -->
+      <SpaceCard variant="dark" className="mb-6">
+        <p class="text-space-text font-body">
+          Seuls les jeux approuvés par les administrateurs seront votables. Les
+          propositions rejetées seront supprimées après un certain délai.
         </p>
-      </div>
-      <!-- Grille de fond -->
-      <div class="cyber-grid"></div>
+      </SpaceCard>
 
       <!-- Filtres et bouton d'ajout -->
-      <div class="cyberpunk-panel mb-6 relative overflow-hidden">
-        <div class="flex flex-col space-y-4 z-10 relative">
-          <!-- Filtres + Recherche sur une ligne (desktop) ou empilés (mobile) -->
-          <div class="flex flex-wrap justify-between items-center gap-4">
-            <div class="space-x-1 sm:space-x-2 flex flex-wrap gap-2">
-              <button
+      <SpaceCard variant="primary" className="mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <!-- Filtres -->
+          <div class="space-y-4">
+            <label class="block mb-2 font-nasa text-space-primary-light"
+              >Filtrer par statut</label
+            >
+            <div class="flex flex-wrap gap-2">
+              <SpaceButton
                 v-for="filter in filters"
                 :key="filter.value"
                 @click="
                   activeFilter = filter.value;
                   currentPage = 1;
                 "
-                :class="[
-                  activeFilter === filter.value
-                    ? filter.value === 'approved'
-                      ? 'cyberpunk-btn-green'
-                      : filter.value === 'pending'
-                      ? 'cyberpunk-btn-amber'
-                      : 'cyberpunk-btn-purple'
-                    : 'cyberpunk-btn-gray',
-                ]"
-                class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-orbitron transition-all duration-300"
+                :variant="activeFilter === filter.value ? 'primary' : 'outline'"
+                size="sm"
               >
                 {{ filter.label }}
-              </button>
+              </SpaceButton>
             </div>
+          </div>
 
-            <!-- Menu de tri ajouté -->
-            <div class="relative w-auto">
+          <!-- Tri -->
+          <div class="space-y-4">
+            <label class="block mb-2 font-nasa text-space-secondary-light"
+              >Options de tri</label
+            >
+            <div class="flex flex-col gap-2">
               <select
                 v-model="sortOption"
-                class="w-full bg-gray-900 border border-cyan-500/50 rounded-lg px-4 py-2 pr-10 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow font-orbitron text-xs"
+                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="default">Tri par défaut</option>
                 <option value="votesDesc">Votes (+)</option>
                 <option value="votesAsc">Votes (-)</option>
               </select>
+
               <div
                 v-show="sortOption === 'votesDesc' || sortOption === 'votesAsc'"
-                class="mt-2 flex items-center"
+                class="flex items-center gap-2"
               >
-                <label
-                  class="cyber-checkbox-container relative flex items-center cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    id="positiveVotesOnly"
-                    v-model="onlyPositiveVotes"
-                    class="absolute opacity-0 w-0 h-0"
-                  />
-                  <span
-                    class="cyber-checkbox flex items-center justify-center w-5 h-5 bg-gray-900 border border-cyan-500/70 mr-2 transition-all duration-200 overflow-hidden"
-                  >
-                    <span
-                      class="check-inner absolute inset-0 bg-gradient-to-br from-pink-500 to-purple-600 opacity-0 transition-opacity duration-200"
-                      :class="{ 'opacity-100': onlyPositiveVotes }"
-                    ></span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3 w-3 text-black transform scale-0 transition-transform duration-200"
-                      :class="{ 'scale-100': onlyPositiveVotes }"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-xs text-cyan-300 font-orbitron hover:text-pink-300 transition-colors duration-200"
-                  >
-                    Compter uniquement les votes positifs
-                  </span>
+                <input
+                  type="checkbox"
+                  id="positiveVotesOnly"
+                  v-model="onlyPositiveVotes"
+                  class="rounded border-space-primary/30 bg-space-bg-light text-space-primary focus:ring-space-primary/30"
+                />
+                <label for="positiveVotesOnly" class="text-sm text-space-text">
+                  Compter uniquement les votes positifs
                 </label>
               </div>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-              ></div>
             </div>
+          </div>
 
-            <!-- Champ de recherche -->
-            <div
-              class="relative w-full sm:w-auto flex-grow sm:flex-grow-0 sm:max-w-xs"
-            >
-              <input
+          <!-- Recherche et Ajout -->
+          <div class="space-y-4">
+            <div class="relative">
+              <label class="block mb-2 font-nasa text-space-accent-light"
+                >Rechercher un jeu</label
+              >
+              <SpaceInput
                 v-model="searchTerm"
-                type="text"
-                placeholder="Rechercher un jeu..."
-                class="w-full bg-gray-900 border border-cyan-500/50 rounded-lg px-4 py-2 pr-10 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow font-orbitron text-xs"
+                placeholder="Nom du jeu..."
                 @input="handleSearch"
-              />
-              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                <svg
-                  v-if="!searchTerm"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <button
-                  v-else
-                  @click="clearSearch"
-                  class="text-gray-400 hover:text-cyan-400 transition-colors"
-                >
+                variant="accent"
+                :clearable="true"
+              >
+                <template #icon>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
+                    class="h-4 w-4 text-space-text-muted"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -154,64 +103,73 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                </button>
-              </div>
+                </template>
+              </SpaceInput>
             </div>
 
-            <div class="w-full sm:w-auto">
-              <button
-                @click="showProposalForm = true"
-                class="cyberpunk-btn-pink px-4 py-2 rounded-md flex items-center justify-center font-orbitron shadow-lg transition-all duration-300 text-sm w-full sm:w-auto"
+            <SpaceButton
+              @click="showProposalForm = true"
+              variant="accent"
+              className="w-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                Proposer un jeu
-              </button>
-            </div>
+                <path
+                  fill-rule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Proposer un jeu
+            </SpaceButton>
           </div>
         </div>
-
-        <!-- Effet d'angle -->
-        <div class="cyber-angle top-right"></div>
-        <div class="cyber-angle bottom-left"></div>
-      </div>
+      </SpaceCard>
 
       <!-- État de chargement -->
       <div v-if="loading" class="flex justify-center py-12">
-        <CyberpunkLoader />
+        <SpaceLoader text="Chargement des propositions..." />
       </div>
 
       <!-- Message si aucune proposition -->
-      <CyberTerminal
+      <SpaceTerminal
         v-else-if="proposals.length === 0"
         :command="`list_proposals --filter=${activeFilter} ${
           searchTerm ? '--search=\'' + searchTerm + '\'' : ''
         }`"
-        errorCode="404_NO_PROPOSALS"
-        :message="emptyStateMessage"
-        class="my-8"
-      />
+        title="Console de recherche"
+        showCursor
+        className="my-8"
+      >
+        <div class="text-space-error font-mono">
+          Erreur 404: Aucune proposition trouvée.
+        </div>
+        <div class="text-space-text-muted mt-2">
+          {{ emptyStateMessage }}
+        </div>
+      </SpaceTerminal>
 
-      <CyberTerminal
+      <SpaceTerminal
         v-else-if="filteredProposals.length === 0"
         :command="`search_proposals --query='${searchTerm}' --filter=${activeFilter}`"
-        errorCode="404_NO_RESULTS"
-        :message="emptyStateMessage"
-        class="my-8"
-      />
+        title="Console de recherche"
+        showCursor
+        className="my-8"
+      >
+        <div class="text-space-error font-mono">
+          Erreur 404: Aucun résultat pour cette recherche.
+        </div>
+        <div class="text-space-text-muted mt-2">
+          {{ emptyStateMessage }}
+        </div>
+      </SpaceTerminal>
 
       <!-- Liste des propositions -->
       <div v-else class="space-y-4">
@@ -229,108 +187,68 @@
         />
 
         <!-- Pagination -->
-        <CyberpunkPagination
-          v-if="filteredProposals.length > itemsPerPage"
-          class="mt-8"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          prev-label="Précédent"
-          next-label="Suivant"
-          color="pink"
-          :show-dots="totalPages > 5"
-          @prev-page="prevPage"
-          @next-page="nextPage"
-          @page-select="goToPage"
-        />
+        <div class="mt-8">
+          <SpacePagination
+            v-if="filteredProposals.length > itemsPerPage"
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @prev-page="prevPage"
+            @next-page="nextPage"
+            @page-select="goToPage"
+          />
+        </div>
       </div>
     </div>
 
     <!-- Modal de proposition de jeu -->
-    <div
-      v-if="showProposalForm"
-      class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-    >
-      <div
-        class="bg-black/90 border border-purple-500 rounded-xl max-w-2xl w-full mx-auto p-6 shadow-2xl shadow-purple-500/30"
-      >
-        <div class="flex justify-between items-start mb-4">
-          <h2 class="text-2xl font-bold text-white font-audiowide neon-text">
-            <span class="cyber-bracket">⌜⌝</span>
-            Proposer un nouveau jeu
-            <span class="cyber-bracket">⌞⌟</span>
-          </h2>
-          <button
-            @click="showProposalForm = false"
-            class="text-gray-400 hover:text-pink-500 transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="mb-4">
+    <SpaceModal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
+      <div class="space-y-6">
+        <div>
           <label
-            class="block text-sm font-medium text-cyan-400 mb-1 font-orbitron"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Rechercher un jeu
           </label>
           <div class="relative">
-            <input
+            <SpaceInput
               v-model="searchQuery"
               @input="debounceSearch"
-              type="text"
               placeholder="Entrez le nom d'un jeu..."
-              class="w-full bg-gray-900 border border-pink-500/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow font-orbitron text-sm"
-            />
-
-            <div
-              v-if="searching"
-              class="absolute inset-y-0 right-0 flex items-center pr-3"
+              variant="primary"
+              :stars="true"
             >
-              <div
-                class="h-4 w-4 border-t-2 border-pink-500 rounded-full animate-spin"
-              ></div>
-            </div>
+              <template #rightIcon v-if="searching">
+                <div
+                  class="animate-spin h-4 w-4 border-2 border-t-space-primary rounded-full"
+                ></div>
+              </template>
+            </SpaceInput>
           </div>
 
           <!-- Résultats de recherche -->
           <div
             v-if="searchResults.length > 0"
-            class="mt-2 border border-purple-500/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-black/80"
+            class="mt-2 border border-space-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-space-bg/80"
           >
             <div
               v-for="game in searchResults"
               :key="game.id"
               @click="selectGame(game)"
-              class="p-3 flex items-center hover:bg-purple-900/20 cursor-pointer border-b border-pink-700/30 transition-all"
+              class="p-3 flex items-center hover:bg-space-primary/10 cursor-pointer border-b border-space-primary/20 transition-all"
             >
               <div class="relative overflow-hidden rounded">
                 <img
                   :src="game.background_image || '/img/game-placeholder.jpg'"
                   :alt="game.name"
-                  class="w-12 h-12 object-cover rounded border border-cyan-500/50"
+                  class="w-12 h-12 object-cover rounded border border-space-primary/50"
                   @error="(e) => ((e.target as HTMLImageElement).src = '/img/game-placeholder.jpg')"
                 />
-                <!-- Scanline overlay -->
-                <div class="absolute inset-0 bg-scanline opacity-20"></div>
               </div>
               <div class="ml-3">
-                <p class="text-white font-medium font-orbitron">
+                <p class="text-space-text font-medium font-heading">
                   {{ game.name }}
                 </p>
-                <p class="text-cyan-400 text-xs">
+                <p class="text-space-primary-light text-xs">
                   <span v-if="game.released">{{
                     formatGameReleaseDate(game.released)
                   }}</span>
@@ -340,125 +258,76 @@
           </div>
         </div>
 
-        <div class="mb-4">
+        <div>
           <label
-            class="block text-sm font-medium text-cyan-400 mb-1 font-orbitron"
-            >Nom du jeu</label
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
-          <input
-            v-model="newProposal.name"
-            type="text"
-            class="w-full bg-gray-900 border border-pink-500/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow"
-          />
+            Nom du jeu
+          </label>
+          <SpaceInput v-model="newProposal.name" variant="primary" />
         </div>
 
-        <div class="mb-4">
+        <div>
           <label
-            class="block text-sm font-medium text-cyan-400 mb-1 font-orbitron"
-            >Description (optionnelle)</label
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
+            Description (optionnelle)
+          </label>
           <textarea
             v-model="newProposal.description"
             rows="3"
-            class="w-full bg-gray-900 border border-pink-500/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 focus:shadow-glow"
+            class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
           ></textarea>
         </div>
+      </div>
 
-        <div class="flex justify-end">
-          <button
-            @click="showProposalForm = false"
-            class="cyberpunk-btn-gray px-4 py-2 mr-2 rounded-lg font-orbitron text-sm"
-          >
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <SpaceButton @click="showProposalForm = false" variant="outline">
             Annuler
-          </button>
-          <button
+          </SpaceButton>
+          <SpaceButton
             @click="submitProposal"
             :disabled="!isProposalValid || submitting"
-            :class="[
-              'px-4 py-2 rounded-lg flex items-center justify-center font-orbitron text-sm',
-              isProposalValid && !submitting
-                ? 'cyberpunk-btn-purple'
-                : 'opacity-50 bg-gray-700 text-gray-300 cursor-not-allowed',
-            ]"
+            variant="primary"
           >
             <span
               v-if="submitting"
-              class="h-4 w-4 border-t-2 border-white rounded-full animate-spin mr-2"
+              class="animate-spin h-4 w-4 border-2 border-t-transparent rounded-full mr-2"
             ></span>
-            <span>{{
-              submitting ? "Envoi en cours..." : "Proposer ce jeu"
-            }}</span>
-          </button>
+            {{ submitting ? "Envoi en cours..." : "Proposer ce jeu" }}
+          </SpaceButton>
         </div>
-      </div>
-    </div>
+      </template>
+    </SpaceModal>
 
     <!-- Modal de rejet -->
-    <div
-      v-if="showRejectDialog"
-      class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-    >
-      <div
-        class="bg-black/90 border border-red-500 rounded-xl max-w-md w-full mx-auto p-6 shadow-2xl shadow-red-500/30"
-      >
-        <div class="flex justify-between items-start mb-4">
-          <h2 class="text-xl font-bold text-white font-audiowide">
-            <span class="cyber-bracket text-red-400 opacity-60">⌜⌝</span>
-            Motif du rejet
-            <span class="cyber-bracket text-red-400 opacity-60">⌞⌟</span>
-          </h2>
-          <button
-            @click="showRejectDialog = false"
-            class="text-gray-400 hover:text-pink-500 transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="mb-4">
-          <label
-            class="block text-sm font-medium text-red-400 mb-1 font-orbitron"
-            style="text-shadow: 0 0 5px rgba(239, 68, 68, 0.5)"
-          >
-            Raison du rejet (visible par tous les utilisateurs)
-          </label>
-          <textarea
-            v-model="rejectionReason"
-            rows="3"
-            placeholder="Expliquez pourquoi cette proposition ne convient pas..."
-            class="w-full bg-gray-900 border border-red-500/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500 focus:shadow-glow-red"
-          ></textarea>
-        </div>
-
-        <div class="flex justify-end">
-          <button
-            @click="showRejectDialog = false"
-            class="cyberpunk-btn-gray px-4 py-2 mr-2 rounded-lg font-orbitron text-sm"
-          >
-            Annuler
-          </button>
-          <button
-            @click="rejectProposal"
-            class="cyberpunk-btn-pink px-4 py-2 rounded-lg font-orbitron text-sm"
-          >
-            Rejeter la proposition
-          </button>
-        </div>
+    <SpaceModal v-model="showRejectDialog" title="MOTIF DU REJET">
+      <div>
+        <label
+          class="block text-sm font-medium text-space-error mb-1 font-nasa"
+        >
+          Raison du rejet (visible par tous les utilisateurs)
+        </label>
+        <textarea
+          v-model="rejectionReason"
+          rows="3"
+          placeholder="Expliquez pourquoi cette proposition ne convient pas..."
+          class="w-full rounded-lg border border-space-error/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-error/30 focus:outline-none transition-all duration-300"
+        ></textarea>
       </div>
-    </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <SpaceButton @click="showRejectDialog = false" variant="outline">
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="rejectProposal" variant="error">
+            Rejeter la proposition
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
 
     <!-- Toast via le composant partagé -->
     <Toast
@@ -468,13 +337,26 @@
     />
 
     <!-- Dialog de confirmation de suppression -->
-    <confirmation-dialog
-      v-if="deleteDialogVisible"
-      title="Supprimer cette proposition"
-      message="Êtes-vous sûr de vouloir supprimer définitivement cette proposition de jeu ? Cette action est irréversible."
-      @confirm="deleteProposal"
-      @cancel="deleteDialogVisible = false"
-    />
+    <SpaceModal
+      v-model="deleteDialogVisible"
+      title="SUPPRIMER CETTE PROPOSITION"
+    >
+      <p class="text-space-text">
+        Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
+        jeu ? Cette action est irréversible.
+      </p>
+
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <SpaceButton @click="deleteDialogVisible = false" variant="outline">
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="deleteProposal" variant="error">
+            Supprimer
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceModal>
   </div>
 </template>
 
@@ -484,12 +366,8 @@ import { useUserStore } from "../stores/userStore";
 import gameProposalService from "../services/gameProposalService";
 import rawgService from "../services/rawgService";
 import type { GameProposal, RawgGame } from "../types";
-import ConfirmationDialog from "../shared/ConfirmationDialog.vue";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
-import CyberpunkPagination from "../shared/CyberpunkPagination.vue";
-import CyberTerminal from "../shared/CyberTerminal.vue";
-import CyberpunkLoader from "../shared/CyberpunkLoader.vue";
 
 // ===================================
 // ÉTAT ET RÉFÉRENCES
@@ -955,211 +833,5 @@ onMounted(() => {
   position: relative;
   z-index: 20;
   overflow: visible;
-}
-/* Titre Cyberpunk Synthwave avec glitch */
-.cyber-glitch-title {
-  font-family: "Audiowide", cursive;
-  position: relative;
-  color: #ffffff;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
-  letter-spacing: 2px;
-  animation: cyber-glow 3s infinite alternate;
-  margin-bottom: 1rem;
-}
-
-.cyber-glitch-title::before,
-.cyber-glitch-title::after {
-  content: "Propositions de jeux";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  opacity: 0.8;
-}
-
-.cyber-glitch-title::before {
-  color: #0ff;
-  z-index: -1;
-  animation: cyber-glitch 3s infinite alternate-reverse;
-}
-
-.cyber-glitch-title::after {
-  color: #f0f;
-  z-index: -2;
-  animation: cyber-glitch 2s infinite alternate;
-}
-
-@keyframes cyber-glitch {
-  0%,
-  5%,
-  100% {
-    transform: none;
-    opacity: 0.8;
-  }
-  1% {
-    transform: translate(4px, -4px);
-    opacity: 0.6;
-  }
-  2% {
-    transform: translate(-3px, 2px);
-    opacity: 0.7;
-  }
-  3% {
-    transform: none;
-    opacity: 0.8;
-  }
-  4% {
-    transform: translate(2px, 3px);
-    opacity: 0.6;
-  }
-}
-
-@keyframes cyber-glow {
-  0% {
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-  }
-  100% {
-    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff,
-      0 0 50px #ff00ff;
-  }
-}
-
-/* Effet de grille cyberpunk */
-.cyber-grid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-      to right,
-      rgba(139, 92, 246, 0.05) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-  z-index: -1;
-  pointer-events: none;
-  transform: perspective(500px) rotateX(30deg);
-  opacity: 0.5;
-}
-
-/* Panneau cyberpunk avec angle coupé */
-.cyberpunk-panel {
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
-  border-radius: 0.75rem;
-  border: 1px solid rgb(236, 72, 153);
-  box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.3);
-  padding: 1.25rem;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-  position: relative;
-}
-
-.cyberpunk-panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    120deg,
-    rgba(139, 92, 246, 0.05) 50%,
-    rgba(236, 72, 153, 0.05) 100%
-  );
-  z-index: -1;
-  border-radius: inherit;
-}
-
-/* Angles cyberpunk */
-.cyber-angle {
-  position: absolute;
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 1px solid rgb(236, 72, 153);
-}
-
-.cyber-angle.top-right {
-  top: 0;
-  right: 0;
-  border-bottom: 0;
-  border-left: 0;
-}
-
-.cyber-angle.bottom-left {
-  bottom: 0;
-  left: 0;
-  border-top: 0;
-  border-right: 0;
-}
-
-/* Effet de scanlines */
-.bg-scanline {
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.4) 0.5%,
-    transparent 1%
-  );
-  background-size: 100% 4px;
-}
-
-/* Effet de brillance pour les boutons et textes */
-.shadow-glow {
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-}
-
-.shadow-glow-red {
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-}
-
-.focus\:shadow-glow:focus {
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-}
-
-.focus\:shadow-glow-red:focus {
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-}
-
-/* Déco du titre dans les modales */
-.cyber-bracket {
-  color: rgba(139, 92, 246, 0.6);
-  font-size: 1.1em;
-  vertical-align: middle;
-}
-
-.cyber-checkbox-container:hover .cyber-checkbox {
-  box-shadow: 0 0 8px rgba(45, 212, 191, 0.5);
-  border-color: rgba(45, 212, 191, 0.9);
-}
-
-.cyber-checkbox {
-  position: relative;
-  transform: skewX(-10deg);
-}
-
-.cyber-checkbox .check-inner {
-  clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
-}
-
-.cyber-checkbox::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #0ff, #f0f);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.cyber-checkbox-container:hover .cyber-checkbox::before {
-  opacity: 0.5;
 }
 </style>
