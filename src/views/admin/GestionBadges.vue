@@ -6,14 +6,17 @@
       class="bg-black/80 backdrop-blur-xl rounded-xl border border-purple-500/30 shadow-lg shadow-purple-500/20 p-8 relative overflow-hidden"
     >
       <!-- En-tête -->
-      <div class="text-center mb-10 relative z-10">
-        <h1 class="text-4xl text-white font-audiowide mb-2 neon-text-pink">
-          Gestion des Badges
-        </h1>
-        <div
-          class="h-1 w-40 mx-auto bg-gradient-to-r from-transparent via-pink-500 to-transparent rounded shadow-glow"
-        ></div>
-      </div>
+      <SpaceHeader
+        title="GESTION DE BADGES"
+        mission="BADGES-EXPLORER"
+        :showMissionInfo="true"
+      >
+        <template #badge v-if="badges.length > 0">
+          <SpaceBadge variant="secondary" size="lg">{{
+            badges.length
+          }}</SpaceBadge>
+        </template>
+      </SpaceHeader>
 
       <!-- Section Création de badge -->
       <div
