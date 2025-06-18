@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <SpaceContainer>
     <!-- En-tête de la page avec style NASA -->
     <SpaceHeader
       title="TOURNOIS À VENIR"
@@ -329,7 +329,7 @@
         </div>
       </template>
     </SpaceModal>
-  </div>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">
@@ -880,13 +880,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.container {
-  min-height: calc(100vh - 200px);
-  position: relative;
-  z-index: 20;
-  overflow: visible;
-}
-
 /* Animations subtiles pour les éléments interactifs */
 .space-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

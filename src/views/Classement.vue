@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative max-w-6xl">
+  <SpaceContainer>
     <!-- En-tête de la page avec style NASA -->
     <SpaceHeader title="CLASSEMENT" />
     <div class="flex flex-col gap-6">
@@ -449,7 +449,7 @@
         </div>
       </SpaceCard>
     </div>
-  </div>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">

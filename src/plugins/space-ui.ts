@@ -18,6 +18,9 @@ import Header from "@/components/ui/molecules/Header.vue";
 import Pagination from "@/components/ui/organisms/Pagination.vue";
 import Terminal from "@/components/ui/organisms/Terminal.vue";
 
+//Layout
+import Container from "@/components/ui/layout/Container.vue";
+
 // Liste des composants à enregistrer avec les bons noms pour Vue
 const components = {
   // Atoms
@@ -38,6 +41,9 @@ const components = {
   // Organisms
   SpacePagination: Pagination,
   SpaceTerminal: Terminal,
+
+  // Layout
+  SpaceContainer: Container,
 };
 
 export default {
