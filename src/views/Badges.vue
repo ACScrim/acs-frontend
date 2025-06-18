@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <SpaceContainer>
     <!-- En-tête de la page avec style spatial -->
     <SpaceHeader
       title="COLLECTION DE BADGES"
@@ -509,120 +509,118 @@
         </div>
       </SpaceTerminal>
     </div>
+  </SpaceContainer>
 
-    <!-- Modal détail badge -->
-    <SpaceModal
-      v-model="showModal"
-      :title="selectedBadge ? selectedBadge.title : ''"
-    >
-      <div v-if="selectedBadge" class="space-y-6">
-        <!-- Image et description du badge -->
-        <div class="flex flex-col items-center">
-          <div class="relative mb-4">
-            <img
-              :src="selectedBadge.imageUrl"
-              :alt="selectedBadge.title"
-              class="h-32 w-32 rounded-full border-4 border-space-primary object-cover"
-              @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
-            />
-            <div
-              class="absolute inset-0 rounded-full shadow-glow-primary"
-            ></div>
-          </div>
-
-          <SpaceBadge
-            :variant="
-              selectedBadge.categoryType === 'acs' ? 'secondary' : 'primary'
-            "
-            size="lg"
-            className="mb-4"
-          >
-            {{
-              selectedBadge.categoryType === "acs"
-                ? "ACS"
-                : getGameName(selectedBadge.categoryId)
-            }}
-          </SpaceBadge>
-
-          <p
-            class="text-space-text-muted text-center bg-space-bg-light/20 p-4 rounded border border-space-bg-light/30 text-sm"
-          >
-            {{
-              selectedBadge.description ||
-              "Aucune description disponible pour ce badge."
-            }}
-          </p>
+  <!-- Modal détail badge -->
+  <!-- La modale est déplacée en dehors du SpaceContainer pour un positionnement correct -->
+  <SpaceModal
+    v-model="showModal"
+    :title="selectedBadge ? selectedBadge.title : ''"
+  >
+    <div v-if="selectedBadge" class="space-y-6">
+      <!-- Image et description du badge -->
+      <div class="flex flex-col items-center">
+        <div class="relative mb-4">
+          <img
+            :src="selectedBadge.imageUrl"
+            :alt="selectedBadge.title"
+            class="h-32 w-32 rounded-full border-4 border-space-primary object-cover"
+            @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
+          />
+          <div class="absolute inset-0 rounded-full shadow-glow-primary"></div>
         </div>
 
-        <!-- Liste des joueurs -->
-        <div>
-          <h4 class="text-space-text font-heading mb-3 flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-space-primary-light"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-              />
-            </svg>
-            Joueurs avec ce badge ({{
-              selectedBadge._id ? getBadgePlayers(selectedBadge._id).length : 0
-            }})
-          </h4>
+        <SpaceBadge
+          :variant="
+            selectedBadge.categoryType === 'acs' ? 'secondary' : 'primary'
+          "
+          size="lg"
+          className="mb-4"
+        >
+          {{
+            selectedBadge.categoryType === "acs"
+              ? "ACS"
+              : getGameName(selectedBadge.categoryId)
+          }}
+        </SpaceBadge>
 
+        <p
+          class="text-space-text-muted text-center bg-space-bg-light/20 p-4 rounded border border-space-bg-light/30 text-sm"
+        >
+          {{
+            selectedBadge.description ||
+            "Aucune description disponible pour ce badge."
+          }}
+        </p>
+      </div>
+
+      <!-- Liste des joueurs -->
+      <div>
+        <h4 class="text-space-text font-heading mb-3 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-space-primary-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+            />
+          </svg>
+          Joueurs avec ce badge ({{
+            selectedBadge._id ? getBadgePlayers(selectedBadge._id).length : 0
+          }})
+        </h4>
+
+        <div
+          class="bg-space-bg-light/20 rounded-lg border border-space-bg-light/30 max-h-80 overflow-y-auto"
+        >
           <div
-            class="bg-space-bg-light/20 rounded-lg border border-space-bg-light/30 max-h-80 overflow-y-auto"
+            v-if="
+              selectedBadge._id && getBadgePlayers(selectedBadge._id).length > 0
+            "
           >
             <div
-              v-if="
-                selectedBadge._id &&
-                getBadgePlayers(selectedBadge._id).length > 0
-              "
+              v-for="player in getBadgePlayers(selectedBadge._id)"
+              :key="player._id"
+              class="flex items-center p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/30 transition-colors"
             >
               <div
-                v-for="player in getBadgePlayers(selectedBadge._id)"
-                :key="player._id"
-                class="flex items-center p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/30 transition-colors"
+                class="h-10 w-10 rounded-full bg-space-bg-light flex items-center justify-center border border-space-primary-light text-white mr-3 overflow-hidden"
               >
-                <div
-                  class="h-10 w-10 rounded-full bg-space-bg-light flex items-center justify-center border border-space-primary-light text-white mr-3 overflow-hidden"
-                >
-                  <img
-                    v-if="getUserAvatar(player)"
-                    :src="getUserAvatar(player)"
-                    alt="Avatar"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                    @error="(e) => ((e.target as HTMLImageElement).src = '/img/avatar-placeholder.jpg')"
-                  />
-                  <span v-else>{{ getInitials(player.username) }}</span>
-                </div>
-                <router-link
-                  :to="`/profil/${player._id}`"
-                  class="text-space-primary-light hover:text-space-primary transition-colors font-heading"
-                >
-                  {{ player.username }}
-                </router-link>
+                <img
+                  v-if="getUserAvatar(player)"
+                  :src="getUserAvatar(player)"
+                  alt="Avatar"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  @error="(e) => ((e.target as HTMLImageElement).src = '/img/avatar-placeholder.jpg')"
+                />
+                <span v-else>{{ getInitials(player.username) }}</span>
               </div>
+              <router-link
+                :to="`/profil/${player._id}`"
+                class="text-space-primary-light hover:text-space-primary transition-colors font-heading"
+              >
+                {{ player.username }}
+              </router-link>
             </div>
-            <div v-else class="p-4 text-space-text-muted italic text-center">
-              Aucun joueur n'a encore obtenu ce badge
-            </div>
+          </div>
+          <div v-else class="p-4 text-space-text-muted italic text-center">
+            Aucun joueur n'a encore obtenu ce badge
           </div>
         </div>
       </div>
+    </div>
 
-      <template #footer>
-        <div class="flex justify-end">
-          <SpaceButton @click="showModal = false" variant="primary">
-            Fermer
-          </SpaceButton>
-        </div>
-      </template>
-    </SpaceModal>
-  </div>
+    <template #footer>
+      <div class="flex justify-end">
+        <SpaceButton @click="showModal = false" variant="primary">
+          Fermer
+        </SpaceButton>
+      </div>
+    </template>
+  </SpaceModal>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <SpaceContainer>
     <!-- En-tête de la page avec notre nouveau composant SpaceHeader -->
     <SpaceHeader
       title="MEMBRES DE L'ÉQUIPAGE"
@@ -152,100 +152,95 @@
     </SpaceTerminal>
 
     <!-- Liste des membres -->
-    <SpaceCard v-else variant="primary" :stars="true" className="mb-6">
-      <div class="grid grid-cols-1 divide-y divide-space-bg-light/20">
+    <div v-else class="members-grid-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Carte de membre améliorée -->
         <div
           v-for="user in paginatedUsers"
           :key="user._id"
-          class="member-card p-4 transition-colors hover:bg-space-bg-light/10"
+          class="member-card bg-space-bg-dark/80 backdrop-blur-sm rounded-xl overflow-hidden border border-space-primary/20 hover:border-space-primary/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-glow"
         >
+          <!-- En-tête de la carte avec le statut de l'utilisateur -->
           <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+            class="member-card-header p-3 flex justify-between items-center border-b border-space-primary/10"
           >
-            <!-- Avatar et informations utilisateur -->
-            <div class="flex items-center gap-4">
-              <div class="avatar-container">
-                <img
-                  v-if="user.avatarUrl"
-                  :src="user.avatarUrl"
-                  alt="Avatar"
-                  class="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-space-primary-light space-avatar-glow"
-                  loading="lazy"
-                  @error="handleImageError($event)"
-                />
-                <div
-                  v-else
-                  class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary"
-                >
-                  <span
-                    class="text-space-primary-light text-sm sm:text-xl font-bold"
-                    >{{ getUserInitials(user.username) }}</span
-                  >
-                </div>
-              </div>
-              <div>
-                <router-link
-                  v-if="getPlayerIdForUser(user)"
-                  :to="{
-                    name: 'Profil',
-                    params: { id: getPlayerIdForUser(user) },
-                  }"
-                  class="text-base sm:text-lg text-space-text hover:text-space-primary-light font-heading transition-colors capitalize"
-                >
-                  {{ user.username }}
-                </router-link>
-                <span
-                  v-else
-                  class="text-base sm:text-lg text-space-text font-heading"
-                >
-                  {{ user.username }}
-                </span>
-                <div class="text-xs sm:text-sm text-space-text-muted mt-1">
-                  <SpaceBadge
-                    v-if="user.role === 'admin'"
-                    variant="secondary"
-                    size="sm"
-                    className="mr-2"
-                  >
-                    Admin
-                  </SpaceBadge>
-                  <SpaceBadge
-                    v-else-if="user.role === 'superadmin'"
-                    variant="accent"
-                    size="sm"
-                    className="mr-2"
-                  >
-                    Super Admin
-                  </SpaceBadge>
-                  <SpaceBadge
-                    v-else
-                    variant="primary"
-                    size="sm"
-                    className="mr-2"
-                  >
-                    Membre
-                  </SpaceBadge>
-                </div>
+            <SpaceBadge
+              v-if="user.role === 'admin'"
+              variant="secondary"
+              size="sm"
+            >
+              Admin
+            </SpaceBadge>
+            <SpaceBadge
+              v-else-if="user.role === 'superadmin'"
+              variant="accent"
+              size="sm"
+            >
+              Super Admin
+            </SpaceBadge>
+            <SpaceBadge v-else variant="primary" size="sm"> Membre </SpaceBadge>
+            <div class="text-space-text-muted text-xs">
+              ID: {{ user._id ? user._id.substring(0, 8) : "N/A" }}
+            </div>
+          </div>
+
+          <!-- Corps de la carte avec avatar et nom -->
+          <div class="p-4 flex flex-col items-center text-center">
+            <div class="avatar-container mb-4 relative">
+              <div
+                class="avatar-glow absolute inset-0 rounded-full opacity-50"
+              ></div>
+              <img
+                v-if="user.avatarUrl"
+                :src="user.avatarUrl"
+                alt="Avatar"
+                class="w-24 h-24 rounded-full object-cover border-2 border-space-primary-light space-avatar-glow"
+                loading="lazy"
+                @error="handleImageError($event)"
+              />
+              <div
+                v-else
+                class="w-24 h-24 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary"
+              >
+                <span class="text-space-primary-light text-xl font-bold">{{
+                  getUserInitials(user.username)
+                }}</span>
               </div>
             </div>
 
-            <!-- Bouton de profil - aligné à droite sur desktop, centré sur mobile -->
-            <div class="mt-3 sm:mt-0 flex justify-center sm:justify-end">
+            <div class="mb-4">
               <router-link
                 v-if="getPlayerIdForUser(user)"
                 :to="{
                   name: 'Profil',
                   params: { id: getPlayerIdForUser(user) },
                 }"
-                class="space-view-profile-button"
+                class="text-lg text-space-text hover:text-space-primary-light font-heading transition-colors capitalize block"
               >
-                <SpaceButton variant="secondary" size="sm">
+                {{ user.username }}
+              </router-link>
+              <span v-else class="text-lg text-space-text font-heading block">
+                {{ user.username }}
+              </span>
+            </div>
+
+            <!-- Pied de carte avec action -->
+            <div class="mt-2">
+              <router-link
+                v-if="getPlayerIdForUser(user)"
+                :to="{
+                  name: 'Profil',
+                  params: { id: getPlayerIdForUser(user) },
+                }"
+                class="space-view-profile-button block"
+              >
+                <SpaceButton variant="secondary" size="sm" className="w-full">
                   Voir profil
                 </SpaceButton>
               </router-link>
               <span
                 v-else
-                class="text-space-text-muted font-mono text-sm flex items-center"
+                class="text-space-text-muted font-mono text-sm flex items-center justify-center p-2 border border-space-bg-light/20 rounded-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -265,7 +260,7 @@
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </div>
 
     <!-- Pagination -->
     <div class="mt-6">
@@ -277,12 +272,13 @@
         @page-select="currentPage = $event"
       />
     </div>
-  </div>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
+import SpaceContainer from "@/components/ui/layout/Container.vue";
 
 // Utilisation du store
 const memberStore = useMemberStore();
@@ -290,7 +286,7 @@ const memberStore = useMemberStore();
 // États pour la recherche et la pagination
 const searchTerm = ref("");
 const currentPage = ref(1);
-const itemsPerPage = 10;
+const itemsPerPage = 9; // Modifier pour 9 membres par page (3x3 grid)
 
 // Options de tri
 const sortOptions = [
@@ -416,43 +412,74 @@ watch(currentSort, () => {
 </script>
 
 <style scoped>
-.space-page-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-  position: relative;
+.members-grid-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .member-card {
-  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.member-card:hover {
+  box-shadow: 0 8px 30px rgba(109, 40, 217, 0.4);
+}
+
+.avatar-container {
+  position: relative;
+  z-index: 1;
 }
 
 .space-avatar-glow {
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.5);
   transition: all 0.3s ease;
 }
 
 .member-card:hover .space-avatar-glow {
-  box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.8);
+  box-shadow: 0 0 25px rgba(109, 40, 217, 0.8);
 }
 
 .space-avatar-fallback {
   border: 2px solid var(--space-primary);
 }
 
+.avatar-glow {
+  box-shadow: 0 0 30px rgba(109, 40, 217, 0.6);
+  animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.97);
+  }
+}
+
 .space-view-profile-button {
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 /* Animation de scan pour les membres */
 @keyframes scan-line {
   0% {
     top: 0%;
+    opacity: 1;
   }
   100% {
     top: 100%;
+    opacity: 0;
   }
 }
 
@@ -465,39 +492,35 @@ watch(currentSort, () => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    rgba(109, 40, 217, 0.8),
     transparent
   );
-  animation: scan-line 3s ease-out;
-  animation-iteration-count: 1;
+  top: 0;
+  animation: scan-line 2s linear infinite;
   opacity: 0;
   pointer-events: none;
 }
 
 .member-card:hover::after {
   opacity: 1;
-  animation-iteration-count: 1;
-  animation-play-state: running;
+}
+
+/* Effet de brillance sur hover */
+.shadow-glow {
+  box-shadow: 0 0 25px rgba(109, 40, 217, 0.5);
 }
 
 /* Style pour le filtre de tri */
 select {
-  background-color: var(--space-bg-light);
-  border: 1px solid rgba(var(--space-secondary-rgb), 0.3);
+  background-color: rgba(30, 30, 45, 0.8);
+  border: 1px solid rgba(109, 40, 217, 0.3);
   color: var(--space-text);
   transition: all 0.3s ease;
 }
 
 select:focus {
   border-color: var(--space-secondary);
-  box-shadow: 0 0 0 2px rgba(var(--space-secondary-rgb), 0.2);
-}
-
-/* Style NASA pour les étiquettes */
-label {
-  font-family: var(--font-nasa);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2);
 }
 
 /* Animation subtile pour les badges */
@@ -536,12 +559,9 @@ label {
 
 /* Responsive design */
 @media (max-width: 640px) {
-  .space-page-container {
-    padding: 0.5rem;
-  }
-
-  .member-card {
-    padding: 0.75rem;
+  .members-grid-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 }
 </style>

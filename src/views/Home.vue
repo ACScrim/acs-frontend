@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex items-center justify-center min-h-screen p-4 navbar-spacing overflow-hidden"
+    class="relative flex items-center justify-center min-h-screen p-4 pb-16 navbar-spacing overflow-hidden"
   >
     <!-- Grille spatiale en arrière-plan -->
     <div
@@ -29,7 +29,7 @@
       class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-space-accent-dark/10 to-space-accent/5 opacity-20 blur-xl pointer-events-none"
     ></div>
     <div
-      class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3"
+      class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3 animate-fade-in-up"
       :class="
         user
           ? 'grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6'
@@ -138,7 +138,10 @@
         </div>
       </div>
       <!-- Colonne de droite - Informations sur les tournois -->
-      <div v-if="user" class="flex flex-col space-y-4 lg:space-y-5">
+      <div
+        v-if="user"
+        class="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6"
+      >
         <!-- Prochain tournoi -->
         <SpaceCard
           variant="primary"
@@ -178,14 +181,16 @@
           <div v-if="isLoading">
             <SpaceLoader text="Chargement des données..." />
           </div>
-          <div v-else-if="nextTournament" class="space-y-4">
+          <div v-else-if="nextTournament" class="space-y-3">
             <TournamentCard :tournament="nextTournament" variant="primary">
               <template #content>
-                <div class="flex flex-wrap gap-y-2 gap-x-4">
-                  <div class="text-sm text-space-text flex items-center">
+                <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
+                  <div
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1 text-space-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -200,10 +205,12 @@
                     <span>{{ formatDate(nextTournament.date) }}</span>
                   </div>
 
-                  <div class="text-sm text-space-text flex items-center">
+                  <div
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1 text-space-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -303,8 +310,13 @@
               </div>
             </div>
             <!-- Timer animé -->
-            <SpaceCard variant="dark" className="mt-4">
-              <div class="text-xs text-space-text-muted mb-2 font-nasa">
+            <SpaceCard
+              variant="dark"
+              className="mt-3 py-1 px-2 max-w-xs mx-auto"
+            >
+              <div
+                class="text-2xs text-space-text-muted mb-1 font-nasa text-center"
+              >
                 Commence dans:
               </div>
               <CountdownTimer :units="countdownUnits" variant="primary" />
@@ -335,13 +347,12 @@
             </div>
           </div>
         </SpaceCard>
-
         <!-- Dernier tournoi terminé -->
         <SpaceCard
           variant="secondary"
           :stars="true"
           :decorated="true"
-          className="relative overflow-hidden"
+          className="relative overflow-hidden mb-8"
         >
           <template #header>
             <div class="flex items-center justify-between mb-2">
@@ -369,7 +380,7 @@
           <div v-if="isLoading">
             <SpaceLoader text="Chargement des résultats..." />
           </div>
-          <div v-else-if="lastFinishedTournament" class="space-y-4">
+          <div v-else-if="lastFinishedTournament" class="space-y-3">
             <TournamentCard
               :tournament="lastFinishedTournament"
               variant="secondary"
@@ -377,26 +388,7 @@
               <template #content>
                 <div
                   class="text-sm text-space-text-muted flex items-center mt-1"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 text-space-secondary-light"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span
-                    >Terminé le:
-                    {{ formatDate(lastFinishedTournament.date) }}</span
-                  >
-                </div>
+                ></div>
               </template>
             </TournamentCard>
 
@@ -513,12 +505,13 @@
                 </SpaceCard>
               </div>
             </div>
-
             <div class="flex justify-between items-center">
-              <div class="text-space-text-muted text-sm flex items-center">
+              <div
+                class="text-space-text-muted text-3xs xs:text-2xs sm:text-xs flex items-center"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1 text-space-secondary-light"
+                  class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -531,7 +524,7 @@
                   />
                 </svg>
                 <span
-                  >Terminé le:
+                  >Terminé le :
                   {{ formatDate(lastFinishedTournament.date) }}</span
                 >
               </div>
@@ -1181,6 +1174,22 @@ onUnmounted(() => {
   }
 }
 
+/* Animation de fondu vers le haut */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
 /* Style du bouton Discord */
 .space-discord-button {
   position: relative;
@@ -1251,6 +1260,24 @@ onUnmounted(() => {
 
 /* Styles pour l'image du jeu - DÉPLACÉ dans TournamentCard.vue */
 /* La classe game-image-container et game-image-glow sont maintenant dans TournamentCard.vue */
+
+/* Ajustements responsifs pour les cards de tournoi */
+@media (min-width: 768px) {
+  .space-y-5 {
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Sur les grands écrans, assurer que les deux cards tiennent sans scroll */
+  .space-y-6 > * {
+    margin-bottom: 0;
+  }
+
+  .space-y-6 > *:last-child {
+    margin-bottom: 1.5rem;
+  }
+}
 
 /* Style spécifique pour les badges de rang */
 .getRankBadgeVariant-0 {

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative">
+  <SpaceContainer>
     <!-- En-tête de la page -->
     <SpaceHeader
       title="PROPOSITIONS DE JEUX"
@@ -113,7 +113,7 @@
             <SpaceButton
               @click="showProposalForm = true"
               variant="accent"
-              className="w-full"
+              className="w-full hover:scale-105 transition-transform duration-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -171,20 +171,26 @@
         </div>
       </SpaceTerminal>
 
-      <!-- Liste des propositions -->
-      <div v-else class="space-y-4">
-        <game-proposal-card
+      <!-- Liste des propositions avec mise en page améliorée -->
+      <div v-else class="proposals-grid space-y-6">
+        <!-- Card pour chaque proposition avec effet de survol -->
+        <div
           v-for="proposal in paginatedProposals"
           :key="proposal._id"
-          :proposal="proposal"
-          :is-admin="isAdmin"
-          :is-authenticated="isAuthenticated"
-          :show-positive-only="onlyPositiveVotes"
-          @vote="handleVote"
-          @approve="approveProposal"
-          @reject="openRejectDialog"
-          @delete="confirmDelete"
-        />
+          class="proposal-card-wrapper transform transition-all duration-300 hover:scale-[1.01]"
+        >
+          <game-proposal-card
+            :proposal="proposal"
+            :is-admin="isAdmin"
+            :is-authenticated="isAuthenticated"
+            :show-positive-only="onlyPositiveVotes"
+            @vote="handleVote"
+            @approve="approveProposal"
+            @reject="openRejectDialog"
+            @delete="confirmDelete"
+            class="proposal-card"
+          />
+        </div>
 
         <!-- Pagination -->
         <div class="mt-8">
@@ -228,13 +234,13 @@
           <!-- Résultats de recherche -->
           <div
             v-if="searchResults.length > 0"
-            class="mt-2 border border-space-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-space-bg/80"
+            class="mt-2 border border-space-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-space-bg/80 custom-scrollbar"
           >
             <div
               v-for="game in searchResults"
               :key="game.id"
               @click="selectGame(game)"
-              class="p-3 flex items-center hover:bg-space-primary/10 cursor-pointer border-b border-space-primary/20 transition-all"
+              class="game-search-result p-3 flex items-center hover:bg-space-primary/10 cursor-pointer border-b border-space-primary/20 transition-all"
             >
               <div class="relative overflow-hidden rounded">
                 <img
@@ -276,7 +282,7 @@
           <textarea
             v-model="newProposal.description"
             rows="3"
-            class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+            class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300 custom-scrollbar"
           ></textarea>
         </div>
       </div>
@@ -290,6 +296,7 @@
             @click="submitProposal"
             :disabled="!isProposalValid || submitting"
             variant="primary"
+            className="min-w-[150px]"
           >
             <span
               v-if="submitting"
@@ -313,7 +320,7 @@
           v-model="rejectionReason"
           rows="3"
           placeholder="Expliquez pourquoi cette proposition ne convient pas..."
-          class="w-full rounded-lg border border-space-error/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-error/30 focus:outline-none transition-all duration-300"
+          class="w-full rounded-lg border border-space-error/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-error/30 focus:outline-none transition-all duration-300 custom-scrollbar"
         ></textarea>
       </div>
 
@@ -357,7 +364,7 @@
         </div>
       </template>
     </SpaceModal>
-  </div>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">
@@ -368,6 +375,7 @@ import rawgService from "../services/rawgService";
 import type { GameProposal, RawgGame } from "../types";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
+import SpaceContainer from "@/components/ui/layout/Container.vue";
 
 // ===================================
 // ÉTAT ET RÉFÉRENCES
@@ -818,12 +826,94 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.container {
-  min-height: calc(
-    100vh - 200px
-  ); /* Ajuster selon la hauteur de votre navbar + footer */
+/* Stylisation générale */
+.proposals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Stylisation des cartes de proposition */
+.proposal-card-wrapper {
   position: relative;
-  z-index: 20;
-  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.proposal-card-wrapper:hover {
+  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.2);
+  z-index: 2;
+}
+
+.proposal-card {
+  height: 100%;
+  backdrop-filter: blur(5px);
+}
+
+/* Animations */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(109, 40, 217, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+  }
+}
+
+.game-search-result {
+  position: relative;
+  overflow: hidden;
+}
+
+.game-search-result:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-primary),
+    transparent
+  );
+  animation: scanline 1s ease-out;
+}
+
+@keyframes scanline {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Scrollbar personnalisée */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 30, 45, 0.2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(109, 40, 217, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(109, 40, 217, 0.7);
 }
 </style>
