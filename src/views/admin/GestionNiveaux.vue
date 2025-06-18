@@ -1179,37 +1179,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.font-audiowide {
-  font-family: "Audiowide", cursive;
-}
-
-.font-orbitron {
-  font-family: "Orbitron", sans-serif;
-}
-
-/* Animation pour le bouton d'export */
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-}
-
 .avatar-container {
   position: relative;
-}
-
-.avatar-glow {
-  box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
-  transition: all 0.3s ease;
-}
-
-tr:hover .avatar-glow,
-div:hover .avatar-glow {
-  box-shadow: 0 0 15px rgba(34, 211, 238, 0.8);
 }
 
 [title] {

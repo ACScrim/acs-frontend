@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-8xl mx-auto">
       <!-- En-tête -->
       <SpaceHeader
         title="Gestion des Tournois"

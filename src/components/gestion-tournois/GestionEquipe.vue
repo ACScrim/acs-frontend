@@ -3,9 +3,12 @@
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
     <!-- En-tête -->
-    <h1 class="text-4xl text-white mb-8 text-center neon-text">
-      Gestion des Équipes
-    </h1>
+    <SpaceHeader
+      title="GESTION DES ÉQUIPES"
+      titleSize="3xl"
+      :showMissionInfo="true"
+      mission="EQUIPE-CREATION"
+    />
     <!-- Information du tournoi sélectionné -->
     <div
       class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"

@@ -1,7 +1,12 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\VoirCheckIn.vue -->
 <template>
   <div class="check-in-container">
-    <h1 class="cyber-title">Statut des Check-ins</h1>
+    <SpaceHeader
+      title="STATUT DES CHECK-INS "
+      titleSize="3xl"
+      :showMissionInfo="true"
+      mission="CHECKIN-STATUS"
+    />
 
     <!-- Information du tournoi sélectionné -->
     <div class="tournament-selection-info">
