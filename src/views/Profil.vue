@@ -180,10 +180,10 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-12 h-12 rounded-full object-cover border-2 border-space-secondary shadow-glow-secondary"
+                  class="w-12 h-12 rounded-full object-cover border-2 border-space-silver shadow-glow"
                 />
                 <SpaceBadge
-                  variant="secondary"
+                  variant="silver"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
@@ -192,7 +192,7 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-secondary-dark to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-secondary shadow-inner relative overflow-hidden podium-column podium-silver"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-silver to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-silver shadow-inner relative overflow-hidden podium-column podium-silver"
               >
                 <div
                   class="absolute inset-0 bg-space-secondary/50 scanline"
@@ -213,10 +213,10 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-14 h-14 rounded-full object-cover border-2 border-space-accent shadow-glow-accent"
+                  class="w-14 h-14 rounded-full object-cover border-2 border-space-gold shadow-glow"
                 />
                 <SpaceBadge
-                  variant="accent"
+                  variant="gold"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center animate-pulse font-bold"
@@ -225,7 +225,7 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-accent-dark to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-accent shadow-inner shadow-space-accent/20 relative overflow-hidden podium-column podium-gold"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-gold to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-gold shadow-inner shadow-space-gold/20 relative overflow-hidden podium-column podium-gold"
               >
                 <div class="absolute inset-0 bg-space-accent/50 scanline"></div>
                 <span
@@ -244,10 +244,10 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-10 h-10 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-space-bronze shadow-glow"
                 />
                 <SpaceBadge
-                  variant="primary"
+                  variant="bronze"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
@@ -256,13 +256,13 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-primary-dark to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-primary shadow-inner relative overflow-hidden podium-column podium-bronze"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-bronze to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
               >
                 <div
                   class="absolute inset-0 bg-space-primary/50 scanline"
                 ></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-white z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
                   >{{ medalCount.bronze }}</span
                 >
               </div>
@@ -278,26 +278,23 @@
         <div class="flex flex-wrap justify-center gap-4 mb-4">
           <!-- Or -->
           <SpaceCard
-            variant="accent"
+            variant="gold"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-accent-light text-lg font-nasa mb-1">
-              🥇 Or
-            </div>
+            <div class="text-space-gold text-lg font-nasa mb-1">🥇 Or</div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.gold }}
             </div>
             <div class="text-xs text-space-text-muted">victoires</div>
           </SpaceCard>
-
           <!-- Argent -->
           <SpaceCard
-            variant="secondary"
+            variant="silver"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-secondary-light text-lg font-nasa mb-1">
+            <div class="text-space-silver text-lg font-nasa mb-1">
               🥈 Argent
             </div>
             <div class="text-2xl font-bold text-white">
@@ -305,14 +302,13 @@
             </div>
             <div class="text-xs text-space-text-muted">2e places</div>
           </SpaceCard>
-
           <!-- Bronze -->
           <SpaceCard
-            variant="primary"
+            variant="bronze"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-primary-light text-lg font-nasa mb-1">
+            <div class="text-space-bronze text-lg font-nasa mb-1">
               🥉 Bronze
             </div>
             <div class="text-2xl font-bold text-white">
@@ -1672,11 +1668,11 @@ const getRankingBadgeVariant = (rank: number): string => {
 
   switch (rank) {
     case 1:
-      return "accent";
+      return "gold";
     case 2:
-      return "secondary";
+      return "silver";
     case 3:
-      return "primary";
+      return "bronze";
     default:
       return "outline";
   }
@@ -1885,37 +1881,37 @@ onMounted(() => {
 }
 
 .podium-gold {
-  box-shadow: 0 0 20px rgba(247, 37, 133, 0.3);
+  box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.4);
 }
 
 .podium-gold::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(247, 37, 133, 0.8) 0%,
+    rgba(var(--space-gold-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-silver {
-  box-shadow: 0 0 15px rgba(108, 99, 255, 0.3);
+  box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.4);
 }
 
 .podium-silver::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(108, 99, 255, 0.7) 0%,
+    rgba(var(--space-silver-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-bronze {
-  box-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+  box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.4);
 }
 
 .podium-bronze::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(76, 201, 240, 0.7) 0%,
+    rgba(var(--space-bronze-rgb), 0.7) 0%,
     transparent 70%
   );
 }

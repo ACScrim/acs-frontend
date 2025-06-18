@@ -28,7 +28,10 @@ interface Props {
     | "success"
     | "warning"
     | "error"
-    | "info";
+    | "info"
+    | "gold"
+    | "silver"
+    | "bronze";
   filled?: boolean;
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -51,6 +54,12 @@ const variantClasses = computed(() => {
         return "bg-space-secondary text-white border-space-secondary";
       case "accent":
         return "bg-space-accent text-white border-space-accent";
+      case "gold":
+        return "bg-space-gold text-black border-space-gold";
+      case "silver":
+        return "bg-space-silver text-black border-space-silver";
+      case "bronze":
+        return "bg-space-bronze text-black border-space-bronze";
       case "success":
         return "bg-success text-white border-success";
       case "warning":
@@ -70,6 +79,12 @@ const variantClasses = computed(() => {
         return "bg-space-secondary/20 text-space-secondary-light border-space-secondary-light/30";
       case "accent":
         return "bg-space-accent/20 text-space-accent-light border-space-accent-light/30";
+      case "gold":
+        return "bg-space-gold/20 text-space-gold border-space-gold/30";
+      case "silver":
+        return "bg-space-silver/20 text-space-silver border-space-silver/30";
+      case "bronze":
+        return "bg-space-bronze/20 text-space-bronze border-space-bronze/30";
       case "success":
         return "bg-success/20 text-success border-success/30";
       case "warning":
@@ -165,5 +180,47 @@ const variantClasses = computed(() => {
 .bg-info {
   background-color: var(--space-info);
   --r: var(--space-info-rgb);
+}
+.bg-space-gold {
+  background-color: var(--space-gold);
+  --r: var(--space-gold-rgb);
+}
+.bg-space-silver {
+  background-color: var(--space-silver);
+  --r: var(--space-silver-rgb);
+}
+.bg-space-bronze {
+  background-color: var(--space-bronze);
+  --r: var(--space-bronze-rgb);
+}
+
+.bg-space-gold\/20 {
+  background-color: rgba(var(--space-gold-rgb), 0.2);
+}
+.text-space-gold {
+  color: var(--space-gold);
+}
+.border-space-gold\/30 {
+  border-color: rgba(var(--space-gold-rgb), 0.3);
+}
+
+.bg-space-silver\/20 {
+  background-color: rgba(var(--space-silver-rgb), 0.2);
+}
+.text-space-silver {
+  color: var(--space-silver);
+}
+.border-space-silver\/30 {
+  border-color: rgba(var(--space-silver-rgb), 0.3);
+}
+
+.bg-space-bronze\/20 {
+  background-color: rgba(var(--space-bronze-rgb), 0.2);
+}
+.text-space-bronze {
+  color: var(--space-bronze);
+}
+.border-space-bronze\/30 {
+  border-color: rgba(var(--space-bronze-rgb), 0.3);
 }
 </style>

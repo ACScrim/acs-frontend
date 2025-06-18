@@ -100,7 +100,14 @@
 import { computed } from "vue";
 
 interface Props {
-  variant?: "primary" | "secondary" | "accent" | "dark";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "dark"
+    | "gold"
+    | "silver"
+    | "bronze";
   section?:
     | "profile"
     | "statistics"
@@ -146,6 +153,12 @@ const variantClasses = computed(() => {
       return "bg-space-bg-light border border-space-accent/30";
     case "dark":
       return "bg-space-bg border border-space-bg-light/30";
+    case "gold":
+      return "bg-space-bg-light border border-space-gold/30";
+    case "silver":
+      return "bg-space-bg-light border border-space-silver/30";
+    case "bronze":
+      return "bg-space-bg-light border border-space-bronze/30";
     default:
       return "bg-space-bg-light border border-space-primary/30";
   }
@@ -278,6 +291,18 @@ const elevationClasses = computed(() => {
 
 .space-card[data-variant="accent"] .space-card-decorations {
   color: var(--space-accent);
+}
+
+.space-card[data-variant="gold"] .space-card-decorations {
+  color: var(--space-gold);
+}
+
+.space-card[data-variant="silver"] .space-card-decorations {
+  color: var(--space-silver);
+}
+
+.space-card[data-variant="bronze"] .space-card-decorations {
+  color: var(--space-bronze);
 }
 
 .space-card-header {

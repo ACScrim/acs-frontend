@@ -77,7 +77,6 @@
               <div class="flex items-center gap-3">
                 <SpaceToggle
                   v-model="showFinished"
-                  @update:modelValue="toggleShowFinished"
                   className="bg-space-secondary/20"
                 />
                 <span class="text-space-text text-sm">
@@ -89,7 +88,6 @@
               <div class="flex items-center gap-3">
                 <SpaceToggle
                   v-model="sortAscending"
-                  @update:modelValue="toggleSortAscending"
                   className="bg-space-secondary/20"
                 />
                 <span class="text-space-text text-sm">
@@ -379,15 +377,6 @@ const itemsPerPage = ref<number>(6); // Nombre de tournois par page
 
 import tournamentService from "../services/tournamentService";
 const tournaments = ref<Tournament[]>([]);
-
-// Fonctions pour gérer les toggles explicitement
-const toggleShowFinished = () => {
-  showFinished.value = !showFinished.value;
-};
-
-const toggleSortAscending = () => {
-  sortAscending.value = !sortAscending.value;
-};
 
 //-------------------------------------------------------
 // SECTION: Store et propriétés calculées

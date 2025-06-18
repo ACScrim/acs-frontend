@@ -306,7 +306,7 @@
                 <td class="px-6 py-3 whitespace-nowrap">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-primary hover:text-space-primary-light font-heading transition-all duration-300 text-center text-lg"
+                    class="text-space-text hover:text-space-primary-light font-heading transition-all duration-300 text-center text-lg"
                   >
                     {{ ranking.username }}
                   </router-link>
@@ -629,11 +629,11 @@ const sortBy = (key: string) => {
 const getRankBadgeVariant = (index: number) => {
   switch (index) {
     case 0:
-      return "accent"; // 1er place (Or)
+      return "gold"; // 1er place (Or)
     case 1:
-      return "secondary"; // 2ème place (Argent)
+      return "silver"; // 2ème place (Argent)
     case 2:
-      return "primary"; // 3ème place (Bronze)
+      return "bronze"; // 3ème place (Bronze)
     default:
       return "primary";
   }

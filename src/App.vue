@@ -23,6 +23,34 @@
       <div class="planet-jupiter"></div>
       <div class="planet-rings"></div>
       <div class="planet-saturn"></div>
+
+      <!-- Nouvelles planètes plus grandes -->
+      <div class="planet-gas-giant"></div>
+      <div class="planet-ice"></div>
+
+      <!-- Astronaute et fusée -->
+      <div class="astronaut"></div>
+      <div class="rocket">
+        <div class="rocket-body"></div>
+        <div class="rocket-window"></div>
+        <div class="rocket-engine"></div>
+        <div class="rocket-flames"></div>
+      </div>
+
+      <!-- Voiture Rocket League -->
+      <div class="rocket-car">
+        <div class="rocket-car-body"></div>
+        <div class="rocket-car-roof"></div>
+        <div class="rocket-car-window"></div>
+        <div class="rocket-car-boost"></div>
+        <div class="rocket-car-wheels"></div>
+        <div class="rocket-car-wheels rocket-car-wheels-back"></div>
+      </div>
+
+      <!-- Étoiles filantes -->
+      <div class="shooting-star shooting-star-1"></div>
+      <div class="shooting-star shooting-star-2"></div>
+      <div class="shooting-star shooting-star-3"></div>
     </div>
 
     <!-- Fond vidéo pour le mode allégé -->
@@ -314,50 +342,329 @@ html {
   animation: planet-float 40s infinite ease-in-out reverse;
 }
 
-/* Animations */
-@keyframes stars-move-small {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
+/* Nouvelles planètes plus grandes */
+.planet-gas-giant {
+  position: absolute;
+  bottom: 25%;
+  right: 20%;
+  width: 180px;
+  height: 180px;
+  background-image: linear-gradient(to bottom right, #3b82f6, #1e40af, #0f172a);
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.4),
+    inset 0 0 40px rgba(17, 24, 39, 0.9);
+  z-index: 2;
+  animation: planet-float 80s infinite ease-in-out;
+  opacity: 0.7;
 }
 
-@keyframes stars-move-medium {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
+.planet-ice {
+  position: absolute;
+  top: 40%;
+  left: 15%;
+  width: 150px;
+  height: 150px;
+  background-image: linear-gradient(to bottom right, #67e8f9, #06b6d4, #0e7490);
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(103, 232, 249, 0.3),
+    inset 0 0 35px rgba(17, 24, 39, 0.8);
+  z-index: 2;
+  animation: planet-float 65s infinite ease-in-out reverse;
+  opacity: 0.8;
 }
 
-@keyframes stars-move-large {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
+/* Astronaute flottant */
+.astronaut {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 60px;
+  height: 70px;
+  background-image: radial-gradient(
+      circle at 60% 40%,
+      #f1f5f9 40%,
+      transparent 41%
+    ),
+    /* Visière */
+      linear-gradient(
+        to bottom,
+        #e2e8f0 55%,
+        #94a3b8 56%,
+        #94a3b8 75%,
+        #64748b 76%
+      ); /* Combinaison */
+  background-size: 60% 40%, 100% 100%;
+  background-position: center 25%, center;
+  background-repeat: no-repeat;
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 0 0 15px rgba(226, 232, 240, 0.4),
+    inset 0 0 10px rgba(17, 24, 39, 0.6);
+  z-index: 4;
+  animation: astronaut-float 15s ease-in-out infinite;
 }
 
-@keyframes nebula-drift {
-  0% {
-    transform: translate(-5%, -5%);
-  }
-  100% {
-    transform: translate(5%, 5%);
-  }
+.astronaut::before {
+  content: "";
+  position: absolute;
+  top: 60%;
+  left: -20%;
+  width: 35px;
+  height: 35px;
+  background: #94a3b8;
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(17, 24, 39, 0.6);
+  z-index: -1;
 }
 
-@keyframes planet-float {
+.astronaut::after {
+  content: "";
+  position: absolute;
+  top: 60%;
+  right: -20%;
+  width: 35px;
+  height: 35px;
+  background: #94a3b8;
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(17, 24, 39, 0.6);
+  z-index: -1;
+}
+
+/* Animation de l'astronaute */
+@keyframes astronaut-float {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(5deg);
+  }
+  25% {
+    transform: translateY(15px) rotate(-5deg);
   }
   50% {
-    transform: translateY(20px);
+    transform: translateY(0) rotate(5deg);
+  }
+  75% {
+    transform: translateY(-15px) rotate(-5deg);
+  }
+}
+
+/* Fusée */
+.rocket {
+  position: absolute;
+  bottom: 5%;
+  right: 15%;
+  width: 30px;
+  height: 120px;
+  z-index: 3;
+  transform: rotate(-15deg);
+  animation: rocket-launch 20s ease-in-out infinite;
+}
+
+.rocket-body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+  border-radius: 50% 50% 30% 30%;
+  box-shadow: 0 0 20px rgba(226, 232, 240, 0.4);
+}
+
+.rocket-window {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.rocket-engine {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 10px;
+  background: #475569;
+  border-radius: 0 0 10px 10px;
+}
+
+.rocket-flames {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    #f97316,
+    #fb923c,
+    #fdba74,
+    transparent
+  );
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.8;
+  animation: rocket-flames 0.2s ease-in-out infinite alternate;
+}
+
+/* Animation de la fusée */
+@keyframes rocket-launch {
+  0% {
+    transform: rotate(-15deg) translateY(100px) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    transform: rotate(-15deg) translateY(0) scale(0.8);
+    opacity: 1;
+  }
+  25%,
+  75% {
+    transform: rotate(-15deg) translateY(0) scale(1);
+  }
+  90% {
+    transform: rotate(-15deg) translateY(-200px) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-15deg) translateY(-300px) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes rocket-flames {
+  0% {
+    height: 30px;
+    opacity: 0.7;
+  }
+  100% {
+    height: 40px;
+    opacity: 0.9;
+  }
+}
+
+/* Voiture Rocket League */
+.rocket-car {
+  position: absolute;
+  top: 60%;
+  left: 65%;
+  width: 100px;
+  height: 40px;
+  z-index: 4;
+  transform: rotate(10deg);
+  animation: rocket-car-float 12s ease-in-out infinite;
+}
+
+.rocket-car-body {
+  position: absolute;
+  width: 100%;
+  height: 55%;
+  bottom: 30%;
+  background: linear-gradient(to right, #ef4444, #dc2626);
+  border-radius: 10px 20px 2px 2px;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+.rocket-car-roof {
+  position: absolute;
+  width: 60%;
+  height: 30%;
+  top: 0;
+  left: 10%;
+  background: #1e293b;
+  border-radius: 10px 15px 0 0;
+  border-top: 2px solid #475569;
+}
+
+.rocket-car-window {
+  position: absolute;
+  width: 30%;
+  height: 25%;
+  top: 20%;
+  left: 25%;
+  background: #0ea5e9;
+  border-radius: 2px;
+  box-shadow: 0 0 5px rgba(14, 165, 233, 0.6);
+}
+
+.rocket-car-boost {
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  bottom: 35%;
+  left: -20px;
+  background: linear-gradient(to left, #f97316, #fdba74, transparent);
+  border-radius: 50%;
+  filter: blur(3px);
+  opacity: 0.8;
+  animation: rocket-car-boost 0.2s ease-in-out infinite alternate;
+}
+
+.rocket-car-wheels {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 5%;
+  left: 15%;
+  background: #0f172a;
+  border-radius: 50%;
+  border: 3px solid #64748b;
+  box-shadow: 0 0 5px rgba(100, 116, 139, 0.8);
+  animation: rocket-car-wheels 1s linear infinite;
+}
+
+.rocket-car-wheels-back {
+  left: auto;
+  right: 15%;
+}
+
+/* Animations pour la voiture Rocket League */
+@keyframes rocket-car-float {
+  0% {
+    transform: rotate(10deg) translateY(0) translateX(0);
+  }
+  15% {
+    transform: rotate(-5deg) translateY(30px) translateX(80px);
+  }
+  30% {
+    transform: rotate(10deg) translateY(-20px) translateX(160px);
+  }
+  45% {
+    transform: rotate(-5deg) translateY(15px) translateX(80px);
+  }
+  60% {
+    transform: rotate(10deg) translateY(-15px) translateX(0);
+  }
+  75% {
+    transform: rotate(-5deg) translateY(20px) translateX(-80px);
+  }
+  90% {
+    transform: rotate(10deg) translateY(-30px) translateX(-40px);
+  }
+  100% {
+    transform: rotate(10deg) translateY(0) translateX(0);
+  }
+}
+
+@keyframes rocket-car-boost {
+  0% {
+    width: 25px;
+    opacity: 0.6;
+  }
+  100% {
+    width: 35px;
+    opacity: 0.8;
+  }
+}
+
+@keyframes rocket-car-wheels {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
@@ -378,6 +685,77 @@ html {
   .planet-saturn {
     width: 50px;
     height: 50px;
+  }
+
+  /* Ajustements responsive pour les nouvelles planètes */
+  .planet-gas-giant {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    right: 15%;
+  }
+
+  .planet-ice {
+    width: 80px;
+    height: 80px;
+    top: 35%;
+    left: 10%;
+  }
+
+  .shooting-star {
+    width: 100px;
+  }
+
+  /* Ajustements responsive pour l'astronaute et la fusée */
+  .astronaut {
+    width: 40px;
+    height: 50px;
+    left: 15%;
+  }
+
+  .astronaut::before,
+  .astronaut::after {
+    width: 25px;
+    height: 25px;
+  }
+
+  .rocket {
+    width: 20px;
+    height: 80px;
+    right: 10%;
+  }
+
+  .rocket-window {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Ajustements responsive pour la voiture Rocket League */
+  .rocket-car {
+    width: 40px;
+    height: 80px;
+    right: 5%;
+  }
+
+  .rocket-car-body {
+    height: 50%;
+  }
+
+  .rocket-car-roof {
+    height: 30%;
+  }
+
+  .rocket-car-window {
+    height: 40%;
+  }
+
+  .rocket-car-boost {
+    height: 8px;
+  }
+
+  .rocket-car-wheels {
+    width: 8px;
+    height: 8px;
   }
 }
 </style>

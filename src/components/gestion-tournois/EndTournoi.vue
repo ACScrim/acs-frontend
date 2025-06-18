@@ -600,11 +600,11 @@ const getRankingBorderClass = (
 ): string => {
   switch (rank) {
     case 1:
-      return `border-yellow-400 shadow-yellow-400/20 ${opacityClass}`;
+      return `border-space-gold shadow-space-gold/20 ${opacityClass}`;
     case 2:
-      return `border-gray-300 shadow-gray-300/20 ${opacityClass}`;
+      return `border-space-silver shadow-space-silver/20 ${opacityClass}`;
     case 3:
-      return `border-amber-600 shadow-amber-600/20 ${opacityClass}`;
+      return `border-space-bronze shadow-space-bronze/20 ${opacityClass}`;
     case 4:
       return `border-blue-500 shadow-blue-500/20 ${opacityClass}`;
     case 0:
@@ -617,11 +617,11 @@ const getRankingBorderClass = (
 const getRankingBorderBottomClass = (rank: number): string => {
   switch (rank) {
     case 1:
-      return "border-yellow-400";
+      return "border-space-gold";
     case 2:
-      return "border-gray-300";
+      return "border-space-silver";
     case 3:
-      return "border-amber-600";
+      return "border-space-bronze";
     case 4:
       return "border-blue-500";
     case 0:
@@ -634,11 +634,11 @@ const getRankingBorderBottomClass = (rank: number): string => {
 const getRankingTextClass = (rank: number): string => {
   switch (rank) {
     case 1:
-      return "text-yellow-400";
+      return "text-space-gold";
     case 2:
-      return "text-gray-300";
+      return "text-space-silver";
     case 3:
-      return "text-amber-600";
+      return "text-space-bronze";
     case 4:
       return "text-blue-500";
     case 0:

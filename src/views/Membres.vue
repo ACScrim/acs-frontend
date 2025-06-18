@@ -154,12 +154,16 @@
     <!-- Liste des membres -->
     <div v-else class="members-grid-container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Carte de membre améliorée -->
-        <div
-          v-for="user in paginatedUsers"
-          :key="user._id"
-          class="member-card bg-space-bg-dark/80 backdrop-blur-sm rounded-xl overflow-hidden border border-space-primary/20 hover:border-space-primary/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-glow"
-        >
+        <!-- Carte de membre améliorée -->          <div
+            v-for="user in paginatedUsers"
+            :key="user._id"
+            class="member-card bg-space-bg-dark/80 backdrop-blur-sm rounded-xl overflow-hidden border border-space-primary/20 hover:border-space-primary/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-glow"
+            :class="[
+              user.role === 'admin' ? 'member-card-admin' : '',
+              user.role === 'superadmin' ? 'member-card-superadmin' : '',
+              getPlayerIdForUser(user) ? 'member-card-player' : ''
+            ]"
+          >
           <!-- En-tête de la carte avec le statut de l'utilisateur -->
           <div
             class="member-card-header p-3 flex justify-between items-center border-b border-space-primary/10"
@@ -185,16 +189,25 @@
           </div>
 
           <!-- Corps de la carte avec avatar et nom -->
-          <div class="p-4 flex flex-col items-center text-center">
-            <div class="avatar-container mb-4 relative">
+          <div class="p-4 flex flex-col items-center text-center">            <div class="avatar-container mb-4 relative">
               <div
                 class="avatar-glow absolute inset-0 rounded-full opacity-50"
+                :class="[
+                  user.role === 'admin' ? 'avatar-glow-admin' : '',
+                  user.role === 'superadmin' ? 'avatar-glow-superadmin' : '',
+                  getPlayerIdForUser(user) ? 'avatar-glow-player' : ''
+                ]"
               ></div>
               <img
                 v-if="user.avatarUrl"
                 :src="user.avatarUrl"
                 alt="Avatar"
                 class="w-24 h-24 rounded-full object-cover border-2 border-space-primary-light space-avatar-glow"
+                :class="[
+                  user.role === 'admin' ? 'border-space-secondary-light' : '',
+                  user.role === 'superadmin' ? 'border-space-accent-light' : '',
+                  getPlayerIdForUser(user) ? 'avatar-has-profile' : ''
+                ]"
                 loading="lazy"
                 @error="handleImageError($event)"
               />
@@ -421,10 +434,13 @@ watch(currentSort, () => {
   position: relative;
   height: 100%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: linear-gradient(135deg, rgba(30, 30, 45, 0.85), rgba(20, 20, 35, 0.95));
 }
 
 .member-card:hover {
-  box-shadow: 0 8px 30px rgba(109, 40, 217, 0.4);
+  box-shadow: 0 8px 30px rgba(109, 40, 217, 0.6);
+  transform: translateY(-5px);
 }
 
 .avatar-container {
@@ -496,7 +512,7 @@ watch(currentSort, () => {
     transparent
   );
   top: 0;
-  animation: scan-line 2s linear infinite;
+  animation: scan-line 3s linear infinite;
   opacity: 0;
   pointer-events: none;
 }
@@ -549,12 +565,179 @@ select:focus {
   0% {
     left: -100%;
   }
+  20%, 100% {
+    left: 100%;
+  }
+}
+
+/* Styles améliorés pour les différents types de cartes de membre */
+.member-card-admin {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(28, 36, 54, 0.95));
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+  border-left: 4px solid var(--space-secondary) !important;
+  box-shadow: 0 5px 20px rgba(99, 102, 241, 0.2) !important;
+}
+
+.member-card-superadmin {
+  background: linear-gradient(135deg, rgba(36, 14, 40, 0.85), rgba(34, 13, 38, 0.95));
+  border: 1px solid rgba(236, 72, 153, 0.3) !important;
+  border-left: 4px solid var(--space-accent) !important;
+  box-shadow: 0 5px 20px rgba(236, 72, 153, 0.2) !important;
+}
+
+.member-card-player {
+  background: linear-gradient(135deg, rgba(25, 17, 45, 0.85), rgba(23, 15, 41, 0.95));
+  border: 1px solid rgba(109, 40, 217, 0.3) !important;
+  border-left: 4px solid var(--space-primary) !important;
+}
+
+.member-card-admin:hover {
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4) !important;
+  background: linear-gradient(135deg, rgba(33, 44, 63, 0.85), rgba(30, 39, 59, 0.95));
+}
+
+.member-card-superadmin:hover {
+  box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4) !important;
+  background: linear-gradient(135deg, rgba(39, 17, 44, 0.85), rgba(37, 16, 42, 0.95));
+}
+
+.member-card-player:hover {
+  box-shadow: 0 8px 30px rgba(109, 40, 217, 0.5) !important;
+  background: linear-gradient(135deg, rgba(28, 20, 48, 0.85), rgba(26, 18, 44, 0.95));
+}
+
+/* Styles pour les avatars selon le rôle */
+.avatar-glow-admin {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.6) !important;
+  animation: pulse-admin 3s infinite !important;
+}
+
+.avatar-glow-superadmin {
+  box-shadow: 0 0 30px rgba(236, 72, 153, 0.6) !important;
+  animation: pulse-superadmin 3s infinite !important;
+}
+
+.avatar-glow-player {
+  box-shadow: 0 0 30px rgba(109, 40, 217, 0.6) !important;
+  animation: pulse-player 3s infinite !important;
+}
+
+.avatar-has-profile {
+  border-width: 3px !important;
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.7);
+}
+
+/* Animations améliorées pour les avatars */
+@keyframes pulse-admin {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.97);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.4);
+  }
   50% {
-    left: 100%;
+    opacity: 0.7;
+    transform: scale(1.03);
+    box-shadow: 0 0 35px rgba(99, 102, 241, 0.7);
   }
-  100% {
-    left: 100%;
+}
+
+@keyframes pulse-superadmin {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.97);
+    box-shadow: 0 0 25px rgba(236, 72, 153, 0.4);
   }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.03);
+    box-shadow: 0 0 35px rgba(236, 72, 153, 0.7);
+  }
+}
+
+@keyframes pulse-player {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.97);
+    box-shadow: 0 0 25px rgba(109, 40, 217, 0.4);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.03);
+    box-shadow: 0 0 35px rgba(109, 40, 217, 0.7);
+  }
+}
+
+/* Effet de couleur de fond amélioré */
+.member-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 10%, rgba(109, 40, 217, 0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.member-card:hover::before {
+  opacity: 1;
+}
+
+.member-card-admin::before {
+  background: radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.15), transparent 70%);
+}
+
+.member-card-superadmin::before {
+  background: radial-gradient(circle at 50% 10%, rgba(236, 72, 153, 0.15), transparent 70%);
+}
+
+/* Ajouter un effet de bordure scintillante pour les différents types de membres */
+.member-card-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.member-card-header::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--space-primary), transparent);
+  opacity: 0.7;
+}
+
+.member-card-admin .member-card-header::after {
+  background: linear-gradient(90deg, transparent, var(--space-secondary), transparent);
+}
+
+.member-card-superadmin .member-card-header::after {
+  background: linear-gradient(90deg, transparent, var(--space-accent), transparent);
+}
+
+/* Ajouter un effet de particules/étoiles pour les membres superadmin */
+.member-card-superadmin {
+  position: relative;
+  overflow: hidden;
+}
+
+.member-card-superadmin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 30% 60%, rgba(236, 72, 153, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 50% 40%, rgba(236, 72, 153, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 70% 90%, rgba(236, 72, 153, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.15) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 0;
+  opacity: 0.5;
 }
 
 /* Responsive design */

@@ -55,9 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-
-const props = defineProps({
+defineProps({
   modelValue: {
     type: [String, Number],
     default: "",

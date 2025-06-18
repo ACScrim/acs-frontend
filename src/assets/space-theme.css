@@ -45,6 +45,14 @@
   --space-card-border: rgba(76, 201, 240, 0.3);
   --space-card-shadow: rgba(76, 201, 240, 0.2);
 
+  /* Couleurs pour les classements */
+  --space-gold: #ffd700;
+  --space-gold-rgb: 255, 215, 0;
+  --space-silver: #c0c0c0;
+  --space-silver-rgb: 192, 192, 192;
+  --space-bronze: #cd7f32;
+  --space-bronze-rgb: 205, 127, 50;
+
   /* Couleurs des planètes et orbites */
   --space-orbit-border: rgba(255, 255, 255, 0.2);
   --space-planet1-start: #ff6b6b;
@@ -157,6 +165,37 @@
 }
 .bg-space-bg-dark {
   background-color: var(--space-bg-dark);
+}
+
+/* Classes pour les classements */
+.bg-space-gold {
+  background-color: var(--space-gold);
+}
+.bg-space-silver {
+  background-color: var(--space-silver);
+}
+.bg-space-bronze {
+  background-color: var(--space-bronze);
+}
+
+.text-space-gold {
+  color: var(--space-gold);
+}
+.text-space-silver {
+  color: var(--space-silver);
+}
+.text-space-bronze {
+  color: var(--space-bronze);
+}
+
+.border-space-gold {
+  border-color: var(--space-gold);
+}
+.border-space-silver {
+  border-color: var(--space-silver);
+}
+.border-space-bronze {
+  border-color: var(--space-bronze);
 }
 
 /* Classes pour les textes */
@@ -538,4 +577,112 @@ textarea:focus {
 
 .uppercase-nasa {
   text-transform: uppercase;
+}
+
+/* Boutons pour les classements */
+.cyberpunk-btn-gold {
+  background: linear-gradient(135deg, var(--space-gold), var(--space-accent));
+  color: #000;
+  border: 1px solid var(--space-gold);
+  box-shadow: 0 0 10px rgba(var(--space-gold-rgb), 0.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-gold:hover {
+  box-shadow: 0 0 15px rgba(var(--space-gold-rgb), 0.7);
+}
+
+.cyberpunk-btn-gold::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+.cyberpunk-btn-silver {
+  background: linear-gradient(
+    135deg,
+    var(--space-silver),
+    var(--space-secondary)
+  );
+  color: #000;
+  border: 1px solid var(--space-silver);
+  box-shadow: 0 0 10px rgba(var(--space-silver-rgb), 0.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-silver:hover {
+  box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.7);
+}
+
+.cyberpunk-btn-silver::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite 0.5s;
+}
+
+.cyberpunk-btn-bronze {
+  background: linear-gradient(
+    135deg,
+    var(--space-bronze),
+    var(--space-primary)
+  );
+  color: #000;
+  border: 1px solid var(--space-bronze);
+  box-shadow: 0 0 10px rgba(var(--space-bronze-rgb), 0.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberpunk-btn-bronze:hover {
+  box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.7);
+}
+
+.cyberpunk-btn-bronze::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite 1s;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }

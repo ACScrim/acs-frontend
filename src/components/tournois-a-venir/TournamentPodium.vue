@@ -79,9 +79,9 @@
           <div>
             <h4
               v-if="getTeamsByRank(2).length > 0"
-              class="text-base font-heading text-space-secondary mb-2 text-center"
+              class="text-base font-heading text-space-silver mb-2 text-center"
             >
-              <SpaceBadge variant="secondary" size="md" className="mr-2"
+              <SpaceBadge variant="silver" size="md" className="mr-2"
                 >🥈</SpaceBadge
               >
               {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
@@ -128,9 +128,9 @@
           <div>
             <h4
               v-if="getTeamsByRank(1).length > 0"
-              class="text-lg font-heading text-space-accent mb-2 text-center"
+              class="text-lg font-heading text-space-gold mb-2 text-center"
             >
-              <SpaceBadge variant="accent" size="md" className="mr-2"
+              <SpaceBadge variant="gold" size="md" className="mr-2"
                 >🏆</SpaceBadge
               >
               {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
@@ -177,9 +177,9 @@
           <div>
             <h4
               v-if="getTeamsByRank(3).length > 0"
-              class="text-base font-heading text-space-primary mb-2 text-center"
+              class="text-base font-heading text-space-bronze mb-2 text-center"
             >
-              <SpaceBadge variant="primary" size="md" className="mr-2"
+              <SpaceBadge variant="bronze" size="md" className="mr-2"
                 >🥉</SpaceBadge
               >
               {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
@@ -225,8 +225,8 @@
 
         <!-- Version mobile du podium (cartes en liste) -->
         <div class="block md:hidden col-span-3 mt-4">
-          <h4 class="text-center text-lg font-heading text-space-accent mb-4">
-            <SpaceBadge variant="accent" size="md" className="mr-2"
+          <h4 class="text-center text-lg font-heading text-space-gold mb-4">
+            <SpaceBadge variant="gold" size="md" className="mr-2"
               >🏆</SpaceBadge
             >
             Podium
@@ -234,9 +234,7 @@
 
           <!-- Or (1er) -->
           <div v-if="getTeamsByRank(1).length > 0" class="mb-6">
-            <h5
-              class="text-center text-base font-heading text-space-accent mb-2"
-            >
+            <h5 class="text-center text-base font-heading text-space-gold mb-2">
               <span class="text-2xl mr-2">🥇</span>
               {{
                 getTeamsByRank(1).length > 1
@@ -285,7 +283,7 @@
           <!-- Argent (2e) -->
           <div v-if="getTeamsByRank(2).length > 0" class="mb-6">
             <h5
-              class="text-center text-base font-heading text-space-secondary mb-2"
+              class="text-center text-base font-heading text-space-silver mb-2"
             >
               <span class="text-xl mr-2">🥈</span>
               {{
@@ -335,7 +333,7 @@
           <!-- Bronze (3e) -->
           <div v-if="getTeamsByRank(3).length > 0" class="mb-4">
             <h5
-              class="text-center text-base font-heading text-space-primary mb-2"
+              class="text-center text-base font-heading text-space-bronze mb-2"
             >
               <span class="text-lg mr-2">🥉</span>
               {{
@@ -668,10 +666,10 @@ const handleToggleOtherRankings = () => {
 .podium-gold {
   background: linear-gradient(
     to bottom,
-    var(--space-accent-light),
+    var(--space-gold),
     var(--space-accent)
   );
-  box-shadow: 0 0 20px rgba(var(--space-accent-rgb), 0.5);
+  box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.5);
   position: relative;
   overflow: hidden;
 }
@@ -695,10 +693,10 @@ const handleToggleOtherRankings = () => {
 .podium-silver {
   background: linear-gradient(
     to bottom,
-    var(--space-secondary-light),
+    var(--space-silver),
     var(--space-secondary)
   );
-  box-shadow: 0 0 15px rgba(var(--space-secondary-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.5);
   position: relative;
   overflow: hidden;
 }
@@ -722,10 +720,10 @@ const handleToggleOtherRankings = () => {
 .podium-bronze {
   background: linear-gradient(
     to bottom,
-    var(--space-primary-light),
+    var(--space-bronze),
     var(--space-primary)
   );
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.5);
   position: relative;
   overflow: hidden;
 }
@@ -749,30 +747,30 @@ const handleToggleOtherRankings = () => {
 .gold-medal {
   background: radial-gradient(
     circle at 30% 30%,
-    var(--space-accent-light),
+    var(--space-gold),
     var(--space-accent)
   );
-  box-shadow: 0 0 30px rgba(var(--space-accent-rgb), 0.6);
+  box-shadow: 0 0 30px rgba(var(--space-gold-rgb), 0.6);
   animation: pulse-gold 2s infinite;
 }
 
 .silver-medal {
   background: radial-gradient(
     circle at 30% 30%,
-    var(--space-secondary-light),
+    var(--space-silver),
     var(--space-secondary)
   );
-  box-shadow: 0 0 20px rgba(var(--space-secondary-rgb), 0.5);
+  box-shadow: 0 0 20px rgba(var(--space-silver-rgb), 0.5);
   animation: pulse-silver 2s infinite;
 }
 
 .bronze-medal {
   background: radial-gradient(
     circle at 30% 30%,
-    var(--space-primary-light),
+    var(--space-bronze),
     var(--space-primary)
   );
-  box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.5);
+  box-shadow: 0 0 20px rgba(var(--space-bronze-rgb), 0.5);
   animation: pulse-bronze 2s infinite;
 }
 
@@ -790,30 +788,30 @@ const handleToggleOtherRankings = () => {
 @keyframes pulse-gold {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(var(--space-accent-rgb), 0.6);
+    box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.6);
   }
   50% {
-    box-shadow: 0 0 30px rgba(var(--space-accent-rgb), 0.8);
+    box-shadow: 0 0 30px rgba(var(--space-gold-rgb), 0.8);
   }
 }
 
 @keyframes pulse-silver {
   0%,
   100% {
-    box-shadow: 0 0 15px rgba(var(--space-secondary-rgb), 0.5);
+    box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.5);
   }
   50% {
-    box-shadow: 0 0 25px rgba(var(--space-secondary-rgb), 0.7);
+    box-shadow: 0 0 25px rgba(var(--space-silver-rgb), 0.7);
   }
 }
 
 @keyframes pulse-bronze {
   0%,
   100% {
-    box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.4);
+    box-shadow: 0 0 10px rgba(var(--space-bronze-rgb), 0.4);
   }
   50% {
-    box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.6);
+    box-shadow: 0 0 20px rgba(var(--space-bronze-rgb), 0.6);
   }
 }
 </style>
