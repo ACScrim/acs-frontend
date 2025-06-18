@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex items-center justify-center min-h-screen p-4 overflow-hidden"
+    class="relative flex items-center justify-center min-h-screen p-4 navbar-spacing overflow-hidden"
   >
     <!-- Grille spatiale en arrière-plan -->
     <div
@@ -28,11 +28,12 @@
     <div
       class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-space-accent-dark/10 to-space-accent/5 opacity-20 blur-xl pointer-events-none"
     ></div>
-
     <div
-      class="w-full max-w-6xl z-10 px-4"
+      class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3"
       :class="
-        user ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' : 'flex justify-center'
+        user
+          ? 'grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6'
+          : 'flex justify-center'
       "
     >
       <!-- Colonne de gauche - Contenu principal -->
@@ -41,7 +42,7 @@
         :class="!user ? 'max-w-md' : ''"
       >
         <!-- Titre principal avec effet spatial -->
-        <div class="title-container relative mb-10">
+        <div class="title-container relative mb-3 sm:mb-4 mt-0">
           <div class="title-bg"></div>
           <h1
             class="title-text font-nasa text-center leading-tight relative z-10"
@@ -49,15 +50,16 @@
             ALORS, <br />ÇA SCRIM ?
           </h1>
         </div>
-
         <!-- Logo -->
-        <div class="relative my-8 flex items-center justify-center group">
+        <div
+          class="relative my-4 sm:my-6 flex items-center justify-center group"
+        >
           <div
             class="absolute inset-0 rounded-full bg-space-primary/10 filter blur-xl group-hover:bg-space-primary/20 transition-all duration-500 opacity-70"
           ></div>
           <img
             src="../assets/logo.svg"
-            class="h-48 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
+            class="h-36 sm:h-40 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
             alt="Logo"
           />
         </div>
@@ -68,7 +70,7 @@
           @click="loginWithDiscord"
           variant="primary"
           size="lg"
-          className="mt-8 space-discord-button"
+          className="mt-4 sm:mt-6 space-discord-button"
         >
           <template #icon>
             <svg
@@ -84,33 +86,59 @@
           </template>
           Connexion via Discord
         </SpaceButton>
-
-        <!-- Badge de bienvenue -->
-        <SpaceCard
+        <!-- Badge de bienvenue stylisé différemment -->
+        <div
           v-else
-          variant="secondary"
-          className="mt-8 max-w-sm border-space-secondary-light/50 animate-float-subtle"
+          class="mt-4 sm:mt-6 max-w-sm p-3 rounded-lg border-2 border-space-secondary/70 bg-gradient-to-br from-space-bg-light/80 to-space-bg/90 backdrop-blur-md shadow-lg shadow-space-secondary/20 animate-float-subtle relative overflow-hidden"
         >
-          <div class="flex items-center justify-center p-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-secondary-light"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <p class="capitalize font-nasa">Bienvenue, {{ user.username }}!</p>
-          </div>
-        </SpaceCard>
-      </div>
+          <!-- Effet de brillance -->
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+          ></div>
 
+          <!-- Cercle décoratif -->
+          <div
+            class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-space-secondary/10 blur-xl"
+          ></div>
+
+          <!-- Contenu -->
+          <div class="flex items-center justify-center p-1 relative z-10">
+            <div
+              class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-space-secondary/20 border border-space-secondary/50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-space-secondary-light"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <div>
+              <p
+                class="capitalize font-nasa text-lg text-space-secondary-light"
+              >
+                Bienvenue, {{ user.username }}!
+              </p>
+              <p class="text-xs text-space-text-muted mt-1">
+                Prêt à participer au prochain tournoi?
+              </p>
+            </div>
+          </div>
+
+          <!-- Ligne décorative -->
+          <div
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-space-secondary/50 to-transparent"
+          ></div>
+        </div>
+      </div>
       <!-- Colonne de droite - Informations sur les tournois -->
-      <div v-if="user" class="flex flex-col space-y-6">
+      <div v-if="user" class="flex flex-col space-y-4 lg:space-y-5">
         <!-- Prochain tournoi -->
         <SpaceCard
           variant="primary"
@@ -150,52 +178,9 @@
           <div v-if="isLoading">
             <SpaceLoader text="Chargement des données..." />
           </div>
-
           <div v-else-if="nextTournament" class="space-y-4">
-            <div class="flex gap-4">
-              <!-- Image du jeu -->
-              <div class="game-image-container">
-                <img
-                  v-if="nextTournament.game && nextTournament.game.imageUrl"
-                  :src="nextTournament.game.imageUrl"
-                  :alt="nextTournament.game.name"
-                  class="w-16 h-16 rounded-lg object-cover border-2 border-space-primary/30"
-                />
-                <div
-                  v-else
-                  class="w-16 h-16 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-primary/30"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-space-primary-light"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div class="game-image-glow"></div>
-              </div>
-
-              <!-- Informations du tournoi -->
-              <div class="flex-1">
-                <h3
-                  class="text-xl font-nasa text-space-primary-light mb-1 truncate"
-                >
-                  {{ nextTournament.name }}
-                </h3>
+            <TournamentCard :tournament="nextTournament" variant="primary">
+              <template #content>
                 <div class="flex flex-wrap gap-y-2 gap-x-4">
                   <div class="text-sm text-space-text flex items-center">
                     <svg
@@ -233,8 +218,8 @@
                     <span>{{ formatTime(nextTournament.date) }}</span>
                   </div>
                 </div>
-              </div>
-            </div>
+              </template>
+            </TournamentCard>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -317,30 +302,12 @@
                 </router-link>
               </div>
             </div>
-
             <!-- Timer animé -->
             <SpaceCard variant="dark" className="mt-4">
               <div class="text-xs text-space-text-muted mb-2 font-nasa">
                 Commence dans:
               </div>
-              <div class="countdown-timer grid grid-cols-4 gap-2 text-center">
-                <div
-                  v-for="(unit, i) in countdownUnits"
-                  :key="i"
-                  class="bg-space-bg-light/50 p-2 rounded-lg border border-space-primary/30 relative overflow-hidden"
-                >
-                  <div
-                    class="absolute inset-0 bg-space-primary/5 pulse-animation"
-                  ></div>
-                  <span
-                    class="text-lg font-bold text-space-primary-light font-mono block"
-                    >{{ unit.value }}</span
-                  >
-                  <span class="text-xs text-space-text-muted block">{{
-                    unit.label
-                  }}</span>
-                </div>
-              </div>
+              <CountdownTimer :units="countdownUnits" variant="primary" />
             </SpaceCard>
           </div>
 
@@ -402,13 +369,36 @@
           <div v-if="isLoading">
             <SpaceLoader text="Chargement des résultats..." />
           </div>
-
           <div v-else-if="lastFinishedTournament" class="space-y-4">
-            <h3
-              class="text-xl font-nasa text-space-secondary-light mb-2 truncate"
+            <TournamentCard
+              :tournament="lastFinishedTournament"
+              variant="secondary"
             >
-              {{ lastFinishedTournament.name }}
-            </h3>
+              <template #content>
+                <div
+                  class="text-sm text-space-text-muted flex items-center mt-1"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1 text-space-secondary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span
+                    >Terminé le:
+                    {{ formatDate(lastFinishedTournament.date) }}</span
+                  >
+                </div>
+              </template>
+            </TournamentCard>
 
             <!-- Podium -->
             <div class="space-y-3">
@@ -418,22 +408,72 @@
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
                   variant="dark"
-                  className="border-space-accent/40 hover:border-space-accent/60 transition-all duration-300"
+                  :className="`border-space-accent/40 hover:border-space-accent/60 transition-all duration-300 ${
+                    index === 0
+                      ? 'border-2 border-amber-500/70 bg-gradient-to-r from-amber-900/10 to-amber-700/5'
+                      : ''
+                  }`"
                 >
                   <div class="flex items-center">
                     <div
-                      class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-space-accent/20 border border-space-accent/50"
+                      :class="`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${
+                        index === 0
+                          ? 'bg-amber-500/30 border border-amber-500/70'
+                          : 'bg-space-accent/20 border border-space-accent/50'
+                      }`"
                     >
-                      <SpaceBadge
-                        :variant="getRankBadgeVariant(index)"
-                        size="md"
-                      >
-                        {{ index + 1 }}
-                      </SpaceBadge>
+                      <!-- Afficher une coupe pour la première place -->
+                      <template v-if="index === 0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-6 text-amber-400"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path
+                            d="M11 17.938a8.001 8.001 0 01-7.938-7.938h1.937c.115 3.197 2.707 5.789 5.904 5.904v2.034z"
+                          ></path>
+                          <path
+                            d="M14.063 2.063a8.001 8.001 0 017.938 7.938h-1.937a6.001 6.001 0 00-5.904-5.904V2.063zM13 17.938v2.034a8.001 8.001 0 007.938-7.938h-1.937A6.001 6.001 0 0113 17.938zM2.063 10.001a8.001 8.001 0 017.938-7.938v2.034a6.001 6.001 0 00-5.904 5.904H2.063z"
+                          ></path>
+                          <path
+                            d="M5 22h14c1.103 0 2-.897 2-2v-1H3v1c0 1.103.897 2 2 2z"
+                          ></path>
+                          <path
+                            d="M11 2H5.414L12 8.586V3c0-.553-.447-1-1-1z"
+                          ></path>
+                          <path
+                            d="M5 2c-.553 0-1 .447-1 1v6c0 .553.447 1 1 1h6c.553 0 1-.447 1-1V3c0-.553-.447-1-1-1H5z"
+                          ></path>
+                          <path
+                            d="M13 4v5c0 .553.447 1 1 1h6c.553 0 1-.447 1-1V4c0-.553-.447-1-1-1h-6c-.553 0-1 .447-1 1z"
+                          ></path>
+                        </svg>
+                      </template>
+                      <template v-else>
+                        <SpaceBadge
+                          :variant="getRankBadgeVariant(index)"
+                          size="md"
+                        >
+                          {{ index + 1 }}
+                        </SpaceBadge>
+                      </template>
                     </div>
                     <div
-                      class="flex-1 truncate font-nasa text-space-accent-light"
+                      class="flex-1 truncate font-nasa"
+                      :class="
+                        index === 0
+                          ? 'text-amber-400'
+                          : 'text-space-accent-light'
+                      "
                     >
+                      <!-- Ajouter "Équipe gagnante" pour la première place -->
+                      <template v-if="index === 0">
+                        <span
+                          class="text-amber-300 mr-2 text-xs uppercase tracking-wider"
+                          >Équipe gagnante:</span
+                        >
+                      </template>
                       {{ team.name }}
                     </div>
                   </div>
@@ -450,7 +490,7 @@
                       <SpaceBadge
                         v-for="player in team.players"
                         :key="player._id"
-                        variant="accent"
+                        :variant="index === 0 ? 'warning' : 'accent'"
                         size="xs"
                         className="flex items-center"
                       >
@@ -585,6 +625,8 @@ import type { User } from "../types/User";
 import type { Tournament } from "../types";
 import CheckInReminderModal from "@/components/CheckInReminderModal.vue";
 import playerService from "../services/playerService";
+import CountdownTimer from "@/components/ui/molecules/CountdownTimer.vue";
+import TournamentCard from "@/components/ui/molecules/TournamentCard.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant
@@ -1179,8 +1221,8 @@ onUnmounted(() => {
 
 .title-container {
   position: relative;
-  padding: 2rem 1rem;
-  margin-bottom: 2rem;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.5rem;
   overflow: hidden;
   width: 100%;
 }
@@ -1191,7 +1233,7 @@ onUnmounted(() => {
 }
 
 .title-text {
-  font-size: 3.5rem;
+  font-size: 3rem;
   letter-spacing: 0.15em;
   color: white;
   text-shadow: 0 0 10px rgba(109, 40, 217, 0.8),
@@ -1203,29 +1245,12 @@ onUnmounted(() => {
 
 @media (max-width: 640px) {
   .title-text {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
   }
 }
 
-/* Styles pour l'image du jeu */
-.game-image-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-}
-
-.game-image-glow {
-  position: absolute;
-  inset: -2px;
-  border-radius: 10px;
-  background: var(--space-primary);
-  filter: blur(5px);
-  opacity: 0.3;
-  z-index: -1;
-}
+/* Styles pour l'image du jeu - DÉPLACÉ dans TournamentCard.vue */
+/* La classe game-image-container et game-image-glow sont maintenant dans TournamentCard.vue */
 
 /* Style spécifique pour les badges de rang */
 .getRankBadgeVariant-0 {
@@ -1244,5 +1269,22 @@ onUnmounted(() => {
   background-color: rgba(109, 40, 217, 0.2);
   color: var(--space-primary-light);
   border-color: rgba(109, 40, 217, 0.5);
+}
+
+/* Espacement par rapport à la navbar */
+.navbar-spacing {
+  padding-top: 4rem; /* 64px en taille de base */
+}
+
+@media (min-width: 640px) {
+  .navbar-spacing {
+    padding-top: 4.5rem; /* 72px sur tablette */
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-spacing {
+    padding-top: 5rem; /* 80px sur grand écran */
+  }
 }
 </style>
