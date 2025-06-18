@@ -1,8 +1,7 @@
 <template>
-  <div class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative">
+  <div class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative max-w-6xl">
     <!-- En-tête de la page avec style NASA -->
     <SpaceHeader title="CLASSEMENT" />
-
     <div class="flex flex-col gap-6">
       <!-- En-tête de la page -->
       <div class="relative flex justify-between items-center">
@@ -179,29 +178,32 @@
         v-else
         variant="dark"
         :stars="true"
-        className="overflow-hidden"
+        className="overflow-hidden transform hover:scale-[1.01] transition-transform duration-300"
       >
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
-          <table class="min-w-full">
-            <thead class="bg-space-bg-light/20">
+          <table class="min-w-full shadow-lg">
+            <thead class="bg-space-bg-light/30">
               <tr>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-4 text-center text-sm font-heading text-space-text-muted uppercase tracking-wider"
                 >
                   Rang
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
-                  <div class="flex items-center">
+                  <div class="flex items-center justify-center">
                     <span>Joueur</span>
                     <button
                       @click="sortBy('username')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
-                      :class="{ 'bg-space-primary/20': sortKey === 'username' }"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
+                      :class="{
+                        'bg-space-primary/50 text-white shadow-md':
+                          sortKey === 'username',
+                      }"
                     >
                       <span v-if="sortKey === 'username' && sortOrder === 'asc'"
                         >▲</span
@@ -218,15 +220,16 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
-                  <div class="flex items-center">
+                  <div class="flex items-center justify-center">
                     <span>Tournois</span>
                     <button
                       @click="sortBy('totalTournaments')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
                       :class="{
-                        'bg-space-primary/20': sortKey === 'totalTournaments',
+                        'bg-space-primary/50 text-white shadow-md':
+                          sortKey === 'totalTournaments',
                       }"
                     >
                       <span
@@ -247,15 +250,16 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
-                  <div class="flex items-center">
+                  <div class="flex items-center justify-center">
                     <span>Victoires</span>
                     <button
                       @click="sortBy('totalVictories')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/30 focus:outline-none"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
                       :class="{
-                        'bg-space-primary/20': sortKey === 'totalVictories',
+                        'bg-space-primary/50 text-white shadow-md':
+                          sortKey === 'totalVictories',
                       }"
                     >
                       <span
@@ -280,17 +284,17 @@
               <tr
                 v-for="(ranking, index) in paginatedRankings"
                 :key="ranking.playerId"
-                class="transition-colors duration-200"
+                class="transition-all duration-300"
                 :class="[index % 2 === 0 ? 'row-even' : 'row-odd', 'row-hover']"
               >
-                <td class="px-6 py-3 whitespace-nowrap">
-                  <div class="flex items-center">
+                <td class="px-6 py-3 whitespace-nowrap text-center">
+                  <div class="flex items-center justify-center">
                     <SpaceBadge
                       v-if="calculateGlobalRank(index) <= 3"
                       :variant="
                         getRankBadgeVariant(calculateGlobalRank(index) - 1)
                       "
-                      class="mr-2"
+                      class="mr-2 transform scale-125 shadow-glow"
                     >
                       {{ calculateGlobalRank(index) }}
                     </SpaceBadge>
@@ -302,19 +306,19 @@
                 <td class="px-6 py-3 whitespace-nowrap">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300"
+                    class="text-space-primary hover:text-space-primary-light font-heading transition-all duration-300 text-center text-lg"
                   >
                     {{ ranking.username }}
                   </router-link>
                 </td>
-                <td class="px-6 py-3 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div
                     class="text-sm font-mono font-semibold text-space-secondary-light"
                   >
                     {{ ranking.totalTournaments }}
                   </div>
                 </td>
-                <td class="px-6 py-3 whitespace-nowrap">
+                <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div
                     class="text-sm font-mono font-semibold text-space-accent-light"
                   >
@@ -344,7 +348,9 @@
                 @click="sortBy('username')"
                 variant="ghost"
                 size="xs"
-                :className="sortKey === 'username' ? 'bg-space-primary/20' : ''"
+                :className="
+                  sortKey === 'username' ? 'bg-space-primary/50 text-white' : ''
+                "
               >
                 Nom
                 {{
@@ -360,7 +366,9 @@
                 variant="ghost"
                 size="xs"
                 :className="
-                  sortKey === 'totalVictories' ? 'bg-space-primary/20' : ''
+                  sortKey === 'totalVictories'
+                    ? 'bg-space-primary/50 text-white'
+                    : ''
                 "
               >
                 Victoires
@@ -403,7 +411,7 @@
                 <div class="flex-grow min-w-0">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-primary-light hover:text-space-primary font-heading transition-all duration-300 block truncate"
+                    class="text-space-primary hover:text-space-primary-light font-heading transition-all duration-300 block truncate"
                     :title="ranking.username"
                   >
                     {{ ranking.username }}
@@ -414,7 +422,7 @@
                 <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex items-center">
                     <span
-                      class="font-mono text-space-accent-light mr-1 whitespace-nowrap"
+                      class="font-mono text-space-accent font-semibold mr-1 whitespace-nowrap"
                     >
                       {{ ranking.totalVictories }}
                     </span>
@@ -704,7 +712,7 @@ const prevPage = () => {
 };
 
 /**
- * Calcule le rang global d'un joueur basé sur son index dans la page courante
+ * Calcule le rang global d'un joueur baséé sur son index dans la page courante
  */
 const calculateGlobalRank = (index: number): number => {
   return (currentPage.value - 1) * itemsPerPage + index + 1;
@@ -773,9 +781,19 @@ onMounted(async () => {
   }
 }
 
-th,
+th {
+  position: relative;
+  text-align: center;
+  font-size: 0.95rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 td {
   position: relative;
+  text-align: center;
+  font-size: 1.05rem;
+  padding: 1rem 0.75rem;
 }
 
 th:not(:last-child)::after,
@@ -794,16 +812,47 @@ td:not(:last-child)::after {
   );
 }
 
-/* Garder les styles existants pour les lignes alternées */
+/* Garder les styles existants pour les lignes alternées, mais en éclaircissant */
 .row-even {
   background-color: transparent;
 }
 
 .row-odd {
-  background-color: rgba(109, 40, 217, 0.15);
+  background-color: rgba(109, 40, 217, 0.08); /* Plus claire que l'original */
 }
 
 .row-hover:hover {
-  background-color: rgba(109, 40, 217, 0.05);
+  background-color: rgba(109, 40, 217, 0.15); /* Plus visible au survol */
+  z-index: 1;
+  box-shadow: inset 0 0 8px rgba(109, 40, 217, 0.2);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Structure du tableau */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+tbody tr {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Effet de lueur pour les badges des premiers */
+.shadow-glow {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  }
 }
 </style>
