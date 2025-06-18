@@ -49,6 +49,7 @@
       <SpaceCard
         id="profil"
         variant="primary"
+        section="profile"
         :stars="true"
         :decorated="true"
         className="mb-8 overflow-hidden"
@@ -98,14 +99,14 @@
           ></div>
         </div>
       </SpaceCard>
-
       <!-- Section des statistiques - Version simplifiée -->
       <SpaceCard
         id="statistiques"
         variant="secondary"
+        section="statistics"
         :stars="true"
         :decorated="true"
-        className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
+        className="mb-8 transform transition-all hover:scale-[1.02] duration-300 section-statistiques"
       >
         <div class="flex items-center mb-6">
           <svg
@@ -141,11 +142,11 @@
           </SpaceCard>
         </div>
       </SpaceCard>
-
       <!-- Section Palmarès avec podium -->
       <SpaceCard
         id="palmares"
         variant="accent"
+        section="medals"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -184,16 +185,17 @@
                 <SpaceBadge
                   variant="secondary"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 flex items-center justify-center"
+                  :filled="true"
+                  className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   2
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-secondary-dark to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-secondary shadow-inner relative overflow-hidden"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-secondary-dark to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-secondary shadow-inner relative overflow-hidden podium-column podium-silver"
               >
                 <div
-                  class="absolute inset-0 bg-space-secondary/30 opacity-30 scanline"
+                  class="absolute inset-0 bg-space-secondary/50 scanline"
                 ></div>
                 <span
                   class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
@@ -216,17 +218,16 @@
                 <SpaceBadge
                   variant="accent"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 flex items-center justify-center animate-pulse"
+                  :filled="true"
+                  className="absolute -bottom-1 -right-1 flex items-center justify-center animate-pulse font-bold"
                 >
                   1
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-accent-dark to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-accent shadow-inner shadow-space-accent/20 relative overflow-hidden"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-accent-dark to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-accent shadow-inner shadow-space-accent/20 relative overflow-hidden podium-column podium-gold"
               >
-                <div
-                  class="absolute inset-0 bg-space-accent/30 opacity-30 scanline"
-                ></div>
+                <div class="absolute inset-0 bg-space-accent/50 scanline"></div>
                 <span
                   class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
                   >{{ medalCount.gold }}</span
@@ -248,16 +249,17 @@
                 <SpaceBadge
                   variant="primary"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 flex items-center justify-center"
+                  :filled="true"
+                  className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   3
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-primary-dark to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-primary shadow-inner relative overflow-hidden"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-primary-dark to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-primary shadow-inner relative overflow-hidden podium-column podium-bronze"
               >
                 <div
-                  class="absolute inset-0 bg-space-primary/30 opacity-30 scanline"
+                  class="absolute inset-0 bg-space-primary/50 scanline"
                 ></div>
                 <span
                   class="text-xl sm:text-2xl font-bold font-nasa text-white z-10"
@@ -266,10 +268,9 @@
               </div>
             </div>
           </div>
-
           <!-- Base du podium -->
           <div
-            class="absolute bottom-0 bg-space-bg-light h-4 w-full max-w-md rounded-md border-t border-space-primary/30"
+            class="absolute bottom-0 bg-gradient-to-r from-space-primary/30 via-space-accent/40 to-space-secondary/30 h-4 w-full max-w-md rounded-md border-t border-space-primary/50 podium-base"
           ></div>
         </div>
 
@@ -321,11 +322,11 @@
           </SpaceCard>
         </div>
       </SpaceCard>
-
       <!-- Section Activité et engagement -->
       <SpaceCard
         id="activite"
         variant="secondary"
+        section="activity"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -392,11 +393,11 @@
           </SpaceCard>
         </div>
       </SpaceCard>
-
       <!-- Section Performance par jeu -->
       <SpaceCard
         id="performance"
         variant="primary"
+        section="performance"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -440,7 +441,7 @@
             v-for="gameStat in displayedGameStats"
             :key="gameStat.gameId"
             variant="dark"
-            className="transform transition-all hover:scale-[1.02] duration-300"
+            className="transform transition-all hover:scale-[1.02] duration-300 border-l-4 border-l-space-primary"
           >
             <!-- Structure responsive avec flex-col sur mobile -->
             <div
@@ -494,26 +495,27 @@
                   </div>
                 </div>
               </div>
-
               <!-- Partie droite responsive -->
               <div
                 class="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center"
               >
                 <!-- Taux de victoire -->
-                <div class="flex items-center sm:text-right">
+                <div class="flex items-center sm:text-right sm:mb-2">
                   <div
-                    class="text-2xl font-bold text-space-primary-light font-mono mr-2 sm:mr-0 sm:mb-1"
+                    class="text-2xl font-bold text-space-primary-light font-mono mr-2 sm:mr-0"
                   >
-                    {{ gameStat.winRate }}%
+                    {{ gameStat.winRate }}
                   </div>
-                  <div class="text-xs text-space-text-muted sm:text-center">
-                    taux de victoire
+                  <div
+                    class="text-xs text-space-text-muted sm:text-center ml-2"
+                  >
+                    % taux de victoire
                   </div>
                 </div>
 
                 <!-- Barre de progression -->
                 <div
-                  class="w-16 sm:w-24 h-2 bg-[var(--space-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 sm:mt-2"
+                  class="w-16 sm:w-32 h-2 bg-[var(--space-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 mt-2"
                 >
                   <div
                     class="h-full bg-[var(--space-primary)] rounded-full"
@@ -536,11 +538,11 @@
           </div>
         </SpaceTerminal>
       </SpaceCard>
-
       <!-- Section Statistiques sociales -->
       <SpaceCard
         id="collaborations"
         variant="secondary"
+        section="collaborations"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -619,32 +621,40 @@
                 v-for="teammate in displayedFrequentTeammates"
                 :key="teammate.playerId"
                 variant="dark"
-                className="flex items-center justify-between transform transition-all hover:scale-[1.02] duration-300"
+                className="transform transition-all hover:scale-[1.02] duration-300 p-3 border-l-4 border-l-space-secondary"
               >
-                <div class="flex items-center">
-                  <div
-                    class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-secondary/50 flex items-center justify-center mr-3"
-                  >
-                    <span class="text-space-secondary-light font-bold">
-                      {{ teammate.username.charAt(0).toUpperCase() }}
-                    </span>
-                  </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center flex-1 min-w-0">
+                    <div
+                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-secondary/50 flex items-center justify-center mr-3 flex-shrink-0"
+                    >
+                      <span class="text-space-secondary-light font-bold">
+                        {{ teammate.username.charAt(0).toUpperCase() }}
+                      </span>
+                    </div>
 
-                  <router-link
-                    :to="{ name: 'Profil', params: { id: teammate.playerId } }"
-                    class="text-space-text hover:text-space-secondary-light transition-colors"
-                  >
-                    {{ teammate.username }}
-                  </router-link>
-                </div>
-
-                <div class="text-right">
-                  <div
-                    class="text-lg font-bold text-space-secondary-light font-mono"
-                  >
-                    {{ teammate.count }}
+                    <router-link
+                      :to="{
+                        name: 'Profil',
+                        params: { id: teammate.playerId },
+                      }"
+                      class="text-space-text hover:text-space-secondary-light transition-colors truncate"
+                    >
+                      {{ teammate.username }}
+                    </router-link>
                   </div>
-                  <div class="text-xs text-space-text-muted">équipes</div>
+                  <div class="text-right flex items-center ml-3">
+                    <div
+                      class="text-lg font-bold text-space-secondary-light font-mono"
+                    >
+                      {{ teammate.count }}
+                    </div>
+                    <div
+                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap"
+                    >
+                      équipes
+                    </div>
+                  </div>
                 </div>
               </SpaceCard>
 
@@ -711,33 +721,38 @@
               <SpaceCard
                 v-for="partner in displayedWinningPartners"
                 :key="partner.playerId"
-                variant="accent"
-                className="flex items-center justify-between transform transition-all hover:scale-105 duration-300"
+                variant="dark"
+                className="transform transition-all hover:scale-105 duration-300 p-3 border-l-4 border-l-space-accent"
               >
-                <div class="flex items-center">
-                  <div
-                    class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-accent/50 flex items-center justify-center mr-3"
-                  >
-                    <span class="text-space-accent-light font-bold">
-                      {{ partner.username.charAt(0).toUpperCase() }}
-                    </span>
-                  </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center flex-1 min-w-0">
+                    <div
+                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-accent/50 flex items-center justify-center mr-3 flex-shrink-0"
+                    >
+                      <span class="text-space-accent-light font-bold">
+                        {{ partner.username.charAt(0).toUpperCase() }}
+                      </span>
+                    </div>
 
-                  <router-link
-                    :to="{ name: 'Profil', params: { id: partner.playerId } }"
-                    class="text-space-text hover:text-space-accent-light transition-colors"
-                  >
-                    {{ partner.username }}
-                  </router-link>
-                </div>
-
-                <div class="text-right">
-                  <div
-                    class="text-lg font-bold text-space-accent-light font-mono flex items-center"
-                  >
-                    🏆 {{ partner.wins }}
+                    <router-link
+                      :to="{ name: 'Profil', params: { id: partner.playerId } }"
+                      class="text-space-text hover:text-space-accent-light transition-colors truncate"
+                    >
+                      {{ partner.username }}
+                    </router-link>
                   </div>
-                  <div class="text-xs text-space-text-muted">victoires</div>
+                  <div class="text-right flex items-center ml-3">
+                    <div
+                      class="text-lg font-bold text-space-accent-light font-mono flex items-center"
+                    >
+                      {{ partner.wins }}
+                    </div>
+                    <div
+                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap flex items-center"
+                    >
+                      <span class="mr-1">victoires</span> 🏆
+                    </div>
+                  </div>
                 </div>
               </SpaceCard>
 
@@ -767,11 +782,11 @@
           </div>
         </div>
       </SpaceCard>
-
       <!-- Section des badges -->
       <SpaceCard
         id="badges"
         variant="primary"
+        section="badges"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -805,19 +820,23 @@
             v-for="badge in player.badges"
             :key="badge._id"
             variant="dark"
-            className="flex flex-col items-center transform transition-all hover:scale-105 hover:shadow-glow-primary duration-300 cursor-pointer"
+            className="flex flex-col items-center transform transition-all hover:scale-110 hover:shadow-glow-primary duration-300 cursor-pointer p-4"
             @click="selectBadge(badge)"
           >
-            <img
-              :src="badge.imageUrl"
-              :alt="badge.title"
-              class="h-16 w-16 mb-3 rounded-full border-2 border-space-primary object-cover"
-              loading="lazy"
-              @error="handleImageError"
-            />
-            <span class="text-space-text text-center font-nasa text-sm">
-              {{ badge.title }}
-            </span>
+            <div class="flex flex-col items-center h-full justify-center">
+              <img
+                :src="badge.imageUrl"
+                :alt="badge.title"
+                class="h-16 w-16 mb-3 rounded-full border-2 border-space-primary object-cover"
+                loading="lazy"
+                @error="handleImageError"
+              />
+              <span
+                class="text-space-text text-center font-nasa text-sm line-clamp-2"
+              >
+                {{ badge.title }}
+              </span>
+            </div>
           </SpaceCard>
         </div>
 
@@ -832,11 +851,11 @@
           </div>
         </SpaceTerminal>
       </SpaceCard>
-
       <!-- Section Réalisations et progression -->
       <SpaceCard
         id="records"
         variant="accent"
+        section="records"
         :stars="true"
         :decorated="true"
         className="mb-8 transform transition-all hover:scale-[1.02] duration-300"
@@ -1843,4 +1862,90 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Styles spécifiques pour le podium */
+.podium-column {
+  position: relative;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 500px;
+}
+
+.podium-column::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform: translateZ(-5px);
+  opacity: 0.3;
+}
+
+.podium-column:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+.podium-gold {
+  box-shadow: 0 0 20px rgba(247, 37, 133, 0.3);
+}
+
+.podium-gold::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(247, 37, 133, 0.8) 0%,
+    transparent 70%
+  );
+}
+
+.podium-silver {
+  box-shadow: 0 0 15px rgba(108, 99, 255, 0.3);
+}
+
+.podium-silver::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(108, 99, 255, 0.7) 0%,
+    transparent 70%
+  );
+}
+
+.podium-bronze {
+  box-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+}
+
+.podium-bronze::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(76, 201, 240, 0.7) 0%,
+    transparent 70%
+  );
+}
+
+.scanline {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  background-size: 100% 2px;
+  animation: scanlines 2s linear infinite;
+}
+
+.podium-base {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(76, 201, 240, 0.3);
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(76, 201, 240, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(247, 37, 133, 0.3);
+  }
+  100% {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(108, 99, 255, 0.3);
+  }
+}
+</style>

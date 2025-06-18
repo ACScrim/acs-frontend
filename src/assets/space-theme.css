@@ -14,7 +14,6 @@
   --font-mono: "Space Mono", monospace;
   --font-nasa: "Chakra Petch", sans-serif;
   --font-display: "Roboto Condensed", sans-serif;
-
   /* Couleurs de base */
   --space-primary: #6d28d9;
   --space-primary-light: #8b5cf6;
@@ -41,6 +40,30 @@
   --space-error: #f87171;
   --space-info: #60a5fa;
 
+  /* Couleurs spécifiques pour les cartes et composants */
+  --space-card-bg: rgba(3, 7, 18, 0.85);
+  --space-card-border: rgba(76, 201, 240, 0.3);
+  --space-card-shadow: rgba(76, 201, 240, 0.2);
+
+  /* Couleurs des planètes et orbites */
+  --space-orbit-border: rgba(255, 255, 255, 0.2);
+  --space-planet1-start: #ff6b6b;
+  --space-planet1-end: #ff9e53;
+  --space-planet1-glow: rgba(255, 107, 107, 0.7);
+  --space-planet2-start: #4cc9f0;
+  --space-planet2-end: #4361ee;
+  --space-planet2-glow: rgba(76, 201, 240, 0.7);
+  --space-planet3-start: #f72585;
+  --space-planet3-end: #b5179e;
+  --space-planet3-glow: rgba(247, 37, 133, 0.7);
+
+  /* Couleurs spécifiques pour les sections de cartes */
+  --space-section-profile-color: rgba(76, 201, 240, 0.8);
+  --space-section-profile-fade: rgba(76, 201, 240, 0.2);
+  --space-section-statistics-color: rgba(108, 99, 255, 0.8);
+  --space-section-statistics-fade: rgba(108, 99, 255, 0.2);
+  --space-section-medals-color: rgba(247, 37, 133, 0.8);
+  --space-section-medals-fade: rgba(247, 37, 133, 0.2);
   --space-primary-rgb: 109, 40, 217;
   --space-primary-light-rgb: 139, 92, 246;
   --space-primary-dark-rgb: 76, 29, 149;
@@ -58,10 +81,20 @@
   --space-error-rgb: 248, 113, 113;
   --space-info-rgb: 96, 165, 250;
 
+  --space-card-bg-rgb: 3, 7, 18;
+  --space-card-border-rgb: 76, 201, 240;
+  --space-section-profile-rgb: 76, 201, 240;
+  --space-section-statistics-rgb: 108, 99, 255;
+  --space-section-medals-rgb: 247, 37, 133;
   /* Ombres */
   --shadow-glow-primary: 0 0 15px rgba(109, 40, 217, 0.4);
   --shadow-glow-secondary: 0 0 15px rgba(2, 132, 199, 0.4);
   --shadow-glow-accent: 0 0 15px rgba(251, 146, 60, 0.4);
+  --shadow-glow-profile: 0 0 25px rgba(76, 201, 240, 0.3);
+  --shadow-glow-statistics: 0 0 15px rgba(108, 99, 255, 0.2);
+  --shadow-glow-medals: 0 0 15px rgba(247, 37, 133, 0.2);
+  --shadow-glow-performance: 0 0 15px rgba(76, 201, 240, 0.2);
+  --shadow-card-base: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Classes utilitaires pour les polices */

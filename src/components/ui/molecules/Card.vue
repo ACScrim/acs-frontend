@@ -9,9 +9,11 @@
       },
       variantClasses,
       elevationClasses,
+      section ? `space-card--section-${section}` : '',
       className,
     ]"
     :data-variant="variant"
+    :data-section="section"
   >
     <!-- Badge de statut -->
     <div v-if="$slots.badge" class="absolute top-4 right-4 z-10">
@@ -99,6 +101,15 @@ import { computed } from "vue";
 
 interface Props {
   variant?: "primary" | "secondary" | "accent" | "dark";
+  section?:
+    | "profile"
+    | "statistics"
+    | "medals"
+    | "activity"
+    | "performance"
+    | "collaborations"
+    | "badges"
+    | "records";
   elevation?: "flat" | "low" | "medium" | "high";
   interactive?: boolean;
   hover?: boolean;
@@ -112,6 +123,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "primary",
+  section: undefined,
   elevation: "medium",
   interactive: false,
   hover: false,
@@ -156,10 +168,10 @@ const elevationClasses = computed(() => {
 
 <style scoped>
 .space-card {
-  background: rgba(3, 7, 18, 0.85) !important;
+  background: var(--space-card-bg) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(76, 201, 240, 0.3) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(76, 201, 240, 0.2) !important;
+  border: 1px solid var(--space-card-border) !important;
+  box-shadow: var(--shadow-card-base), 0 0 15px var(--space-card-shadow) !important;
 }
 
 .space-card--interactive {
@@ -269,7 +281,7 @@ const elevationClasses = computed(() => {
 }
 
 .space-card-header {
-  border-bottom: 1px solid rgba(76, 201, 240, 0.3);
+  border-bottom: 1px solid var(--space-card-border);
   padding-bottom: 0.75rem;
   position: relative;
 }
@@ -281,7 +293,11 @@ const elevationClasses = computed(() => {
   bottom: -1px;
   width: 30%;
   height: 1px;
-  background: linear-gradient(90deg, rgba(76, 201, 240, 0.8), transparent);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--space-card-border-rgb), 0.8),
+    transparent
+  );
 }
 
 .space-card-orbit-system {
@@ -303,7 +319,7 @@ const elevationClasses = computed(() => {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border: 1px dashed var(--space-orbit-border);
   border-radius: 50%;
   animation: rotate 60s linear infinite;
 }
@@ -334,8 +350,12 @@ const elevationClasses = computed(() => {
   left: 50%;
   width: 10px;
   height: 10px;
-  background: linear-gradient(135deg, #ff6b6b, #ff9e53);
-  box-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+  background: linear-gradient(
+    135deg,
+    var(--space-planet1-start),
+    var(--space-planet1-end)
+  );
+  box-shadow: 0 0 10px var(--space-planet1-glow);
 }
 
 .planet-2 {
@@ -343,8 +363,12 @@ const elevationClasses = computed(() => {
   left: 50%;
   width: 8px;
   height: 8px;
-  background: linear-gradient(135deg, #4cc9f0, #4361ee);
-  box-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
+  background: linear-gradient(
+    135deg,
+    var(--space-planet2-start),
+    var(--space-planet2-end)
+  );
+  box-shadow: 0 0 8px var(--space-planet2-glow);
 }
 
 .planet-3 {
@@ -352,8 +376,12 @@ const elevationClasses = computed(() => {
   left: 50%;
   width: 6px;
   height: 6px;
-  background: linear-gradient(135deg, #f72585, #b5179e);
-  box-shadow: 0 0 6px rgba(247, 37, 133, 0.7);
+  background: linear-gradient(
+    135deg,
+    var(--space-planet3-start),
+    var(--space-planet3-end)
+  );
+  box-shadow: 0 0 6px var(--space-planet3-glow);
 }
 
 @keyframes rotate {
@@ -363,5 +391,143 @@ const elevationClasses = computed(() => {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Section-specific card styles */
+.space-card--section-profile {
+  box-shadow: var(--shadow-glow-profile) !important;
+  border-width: 2px !important;
+  border-image: linear-gradient(
+      to right,
+      var(--space-section-profile-color),
+      var(--space-section-profile-fade),
+      var(--space-section-profile-color)
+    )
+    1 !important;
+}
+
+.space-card--section-statistics {
+  border-image: linear-gradient(
+      to bottom,
+      var(--space-section-statistics-color),
+      var(--space-section-statistics-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
+}
+
+.space-card--section-statistics:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(var(--space-section-statistics-rgb), 0.3) !important;
+}
+
+.space-card--section-medals {
+  border-image: linear-gradient(
+      to bottom,
+      var(--space-section-medals-color),
+      var(--space-section-medals-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-medals) !important;
+}
+
+.space-card--section-medals:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(var(--space-section-medals-rgb), 0.3) !important;
+}
+
+.space-card--section-activity {
+  border-image: linear-gradient(
+      to right,
+      var(--space-section-statistics-fade),
+      var(--space-section-statistics-color),
+      var(--space-section-statistics-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
+}
+
+.space-card--section-performance {
+  border-image: linear-gradient(
+      45deg,
+      var(--space-section-profile-color),
+      var(--space-section-profile-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-performance) !important;
+}
+
+.space-card--section-performance:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(var(--space-section-profile-rgb), 0.3) !important;
+}
+
+.space-card--section-collaborations {
+  border-image: linear-gradient(
+      135deg,
+      var(--space-section-statistics-color),
+      var(--space-section-statistics-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
+}
+
+.space-card--section-badges {
+  border-image: linear-gradient(
+      to right,
+      var(--space-section-profile-fade),
+      var(--space-section-profile-color),
+      var(--space-section-profile-fade)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-profile) !important;
+}
+
+.space-card--section-records {
+  border-image: linear-gradient(
+      to right,
+      var(--space-section-medals-color),
+      var(--space-section-medals-fade),
+      var(--space-section-medals-color)
+    )
+    1 !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-medals) !important;
+}
+
+/* Animation effects for section cards */
+.space-card--section-profile:hover,
+.space-card--section-badges:hover,
+.space-card--section-records:hover {
+  transform: translateY(-8px) !important;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.space-card--section-statistics:hover,
+.space-card--section-activity:hover,
+.space-card--section-collaborations:hover {
+  transform: translateY(-5px) scale(1.01) !important;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.space-card--section-medals:hover,
+.space-card--section-performance:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Special effects for child cards based on parent section */
+.space-card--section-performance .space-card {
+  border-color: rgba(var(--space-section-profile-rgb), 0.4) !important;
+  transition: all 0.3s ease;
+}
+
+.space-card--section-collaborations .space-card {
+  border-color: rgba(var(--space-section-statistics-rgb), 0.4) !important;
+  transition: all 0.3s ease;
+}
+
+.space-card--section-records .space-card {
+  border-color: rgba(var(--space-section-medals-rgb), 0.4) !important;
+  transition: all 0.3s ease;
 }
 </style>
