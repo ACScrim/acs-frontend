@@ -5,10 +5,12 @@
     :interactive="true"
     :hover="true"
     :decorated="true"
-    :className="[
-      'tournament-grid-card h-full',
-      tournament.finished ? 'finished-tournament' : '',
-    ]"
+    :className="
+      [
+        'tournament-grid-card h-full',
+        tournament.finished ? 'finished-tournament' : '',
+      ].join(' ')
+    "
     @click="navigateToTournamentDetails"
   >
     <!-- Image du jeu ou placeholder avec effet spatial -->

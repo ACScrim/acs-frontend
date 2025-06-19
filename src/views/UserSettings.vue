@@ -373,24 +373,8 @@
         </div>
       </div>
     </div>
-
     <!-- Toast de notification -->
-    <div
-      v-if="message"
-      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
-      :class="[
-        message ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
-      ]"
-    >
-      <SpaceAlert
-        :variant="messageType"
-        :dismissible="true"
-        @dismiss="message = ''"
-        className="backdrop-blur-sm"
-      >
-        {{ message }}
-      </SpaceAlert>
-    </div>
+    <Toast v-if="message" :type="messageType" :message="message" />
 
     <!-- Modal de confirmation pour modifications non sauvegardées -->
     <SpaceModal
@@ -485,6 +469,7 @@ import profileService from "../services/profileService";
 import gameService from "../services/gameService";
 import type { Game } from "../types";
 import type { GameRoles } from "../types/User";
+import Toast from "@/shared/Toast.vue";
 
 // ========================================
 // SECTION: STORES ET DONNÉES RÉACTIVES
@@ -799,11 +784,10 @@ const saveSettings = async () => {
 const showMessage = (text: string, type: "success" | "error") => {
   message.value = text;
   messageType.value = type;
-
-  // Auto-masquer le message après 3 secondes (durée du Toast)
+  // Auto-masquer le message après 4 secondes (durée du nouveau Toast spatial)
   setTimeout(() => {
     message.value = "";
-  }, 3000);
+  }, 4000);
 };
 
 /**

@@ -2,110 +2,120 @@
   <div
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
-    <!-- Sélection du jeu et du tournoi - inchangé -->
-    <h1 class="text-4xl text-white mb-8 neon-text">Terminer un Tournoi</h1>
-
-    <!-- Sélection du jeu et du tournoi -->
-    <div
-      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
+    <SpaceHeader
+      title="FINALISATION DU TOURNOI"
+      :decorated="true"
+      mission="END-TOURNAMENT-2025"
     >
-      <div class="flex items-center gap-3 mb-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 text-cyan-500"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+      <template #badge v-if="selectedTournamentDetails">
+        <SpaceBadge
+          :variant="
+            selectedTournamentDetails.finished ? 'success' : 'secondary'
+          "
+          size="lg"
         >
-          <path
-            fill-rule="evenodd"
-            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <h2 class="font-['Orbitron'] font-semibold text-lg text-cyan-400">
-          Tournoi sélectionné
-        </h2>
-      </div>
+          {{ selectedTournamentDetails.finished ? "Terminé" : "En cours" }}
+        </SpaceBadge>
+      </template>
+    </SpaceHeader>
+
+    <!-- Information du tournoi sélectionné -->
+    <SpaceCard variant="primary" :stars="true" className="mb-6">
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-primary-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+        </div>
+      </template>
 
       <!-- Affichage du tournoi ou message si aucun tournoi sélectionné -->
-      <div
-        v-if="selectedTournamentDetails"
-        class="bg-gray-900/60 p-4 rounded-lg border border-cyan-500/30"
-      >
-        <p class="text-white mb-2">
-          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
-            >Nom:</span
-          >
-          {{ selectedTournamentDetails.name }}
-        </p>
-        <p class="text-white mb-2" v-if="selectedTournamentDetails.date">
-          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
-            >Date:</span
-          >
-          {{ formatLocalDate(selectedTournamentDetails.date) }}
-        </p>
-        <p
-          v-if="selectedTournamentDetails.discordChannelName"
-          class="text-white"
-        >
-          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
-            >Discord:</span
-          >
-          {{ selectedTournamentDetails.discordChannelName }}
-        </p>
-        <p
-          v-if="selectedTournamentDetails.finished"
-          class="mt-2 text-sm px-3 py-1 bg-emerald-900/20 border border-emerald-500/50 rounded-full inline-block text-emerald-300"
-        >
-          <span class="font-['Orbitron']">Tournoi terminé</span>
-        </p>
-      </div>
-      <div
-        v-else
-        class="bg-gray-900/60 p-4 rounded-lg border border-red-500/30 text-gray-400 italic"
-      >
-        Veuillez sélectionner un tournoi dans le menu en haut de la page
-      </div>
-    </div>
-
-    <!-- Détails du tournoi -->
-    <div v-if="selectedTournamentDetails">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-        <!-- Statut du tournoi -->
-        <div
-          v-if="selectedTournamentDetails.finished"
-          class="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg shadow-md shadow-emerald-500/20"
-        >
+      <div v-if="selectedTournamentDetails">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="flex flex-col">
+            <span class="text-space-text-muted text-sm">Nom</span>
+            <span class="text-space-text font-mono text-lg">
+              {{ selectedTournamentDetails.name }}
+            </span>
+          </div>
+          <div v-if="selectedTournamentDetails.date" class="flex flex-col">
+            <span class="text-space-text-muted text-sm">Date</span>
+            <span class="text-space-text font-mono text-lg">
+              {{ formatLocalDate(selectedTournamentDetails.date) }}
+            </span>
+          </div>
           <div
-            class="flex flex-col md:flex-row items-center justify-between gap-4"
+            v-if="selectedTournamentDetails.discordChannelName"
+            class="flex flex-col"
           >
-            <div class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <span class="font-['Orbitron'] font-semibold text-emerald-300">
-                Ce tournoi est déjà terminé
-              </span>
-            </div>
+            <span class="text-space-text-muted text-sm">Discord</span>
+            <span class="text-space-text font-mono text-lg">
+              {{ selectedTournamentDetails.discordChannelName }}
+            </span>
+          </div>
+        </div>
+        <SpaceBadge
+          v-if="selectedTournamentDetails.finished"
+          variant="success"
+          size="md"
+        >
+          Tournoi terminé
+        </SpaceBadge>
+      </div>
+      <div v-else>
+        <SpaceAlert variant="warning" className="text-center">
+          Veuillez sélectionner un tournoi dans le menu en haut de la page
+        </SpaceAlert>
+      </div>
+    </SpaceCard>
 
-            <button
-              @click="confirmUnfinishTournament()"
-              class="cyberpunk-btn-amber flex items-center justify-center py-2 px-4 font-['Orbitron'] text-sm rounded-lg"
+    <!-- Statut du tournoi -->
+    <SpaceCard
+      v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
+      variant="accent"
+      :stars="true"
+      className="mb-6"
+    >
+      <template #header>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-green-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <SpaceTitle size="lg" className="text-green-400">
+              Ce tournoi est déjà terminé
+            </SpaceTitle>
+          </div>
+          <SpaceButton
+            @click="confirmUnfinishTournament()"
+            variant="warning"
+            size="md"
+          >
+            <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 mr-1.5 relative z-10"
+                class="h-4 w-4"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -115,91 +125,131 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="relative z-10">Annuler la finalisation</span>
-            </button>
-          </div>
+            </template>
+            Annuler la finalisation
+          </SpaceButton>
         </div>
-      </div>
-    </div>
-
+      </template>
+    </SpaceCard>
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
     <div v-if="teams.length > 0">
       <!-- Bouton pour terminer le tournoi -->
-      <div
+      <SpaceCard
         v-if="
           selectedTournamentDetails &&
           !selectedTournamentDetails.finished &&
           hasRankings()
         "
-        class="mb-6 p-6 bg-gray-900/70 rounded-lg border border-purple-500/30 shadow-lg shadow-purple-500/20"
+        variant="accent"
+        :stars="true"
+        className="mb-6"
       >
+        <template #header>
+          <div class="flex items-center gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-space-accent-light"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <SpaceTitle size="lg">Finaliser le tournoi</SpaceTitle>
+          </div>
+        </template>
+
         <div
           class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
-          <div>
-            <h3
-              class="text-lg font-['Orbitron'] font-bold text-purple-400 mb-2"
-            >
-              Finaliser le tournoi
-            </h3>
-            <p class="text-white/70 text-sm">
-              Une fois le tournoi terminé, les rankings seront verrouillés et
-              les résultats comptabilisés dans le classement des joueurs.
-            </p>
-          </div>
-          <button
+          <p class="text-space-text-muted">
+            Une fois le tournoi terminé, les rankings seront verrouillés et les
+            résultats comptabilisés dans le classement des joueurs.
+          </p>
+          <SpaceButton
             @click="confirmFinishTournament()"
-            class="cyberpunk-btn-green flex items-center justify-center py-3 px-6 font-['Orbitron'] font-semibold rounded-lg self-end"
+            variant="success"
+            size="lg"
+            className="self-end"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 relative z-10"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="relative z-10">Terminer le tournoi</span>
-          </button>
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Terminer le tournoi
+          </SpaceButton>
         </div>
-      </div>
-
+      </SpaceCard>
       <!-- Cards des équipes - Grid layout -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
+        <SpaceCard
           v-for="(team, index) in teams"
           :key="index"
-          :class="[
-            'p-6 bg-gray-800/70 rounded-xl border shadow-md transition-all duration-300',
-            getRankingBorderClass(team.ranking),
-          ]"
+          :variant="getRankingCardVariant(team.ranking)"
+          :stars="team.ranking > 0"
+          :className="getRankingCardClass(team.ranking)"
         >
-          <div
-            class="flex items-center mb-4 pb-2 border-b border-opacity-30"
-            :class="getRankingBorderBottomClass(team.ranking)"
-          >
-            <h3
-              class="text-xl font-['Orbitron'] font-semibold"
-              :class="getRankingTextClass(team.ranking)"
+          <template #header>
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                :class="getRankingTextClass(team.ranking)"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857M19 12a3 3 0 11-6 0 3 3 0 016 0zm-4 8a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <SpaceTitle
+                size="lg"
+                :className="getRankingTextClass(team.ranking)"
+              >
+                {{ team.name || `Équipe ${index + 1}` }}
+              </SpaceTitle>
+            </div>
+          </template>
+
+          <!-- Badge de rang si l'équipe est classée -->
+          <div v-if="team.ranking > 0" class="mb-4">
+            <SpaceBadge
+              :variant="getRankingBadgeVariant(team.ranking)"
+              size="lg"
             >
-              {{ team.name || `Équipe ${index + 1}` }}
-            </h3>
+              {{ getRankingLabel(team.ranking) }}
+            </SpaceBadge>
           </div>
 
           <!-- Liste des joueurs -->
-          <div class="mb-4">
-            <h4 class="text-sm font-['Orbitron'] text-white/70 mb-2">
+          <div class="mb-6">
+            <SpaceTitle size="sm" className="text-space-text-muted mb-3">
               Membres de l'équipe:
-            </h4>
-            <ul class="space-y-2 max-h-40 overflow-y-auto pr-2">
-              <li
+            </SpaceTitle>
+            <div class="space-y-2 max-h-40 overflow-y-auto">
+              <div
                 v-for="player in team.players"
                 :key="player._id"
-                class="p-3 bg-gray-900/80 text-white border rounded-lg font-['Orbitron'] text-sm flex items-center gap-2"
+                class="p-3 bg-space-surface-light rounded-lg border flex items-center gap-2"
                 :class="getRankingBorderClass(team.ranking, 'opacity-40')"
               >
                 <svg
@@ -217,92 +267,91 @@
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                {{ player.username }}
-              </li>
-            </ul>
+                <span class="text-space-text text-sm">{{
+                  player.username
+                }}</span>
+              </div>
+            </div>
           </div>
 
           <!-- Rang de l'équipe -->
-          <div class="mt-4">
-            <label class="block text-white/80 font-['Orbitron'] text-sm mb-2"
-              >Position dans le classement:</label
-            >
+          <div class="mb-6">
+            <SpaceTitle size="sm" className="text-space-text-muted mb-3">
+              Position dans le classement:
+            </SpaceTitle>
             <div class="flex flex-wrap gap-2">
-              <button
+              <SpaceButton
                 v-for="rank in maxRanking"
                 :key="rank"
                 @click="setRanking(team._id, rank)"
-                :class="[
-                  'cyberpunk-btn px-4 py-2 rounded-lg font-bold transition-all text-sm relative z-10',
-                  getRankingButtonClass(rank, team.ranking === rank),
-                ]"
+                :variant="
+                  team.ranking === rank
+                    ? getRankingButtonVariant(rank)
+                    : 'ghost'
+                "
+                size="sm"
                 :disabled="selectedTournamentDetails?.finished"
               >
                 {{ getRankingLabel(rank) }}
-              </button>
-              <button
+              </SpaceButton>
+              <SpaceButton
                 @click="setRanking(team._id, 0)"
-                :class="[
-                  'px-4 py-2 rounded-lg font-bold transition-all text-sm',
-                  team.ranking === 0
-                    ? 'bg-gray-500/90 text-white'
-                    : 'bg-gray-700/70 text-white hover:bg-gray-600/90',
-                ]"
+                :variant="team.ranking === 0 ? 'secondary' : 'ghost'"
+                size="sm"
                 :disabled="selectedTournamentDetails?.finished"
               >
                 Non classé
-              </button>
+              </SpaceButton>
             </div>
           </div>
-          <div class="mt-6 border-t border-emerald-500/30 pt-4">
-            <label
-              class="flex items-center gap-2 text-white/80 font-['Orbitron'] text-sm mb-3"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 text-emerald-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                />
-              </svg>
-              Score de l'équipe:
-            </label>
-
-            <!-- Remplacer la section problématique par celle-ci -->
-            <div class="relative">
-              <!-- Badge indiquant le score actuel (au-dessus de l'input au lieu d'être superposé) -->
-
-              <div class="flex items-center">
-                <input
-                  v-model.number="teamScores[team._id]"
-                  type="number"
-                  min="0"
-                  :class="[
-                    'w-20 bg-gray-900/80 border rounded-l-lg px-3 py-2 text-white text-center font-bold',
-                    team.score > 0
-                      ? 'border-emerald-500/70' // Supprimé le pl-24 qui décalait le texte
-                      : 'border-emerald-500/40',
-                    !selectedTournamentDetails?.finished
-                      ? 'focus:outline-none focus:ring-1 focus:ring-emerald-500'
-                      : '',
-                  ]"
-                  :disabled="selectedTournamentDetails?.finished"
-                />
-                <button
-                  @click="updateScore(team._id, teamScores[team._id])"
-                  class="cyberpunk-btn-emerald h-[38px] px-3 rounded-r-lg relative overflow-hidden border-l-0 flex items-center"
-                  :disabled="selectedTournamentDetails?.finished"
+          <!-- Score de l'équipe -->
+          <div class="border-t border-space-border pt-4">
+            <div class="flex items-center justify-between mb-3">
+              <SpaceTitle size="sm" className="text-space-text-muted">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-space-accent-light inline mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+                Score de l'équipe:
+              </SpaceTitle>
+              <!-- Badge avec score actuel -->
+              <div v-if="team.score > 0">
+                <SpaceBadge variant="accent" size="sm">
+                  {{ team.score }} pts
+                </SpaceBadge>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <SpaceInput
+                v-model="teamScores[team._id]"
+                type="number"
+                min="0"
+                className="w-20 text-center"
+                :disabled="selectedTournamentDetails?.finished"
+              />
+              <SpaceButton
+                @click="
+                  updateScore(team._id, parseInt(teamScores[team._id]) || 0)
+                "
+                variant="accent"
+                size="sm"
+                :disabled="selectedTournamentDetails?.finished"
+              >
+                <template #icon>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 relative z-10"
+                    class="h-4 w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -312,22 +361,12 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span class="relative z-10 text-xs font-['Orbitron'] ml-1"
-                    >OK</span
-                  >
-                </button>
-              </div>
-
-              <!-- Badge avec score actuel en haut à droite (conservé pour l'aspect visuel) -->
-              <div
-                v-if="team.score > 0"
-                class="absolute right-0 -top-3 bg-emerald-900/80 text-emerald-400 px-2 py-0.5 text-xs font-bold rounded border border-emerald-500 shadow-sm shadow-emerald-500/50"
-              >
-                {{ team.score }} pts
-              </div>
+                </template>
+                OK
+              </SpaceButton>
             </div>
-          </div>
-        </div>
+          </div></SpaceCard
+        >
       </div>
     </div>
 
@@ -390,7 +429,7 @@ const selectedTournamentDetails = ref<
 /** Liste des équipes du tournoi */
 const teams = ref<Team[]>([]);
 
-const teamScores = ref<Record<string, number>>({});
+const teamScores = ref<Record<string, string>>({});
 
 // Variable pour la boîte de dialogue de confirmation d'annulation
 const showUnfinishConfirmationDialog = ref(false);
@@ -450,7 +489,7 @@ const fetchTournamentDetails = async (tournamentId?: string) => {
 const initTeamScores = () => {
   if (teams.value.length > 0) {
     teams.value.forEach((team) => {
-      teamScores.value[team._id] = team.score || 0;
+      teamScores.value[team._id] = (team.score || 0).toString();
     });
   }
 };
@@ -513,7 +552,7 @@ const updateScore = async (teamId: string, score: number) => {
         teamToUpdate.name = `${baseName} (${score} Pts)`;
 
         // S'assurer que le score reste modifiable dans l'input
-        teamScores.value[teamId] = score;
+        teamScores.value[teamId] = score.toString();
       }
 
       showMessage("success", `Score de l'équipe mis à jour : ${score} Pts`);
@@ -594,6 +633,63 @@ const getRankingLabel = (rank: number): string => {
   }
 };
 
+const getRankingCardVariant = (rank: number): string => {
+  switch (rank) {
+    case 1:
+      return "gold"; // Utilise le variant gold de SpaceCard
+    case 2:
+      return "silver"; // Utilise le variant silver de SpaceCard
+    case 3:
+      return "bronze"; // Utilise le variant bronze de SpaceCard
+    default:
+      return "secondary";
+  }
+};
+
+const getRankingCardClass = (rank: number): string => {
+  // Ajouter des styles supplémentaires pour renforcer l'effet visuel
+  switch (rank) {
+    case 1:
+      return "shadow-space-gold/50 shadow-2xl"; // Ombre dorée plus prononcée
+    case 2:
+      return "shadow-space-silver/50 shadow-2xl"; // Ombre argentée plus prononcée
+    case 3:
+      return "shadow-space-bronze/50 shadow-2xl"; // Ombre bronze plus prononcée
+    case 4:
+      return "shadow-blue-400/30 shadow-lg";
+    case 0:
+      return "";
+    default:
+      return "shadow-space-accent/20 shadow-md";
+  }
+};
+
+const getRankingBadgeVariant = (rank: number): string => {
+  switch (rank) {
+    case 1:
+      return "warning"; // Or - warning donne un effet doré
+    case 2:
+      return "secondary"; // Argent
+    case 3:
+      return "accent"; // Bronze/Orange
+    default:
+      return "primary";
+  }
+};
+
+const getRankingButtonVariant = (rank: number): string => {
+  switch (rank) {
+    case 1:
+      return "warning"; // Or - plus visible quand sélectionné
+    case 2:
+      return "secondary"; // Argent - plus visible quand sélectionné
+    case 3:
+      return "accent"; // Bronze - plus visible quand sélectionné
+    default:
+      return "primary";
+  }
+};
+
 const getRankingBorderClass = (
   rank: number,
   opacityClass = "opacity-70"
@@ -613,58 +709,20 @@ const getRankingBorderClass = (
       return `border-purple-500 shadow-purple-500/20 ${opacityClass}`;
   }
 };
-
-const getRankingBorderBottomClass = (rank: number): string => {
-  switch (rank) {
-    case 1:
-      return "border-space-gold";
-    case 2:
-      return "border-space-silver";
-    case 3:
-      return "border-space-bronze";
-    case 4:
-      return "border-blue-500";
-    case 0:
-      return "border-gray-600";
-    default:
-      return "border-purple-500";
-  }
-};
-
 const getRankingTextClass = (rank: number): string => {
   switch (rank) {
     case 1:
-      return "text-space-gold";
+      return "text-space-gold"; // Utilise la couleur or du thème space
     case 2:
-      return "text-space-silver";
+      return "text-space-silver"; // Utilise la couleur argent du thème space
     case 3:
-      return "text-space-bronze";
+      return "text-space-bronze"; // Utilise la couleur bronze du thème space
     case 4:
-      return "text-blue-500";
+      return "text-blue-400";
     case 0:
       return "text-white";
     default:
-      return "text-purple-500";
-  }
-};
-
-/**
- * Détermine la classe CSS pour les boutons de classement
- */
-const getRankingButtonClass = (rank: number, isActive: boolean): string => {
-  if (!isActive) return "bg-gray-700/70 text-white hover:bg-gray-600/90";
-
-  switch (rank) {
-    case 1:
-      return "cyberpunk-btn-gold"; // À ajouter dans votre CSS
-    case 2:
-      return "cyberpunk-btn-silver"; // À ajouter dans votre CSS
-    case 3:
-      return "cyberpunk-btn-bronze"; // À ajouter dans votre CSS
-    case 4:
-      return "cyberpunk-btn-blue";
-    default:
-      return "cyberpunk-btn-purple";
+      return "text-purple-400";
   }
 };
 

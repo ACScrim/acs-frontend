@@ -5,59 +5,13 @@
     @after-leave="onAfterLeave"
   >
     <div v-if="modelValue" class="fixed inset-0 z-[9999]">
-      <!-- Arrière-plan avec étoiles et nébuleuse -->
+      <!-- Arrière-plan optimisé avec CSS pur -->
       <div
-        class="fixed inset-0 bg-space-bg/95 backdrop-blur-md space-modal-backdrop"
+        class="fixed inset-0 bg-space-bg/90 backdrop-blur space-modal-backdrop"
         @click="$emit('update:modelValue', false)"
       >
-        <!-- Nébuleuse cosmique en arrière-plan -->
-        <div class="nebula-effect"></div>
-
-        <!-- Étoiles scintillantes améliorées -->
-        <div
-          v-for="n in 40"
-          :key="`star-${n}`"
-          class="modal-star"
-          :style="{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            width: `${Math.random() * 3 + 1}px`,
-            height: `${Math.random() * 3 + 1}px`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${Math.random() * 3 + 2}s`,
-          }"
-        ></div>
-
-        <!-- Étoiles filantes -->
-        <div
-          v-for="n in 8"
-          :key="`meteor-${n}`"
-          class="shooting-star"
-          :style="{
-            top: `${Math.random() * 70}%`,
-            left: `${Math.random() * 100}%`,
-            width: `${Math.random() * 80 + 70}px`,
-            animationDelay: `${Math.random() * 15}s`,
-            animationDuration: `${Math.random() * 2 + 1}s`,
-            transform: `rotate(${Math.random() * 45 - 22.5}deg)`,
-          }"
-        ></div>
-
-        <!-- Particules flottantes -->
-        <div
-          v-for="n in 12"
-          :key="`particle-${n}`"
-          class="floating-particle"
-          :style="{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            width: `${Math.random() * 6 + 2}px`,
-            height: `${Math.random() * 6 + 2}px`,
-            animationDelay: `${Math.random() * 8}s`,
-            animationDuration: `${Math.random() * 10 + 15}s`,
-            opacity: Math.random() * 0.5 + 0.2,
-          }"
-        ></div>
+        <!-- Fond spatial en CSS pur (plus rapide) -->
+        <div class="space-background"></div>
       </div>
 
       <!-- Conteneur de centrage sans scrollbar -->
@@ -266,268 +220,122 @@ onMounted(() => {
 <style scoped>
 .space-modal-enter-active,
 .space-modal-leave-active {
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
 
 .space-modal-enter-from {
   opacity: 0;
-  transform: scale(0.9) translateY(20px);
+  transform: scale(0.96);
 }
 
 .space-modal-leave-to {
   opacity: 0;
-  transform: scale(0.95) translateY(10px);
+  transform: scale(0.98);
 }
 
-/* Fond d'espace avec nébuleuse améliorée */
+/* Fond d'espace optimisé pour les performances */
 .space-modal-backdrop {
   overflow: hidden;
   position: relative;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-.nebula-effect {
+/* Fond spatial ultra-optimisé */
+.space-background {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-      circle at 30% 50%,
-      rgba(var(--space-primary-rgb), 0.15),
+  background: 
+    /* Nébuleuse simple mais efficace */ radial-gradient(
+      ellipse at 25% 30%,
+      rgba(var(--space-primary-rgb), 0.12) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 75% 70%,
+      rgba(var(--space-gold-rgb), 0.08) 0%,
       transparent 40%
     ),
+    /* Étoiles minimalistes */
+      radial-gradient(1px 1px at 15% 20%, rgba(255, 255, 255, 0.8), transparent),
     radial-gradient(
-      circle at 70% 60%,
-      rgba(var(--space-secondary-rgb), 0.1),
-      transparent 30%
+      1px 1px at 85% 10%,
+      rgba(var(--space-gold-rgb), 0.7),
+      transparent
     ),
     radial-gradient(
-      circle at 20% 30%,
-      rgba(var(--space-gold-rgb), 0.07),
-      transparent 35%
+      1px 1px at 45% 80%,
+      rgba(var(--space-silver-rgb), 0.6),
+      transparent
     ),
+    radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, 0.9), transparent),
     radial-gradient(
-      circle at 80% 30%,
-      rgba(var(--space-silver-rgb), 0.05),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 50% 70%,
-      rgba(var(--space-bronze-rgb), 0.08),
-      transparent 30%
+      1px 1px at 25% 60%,
+      rgba(var(--space-bronze-rgb), 0.7),
+      transparent
     );
-  filter: blur(30px);
-  opacity: 0.7;
-  animation: nebula-drift 30s infinite alternate ease-in-out;
+
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    100% 100%, 100% 100%;
+
+  opacity: 0.6;
+  /* Animation simple et légère */
+  animation: subtle-drift 40s ease-in-out infinite alternate;
 }
 
-@keyframes nebula-drift {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.1) rotate(2deg);
-  }
-  100% {
-    transform: scale(1.2) rotate(5deg);
-  }
-}
-
-/* Étoiles améliorées */
-.modal-star {
-  position: absolute;
-  background-color: white;
-  border-radius: 50%;
-  animation: twinkle var(--animation-duration, 5s) ease-in-out infinite;
-  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.3);
-}
-
-/* Une étoile sur quatre est dorée */
-.modal-star:nth-child(4n + 1) {
-  background-color: var(--space-gold);
-  box-shadow: 0 0 5px 1px rgba(var(--space-gold-rgb), 0.5);
-}
-
-/* Une étoile sur quatre est argentée */
-.modal-star:nth-child(4n + 2) {
-  background-color: var(--space-silver);
-  box-shadow: 0 0 5px 1px rgba(var(--space-silver-rgb), 0.5);
-}
-
-/* Une étoile sur quatre est bronze */
-.modal-star:nth-child(4n + 3) {
-  background-color: var(--space-bronze);
-  box-shadow: 0 0 5px 1px rgba(var(--space-bronze-rgb), 0.5);
-}
-
-@keyframes twinkle {
+@keyframes subtle-drift {
   0%,
   100% {
-    opacity: 0.8;
-    transform: scale(1);
+    transform: translateX(0) translateY(0) scale(1);
   }
   50% {
-    opacity: 0.4;
-    transform: scale(0.8);
+    transform: translateX(5px) translateY(3px) scale(1.01);
   }
 }
 
-/* Étoiles filantes améliorées */
-.shooting-star {
-  position: absolute;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0)
-  );
-  opacity: 0;
-  animation: shooting var(--animation-duration, 1.5s) linear infinite;
-}
-
-/* Une étoile filante sur trois est dorée */
-.shooting-star:nth-child(3n + 1) {
-  background: linear-gradient(
-    90deg,
-    rgba(var(--space-gold-rgb), 0),
-    rgba(var(--space-gold-rgb), 0.9),
-    rgba(var(--space-gold-rgb), 0)
-  );
-  height: 1.5px;
-}
-
-/* Une étoile filante sur trois est argentée */
-.shooting-star:nth-child(3n + 2) {
-  background: linear-gradient(
-    90deg,
-    rgba(var(--space-silver-rgb), 0),
-    rgba(var(--space-silver-rgb), 0.9),
-    rgba(var(--space-silver-rgb), 0)
-  );
-  height: 1.2px;
-}
-
-/* Une étoile filante sur trois est bronze */
-.shooting-star:nth-child(3n) {
-  background: linear-gradient(
-    90deg,
-    rgba(var(--space-bronze-rgb), 0),
-    rgba(var(--space-bronze-rgb), 0.9),
-    rgba(var(--space-bronze-rgb), 0)
-  );
-  height: 1.3px;
-}
-
-@keyframes shooting {
-  0% {
-    opacity: 0;
-    transform: translateX(-100px) var(--transform, rotate(-15deg));
-  }
-  10%,
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(calc(100vw + 100px)) var(--transform, rotate(-15deg));
-  }
-}
-
-/* Particules flottantes */
-.floating-particle {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.3);
-  filter: blur(1px);
-  animation: float-particle var(--animation-duration, 20s) ease-in-out infinite;
-}
-
-/* Particule dorée */
-.floating-particle:nth-child(3n + 1) {
-  background-color: rgba(var(--space-gold-rgb), 0.3);
-  box-shadow: 0 0 8px 2px rgba(var(--space-gold-rgb), 0.2);
-}
-
-/* Particule argentée */
-.floating-particle:nth-child(3n + 2) {
-  background-color: rgba(var(--space-silver-rgb), 0.3);
-  box-shadow: 0 0 8px 2px rgba(var(--space-silver-rgb), 0.2);
-}
-
-/* Particule bronze */
-.floating-particle:nth-child(3n) {
-  background-color: rgba(var(--space-bronze-rgb), 0.3);
-  box-shadow: 0 0 8px 2px rgba(var(--space-bronze-rgb), 0.2);
-}
-
-@keyframes float-particle {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  25% {
-    transform: translate(20px, 15px) rotate(90deg);
-  }
-  50% {
-    transform: translate(0px, 30px) rotate(180deg);
-  }
-  75% {
-    transform: translate(-20px, 15px) rotate(270deg);
-  }
-}
-
-/* Conteneur de la modale avec effet de lueur amélioré */
+/* Conteneur de la modale avec effet de lueur optimisé */
 .space-modal-content {
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.2),
-    0 0 30px rgba(var(--space-primary-rgb), 0.1),
-    0 0 50px rgba(var(--space-primary-rgb), 0.05);
-  animation: content-glow 8s infinite alternate ease-in-out;
+  box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
+    0 0 40px rgba(var(--space-primary-rgb), 0.08);
   position: relative;
   overflow: hidden;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  background-color: rgba(var(--space-bg-rgb), 0.85);
+  background-color: rgba(var(--space-bg-rgb), 0.9);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Animation de lueur simplifiée */
+  animation: gentle-glow 6s infinite alternate ease-in-out;
 }
 
-@keyframes content-glow {
+@keyframes gentle-glow {
   0% {
-    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.2),
-      0 0 30px rgba(var(--space-primary-rgb), 0.1),
-      0 0 50px rgba(var(--space-primary-rgb), 0.05);
-  }
-  25% {
-    box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.2),
-      0 0 35px rgba(var(--space-gold-rgb), 0.1),
-      0 0 55px rgba(var(--space-gold-rgb), 0.05);
+    box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
+      0 0 40px rgba(var(--space-primary-rgb), 0.08);
   }
   50% {
-    box-shadow: 0 0 20px rgba(var(--space-secondary-rgb), 0.25),
-      0 0 40px rgba(var(--space-secondary-rgb), 0.15),
-      0 0 60px rgba(var(--space-secondary-rgb), 0.05);
-  }
-  75% {
-    box-shadow: 0 0 20px rgba(var(--space-silver-rgb), 0.2),
-      0 0 35px rgba(var(--space-silver-rgb), 0.1),
-      0 0 55px rgba(var(--space-silver-rgb), 0.05);
+    box-shadow: 0 0 25px rgba(var(--space-gold-rgb), 0.18),
+      0 0 45px rgba(var(--space-gold-rgb), 0.1);
   }
   100% {
-    box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.2),
-      0 0 30px rgba(var(--space-bronze-rgb), 0.1),
-      0 0 50px rgba(var(--space-bronze-rgb), 0.05);
+    box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
+      0 0 40px rgba(var(--space-primary-rgb), 0.08);
   }
 }
 
-/* Holographic scanline effect */
+/* Holographic scanline effect optimisé */
 .holographic-effect {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(var(--space-primary-rgb), 0.03) 50%,
+    rgba(var(--space-primary-rgb), 0.02) 50%,
     transparent 100%
   );
-  background-size: 100% 8px;
-  opacity: 0.2;
-  animation: scan-lines 8s linear infinite;
+  background-size: 100% 12px;
+  opacity: 0.15;
+  animation: scan-lines 12s linear infinite;
   pointer-events: none;
   z-index: 2;
 }
@@ -541,101 +349,95 @@ onMounted(() => {
   }
 }
 
-/* Titre de la modale amélioré */
+/* Titre de la modale optimisé */
 .space-modal-title {
   display: inline-block;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.2px;
   background: linear-gradient(
     90deg,
     var(--space-text),
     var(--space-primary-light),
     var(--space-gold),
-    var(--space-silver),
-    var(--space-bronze),
-    var(--space-primary-light)
+    var(--space-text)
   );
-  background-size: 300% 100%;
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
   position: relative;
-  animation: title-gradient 8s linear infinite;
+  animation: title-shimmer 8s linear infinite;
 }
 
-@keyframes title-gradient {
-  0% {
+@keyframes title-shimmer {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 .title-underline {
   position: absolute;
-  bottom: -8px;
+  bottom: -6px;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: linear-gradient(
     90deg,
     transparent,
     var(--space-primary-light),
     var(--space-gold),
-    var(--space-silver),
-    var(--space-bronze),
     var(--space-primary-light),
     transparent
   );
-  background-size: 200% 100%;
-  animation: underline-slide 5s linear infinite;
+  background-size: 150% 100%;
+  animation: underline-flow 6s linear infinite;
 }
 
-@keyframes underline-slide {
-  0% {
+@keyframes underline-flow {
+  0%,
+  100% {
     background-position: 100% 0%;
   }
-  100% {
+  50% {
     background-position: 0% 0%;
   }
 }
 
 .title-glow {
   position: absolute;
-  width: 30px;
-  height: 10px;
+  width: 25px;
+  height: 8px;
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--space-primary-rgb), 0.6),
-    transparent 70%
+    rgba(var(--space-primary-rgb), 0.4),
+    transparent 80%
   );
-  filter: blur(5px);
+  filter: blur(3px);
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  opacity: 0.7;
-  animation: title-glow-slide 4s ease-in-out infinite;
+  opacity: 0.6;
+  animation: title-glow-travel 6s ease-in-out infinite;
 }
 
-@keyframes title-glow-slide {
-  0% {
+@keyframes title-glow-travel {
+  0%,
+  100% {
     left: 0;
     opacity: 0;
   }
-  20% {
-    opacity: 0.7;
+  25%,
+  75% {
+    opacity: 0.6;
   }
-  80% {
-    opacity: 0.7;
-  }
-  100% {
-    left: 100%;
-    opacity: 0;
+  50% {
+    left: calc(100% - 25px);
+    opacity: 0.6;
   }
 }
 
@@ -753,80 +555,75 @@ onMounted(() => {
   box-shadow: 0 0 10px 2px rgba(var(--space-gold-rgb), 0.5);
 }
 
-/* Grille futuriste améliorée */
+/* Grille futuriste optimisée */
 .modal-grid {
   position: absolute;
   inset: 0;
   background-image: linear-gradient(
       to right,
-      rgba(var(--space-primary-rgb), 0.05) 1px,
+      rgba(var(--space-primary-rgb), 0.03) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      rgba(var(--space-primary-rgb), 0.05) 1px,
+      rgba(var(--space-primary-rgb), 0.03) 1px,
       transparent 1px
     );
-  background-size: 20px 20px;
+  background-size: 24px 24px;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.5;
-  animation: grid-pulse 8s infinite alternate ease-in-out;
+  opacity: 0.3;
+  animation: grid-gentle 10s infinite alternate ease-in-out;
 }
 
-@keyframes grid-pulse {
-  0% {
-    opacity: 0.3;
-    background-size: 20px 20px;
+@keyframes grid-gentle {
+  0%,
+  100% {
+    opacity: 0.2;
   }
   50% {
-    opacity: 0.5;
-    background-size: 22px 22px;
-  }
-  100% {
-    opacity: 0.3;
-    background-size: 20px 20px;
+    opacity: 0.35;
   }
 }
 
-/* Orbites décoratives améliorées */
+/* Orbites décoratives optimisées */
 .orbital-ring {
   position: absolute;
   border-radius: 50%;
-  border: 1px dashed rgba(var(--space-primary-rgb), 0.3);
+  border: 1px dashed rgba(var(--space-primary-rgb), 0.2);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 .orbital-ring-1 {
-  width: 150px;
-  height: 150px;
-  top: -30px;
-  right: -50px;
-  animation: orbit-rotate 20s linear infinite;
-  border-color: rgba(var(--space-gold-rgb), 0.3);
+  width: 120px;
+  height: 120px;
+  top: -20px;
+  right: -40px;
+  animation: orbit-slow 30s linear infinite;
+  border-color: rgba(var(--space-gold-rgb), 0.25);
 }
 
 .orbital-ring-2 {
-  width: 120px;
-  height: 120px;
-  bottom: -30px;
-  left: -50px;
-  animation: orbit-rotate 15s linear reverse infinite;
-  border-color: rgba(var(--space-silver-rgb), 0.3);
+  width: 100px;
+  height: 100px;
+  bottom: -20px;
+  left: -40px;
+  animation: orbit-slow 25s linear reverse infinite;
+  border-color: rgba(var(--space-silver-rgb), 0.25);
 }
 
 .orbital-ring-3 {
-  width: 180px;
-  height: 180px;
-  bottom: -60px;
-  right: -60px;
-  animation: orbit-rotate 25s linear infinite;
-  border-color: rgba(var(--space-bronze-rgb), 0.3);
+  width: 140px;
+  height: 140px;
+  bottom: -40px;
+  right: -50px;
+  animation: orbit-slow 35s linear infinite;
+  border-color: rgba(var(--space-bronze-rgb), 0.2);
 }
 
-@keyframes orbit-rotate {
+@keyframes orbit-slow {
   from {
     transform: rotate(0deg);
   }
@@ -862,40 +659,33 @@ onMounted(() => {
   box-shadow: 0 0 8px 2px rgba(var(--space-bronze-rgb), 0.5);
 }
 
-/* Bordure lumineuse */
+/* Bordure lumineuse optimisée */
 .modal-glow-border {
   position: absolute;
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.3),
-    0 0 15px 2px rgba(var(--space-primary-rgb), 0.2);
+  transition: opacity 0.3s ease;
+  box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.25),
+    0 0 12px 1px rgba(var(--space-primary-rgb), 0.15);
   z-index: 0;
 }
 
 .space-modal-container:hover .modal-glow-border {
   opacity: 1;
-  animation: border-color-cycle 8s infinite alternate ease-in-out;
+  animation: border-gentle-glow 6s infinite alternate ease-in-out;
 }
 
-@keyframes border-color-cycle {
-  0% {
-    box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.3),
-      0 0 15px 2px rgba(var(--space-primary-rgb), 0.2);
-  }
-  33% {
-    box-shadow: 0 0 0 1px rgba(var(--space-gold-rgb), 0.3),
-      0 0 15px 2px rgba(var(--space-gold-rgb), 0.2);
-  }
-  66% {
-    box-shadow: 0 0 0 1px rgba(var(--space-silver-rgb), 0.3),
-      0 0 15px 2px rgba(var(--space-silver-rgb), 0.2);
-  }
+@keyframes border-gentle-glow {
+  0%,
   100% {
-    box-shadow: 0 0 0 1px rgba(var(--space-bronze-rgb), 0.3),
-      0 0 15px 2px rgba(var(--space-bronze-rgb), 0.2);
+    box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.25),
+      0 0 12px 1px rgba(var(--space-primary-rgb), 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(var(--space-gold-rgb), 0.3),
+      0 0 15px 1px rgba(var(--space-gold-rgb), 0.18);
   }
 }
 
@@ -972,13 +762,13 @@ onMounted(() => {
   }
 }
 
-/* Animation de bienvenue pour la modale */
+/* Animation de bienvenue simplifiée pour la modale */
 @keyframes welcome-pulse {
   0% {
-    transform: scale(1);
+    transform: scale(0.98);
   }
   50% {
-    transform: scale(1.02);
+    transform: scale(1.01);
   }
   100% {
     transform: scale(1);
@@ -986,7 +776,7 @@ onMounted(() => {
 }
 
 .space-modal-enter-active .space-modal-container {
-  animation: welcome-pulse 0.6s ease-out;
+  animation: welcome-pulse 0.4s ease-out;
 }
 
 /* Overlay de contraste pour améliorer la lisibilité */

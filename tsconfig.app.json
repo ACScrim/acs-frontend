@@ -10,5 +10,13 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    // "src/shared/CyberTerminal.vue", // removed because file is missing
+    // "src/shared/CyberpunkLoader.vue", // removed because file is missing
+    // "src/shared/CyberpunkPagination.vue", // removed because file is missing
+    // If you want to include other .vue files, specify them here or use a more specific pattern
+    "src/**/*.vue"
+  ]
 }

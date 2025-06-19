@@ -4,14 +4,16 @@
     :interactive="true"
     :stars="true"
     :decorated="true"
-    :className="[
-      'mb-4',
-      proposal.status === 'approved'
-        ? 'proposal-approved'
-        : proposal.status === 'pending'
-        ? 'proposal-pending'
-        : 'proposal-rejected',
-    ]"
+    :className="
+      [
+        'mb-4',
+        proposal.status === 'approved'
+          ? 'proposal-approved'
+          : proposal.status === 'pending'
+          ? 'proposal-pending'
+          : 'proposal-rejected',
+      ].join(' ')
+    "
   >
     <div class="flex flex-col sm:flex-row gap-4">
       <!-- Image du jeu -->

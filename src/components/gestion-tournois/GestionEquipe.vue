@@ -5,123 +5,126 @@
     <!-- En-tête -->
     <SpaceHeader
       title="GESTION DES ÉQUIPES"
-      titleSize="3xl"
-      :showMissionInfo="true"
-      mission="EQUIPE-CREATION"
+      :decorated="true"
+      mission="EQUIPE-CREATION-2025"
     />
+
     <!-- Information du tournoi sélectionné -->
-    <div
-      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-cyan-500/30 shadow-md shadow-cyan-500/20"
-    >
-      <div class="flex items-center gap-3 mb-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 text-cyan-500"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <h2 class="font-['Orbitron'] font-semibold text-lg text-cyan-400">
-          Tournoi sélectionné
-        </h2>
-      </div>
+    <SpaceCard variant="primary" :stars="true" className="mb-6">
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-primary-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+        </div>
+      </template>
 
       <!-- Affichage du tournoi ou message si aucun tournoi sélectionné -->
-      <div
-        v-if="selectedTournamentDetails"
-        class="bg-gray-900/60 p-4 rounded-lg border border-cyan-500/30"
-      >
-        <p class="text-white mb-2">
-          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
-            >Nom:</span
-          >
-          {{ selectedTournamentDetails.name }}
-        </p>
-        <p class="text-white mb-2" v-if="selectedTournamentDetails.date">
-          <span class="text-cyan-400 font-['Orbitron'] font-semibold"
-            >Date:</span
-          >
-          {{
-            new Date(selectedTournamentDetails.date).toLocaleDateString("fr-FR")
-          }}
-        </p>
-        <p
+      <div v-if="selectedTournamentDetails">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="flex flex-col">
+            <span class="text-space-text-muted text-sm">Nom</span>
+            <span class="text-space-text font-mono text-lg">
+              {{ selectedTournamentDetails.name }}
+            </span>
+          </div>
+          <div v-if="selectedTournamentDetails.date" class="flex flex-col">
+            <span class="text-space-text-muted text-sm">Date</span>
+            <span class="text-space-text font-mono text-lg">
+              {{
+                new Date(selectedTournamentDetails.date).toLocaleDateString(
+                  "fr-FR"
+                )
+              }}
+            </span>
+          </div>
+        </div>
+        <SpaceBadge
           v-if="selectedTournamentDetails.finished"
-          class="mt-2 text-sm px-3 py-1 bg-red-900/20 border border-red-500/50 rounded-full inline-block text-red-300"
+          variant="danger"
+          size="md"
         >
-          <span class="font-['Orbitron']">Tournoi terminé</span>
-        </p>
-      </div>
-      <div
-        v-else
-        class="bg-gray-900/60 p-4 rounded-lg border border-red-500/30 text-gray-400 italic"
-      >
-        Veuillez sélectionner un tournoi dans le menu en haut de la page
-      </div>
-    </div>
-
-    <div
-      v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
-      class="mb-6 p-4 bg-red-900/20 text-white rounded-lg border border-red-500/50 shadow-md flex items-start gap-3"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 text-red-400 flex-shrink-0 mt-0.5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
-      <div>
-        <h3 class="font-['Orbitron'] font-bold text-red-300 mb-1">
           Tournoi terminé
-        </h3>
+        </SpaceBadge>
+      </div>
+      <div v-else>
+        <SpaceAlert variant="warning" className="text-center">
+          Veuillez sélectionner un tournoi dans le menu en haut de la page
+        </SpaceAlert>
+      </div>
+    </SpaceCard>
+
+    <!-- Alerte si tournoi terminé -->
+    <SpaceAlert
+      v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
+      variant="danger"
+      className="mb-6"
+    >
+      <template #icon>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </template>
+      <div>
+        <SpaceTitle size="md" className="text-red-300 mb-1">
+          Tournoi terminé
+        </SpaceTitle>
         <p class="text-sm text-white/80">
           Ce tournoi est déjà terminé. Vous pouvez consulter les équipes mais
           vous ne pouvez plus les modifier.
         </p>
       </div>
-    </div>
-    <!-- Détails du tournoi -->
-    <div
+    </SpaceAlert>
+    <!-- Section de génération des équipes -->
+    <SpaceCard
       v-if="selectedTournamentDetails"
-      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-purple-500/30 shadow-md shadow-purple-500/20"
+      variant="accent"
+      :stars="true"
+      className="mb-6"
     >
-      <div class="flex items-center gap-3 mb-6">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 text-purple-500"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-          />
-        </svg>
-        <h2 class="font-['Orbitron'] font-bold text-2xl text-purple-400">
-          Génération des équipes
-        </h2>
-      </div>
-      <div class="flex flex-col md:flex-row items-start gap-4">
-        <div class="w-full md:w-1/2">
-          <label
-            for="numTeams"
-            class="flex items-center text-lg text-purple-500 mb-2 font-['Orbitron'] font-semibold"
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-accent-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
+            <path
+              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+            />
+          </svg>
+          <SpaceTitle size="xl">Génération des équipes</SpaceTitle>
+        </div>
+      </template>
+
+      <div class="flex flex-col md:flex-row items-start gap-6">
+        <div class="w-full md:w-1/2">
+          <SpaceTitle size="md" className="text-space-text-muted mb-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-5 w-5 mr-2 inline"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -132,211 +135,180 @@
               />
             </svg>
             Nombre d'équipes
-          </label>
-          <div class="relative w-full">
-            <input
-              type="number"
-              id="numTeams"
-              v-model="numTeams"
-              min="2"
-              max="20"
-              class="w-full py-3 px-4 bg-gray-900/80 text-white border border-purple-500/50 rounded-lg font-['Orbitron'] shadow-md shadow-purple-500/30 transition-all duration-300 focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/50"
-            />
-          </div>
+          </SpaceTitle>
+          <SpaceInput
+            v-model="numTeams"
+            type="number"
+            min="2"
+            max="20"
+            className="w-full"
+          />
         </div>
+
         <div class="flex flex-wrap gap-3 mt-6 md:mt-8">
-          <button
+          <SpaceButton
             @click="generateTeams"
             :disabled="selectedTournamentDetails?.finished"
-            :class="[
-              'cyberpunk-btn-purple flex items-center justify-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
-              {
-                'opacity-50 cursor-not-allowed':
-                  selectedTournamentDetails?.finished,
-              },
-            ]"
+            variant="accent"
+            size="lg"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 relative z-10"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="relative z-10">Générer les équipes</span>
-          </button>
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Générer les équipes
+          </SpaceButton>
 
           <!-- Supprimer les équipes -->
-          <button
+          <SpaceButton
             v-if="teams.length > 0"
             @click="confirmDeleteAllTeams"
             :disabled="selectedTournamentDetails?.finished"
-            :class="[
-              'cyberpunk-btn-red flex items-center justify-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
-              {
-                'opacity-50 cursor-not-allowed':
-                  selectedTournamentDetails?.finished,
-              },
-            ]"
+            variant="danger"
+            size="lg"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 relative z-10"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="relative z-10">Supprimer les équipes</span>
-          </button>
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Supprimer les équipes
+          </SpaceButton>
         </div>
       </div>
-    </div>
-
+    </SpaceCard>
     <!-- Affichage des équipes avec drag and drop -->
-    <div
+    <SpaceCard
       v-if="teams.length > 0"
-      class="mb-8 p-6 bg-gray-800/70 rounded-xl border border-emerald-500/30 shadow-md shadow-emerald-500/20"
+      variant="secondary"
+      :stars="true"
+      className="mb-6"
     >
-      <div class="flex items-center gap-3 mb-6">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-          <path
-            fill-rule="evenodd"
-            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <h2 class="font-['Orbitron'] font-bold text-2xl text-emerald-400">
-          Composition des équipes
-        </h2>
-      </div>
-      <div class="relative mb-6">
-        <div
-          class="flex items-center py-3 px-4 bg-gray-800/70 border border-emerald-500/30 rounded-lg shadow-md shadow-emerald-500/20 transition-all duration-300 sticky top-0 z-20"
-          :class="{
-            'bg-gray-800/90 border-emerald-500/70 shadow-lg shadow-emerald-500/40':
-              searchQuery,
-          }"
-        >
+      <template #header>
+        <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-emerald-500/70 mr-3"
+            class="h-6 w-6 text-space-secondary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
             <path
               fill-rule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
               clip-rule="evenodd"
             />
           </svg>
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Rechercher un joueur par nom..."
-            @input="searchPlayers"
-            @focus="searchFocused = true"
-            class="flex-1 bg-transparent border-none text-white font-['Orbitron'] text-sm focus:outline-none placeholder:text-white/50"
-          />
-          <button
-            v-if="searchQuery"
-            @click="
-              searchQuery = '';
-              searchResults = [];
-            "
-            class="cyberpunk-btn-gray flex items-center justify-center w-6 h-6 rounded-full"
-          >
+          <SpaceTitle size="xl">Composition des équipes</SpaceTitle>
+        </div>
+      </template>
+      <!-- Barre de recherche -->
+      <div class="relative mb-6">
+        <SpaceInput
+          v-model="searchQuery"
+          type="text"
+          placeholder="Rechercher un joueur par nom..."
+          @input="searchPlayers"
+          @focus="searchFocused = true"
+          className="w-full"
+        >
+          <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 relative z-10"
+              class="h-5 w-5 text-space-text-muted"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
               <path
                 fill-rule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                 clip-rule="evenodd"
               />
             </svg>
-          </button>
-        </div>
+          </template>
+        </SpaceInput>
 
+        <!-- Message aucun résultat -->
         <div
           v-if="searchQuery && searchResults.length === 0 && searchFocused"
-          class="absolute top-full left-0 right-0 flex items-center gap-2 py-3 px-4 mt-2 bg-gray-900/95 border border-red-500/30 rounded-lg shadow-lg text-white/70 text-sm"
+          class="absolute top-full left-0 right-0 mt-2 z-10"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-red-500/70"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>Aucun joueur trouvé</span>
+          <SpaceAlert variant="warning">
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </template>
+            Aucun joueur trouvé
+          </SpaceAlert>
         </div>
 
-        <div
+        <!-- Résultats de recherche avec Space UI -->
+        <SpaceCard
           v-else-if="searchResults.length > 0 && searchFocused"
-          class="absolute top-full left-0 right-0 bg-gray-900/95 border border-emerald-500/30 rounded-lg mt-2 max-h-[300px] overflow-y-auto z-10 shadow-lg shadow-black/50"
+          variant="dark"
+          className="absolute top-full left-0 right-0 mt-2 max-h-[300px] overflow-y-auto z-10"
         >
           <div
             v-for="result in searchResults"
             :key="result.player._id"
             @click="navigateToPlayerTeam(result)"
-            class="flex justify-between items-center p-3 border-b border-emerald-500/10 transition-all duration-200 hover:bg-emerald-500/20 hover:translate-x-1 cursor-pointer"
+            class="flex justify-between items-center p-3 border-b border-space-border/20 transition-all duration-200 hover:bg-space-primary/10 hover:translate-x-1 cursor-pointer last:border-b-0"
           >
-            <span class="font-medium text-white">{{
+            <span class="font-medium text-space-text">{{
               result.player.username
             }}</span>
-            <span
-              class="text-xs text-white bg-emerald-500/40 py-1 px-3 rounded-full shadow-sm shadow-emerald-500/20"
-            >
+            <SpaceBadge variant="primary" size="sm">
               {{ result.teamName }}
-            </span>
+            </SpaceBadge>
           </div>
-        </div>
+        </SpaceCard>
       </div>
 
-      <!-- Dans la section teams-display, remplacer la grid par : -->
-      <div class="flex flex-col gap-6">
-        <!-- Onglets d'équipe avec meilleure visibilité pour l'actif -->
-        <div
-          class="flex flex-wrap gap-2 border-b border-emerald-500/30 pb-2 mb-4 overflow-x-auto"
+      <!-- Onglets d'équipe avec Space UI -->
+      <div
+        class="flex flex-wrap gap-2 border-b border-space-border/30 pb-2 mb-4 overflow-x-auto"
+      >
+        <SpaceButton
+          @click="viewMode = 'overview'"
+          :variant="viewMode === 'overview' ? 'primary' : 'secondary'"
+          size="md"
+          className="whitespace-nowrap"
         >
-          <button
-            @click="viewMode = 'overview'"
-            :class="[
-              'flex items-center py-3 px-5 font-[\'Orbitron\'] font-medium transition-all duration-300 whitespace-nowrap',
-              viewMode === 'overview'
-                ? 'bg-emerald-500/40 text-white border-2 border-emerald-500 rounded-t-lg shadow-[0_0_15px_rgba(16,185,129,0.6)] translate-y-1'
-                : 'bg-gray-800/70 text-white/80 border border-emerald-500/30 rounded-t-lg hover:bg-gray-800/90 hover:border-emerald-500/50',
-            ]"
-          >
+          <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -344,347 +316,129 @@
                 d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
               />
             </svg>
-            Vue d'ensemble
-          </button>
-          <button
+          </template>
+          Vue d'ensemble
+        </SpaceButton>
+
+        <SpaceButton
+          v-for="(team, index) in teams"
+          :key="index"
+          @click="selectTeam(index)"
+          :variant="
+            viewMode === 'team' && activeTeamTab === index
+              ? 'accent'
+              : 'secondary'
+          "
+          size="md"
+          className="whitespace-nowrap"
+        >
+          {{ team.name || `Équipe ${index + 1}` }}
+        </SpaceButton>
+      </div>
+
+      <transition name="fade" mode="out-in">
+        <!-- Vue d'ensemble avec SpaceCard -->
+        <div
+          v-if="viewMode === 'overview'"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
+        >
+          <SpaceCard
             v-for="(team, index) in teams"
             :key="index"
-            @click="selectTeam(index)"
-            :class="[
-              'py-3 px-5 font-[\'Orbitron\'] font-medium transition-all duration-300 whitespace-nowrap',
-              viewMode === 'team' && activeTeamTab === index
-                ? 'bg-emerald-500/40 text-white border-2 border-emerald-500 rounded-t-lg shadow-[0_0_15px_rgba(16,185,129,0.6)] translate-y-1'
-                : 'bg-gray-800/70 text-white/80 border border-emerald-500/30 rounded-t-lg hover:bg-gray-800/90 hover:border-emerald-500/50',
-            ]"
+            variant="secondary"
+            :stars="true"
+            className="flex flex-col gap-4"
           >
-            {{ team.name || `Équipe ${index + 1}` }}
-          </button>
-        </div>
+            <template #header>
+              <div class="flex justify-between items-center">
+                <div class="flex flex-col gap-1">
+                  <SpaceTitle size="lg" className="text-space-secondary-light">
+                    {{ team.name || `Équipe ${index + 1}` }}
+                  </SpaceTitle>
+                  <SpaceBadge :variant="getTeamBalanceVariant(team)" size="sm">
+                    {{ team.players.length }} joueur{{
+                      team.players.length > 1 ? "s" : ""
+                    }}
+                  </SpaceBadge>
+                </div>
+                <div class="flex items-center gap-2">
+                  <SpaceButton
+                    @click="unassignAllPlayers(index)"
+                    variant="danger"
+                    size="sm"
+                    :title="`Désassigner tous les joueurs de ${
+                      team.name || 'cette équipe'
+                    }`"
+                  >
+                    <template #icon>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </template>
+                    Vider
+                  </SpaceButton>
+                  <SpaceButton
+                    @click="selectTeam(index)"
+                    variant="primary"
+                    size="sm"
+                    :title="`Éditer l'équipe ${team.name || index + 1}`"
+                  >
+                    <template #icon>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                        />
+                      </svg>
+                    </template>
+                    Éditer
+                  </SpaceButton>
+                </div>
+              </div>
+            </template>
 
-        <transition name="fade" mode="out-in">
-          <!-- Vue d'ensemble -->
-          <div
-            v-if="viewMode === 'overview'"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
-          >
-            <div
-              v-for="(team, index) in teams"
-              :key="index"
-              class="p-6 bg-gray-800/70 rounded-xl border border-emerald-500/20 shadow-md shadow-emerald-500/10 transition-all duration-300 flex flex-col gap-4 hover:shadow-lg hover:shadow-emerald-500/30 hover:border-emerald-500/40"
+            <!-- Zone de drag and drop -->
+            <vue-draggable-next
+              v-model="team.players"
+              group="players"
+              @start="isDragging = true"
+              @end="
+                onDragEnd();
+                isDragging = false;
+              "
+              :disabled="selectedTournamentDetails?.finished"
+              class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-space-bg-secondary/50 border-2 border-dashed border-space-border/30 rounded-lg transition-all duration-300"
+              :class="{
+                'opacity-70 cursor-not-allowed':
+                  selectedTournamentDetails?.finished,
+              }"
             >
               <div
-                class="flex justify-between items-center pb-2 border-b border-emerald-500/30"
+                v-for="player in team.players"
+                :key="player._id"
+                :data-player-id="player._id"
+                class="flex justify-between items-center p-3 bg-space-bg-primary/80 text-space-text border border-space-secondary/50 rounded-lg shadow-sm shadow-space-secondary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-space-secondary/50 hover:-translate-y-0.5"
               >
-                <div class="flex flex-col gap-1">
-                  <h3
-                    class="font-['Orbitron'] font-semibold text-xl text-emerald-500 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]"
-                  >
-                    {{ team.name || `Équipe ${index + 1}` }}
-                  </h3>
-                  <div class="flex gap-2 items-center">
-                    <span
-                      :class="[
-                        'text-xs py-1 px-2 rounded-full',
-                        getTeamBalanceClass(team) === 'empty'
-                          ? 'bg-red-500/20 text-red-500/90'
-                          : getTeamBalanceClass(team) === 'unbalanced-low'
-                          ? 'bg-amber-500/20 text-amber-500/90'
-                          : getTeamBalanceClass(team) === 'unbalanced-high'
-                          ? 'bg-blue-500/20 text-blue-500/90'
-                          : 'bg-emerald-500/20 text-emerald-500/90',
-                      ]"
-                    >
-                      {{ team.players.length }} joueur{{
-                        team.players.length > 1 ? "s" : ""
-                      }}
-                    </span>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button
-                    @click="unassignAllPlayers(index)"
-                    class="cyberpunk-btn-red flex items-center justify-center w-8 h-8 rounded-md"
-                    title="Désassigner tous les joueurs"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 relative z-10"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    @click="selectTeam(index)"
-                    class="cyberpunk-btn-green flex items-center justify-center w-8 h-8 rounded-md"
-                    title="Éditer l'équipe"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 relative z-10"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Drag and drop area -->
-              <vue-draggable-next
-                v-model="team.players"
-                group="players"
-                @start="isDragging = true"
-                @end="
-                  onDragEnd();
-                  isDragging = false;
-                "
-                :disabled="selectedTournamentDetails?.finished"
-                class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-gray-900/50 border-2 border-dashed border-emerald-500/30 rounded-lg transition-all duration-300"
-                :class="{
-                  'opacity-70 cursor-not-allowed':
-                    selectedTournamentDetails?.finished,
-                }"
-              >
+                <span class="text-space-text">{{ player.username }}</span>
                 <div
-                  v-for="player in team.players"
-                  :key="player._id"
-                  :data-player-id="player._id"
-                  class="flex justify-between items-center p-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-emerald-500/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-emerald-500/50 hover:-translate-y-0.5 relative overflow-hidden"
-                >
-                  <span class="text-white">{{ player.username }}</span>
-                  <div
-                    class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- Placeholder when empty -->
-                <div
-                  v-if="team.players.length === 0"
-                  class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-emerald-500/70 font-['Orbitron'] transition-all duration-300 bg-emerald-500/5 border-2 border-dashed border-emerald-500/30 rounded-lg"
-                >
-                  <p class="mt-2 text-center">Équipe vide</p>
-                </div>
-              </vue-draggable-next>
-            </div>
-          </div>
-
-          <!-- Vue équipe spécifique -->
-          <!-- Vue équipe spécifique - Correction pour afficher les joueurs -->
-          <div
-            v-else-if="viewMode === 'team'"
-            class="bg-gray-800/70 p-6 rounded-xl border border-emerald-500/20 shadow-md shadow-emerald-500/10"
-          >
-            <div
-              class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-2 border-b border-emerald-500/30 gap-4"
-            >
-              <div class="flex flex-col gap-3 w-full">
-                <div class="flex items-center gap-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6 text-emerald-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  <h3
-                    class="font-['Orbitron'] font-bold text-xl text-emerald-400"
-                  >
-                    Équipe {{ activeTeamTab + 1 }}
-                  </h3>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="text-white text-sm font-['Orbitron']"
-                    >Nom de l'équipe:</span
-                  >
-                  <input
-                    type="text"
-                    v-model="teams[activeTeamTab].name"
-                    placeholder="Entrez un nom pour cette équipe"
-                    class="flex-1 py-2 px-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg transition-all duration-300 focus:outline-none focus:border-emerald-500 focus:shadow-md focus:shadow-emerald-500/30 font-['Orbitron']"
-                  />
-                </div>
-              </div>
-
-              <button
-                @click="viewMode = 'overview'"
-                class="cyberpunk-btn-gray flex items-center justify-center px-3 py-1.5 text-sm font-['Orbitron'] rounded-lg self-start sm:self-start"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1 relative z-10"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <span class="relative z-10">Retour</span>
-              </button>
-            </div>
-
-            <div
-              class="p-3 bg-gray-900/50 rounded-lg border border-emerald-500/30"
-            >
-              <div class="flex justify-between items-center mb-2">
-                <h4 class="text-lg text-emerald-300 font-['Orbitron']">
-                  Joueurs de l'équipe
-                </h4>
-
-                <button
-                  @click="unassignAllPlayers(activeTeamTab)"
-                  class="cyberpunk-btn-red flex items-center justify-center px-3 py-1.5 text-sm font-['Orbitron'] rounded-lg"
+                  class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 relative z-10"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span class="relative z-10">Désassigner tous</span>
-                </button>
-              </div>
-
-              <vue-draggable-next
-                v-model="teams[activeTeamTab].players"
-                group="players"
-                @start="isDragging = true"
-                @end="
-                  onDragEnd();
-                  isDragging = false;
-                "
-                :disabled="selectedTournamentDetails?.finished"
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px]"
-                :class="{
-                  'opacity-70': selectedTournamentDetails?.finished,
-                }"
-              >
-                <div
-                  v-for="player in teams[activeTeamTab].players"
-                  :key="player._id"
-                  :data-player-id="player._id"
-                  class="flex justify-between items-center p-3 bg-gray-900/80 text-white border border-emerald-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-emerald-500/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-emerald-500/50 hover:-translate-y-0.5 relative overflow-hidden"
-                >
-                  <span class="text-white">{{ player.username }}</span>
-                  <div
-                    class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- Placeholder when empty -->
-                <div
-                  v-if="teams[activeTeamTab].players.length === 0"
-                  class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-emerald-500/70 font-['Orbitron'] transition-all duration-300 bg-emerald-500/5 border-2 border-dashed border-emerald-500/30 rounded-lg"
-                >
-                  <p class="mt-2 text-center">Cette équipe est vide</p>
-                  <p class="text-sm text-center mt-2">
-                    Glissez-déposez des joueurs ici
-                  </p>
-                </div>
-              </vue-draggable-next>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Liste des joueurs non assignés -->
-        <div
-          class="unassigned-players mb-8 p-6 bg-gray-800/70 rounded-xl border border-red-500/30 shadow-md shadow-red-500/20"
-        >
-          <div class="flex items-center gap-3 mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-red-500"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
-              />
-            </svg>
-            <h2 class="font-['Orbitron'] font-bold text-2xl text-red-400">
-              Joueurs non assignés
-              <span class="text-base font-normal ml-2 text-white/70"
-                >({{ unassignedPlayers.length }})</span
-              >
-            </h2>
-          </div>
-
-          <!-- Zone de drop pour les joueurs non assignés -->
-          <vue-draggable-next
-            v-model="unassignedPlayers"
-            group="players"
-            @start="isDragging = true"
-            @end="
-              onDragEnd();
-              isDragging = false;
-            "
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px]"
-          >
-            <div
-              v-for="(player, index) in unassignedPlayers"
-              :key="player._id"
-              :data-player-id="player._id"
-              class="flex flex-col p-3 bg-gray-900/80 border border-red-500/50 rounded-lg font-['Orbitron'] shadow-sm shadow-red-500/30 transition-all duration-300 hover:shadow-md hover:shadow-red-500/50 hover:-translate-y-0.5 relative overflow-hidden"
-            >
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-white">{{ player.username }}</span>
-                <div
-                  class="flex items-center justify-center w-6 h-6 bg-gray-800/70 rounded cursor-move"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
+                    class="h-4 w-4 text-space-text-muted"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -697,180 +451,410 @@
                 </div>
               </div>
 
-              <!-- Liste déroulante pour assigner à une équipe -->
-              <div class="relative w-full mt-2">
-                <select
-                  :id="`assign-player-${player._id}`"
-                  class="w-full py-1.5 px-2 text-xs bg-gray-900/70 text-white border border-red-500/40 rounded-md font-['Orbitron'] appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:border-red-500/70 focus:shadow-sm focus:shadow-red-500/30"
-                  @change="
-                    assignPlayerToTeam(
-                      index,
-                      ($event.target as HTMLSelectElement)?.value
-                    );
-                    ($event.target as HTMLSelectElement).value = '';
-                  "
+              <!-- Placeholder when empty -->
+              <div
+                v-if="team.players.length === 0"
+                class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-space-text-muted transition-all duration-300 bg-space-secondary/5 border-2 border-dashed border-space-secondary/30 rounded-lg"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-8 w-8 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <option value="" selected disabled>
-                    Assigner à une équipe
-                  </option>
-                  <option
-                    v-for="(team, teamIndex) in teams"
-                    :key="teamIndex"
-                    :value="teamIndex"
-                  >
-                    {{ team.name || `Équipe ${teamIndex + 1}` }}
-                  </option>
-                </select>
-                <div
-                  class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <p class="text-center">Équipe vide</p>
+                <p class="text-xs text-center mt-1">
+                  Glissez-déposez des joueurs ici
+                </p>
+              </div>
+            </vue-draggable-next>
+          </SpaceCard>
+        </div>
+
+        <!-- Vue équipe spécifique avec Space UI -->
+        <SpaceCard
+          v-else-if="viewMode === 'team'"
+          variant="primary"
+          :stars="true"
+          className="mb-6"
+        >
+          <template #header>
+            <div
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            >
+              <div class="flex flex-col gap-3 w-full">
+                <div class="flex items-center gap-3">
                   <svg
-                    class="h-4 w-4 text-red-500"
                     xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-space-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <SpaceTitle size="xl" className="text-space-primary-light">
+                    Équipe {{ activeTeamTab + 1 }}
+                  </SpaceTitle>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-space-text text-sm">Nom de l'équipe:</span>
+                  <SpaceInput
+                    v-model="teams[activeTeamTab].name"
+                    type="text"
+                    placeholder="Entrez un nom pour cette équipe"
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+
+              <SpaceButton
+                @click="viewMode = 'overview'"
+                variant="secondary"
+                size="md"
+              >
+                <template #icon>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
                     <path
                       fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </template>
+                Retour
+              </SpaceButton>
+            </div>
+          </template>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <SpaceTitle size="lg" className="text-space-primary-light">
+                Joueurs de l'équipe
+              </SpaceTitle>
+
+              <SpaceButton
+                @click="unassignAllPlayers(activeTeamTab)"
+                variant="danger"
+                size="md"
+              >
+                <template #icon>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </template>
+                Désassigner tous
+              </SpaceButton>
+            </div>
+
+            <vue-draggable-next
+              v-model="teams[activeTeamTab].players"
+              group="players"
+              @start="isDragging = true"
+              @end="
+                onDragEnd();
+                isDragging = false;
+              "
+              :disabled="selectedTournamentDetails?.finished"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px] p-4 bg-space-bg-secondary/30 border-2 border-dashed border-space-border/30 rounded-lg"
+              :class="{ 'opacity-70': selectedTournamentDetails?.finished }"
+            >
+              <div
+                v-for="player in teams[activeTeamTab].players"
+                :key="player._id"
+                :data-player-id="player._id"
+                class="flex justify-between items-center p-3 bg-space-bg-primary/80 text-space-text border border-space-primary/50 rounded-lg shadow-sm shadow-space-primary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-space-primary/50 hover:-translate-y-0.5"
+              >
+                <span class="text-space-text">{{ player.username }}</span>
+                <div
+                  class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 text-space-text-muted"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
                       clip-rule="evenodd"
                     />
                   </svg>
                 </div>
               </div>
-            </div>
 
-            <!-- Message lorsqu'il n'y a aucun joueur non assigné -->
-            <div
-              v-if="unassignedPlayers.length === 0"
-              class="col-span-full flex flex-col items-center justify-center p-6 text-red-500/70 bg-red-500/5 border-2 border-dashed border-red-500/30 rounded-lg min-h-[150px]"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <!-- Placeholder when empty -->
+              <div
+                v-if="teams[activeTeamTab].players.length === 0"
+                class="col-span-full flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-space-text-muted bg-space-primary/5 border-2 border-dashed border-space-primary/30 rounded-lg"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <p class="mt-4 text-center font-['Orbitron']">
-                Tous les joueurs sont assignés à des équipes
-              </p>
-            </div>
-          </vue-draggable-next>
-        </div>
-      </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-8 w-8 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <p class="text-center">Cette équipe est vide</p>
+                <p class="text-xs text-center mt-2">
+                  Glissez-déposez des joueurs ici
+                </p>
+              </div>
+            </vue-draggable-next>
+          </div>
+        </SpaceCard>
+      </transition>
 
-      <div class="flex flex-wrap gap-4 mt-6">
-        <button
+      <!-- Liste des joueurs non assignés avec Space UI -->
+      <SpaceCard variant="danger" :stars="true" className="mb-8">
+        <template #header>
+          <div class="flex items-center gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-space-danger-light"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+              />
+            </svg>
+            <SpaceTitle size="xl" className="text-space-danger-light">
+              Joueurs non assignés
+            </SpaceTitle>
+            <SpaceBadge variant="danger" size="md">
+              {{ unassignedPlayers.length }}
+            </SpaceBadge>
+          </div>
+        </template>
+
+        <!-- Zone de drop pour les joueurs non assignés -->
+        <vue-draggable-next
+          v-model="unassignedPlayers"
+          group="players"
+          @start="isDragging = true"
+          @end="
+            onDragEnd();
+            isDragging = false;
+          "
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px] p-4 bg-space-danger/5 border-2 border-dashed border-space-danger/30 rounded-lg"
+        >
+          <div
+            v-for="(player, index) in unassignedPlayers"
+            :key="player._id"
+            :data-player-id="player._id"
+            class="flex flex-col p-3 bg-space-bg-primary/80 border border-space-danger/50 rounded-lg shadow-sm shadow-space-danger/30 transition-all duration-300 hover:shadow-md hover:shadow-space-danger/50 hover:-translate-y-0.5"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-space-text">{{ player.username }}</span>
+              <div
+                class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded cursor-move"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-space-text-muted"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Sélecteur d'équipe -->
+            <select
+              :id="`assign-player-${player._id}`"
+              class="w-full py-1.5 px-2 text-xs bg-space-bg-secondary/70 text-space-text border border-space-danger/40 rounded-md appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:border-space-danger/70 focus:shadow-sm focus:shadow-space-danger/30"
+              @change="
+                assignPlayerToTeam(
+                  index,
+                  ($event.target as HTMLSelectElement)?.value
+                );
+                ($event.target as HTMLSelectElement).value = '';
+              "
+            >
+              <option value="" selected disabled>Assigner à une équipe</option>
+              <option
+                v-for="(team, teamIndex) in teams"
+                :key="teamIndex"
+                :value="teamIndex"
+              >
+                {{ team.name || `Équipe ${teamIndex + 1}` }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Message lorsqu'il n'y a aucun joueur non assigné -->
+          <div
+            v-if="unassignedPlayers.length === 0"
+            class="col-span-full flex flex-col items-center justify-center p-6 text-space-text-muted bg-space-success/5 border-2 border-dashed border-space-success/30 rounded-lg min-h-[150px]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10 text-space-success mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p class="text-center">
+              Tous les joueurs sont assignés à des équipes
+            </p>
+          </div>
+        </vue-draggable-next>
+      </SpaceCard>
+
+      <!-- Boutons d'action avec Space UI -->
+      <div class="flex flex-wrap gap-4">
+        <SpaceButton
           @click="saveTeams"
           :disabled="selectedTournamentDetails?.finished"
-          :class="[
-            'cyberpunk-btn-green flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
-            {
-              'opacity-50 cursor-not-allowed':
-                selectedTournamentDetails?.finished,
-            },
-          ]"
-          title="Enregistre la composition actuelle des équipes sans les finaliser ni les publier"
+          variant="success"
+          size="lg"
+          :title="
+            selectedTournamentDetails?.finished
+              ? 'Tournoi terminé'
+              : 'Enregistre la composition actuelle des équipes sans les finaliser ni les publier'
+          "
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2 relative z-10"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span class="relative z-10">Valider les équipes</span>
-        </button>
-        <button
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          Valider les équipes
+        </SpaceButton>
+
+        <SpaceButton
           v-if="teams.length > 0"
           @click="togglePublication"
           :disabled="selectedTournamentDetails?.finished"
-          :class="[
-            selectedTournamentDetails?.teamsPublished
-              ? 'cyberpunk-btn-amber'
-              : 'cyberpunk-btn-cyan',
-            'flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
-            {
-              'opacity-50 cursor-not-allowed':
-                selectedTournamentDetails?.finished,
-            },
-          ]"
+          :variant="
+            selectedTournamentDetails?.teamsPublished ? 'warning' : 'info'
+          "
+          size="lg"
           :title="
-            selectedTournamentDetails?.teamsPublished
+            selectedTournamentDetails?.finished
+              ? 'Tournoi terminé'
+              : selectedTournamentDetails?.teamsPublished
               ? 'Masque les équipes aux participants du tournoi'
               : 'Rend les équipes visibles pour tous les participants du tournoi'
           "
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2 relative z-10"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-              clip-rule="evenodd"
-              v-if="!selectedTournamentDetails?.teamsPublished"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
-              clip-rule="evenodd"
-              v-else
-            />
-          </svg>
-          <span class="relative z-10">
-            {{
-              selectedTournamentDetails?.teamsPublished
-                ? "Dépublier les équipes"
-                : "Publier les équipes"
-            }}
-          </span>
-        </button>
-        <button
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                v-if="!selectedTournamentDetails?.teamsPublished"
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                clip-rule="evenodd"
+              />
+              <path
+                v-else
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          {{
+            selectedTournamentDetails?.teamsPublished
+              ? "Dépublier les équipes"
+              : "Publier les équipes"
+          }}
+        </SpaceButton>
+
+        <SpaceButton
           @click="saveTeamDefinitive"
           :disabled="selectedTournamentDetails?.finished"
-          :class="[
-            'cyberpunk-btn-pink flex items-center py-3 px-6 font-[\'Orbitron\'] font-semibold rounded-lg',
-            {
-              'opacity-50 cursor-not-allowed':
-                selectedTournamentDetails?.finished,
-            },
-          ]"
-          title="Finalise définitivement les équipes, crée les canaux Discord et supprime les anciens canaux"
+          variant="accent"
+          size="lg"
+          :title="
+            selectedTournamentDetails?.finished
+              ? 'Tournoi terminé'
+              : 'Finalise définitivement les équipes, crée les canaux Discord et supprime les anciens canaux'
+          "
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2 relative z-10"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span class="relative z-10">Valider les équipes définitives</span>
-        </button>
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          Valider les équipes définitives
+        </SpaceButton>
       </div>
-    </div>
+    </SpaceCard>
 
-    <!-- Ajouter cette ligne avant la fermeture de template -->
+    <!-- Dialogues de confirmation -->
     <ConfirmationDialog
       v-if="showConfirmationDialog"
       title="Valider les équipes définitives"
@@ -878,7 +862,7 @@
       @confirm="confirmTeamDefinitive"
       @cancel="cancelConfirmation"
     />
-    <!-- Ajouter ce dialogue à la fin du template, juste avant la fermeture de la div principale -->
+
     <ConfirmationDialog
       v-if="showDeleteTeamsDialog"
       title="Supprimer toutes les équipes"
@@ -886,6 +870,7 @@
       @confirm="deleteAllTeams"
       @cancel="cancelDeleteTeams"
     />
+
     <!-- Messages d'état -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
@@ -925,7 +910,7 @@ const selectedTournamentDetails = ref<
 // État de l'interface
 const viewMode = ref("overview"); // 'overview' ou 'team'
 const activeTeamTab = ref(0);
-const numTeams = ref(2);
+const numTeams = ref("2");
 const isDragging = ref(false);
 const searchFocused = ref(false);
 const searchQuery = ref("");
@@ -1010,17 +995,17 @@ const fetchTournamentDetails = async (tournamentId?: string) => {
 const generateTeams = async () => {
   // Utiliser props.selectedTournament au lieu de selectedTournament.value
   const tournamentId = props.selectedTournament;
-
+  const numTeamsValue = parseInt(numTeams.value) || 2;
   if (
     tournamentId &&
-    numTeams.value > 0 &&
+    numTeamsValue > 0 &&
     !selectedTournamentDetails.value?.finished
   ) {
     try {
       // Vérification que le tournoi n'est pas terminé
       const response = await tournamentService.generateTeams(
         tournamentId,
-        numTeams.value
+        numTeamsValue
       );
 
       if (response && response.teams) {
@@ -1247,6 +1232,23 @@ const onDragEnd = () => {
 const selectTeam = (index: number) => {
   viewMode.value = "team";
   activeTeamTab.value = index;
+};
+
+/**
+ * Calcule le variant Space UI à appliquer selon l'équilibre de l'équipe
+ */
+const getTeamBalanceVariant = (team: Team): string => {
+  const balanceClass = getTeamBalanceClass(team);
+  switch (balanceClass) {
+    case "empty":
+      return "danger";
+    case "unbalanced-low":
+      return "warning";
+    case "unbalanced-high":
+      return "info";
+    default:
+      return "success";
+  }
 };
 
 /**

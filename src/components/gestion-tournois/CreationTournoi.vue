@@ -475,7 +475,7 @@ const allPlayers = ref<Player[]>([]);
 const showPlayerList = ref<boolean>(false);
 const games = ref<Game[]>([]);
 const isLoading = ref<boolean>(false);
-const playerCap = ref<number>(0);
+const playerCap = ref<string>("0");
 const discordReminderDate = ref<string>("");
 const privateReminderDate = ref<string>("");
 
@@ -604,7 +604,7 @@ const createTournament = async () => {
       teamsPublished: false,
       description: description.value,
       players: selectedPlayers.value,
-      playerCap: playerCap.value,
+      playerCap: parseInt(playerCap.value) || 0,
       finished: false,
       checkIns,
     };
@@ -632,7 +632,7 @@ const resetForm = () => {
   selectedPlayers.value = [];
   discordReminderDate.value = "";
   privateReminderDate.value = "";
-  playerCap.value = 0; // Réinitialiser playerCap
+  playerCap.value = "0"; // Réinitialiser playerCap
 };
 
 const error = ref<string | null>(null);

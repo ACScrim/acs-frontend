@@ -1,135 +1,163 @@
-<!-- filepath: d:\Dev\ACS\acs-frontend\src\components\VoirCheckIn.vue -->
 <template>
-  <div class="check-in-container">
+  <div
+    class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
+  >
     <SpaceHeader
-      title="STATUT DES CHECK-INS "
-      titleSize="3xl"
-      :showMissionInfo="true"
-      mission="CHECKIN-STATUS"
-    />
-
+      title="STATUT DES CHECK-INS"
+      :decorated="true"
+      mission="CHECKIN-STATUS-2025"
+    >
+      <template #badge v-if="selectedTournamentDetails">
+        <SpaceBadge variant="secondary" size="lg">
+          {{ getCheckedInCount() }}/{{
+            selectedTournamentDetails.players.length
+          }}
+        </SpaceBadge>
+      </template>
+    </SpaceHeader>
     <!-- Information du tournoi sélectionné -->
-    <div class="tournament-selection-info">
-      <div class="info-header">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="tournament-icon"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <h2>Tournoi sélectionné</h2>
-      </div>
+    <SpaceCard variant="primary" :stars="true" className="mb-6">
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-primary-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+        </div>
+      </template>
 
       <!-- Affichage du tournoi -->
-      <div v-if="selectedTournamentDetails" class="tournament-info-box">
-        <div class="info-item">
-          <span class="info-label">Nom:</span>
-          <span class="info-value">{{ selectedTournamentDetails.name }}</span>
+      <div v-if="selectedTournamentDetails">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="flex items-center space-x-3">
+            <span class="text-space-text-muted text-sm">Nom:</span>
+            <span class="text-space-text font-mono">{{
+              selectedTournamentDetails.name
+            }}</span>
+          </div>
+          <div
+            v-if="selectedTournamentDetails.date"
+            class="flex items-center space-x-3"
+          >
+            <span class="text-space-text-muted text-sm">Date:</span>
+            <span class="text-space-text font-mono">
+              {{
+                new Date(selectedTournamentDetails.date).toLocaleDateString(
+                  "fr-FR"
+                )
+              }}
+            </span>
+          </div>
         </div>
-        <div class="info-item" v-if="selectedTournamentDetails.date">
-          <span class="info-label">Date:</span>
-          <span class="info-value">
-            {{
-              new Date(selectedTournamentDetails.date).toLocaleDateString(
-                "fr-FR"
-              )
-            }}
+        <SpaceBadge
+          v-if="selectedTournamentDetails.finished"
+          variant="error"
+          size="md"
+        >
+          Tournoi terminé
+        </SpaceBadge>
+      </div>
+      <div v-else>
+        <SpaceAlert variant="warning" className="text-center">
+          Veuillez sélectionner un tournoi dans le menu en haut de la page
+        </SpaceAlert>
+      </div>
+    </SpaceCard>
+    <!-- Détails du tournoi et statuts des check-ins -->
+    <SpaceCard
+      v-if="selectedTournamentDetails"
+      variant="secondary"
+      :stars="true"
+      className="mb-6"
+    >
+      <template #header>
+        <div class="flex flex-col gap-4">
+          <SpaceTitle size="xl" :decorated="true">
+            {{ selectedTournamentDetails.name }}
+          </SpaceTitle>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="flex flex-col">
+              <span class="text-space-text-muted text-sm">Date</span>
+              <span class="text-space-text font-mono text-lg">
+                {{ new Date(selectedTournamentDetails.date).toLocaleString() }}
+              </span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-space-text-muted text-sm">Joueurs</span>
+              <span class="text-space-text font-mono text-lg">
+                {{ selectedTournamentDetails.players.length }}
+              </span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-space-text-muted text-sm">Check-ins</span>
+              <span class="text-space-text font-mono text-lg">
+                {{ getCheckedInCount() }} /
+                {{ selectedTournamentDetails.players.length }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Barre de progression -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-space-text-muted text-sm"
+            >Progression des check-ins</span
+          >
+          <span class="text-space-primary-light font-mono text-sm">
+            {{ getCheckedInPercentage() }}%
           </span>
         </div>
         <div
-          v-if="selectedTournamentDetails.finished"
-          class="tournament-status finished"
+          class="w-full bg-space-bg-light rounded-full h-3 relative overflow-hidden"
         >
-          <span>Tournoi terminé</span>
-        </div>
-      </div>
-      <div v-else class="tournament-info-empty">
-        Veuillez sélectionner un tournoi dans le menu en haut de la page
-      </div>
-    </div>
-
-    <!-- Détails du tournoi et statuts des check-ins -->
-    <div v-if="selectedTournamentDetails" class="tournament-details-container">
-      <div class="tournament-header">
-        <h2 class="tournament-name">{{ selectedTournamentDetails.name }}</h2>
-        <div class="tournament-stats">
-          <div class="stat-item">
-            <span class="stat-label">Date:</span>
-            <span class="stat-value">{{
-              new Date(selectedTournamentDetails.date).toLocaleString()
-            }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Joueurs:</span>
-            <span class="stat-value">{{
-              selectedTournamentDetails.players.length
-            }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Check-ins:</span>
-            <span class="stat-value"
-              >{{ getCheckedInCount() }} /
-              {{ selectedTournamentDetails.players.length }}</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <div class="check-in-progress">
-        <div class="progress-bar">
           <div
-            class="progress-fill"
+            class="h-full bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 rounded-full transition-all duration-500 ease-out relative shadow-lg"
             :style="{ width: getCheckedInPercentage() + '%' }"
-          ></div>
+          >
+            <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+            ></div>
+          </div>
         </div>
-        <div class="progress-text">
-          {{ getCheckedInPercentage() }}% des joueurs ont fait leur check-in
+        <div class="text-center text-space-accent-light text-sm mt-2 font-mono">
+          {{ getCheckedInPercentage() }}% des joueurs ont confirmé leur présence
         </div>
       </div>
 
-      <div class="players-grid">
-        <!-- Carte de joueur dans players-grid -->
-        <div
+      <!-- Grille des joueurs -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <SpaceCard
           v-for="player in selectedTournamentDetails.players"
           :key="player._id"
-          :class="[
-            'player-card',
-            {
-              'checked-in':
-                player._id && selectedTournamentDetails?.checkIns?.[player._id],
-            },
-          ]"
+          variant="dark"
+          :stars="false"
+          :className="`relative transform transition-all hover:scale-105 duration-300 ${
+            player._id && selectedTournamentDetails?.checkIns?.[player._id]
+              ? 'player-checked-in'
+              : ''
+          }`"
         >
-          <div class="player-avatar">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-          <div class="player-info">
-            <div class="player-name">{{ player.username }}</div>
-
-            <!-- Ajout de la date d'inscription -->
-            <div
-              v-if="
-                player._id &&
-                selectedTournamentDetails?.registrationDates?.[player._id]
+          <!-- Badge de statut -->
+          <div class="absolute top-3 right-3">
+            <SpaceBadge
+              :variant="
+                player._id && selectedTournamentDetails?.checkIns?.[player._id]
+                  ? 'success'
+                  : 'error'
               "
-              class="registration-date"
+              size="sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -138,52 +166,16 @@
                 fill="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
-                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>Inscrit le {{ formatRegistrationDate(player._id) }}</span>
-            </div>
-
-            <div
-              :class="[
-                'check-in-status',
-                {
-                  'status-yes':
-                    player._id &&
-                    selectedTournamentDetails?.checkIns?.[player._id],
-                  'status-no': !(
+                  v-if="
                     player._id &&
                     selectedTournamentDetails?.checkIns?.[player._id]
-                  ),
-                },
-              ]"
-            >
-              <svg
-                v-if="
-                  player._id &&
-                  selectedTournamentDetails?.checkIns?.[player._id]
-                "
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
+                  "
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                   clip-rule="evenodd"
                 />
-              </svg>
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
                 <path
+                  v-else
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                   clip-rule="evenodd"
@@ -191,131 +183,182 @@
               </svg>
               {{
                 player._id && selectedTournamentDetails?.checkIns?.[player._id]
-                  ? "Check-in confirmé"
-                  : "En attente"
+                  ? "Présent"
+                  : "Absent"
               }}
-            </div>
-            <!-- Nouveau bouton pour le check-in manuel -->
-            <button
-              @click="player._id ? togglePlayerCheckIn(player._id) : null"
-              :class="[
-                'manual-check-button',
-                player._id && selectedTournamentDetails?.checkIns?.[player._id]
-                  ? 'check-out-button'
-                  : 'check-in-button',
-              ]"
-            >
-              {{
-                player._id && selectedTournamentDetails?.checkIns?.[player._id]
-                  ? "Annuler le check-in"
-                  : "Marquer présent"
-              }}
-            </button>
+            </SpaceBadge>
           </div>
-        </div>
+
+          <!-- Avatar et informations -->
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-space-bg rounded-full flex items-center justify-center border border-space-primary/30"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-space-primary-light"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <h3 class="text-space-text font-mono font-semibold truncate mb-2">
+                {{ player.username }}
+              </h3>
+
+              <!-- Date d'inscription -->
+              <div
+                v-if="
+                  player._id &&
+                  selectedTournamentDetails?.registrationDates?.[player._id]
+                "
+                class="flex items-center gap-2 mb-3 text-xs text-space-text-muted"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>Inscrit le {{ formatRegistrationDate(player._id) }}</span>
+              </div>
+
+              <!-- Bouton de check-in -->
+              <SpaceButton
+                @click="player._id ? togglePlayerCheckIn(player._id) : null"
+                :variant="
+                  player._id &&
+                  selectedTournamentDetails?.checkIns?.[player._id]
+                    ? 'error'
+                    : 'success'
+                "
+                size="sm"
+                className="w-full"
+              >
+                {{
+                  player._id &&
+                  selectedTournamentDetails?.checkIns?.[player._id]
+                    ? "Annuler le check-in"
+                    : "Marquer présent"
+                }}
+              </SpaceButton>
+            </div>
+          </div>
+        </SpaceCard>
       </div>
 
-      <div class="actions-container">
-        <button class="refresh-button" @click="() => fetchTournamentDetails()">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+      <template #footer>
+        <div class="flex justify-center">
+          <SpaceButton
+            @click="() => fetchTournamentDetails()"
+            variant="primary"
+            size="lg"
           >
-            <path
-              fill-rule="evenodd"
-              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Rafraîchir les statuts
-        </button>
-      </div>
-    </div>
-
-    <!-- État vide ou chargement -->
-    <div
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Rafraîchir les statuts
+          </SpaceButton>
+        </div>
+      </template>
+    </SpaceCard>
+    <!-- États vides ou chargement -->
+    <SpaceCard
       v-else-if="selectedTournament && !selectedTournamentDetails"
-      class="empty-state loading"
+      variant="dark"
+      :stars="true"
+      className="text-center py-12"
     >
-      <svg
-        class="animate-spin h-10 w-10"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-      <p>Chargement des informations du tournoi...</p>
-    </div>
+      <SpaceLoader text="Chargement des informations du tournoi..." />
+    </SpaceCard>
 
-    <div
+    <SpaceCard
       v-else-if="tournaments.length > 0 && !selectedTournament"
-      class="empty-state"
+      variant="dark"
+      :stars="true"
+      className="text-center py-12"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-        <path
-          fill-rule="evenodd"
-          d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-          clip-rule="evenodd"
-        />
-      </svg>
-      <p>Veuillez sélectionner un tournoi pour voir les status des check-ins</p>
-    </div>
+      <div class="flex flex-col items-center gap-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-space-primary-light"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <SpaceTitle size="lg" className="text-space-text-muted">
+          Veuillez sélectionner un tournoi pour voir les statuts des check-ins
+        </SpaceTitle>
+      </div>
+    </SpaceCard>
 
-    <div
+    <SpaceCard
       v-else-if="selectedGame && tournaments.length === 0"
-      class="empty-state"
+      variant="dark"
+      :stars="true"
+      className="text-center py-12"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z"
-          clip-rule="evenodd"
-        />
-      </svg>
-      <p>Aucun tournoi actif pour ce jeu</p>
-    </div>
+      <div class="flex flex-col items-center gap-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-space-accent-light"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <SpaceTitle size="lg" className="text-space-text-muted">
+          Aucun tournoi actif pour ce jeu
+        </SpaceTitle>
+      </div>
+    </SpaceCard>
+    <!-- Toast spatial pour les notifications -->
+    <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>
-
-  <Toast
-    v-if="toast.show"
-    :message="toast.message"
-    :type="toast.type"
-    @close="toast.show = false"
-  />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
-import type { Game, Tournament, Player } from "../../types";
 import Toast from "../../shared/Toast.vue";
+import type { Game, Tournament, Player } from "../../types";
 
 // Accepter les props du parent
 const props = defineProps<{
@@ -436,9 +479,7 @@ const togglePlayerCheckIn = async (playerId: string) => {
     );
 
     // Mettre à jour les détails du tournoi
-    await fetchTournamentDetails();
-
-    // Afficher une notification
+    await fetchTournamentDetails(); // Afficher une notification
     toast.value = {
       show: true,
       message: isCurrentlyCheckedIn
@@ -449,7 +490,7 @@ const togglePlayerCheckIn = async (playerId: string) => {
 
     setTimeout(() => {
       toast.value.show = false;
-    }, 3000);
+    }, 4000);
   } catch (error) {
     console.error("Erreur lors de la mise à jour du check-in:", error);
     toast.value = {
@@ -460,7 +501,7 @@ const togglePlayerCheckIn = async (playerId: string) => {
 
     setTimeout(() => {
       toast.value.show = false;
-    }, 3000);
+    }, 4000);
   }
 };
 
@@ -500,528 +541,87 @@ watch(
 </script>
 
 <style scoped>
-/* Container principal */
-.check-in-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 2rem;
-  background: rgba(13, 6, 23, 0.7);
-  border-radius: 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-  backdrop-filter: blur(10px);
+/* Styles personnalisés pour la barre de progression */
+.progress-bar-container {
   position: relative;
   overflow: hidden;
 }
 
-/* Effet de grille en arrière-plan */
-.check-in-container::before {
-  content: "";
+.progress-bar-glow {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(
-      to right,
-      rgba(139, 92, 246, 0.1) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-  z-index: -1;
-  transform: perspective(500px) rotateX(10deg);
-  opacity: 0.3;
-}
-
-/* Titre principal avec effet néon */
-.cyber-title {
-  font-family: "Audiowide", cursive;
-  font-size: 2.5rem;
-  color: #ffffff;
-  text-align: center;
-  margin-bottom: 2rem;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-  position: relative;
-  letter-spacing: 2px;
-}
-
-/* Grille de sélection */
-.selection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-/* Groupe de formulaire */
-.form-group {
-  margin-bottom: 1rem;
-}
-
-/* Label du formulaire */
-.form-label {
-  display: flex;
-  align-items: center;
-  font-size: 1.125rem;
-  color: #06b6d4;
-  margin-bottom: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.7);
-}
-
-/* Container pour le select */
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-/* Select stylisé */
-.cyber-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  color: white;
-  background-color: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  border-radius: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
-  transition: all 0.3s ease;
-  appearance: none;
-}
-
-.manual-check-button {
-  margin-top: 0.75rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 0.35rem;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid transparent;
-}
-
-.check-in-button {
-  background-color: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.5);
-  color: rgb(110, 231, 183);
-}
-
-.check-in-button:hover {
-  background-color: rgba(16, 185, 129, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.check-out-button {
-  background-color: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.5);
-  color: rgb(252, 165, 165);
-}
-
-.check-out-button:hover {
-  background-color: rgba(239, 68, 68, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.cyber-select:focus {
-  outline: none;
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-}
-
-/* Flèche personnalisée pour le select */
-.select-arrow {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid #06b6d4;
-  pointer-events: none;
-}
-
-/* Container des détails du tournoi */
-.tournament-details-container {
-  background: rgba(17, 24, 39, 0.7);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-top: 1rem;
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-}
-
-/* En-tête du tournoi */
-.tournament-header {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-  padding-bottom: 1rem;
-}
-
-/* Nom du tournoi */
-.tournament-name {
-  font-family: "Orbitron", sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #f0abfc;
-  text-shadow: 0 0 5px rgba(240, 171, 252, 0.7);
-}
-
-/* Stats du tournoi */
-.tournament-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: #a78bfa;
-  font-family: "Orbitron", sans-serif;
-}
-
-.stat-value {
-  font-size: 1.125rem;
-  color: white;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-}
-
-/* Barre de progression des check-ins */
-.check-in-progress {
-  margin-bottom: 2rem;
-}
-
-.progress-bar {
-  height: 0.75rem;
-  background: rgba(55, 65, 81, 0.5);
-  border-radius: 1rem;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #8b5cf6, #ec4899);
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
-  transition: width 0.5s ease;
-}
-
-.progress-text {
-  text-align: center;
-  color: #a78bfa;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.875rem;
-}
-
-/* Grille des joueurs */
-.players-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Carte de joueur */
-.player-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(31, 41, 55, 0.5);
-  border-radius: 0.5rem;
-  border: 1px solid rgba(107, 114, 128, 0.3);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.player-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0.25rem;
-  height: 100%;
-  background: #ef4444;
-  opacity: 0.7;
-}
-
-.player-card.checked-in::before {
-  background: #10b981;
-}
-
-.player-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Avatar du joueur */
-.player-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  background: rgba(17, 24, 39, 0.7);
-  border-radius: 50%;
-  color: #a78bfa;
-}
-
-/* Informations du joueur */
-.player-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.player-name {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 0.3rem;
-}
-
-/* Statut de check-in */
-.check-in-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  font-family: "Orbitron", sans-serif;
-}
-
-.status-yes {
-  color: #10b981;
-}
-
-.status-no {
-  color: #ef4444;
-}
-
-/* Conteneur d'actions */
-.actions-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-
-/* Bouton de rafraîchissement */
-.refresh-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(45deg, #2563eb, #3b82f6);
-  color: white;
-  font-family: "Orbitron", sans-serif;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.refresh-button:hover {
-  background: linear-gradient(45deg, #3b82f6, #60a5fa);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
-  transform: translateY(-2px);
-}
-
-.refresh-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.3),
     transparent
   );
-  transition: all 0.6s ease;
+  width: 100px;
+  animation: shimmer 2s infinite;
 }
 
-.refresh-button:hover::before {
-  left: 100%;
-}
-
-/* États vides */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  background: rgba(17, 24, 39, 0.5);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  color: #a78bfa;
-}
-
-.empty-state svg {
-  margin-bottom: 1rem;
-}
-
-.empty-state p {
-  font-family: "Orbitron", sans-serif;
-  text-align: center;
-}
-
-/* État de chargement */
-.empty-state.loading {
-  color: #8b5cf6;
-}
-
-/* Animation de rotation */
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100px);
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    transform: translateX(calc(100vw + 100px));
   }
 }
 
-/* Media queries pour responsive */
-@media (max-width: 768px) {
-  .check-in-container {
-    padding: 1rem;
+/* Animation de brillance pour la barre de progression */
+@keyframes animate-shimmer {
+  0% {
+    transform: translateX(-100%);
   }
-
-  .cyber-title {
-    font-size: 2rem;
-  }
-
-  .tournament-stats {
-    flex-direction: column;
-    gap: 0.5rem;
+  100% {
+    transform: translateX(100%);
   }
 }
 
-.registration-date {
-  display: flex;
-  align-items: center;
-  font-size: 0.7rem;
-  color: #a78bfa;
-  margin-bottom: 0.4rem;
-  padding: 0.15rem 0.4rem;
-  background: rgba(139, 92, 246, 0.1);
-  border-radius: 0.25rem;
-  width: fit-content;
-  border-left: 2px solid rgba(139, 92, 246, 0.5);
+.animate-shimmer {
+  animation: animate-shimmer 2s infinite;
 }
 
-.registration-date svg {
-  color: #c4b5fd; /* Violet plus clair */
-  min-width: 16px;
+/* Animation d'apparition pour les cartes */
+.player-card-enter-active {
+  transition: all 0.3s ease-out;
 }
 
-/* Nouveaux styles pour l'affichage du tournoi sélectionné */
-.tournament-selection-info {
-  background: rgba(17, 24, 39, 0.7);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+.player-card-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-.info-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+/* Effet hover pour les cartes de joueurs */
+.player-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
-.tournament-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #06b6d4;
+/* Animation du badge de statut */
+.status-badge {
+  transition: all 0.3s ease;
 }
 
-.info-header h2 {
-  font-family: "Orbitron", sans-serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #06b6d4;
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.5);
+.status-badge:hover {
+  transform: scale(1.05);
 }
 
-.tournament-info-box {
-  background: rgba(13, 6, 23, 0.6);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  border: 1px solid rgba(6, 182, 212, 0.2);
+/* Styles pour les cartes de joueurs avec check-in */
+.player-checked-in {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1),
+    rgba(5, 150, 105, 0.05)
+  ) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2) !important;
 }
 
-.info-item {
-  margin-bottom: 0.5rem;
-}
-
-.info-label {
-  color: #06b6d4;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 500;
-  margin-right: 0.5rem;
-}
-
-.info-value {
-  color: white;
-}
-
-.tournament-status {
-  margin-top: 0.75rem;
-  display: inline-block;
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.75rem;
-}
-
-.tournament-status.finished {
-  background-color: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  color: rgb(252, 165, 165);
-}
-
-.tournament-info-empty {
-  background: rgba(13, 6, 23, 0.6);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #9ca3af;
-  font-style: italic;
-  text-align: center;
+.player-checked-in:hover {
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
 }
 </style>

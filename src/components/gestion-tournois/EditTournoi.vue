@@ -645,7 +645,7 @@ const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const showConfirmationDialog = ref<boolean>(false);
 const description = ref<string>("");
-const playerCap = ref<number>(0);
+const playerCap = ref<string>("0");
 const waitlistPlayers = ref<PlayerCheckedIn[]>([]);
 const discordReminderDate = ref<string>("");
 const privateReminderDate = ref<string>("");
@@ -701,7 +701,7 @@ const loadTournamentDetails = async () => {
     date.value = formatDateForInput(tournament.date);
     discordChannelName.value = tournament.discordChannelName;
     description.value = tournament.description || "";
-    playerCap.value = tournament.playerCap || 0; // Charger playerCap
+    playerCap.value = (tournament.playerCap || 0).toString(); // Charger playerCap
     discordReminderDate.value = formatDateForInput(
       tournament.discordReminderDate
     );
@@ -830,7 +830,7 @@ const editTournament = async () => {
       discordChannelName: discordChannelName.value,
       description: description.value,
       players: allPlayers, // Envoyer tous les joueurs (actifs + liste d'attente)
-      playerCap: playerCap.value,
+      playerCap: parseInt(playerCap.value) || 0,
       teamsPublished: false,
       finished: false,
       discordReminderDate: new Date(discordReminder || date.value),
@@ -860,11 +860,12 @@ const confirmDeleteTournament = () => {
 
 const promotePlayer = (player: PlayerCheckedIn) => {
   // Vérifier si l'ajout de ce joueur dépasserait la limite actuelle
-  if (playerCap.value > 0 && selectedPlayers.value.length >= playerCap.value) {
+  const playerCapNum = parseInt(playerCap.value) || 0;
+  if (playerCapNum > 0 && selectedPlayers.value.length >= playerCapNum) {
     // Deux options: augmenter automatiquement la limite ou demander confirmation
 
     // Option 1: Augmenter automatiquement la limite
-    playerCap.value = selectedPlayers.value.length + 1;
+    playerCap.value = (selectedPlayers.value.length + 1).toString();
     showMessage(
       "success",
       `La limite de joueurs a été augmentée à ${playerCap.value} pour permettre l'ajout de ${player.username}.`

@@ -390,10 +390,12 @@
           :key="game._id"
           @click="selectGame(game)"
           :variant="hasLevelForGame(game) ? 'dark' : 'primary'"
-          :className="[
-            'cursor-pointer transition-all hover:scale-[1.02] duration-300 overflow-hidden',
-            hasLevelForGame(game) ? 'opacity-50' : '',
-          ]"
+          :className="
+            [
+              'cursor-pointer transition-all hover:scale-[1.02] duration-300 overflow-hidden',
+              hasLevelForGame(game) ? 'opacity-50' : '',
+            ].join(' ')
+          "
         >
           <div class="flex items-center">
             <!-- Image du jeu -->
@@ -804,25 +806,8 @@
         </div>
       </template>
     </SpaceModal>
-
     <!-- Toast pour les notifications -->
-    <div
-      v-if="toast.show"
-      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
-      :class="[
-        toast.show ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
-        toast.type === 'success' ? 'bg-space-success/80' : 'bg-space-error/80',
-      ]"
-    >
-      <SpaceAlert
-        :variant="toast.type"
-        :dismissible="true"
-        @dismiss="toast.show = false"
-        className="backdrop-blur-sm"
-      >
-        {{ toast.message }}
-      </SpaceAlert>
-    </div>
+    <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>
 </template>
 
@@ -834,6 +819,7 @@ import gameService from "../services/gameService";
 import type { Game, PlayerGameLevel } from "../types";
 import { useRoute, useRouter } from "vue-router";
 import tournamentService from "../services/tournamentService";
+import Toast from "@/shared/Toast.vue";
 // -----------------------------------------------
 // #region ÉTATS RÉACTIFS
 // -----------------------------------------------
@@ -1038,7 +1024,7 @@ const showToast = (message: string, type: "success" | "error") => {
   toast.value = { show: true, message, type };
   setTimeout(() => {
     toast.value.show = false;
-  }, 3000);
+  }, 4000); // Correspondance avec la durée du nouveau Toast spatial
 };
 // #endregion
 

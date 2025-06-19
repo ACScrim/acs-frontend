@@ -261,27 +261,9 @@
           </div>
         </SpaceCard>
       </div>
-
       <!-- Notifications -->
-      <SpaceAlert
-        v-if="error"
-        variant="error"
-        :title="'Erreur'"
-        dismissible
-        className="mt-4"
-      >
-        {{ error }}
-      </SpaceAlert>
-
-      <SpaceAlert
-        v-if="success"
-        variant="success"
-        :title="'Succès'"
-        dismissible
-        className="mt-4"
-      >
-        {{ success }}
-      </SpaceAlert>
+      <Toast v-if="error" type="error" :message="error" />
+      <Toast v-if="success" type="success" :message="success" />
     </div>
 
     <!-- Dialogue de confirmation pour la suppression -->
@@ -315,6 +297,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import userService from "../../services/userService";
+import Toast from "../../shared/Toast.vue";
 import type { User } from "../../types";
 
 //-------------------------------------------------------
@@ -402,7 +385,7 @@ const handleAvatarError = (user: User) => {
 const showMessage = (
   type: "success" | "error",
   message: string,
-  duration = 5000
+  duration = 4000
 ) => {
   if (type === "success") {
     success.value = message;
@@ -412,7 +395,7 @@ const showMessage = (
     success.value = null;
   }
 
-  // Effacer le message après la durée spécifiée
+  // Effacer le message après la durée spécifiée (4s pour le Toast spatial)
   if (duration > 0) {
     setTimeout(() => {
       if (type === "success") success.value = null;

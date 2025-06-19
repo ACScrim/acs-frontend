@@ -589,24 +589,8 @@
       @check-in-updated="handleCheckInUpdate"
       @show-toast="handleShowToast"
     />
-
-    <!-- Toast pour les notifications -->
-    <div
-      v-if="toastMessage"
-      class="fixed bottom-4 right-4 z-50 transform transition-all duration-500 max-w-sm"
-      :class="
-        toastMessage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-      "
-    >
-      <SpaceAlert
-        :variant="toastType"
-        :dismissible="true"
-        @dismiss="toastMessage = ''"
-        className="backdrop-blur-sm"
-      >
-        {{ toastMessage }}
-      </SpaceAlert>
-    </div>
+    <!-- Toast spatial pour les notifications -->
+    <Toast v-if="toastMessage" :type="toastType" :message="toastMessage" />
   </div>
 </template>
 
@@ -620,6 +604,7 @@ import CheckInReminderModal from "@/components/CheckInReminderModal.vue";
 import playerService from "../services/playerService";
 import CountdownTimer from "@/components/ui/molecules/CountdownTimer.vue";
 import TournamentCard from "@/components/ui/molecules/TournamentCard.vue";
+import Toast from "../shared/Toast.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant
@@ -710,17 +695,17 @@ const podiumTeams = computed(() => {
 });
 
 // Gestion de l'affichage du toast
-const handleShowToast = (toast: {
-  type: "success" | "error";
-  message: string;
-}) => {
-  toastType.value = toast.type;
-  toastMessage.value = toast.message;
+const handleShowToast = (
+  message: string,
+  type: "success" | "error" = "success"
+) => {
+  toastMessage.value = message;
+  toastType.value = type;
 
-  // Effacer le toast après 3 secondes
+  // Auto-masquer le toast après 4 secondes (durée du Toast spatial)
   setTimeout(() => {
     toastMessage.value = "";
-  }, 3000);
+  }, 4000);
 };
 
 /**

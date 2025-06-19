@@ -9,12 +9,19 @@
         mission="GAMES-MGMT"
       >
         <template #badge v-if="games.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{ games.length }}</SpaceBadge>
+          <SpaceBadge variant="primary" size="lg">{{
+            games.length
+          }}</SpaceBadge>
         </template>
       </SpaceHeader>
 
       <!-- Formulaire de création/modification de jeu -->
-      <SpaceCard variant="primary" :stars="true" :decorated="true" className="mb-8">
+      <SpaceCard
+        variant="primary"
+        :stars="true"
+        :decorated="true"
+        className="mb-8"
+      >
         <form @submit.prevent="isEditing ? updateGame() : createGame()">
           <div class="mb-6">
             <label
@@ -53,7 +60,9 @@
             <div class="text-space-primary-light text-sm mb-2 font-nasa">
               Jeux suggérés par RAWG - Cliquez pour sélectionner
             </div>
-            <div class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-space-bg-light/30 rounded-md border border-space-primary/20">
+            <div
+              class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-space-bg-light/30 rounded-md border border-space-primary/20"
+            >
               <div
                 v-for="result in searchResults"
                 :key="result.id"
@@ -66,14 +75,20 @@
                     :alt="result.name"
                     class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div class="absolute inset-0 bg-gradient-to-t from-space-bg/80 to-transparent"></div>
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-space-bg/80 to-transparent"
+                  ></div>
                 </div>
                 <div class="p-2">
                   <div class="text-space-primary-light text-sm font-nasa">
                     {{ result.name }}
                   </div>
                   <div class="text-space-text-muted text-xs mt-1">
-                    {{ result.released ? formatReleaseDate(result.released) : "Date inconnue" }}
+                    {{
+                      result.released
+                        ? formatReleaseDate(result.released)
+                        : "Date inconnue"
+                    }}
                   </div>
                 </div>
               </div>
@@ -106,6 +121,7 @@
               placeholder="Entrez une description du jeu (optionnel)"
               :rows="4"
               :error="errors.description"
+              maxlength="100"
             >
             </SpaceInput>
           </div>
@@ -168,7 +184,7 @@
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
+                    />
                   </svg>
                   <p>Erreur de chargement de l'image</p>
                 </div>
@@ -181,7 +197,9 @@
               for="roles"
               class="text-lg text-space-primary-light mb-3 font-nasa flex items-center"
             >
-              <div class="relative w-8 h-8 mr-3 flex items-center justify-center">
+              <div
+                class="relative w-8 h-8 mr-3 flex items-center justify-center"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5 text-space-primary-light z-10"
@@ -200,9 +218,9 @@
             </label>
 
             <!-- Liste des rôles existants -->
-            <SpaceCard 
-              variant="secondary" 
-              className="mb-4 p-4" 
+            <SpaceCard
+              variant="secondary"
+              className="mb-4 p-4"
               :noPadding="false"
             >
               <div
@@ -235,7 +253,9 @@
                         boxShadow: `0 0 6px ${role.color}`,
                       }"
                     ></div>
-                    <span class="text-space-text font-medium font-nasa">{{ role.name }}</span>
+                    <span class="text-space-text font-medium font-nasa">{{
+                      role.name
+                    }}</span>
                   </div>
 
                   <div class="flex space-x-1 z-10">
@@ -288,7 +308,8 @@
                 :showCursor="true"
               >
                 <div class="text-space-text-muted">
-                  Aucun rôle défini pour ce jeu. Ajoutez des rôles pour permettre aux joueurs de spécifier leurs positions préférées.
+                  Aucun rôle défini pour ce jeu. Ajoutez des rôles pour
+                  permettre aux joueurs de spécifier leurs positions préférées.
                 </div>
               </SpaceTerminal>
             </SpaceCard>
@@ -304,11 +325,19 @@
                   <span
                     class="w-1 h-6 bg-gradient-to-b from-space-primary to-space-accent rounded-full mr-3"
                   ></span>
-                  <SpaceTitle 
+                  <SpaceTitle
                     size="sm"
-                    :className="editingRoleIndex !== null ? 'text-space-accent-light' : 'text-space-primary-light'"
+                    :className="
+                      editingRoleIndex !== null
+                        ? 'text-space-accent-light'
+                        : 'text-space-primary-light'
+                    "
                   >
-                    {{ editingRoleIndex !== null ? "Modifier le rôle" : "Ajouter un rôle" }}
+                    {{
+                      editingRoleIndex !== null
+                        ? "Modifier le rôle"
+                        : "Ajouter un rôle"
+                    }}
                   </SpaceTitle>
                 </div>
               </template>
@@ -419,27 +448,9 @@
           </div>
         </form>
       </SpaceCard>
-
       <!-- Notifications -->
-      <SpaceAlert
-        v-if="error"
-        variant="error"
-        :title="'Erreur'"
-        dismissible
-        className="mb-4"
-      >
-        {{ error }}
-      </SpaceAlert>
-
-      <SpaceAlert
-        v-if="success"
-        variant="success"
-        :title="'Succès'"
-        dismissible
-        className="mb-4"
-      >
-        {{ success }}
-      </SpaceAlert>
+      <Toast v-if="error" type="error" :message="error" />
+      <Toast v-if="success" type="success" :message="success" />
 
       <!-- Liste des jeux existants -->
       <SpaceCard variant="secondary" :stars="true" :decorated="true">
@@ -458,7 +469,9 @@
               </svg>
               <SpaceTitle size="xl">Jeux disponibles</SpaceTitle>
             </div>
-            <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{ games.length }}</SpaceBadge>
+            <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{
+              games.length
+            }}</SpaceBadge>
           </div>
         </template>
 
@@ -478,7 +491,7 @@
             <div
               class="absolute inset-0 bg-gradient-to-r from-transparent via-space-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
             ></div>
-            
+
             <!-- Miniature du jeu -->
             <div
               class="aspect-video relative mb-3 overflow-hidden rounded bg-space-bg-light/50"
@@ -512,7 +525,9 @@
             </div>
 
             <!-- Nom du jeu -->
-            <div class="font-nasa text-lg font-semibold text-space-text mb-2 z-10 relative">
+            <div
+              class="font-nasa text-lg font-semibold text-space-text mb-2 z-10 relative"
+            >
               {{ existingGame.name }}
             </div>
 
@@ -572,7 +587,9 @@
           title="Liste des jeux"
           :showCursor="true"
         >
-          <div class="text-space-text-muted">Aucun jeu disponible pour le moment</div>
+          <div class="text-space-text-muted">
+            Aucun jeu disponible pour le moment
+          </div>
         </SpaceTerminal>
       </SpaceCard>
     </div>
@@ -588,16 +605,12 @@
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton
-            @click="cancelDelete"
-            variant="outline"
-            size="sm"
-          >
+          <SpaceButton @click="cancelDelete" variant="outline" size="sm">
             Annuler
           </SpaceButton>
-          <SpaceButton 
-            @click="deleteGame" 
-            variant="error" 
+          <SpaceButton
+            @click="deleteGame"
+            variant="error"
             size="sm"
             :loading="isDeleting"
           >
@@ -621,6 +634,7 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
  */
 import gameService from "../../services/gameService";
 import rawgService from "../../services/rawgService";
+import Toast from "../../shared/Toast.vue";
 
 /**
  * Composants UI
@@ -1096,7 +1110,7 @@ const fetchGames = async () => {
 const showMessage = (
   type: "success" | "error" | "info",
   message: string,
-  duration = 5000
+  duration = 4000
 ) => {
   // Annuler les timeouts précédents pour éviter des comportements inattendus
   if (messageTimeout) {
@@ -1114,7 +1128,7 @@ const showMessage = (
     error.value = null;
   }
 
-  // Stocker la référence du timeout pour pouvoir l'annuler si nécessaire
+  // Stocker la référence du timeout pour pouvoir l'annuler si nécessaire (4s pour le Toast spatial)
   messageTimeout = setTimeout(() => {
     success.value = null;
     error.value = null;
