@@ -561,11 +561,17 @@
                 ? "ACS"
                 : getGameName(selectedBadge.categoryId)
             }}
-          </SpaceBadge>
-
-          <!-- Badge de rareté si applicable -->
+          </SpaceBadge>          <!-- Badge de rareté si applicable -->
           <SpaceBadge
-            v-if="getBadgeRarityClass(selectedBadge) === 'special-badge-gold'"
+            v-if="getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'"
+            variant="gold"
+            size="lg"
+            className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 text-white border-0"
+          >
+            LÉGENDAIRE
+          </SpaceBadge>
+          <SpaceBadge
+            v-else-if="getBadgeRarityClass(selectedBadge) === 'special-badge-gold'"
             variant="gold"
             size="lg"
           >
@@ -892,6 +898,8 @@ const getBadgeRarityClass = (badge: Badge): string => {
   // Si le badge a un champ rarity explicite
   if (badge.rarity) {
     switch (badge.rarity.toLowerCase()) {
+      case "legendary":
+        return "special-badge-legendary";
       case "gold":
         return "special-badge-gold";
       case "silver":
@@ -909,6 +917,9 @@ const getBadgeRarityClass = (badge: Badge): string => {
     const totalPlayers = players.value.length;
 
     if (totalPlayers === 0) return "";
+
+    // Badge légendaire: une seule personne le possède
+    if (playersWithBadge === 1) return "special-badge-legendary";
 
     const percentage = (playersWithBadge / totalPlayers) * 100;
 
@@ -1060,12 +1071,14 @@ onMounted(() => {
 }
 
 /* Animations pour les badges spéciaux */
+.special-badge-legendary,
 .special-badge-gold,
 .special-badge-silver,
 .special-badge-bronze {
   position: relative;
 }
 
+.special-badge-legendary::before,
 .special-badge-gold::before,
 .special-badge-silver::before,
 .special-badge-bronze::before {
@@ -1081,6 +1094,17 @@ onMounted(() => {
   transition: opacity 0.5s ease-in-out;
 }
 
+.special-badge-legendary:hover::before {
+  opacity: 0.2;
+  background: radial-gradient(circle, 
+    var(--space-primary) 0%, 
+    var(--space-gold) 25%, 
+    var(--space-secondary) 50%, 
+    var(--space-bronze) 75%, 
+    transparent 100%);
+  animation: legendary-glow 2s ease-in-out infinite alternate;
+}
+
 .special-badge-gold:hover::before {
   opacity: 0.15;
   background: radial-gradient(circle, var(--space-gold) 0%, transparent 70%);
@@ -1094,5 +1118,21 @@ onMounted(() => {
 .special-badge-bronze:hover::before {
   opacity: 0.15;
   background: radial-gradient(circle, var(--space-bronze) 0%, transparent 70%);
+}
+
+/* Animation spéciale pour les badges légendaires */
+@keyframes legendary-glow {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    transform: scale(1.02) rotate(180deg);
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
 }
 </style>
