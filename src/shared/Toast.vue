@@ -14,12 +14,10 @@
         :class="[
           'relative overflow-hidden rounded-lg backdrop-blur-md border',
           type === 'error'
-            ? 'bg-gradient-to-br from-space-bg-primary/90 via-space-error/10 to-space-bg-primary/95 border-space-error/40'
+            ? 'bg-gradient-to-br from-space-bg-primary/90 via-red-500/10 to-space-bg-primary/95 border-red-500/40'
             : 'bg-gradient-to-br from-space-bg-primary/95 via-space-bg-secondary/90 to-space-bg-primary/95 border-space-border/40',
           'shadow-2xl',
-          type === 'error'
-            ? 'shadow-space-error/30'
-            : 'shadow-space-success/30',
+          type === 'error' ? 'shadow-red-500/30' : 'shadow-space-success/30',
         ]"
       >
         <!-- Animated background particles -->
@@ -32,14 +30,11 @@
             <div class="particle"></div>
           </div>
         </div>
-
         <!-- Holographic border effect -->
         <div
           :class="[
             'absolute inset-0 rounded-lg border-2 opacity-60 animate-pulse',
-            type === 'error'
-              ? 'border-space-error/50'
-              : 'border-space-success/50',
+            type === 'error' ? 'border-red-500/50' : 'border-space-success/50',
           ]"
         ></div>
 
@@ -49,11 +44,11 @@
             <!-- Error Icon - Alert Diamond -->
             <div
               v-if="type === 'error'"
-              class="flex-shrink-0 w-8 h-8 mr-3 flex items-center justify-center rounded-full bg-space-error/20 border border-space-error/40"
+              class="flex-shrink-0 w-8 h-8 mr-3 flex items-center justify-center rounded-full bg-red-500/20 border border-red-500/40"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-error animate-pulse"
+                class="h-5 w-5 text-red-500 animate-pulse"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -89,7 +84,7 @@
               <div
                 :class="[
                   'text-sm font-medium tracking-wide',
-                  type === 'error' ? 'text-space-error' : 'text-space-success',
+                  type === 'error' ? 'text-red-500' : 'text-space-success',
                 ]"
               >
                 {{ type === "error" ? "MISSION ÉCHOUÉE" : "MISSION RÉUSSIE" }}
@@ -104,7 +99,7 @@
               <div
                 :class="[
                   'w-2 h-2 rounded-full animate-pulse',
-                  type === 'error' ? 'bg-space-error' : 'bg-space-success',
+                  type === 'error' ? 'bg-red-500' : 'bg-space-success',
                 ]"
               ></div>
             </div>
@@ -119,7 +114,7 @@
                 :class="[
                   'h-full animate-shrink rounded-full relative',
                   type === 'error'
-                    ? 'bg-gradient-to-r from-space-error/70 to-space-error'
+                    ? 'bg-gradient-to-r from-red-500/70 to-red-500'
                     : 'bg-gradient-to-r from-space-success/70 to-space-success',
                 ]"
               >
@@ -128,7 +123,7 @@
                   :class="[
                     'absolute inset-0 rounded-full animate-pulse',
                     type === 'error'
-                      ? 'shadow-md shadow-space-error/50'
+                      ? 'shadow-md shadow-red-500/50'
                       : 'shadow-md shadow-space-success/50',
                   ]"
                 ></div>
@@ -156,7 +151,7 @@
           :class="[
             'absolute top-0 left-0 w-full h-0.5 animate-scan opacity-50',
             type === 'error'
-              ? 'bg-gradient-to-r from-transparent via-space-error to-transparent'
+              ? 'bg-gradient-to-r from-transparent via-red-500 to-transparent'
               : 'bg-gradient-to-r from-transparent via-space-success to-transparent',
           ]"
         ></div>
