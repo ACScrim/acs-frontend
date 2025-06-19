@@ -7,119 +7,83 @@
     <div v-if="modelValue" class="fixed inset-0 z-[9999]">
       <!-- Arrière-plan optimisé avec CSS pur -->
       <div
-        class="fixed inset-0 bg-space-bg/90 backdrop-blur space-modal-backdrop"
+        class="fixed inset-0 bg-black/80 space-modal-backdrop"
         @click="$emit('update:modelValue', false)"
-      >
-        <!-- Fond spatial en CSS pur (plus rapide) -->
-        <div class="space-background"></div>
-      </div>
+      ></div>
 
       <!-- Conteneur de centrage sans scrollbar -->
-      <div
-        class="fixed inset-0 flex items-center justify-center p-4 overflow-hidden overscroll-contain"
-      >
-        <!-- Contenu modal -->
+      <div class="fixed inset-0 overflow-y-auto overscroll-contain">
         <div
-          ref="modalRef"
-          :class="[
-            'space-modal-container relative max-h-[90vh] overflow-auto',
-            'rounded-lg bg-space-bg-light/98 z-10 w-full max-w-md',
-            'border border-space-primary/30 shadow-xl shadow-space-primary/20',
-            'transform transition-all space-modal-content',
-            'overscroll-contain backdrop-blur-md',
-            className,
-          ]"
-          @click.stop
+          class="min-h-screen flex items-center justify-center p-4 py-16 sm:py-24"
         >
-          <!-- Holographic scanline effect -->
-          <div class="holographic-effect"></div>
-
-          <!-- En-tête -->
+          <!-- Contenu modal -->
           <div
-            v-if="title || $slots.header"
-            class="space-modal-header p-5 border-b border-space-primary/20 flex items-center justify-between sticky top-0 bg-space-bg-light/98 backdrop-blur-md z-10"
+            ref="modalRef"
+            :class="[
+              'space-modal-container relative max-h-[85vh] overflow-y-auto',
+              'rounded-lg bg-gray-900 z-10 w-full max-w-md',
+              'border border-space-primary/30 shadow-xl shadow-space-primary/20',
+              'transform transition-all space-modal-content',
+              'overscroll-contain',
+              className,
+            ]"
+            tabindex="-1"
+            role="dialog"
+            :aria-labelledby="title ? 'modal-title' : undefined"
+            aria-modal="true"
+            @click.stop
           >
-            <div v-if="$slots.header" class="modal-header-content">
-              <slot name="header"></slot>
-            </div>
-            <h3
-              v-else-if="title"
-              class="text-lg font-nasa text-space-text space-modal-title relative"
+            <!-- En-tête -->
+            <div
+              v-if="title || $slots.header"
+              class="space-modal-header p-5 border-b border-space-primary/20 flex items-center justify-between sticky top-0 bg-gray-900 z-10"
             >
-              {{ title }}
-              <div class="title-underline"></div>
-              <div class="title-glow"></div>
-            </h3>
-
-            <!-- Bouton de fermeture -->
-            <button
-              v-if="!hideCloseButton"
-              class="text-space-text-muted hover:text-space-primary transition-all focus:outline-none focus:ring-2 focus:ring-space-primary/50 rounded-full close-button"
-              @click="$emit('update:modelValue', false)"
-              aria-label="Fermer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+              <div v-if="$slots.header" class="modal-header-content">
+                <slot name="header"></slot>
+              </div>
+              <h3
+                v-else-if="title"
+                id="modal-title"
+                class="text-lg font-nasa text-space-text space-modal-title relative"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="close-button-glow"></span>
-            </button>
-          </div>
+                {{ title }}
+              </h3>
 
-          <!-- Corps -->
-          <div class="space-modal-body p-5 relative z-1">
-            <slot></slot>
-          </div>
+              <!-- Bouton de fermeture -->
+              <button
+                v-if="!hideCloseButton"
+                class="text-space-text-muted hover:text-space-primary transition-all focus:outline-none focus:ring-2 focus:ring-space-primary/50 rounded-full close-button"
+                @click="$emit('update:modelValue', false)"
+                aria-label="Fermer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="close-button-glow"></span>
+              </button>
+            </div>
+            <!-- Corps -->
+            <div class="space-modal-body p-5 relative z-1 bg-gray-900">
+              <slot></slot>
+            </div>
 
-          <!-- Pied de page -->
-          <div
-            v-if="$slots.footer"
-            class="space-modal-footer p-5 border-t border-space-primary/20 sticky bottom-0 bg-space-bg-light/98 backdrop-blur-md z-10"
-          >
-            <slot name="footer"></slot>
+            <!-- Pied de page -->
+            <div
+              v-if="$slots.footer"
+              class="space-modal-footer p-5 border-t border-space-primary/20 sticky bottom-0 bg-gray-900 z-10"
+            >
+              <slot name="footer"></slot>
+            </div>
           </div>
-
-          <!-- Éléments décoratifs améliorés -->
-          <div class="space-modal-decoration top-left">
-            <div class="corner-accent"></div>
-          </div>
-          <div class="space-modal-decoration top-right">
-            <div class="corner-accent"></div>
-          </div>
-          <div class="space-modal-decoration bottom-left">
-            <div class="corner-accent"></div>
-          </div>
-          <div class="space-modal-decoration bottom-right">
-            <div class="corner-accent"></div>
-          </div>
-
-          <!-- Effet de grille futuriste -->
-          <div class="modal-grid"></div>
-
-          <!-- Orbites décoratives améliorées -->
-          <div class="orbital-ring orbital-ring-1">
-            <div class="orbital-dot gold"></div>
-          </div>
-          <div class="orbital-ring orbital-ring-2">
-            <div class="orbital-dot silver"></div>
-          </div>
-          <div class="orbital-ring orbital-ring-3">
-            <div class="orbital-dot bronze"></div>
-          </div>
-
-          <!-- Bordure lumineuse -->
-          <div class="modal-glow-border"></div>
-
-          <!-- Overlay de contraste pour améliorer la lisibilité -->
-          <div class="modal-contrast-overlay"></div>
         </div>
       </div>
     </div>
@@ -146,9 +110,9 @@ const emit = defineEmits(["update:modelValue", "after-enter", "after-leave"]);
 
 // Fonction pour restaurer le scroll
 const restoreScroll = () => {
-  document.documentElement.style.overflow = "";
+  // Simplement rétablir le scroll normal
   document.body.style.overflow = "";
-  document.body.style.paddingRight = "";
+  document.documentElement.style.overflow = "";
 };
 
 // Fermer la modale avec la touche Escape
@@ -163,12 +127,10 @@ const modalRef = ref<HTMLElement | null>(null);
 
 // Handlers pour les événements de transition
 const onAfterEnter = () => {
-  // Assurer que la modale est visible en la plaçant au centre de l'écran
+  // Assurer que la modale est visible
   if (modalRef.value) {
-    // Désactiver le défilement du body
-    document.documentElement.style.overflow = "hidden"; // Appliquer à html
-    document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = "0px"; // Empêcher le décalage dû à la disparition de la barre de défilement
+    // Ne pas bloquer le scroll complètement, juste l'optimiser
+    // Permet à l'utilisateur de scroll vers le modal si nécessaire
 
     // Forcer un z-index très élevé sur le conteneur racine de la modale
     const modalRoot = modalRef.value.closest(".fixed.inset-0");
@@ -176,10 +138,8 @@ const onAfterEnter = () => {
       modalRoot.style.zIndex = "9999";
     }
 
-    // Si la modale est plus haute que la fenêtre, s'assurer qu'elle est bien positionnée
-    if (modalRef.value.scrollHeight > window.innerHeight) {
-      modalRef.value.style.maxHeight = "90vh";
-    }
+    // Focus sur la modale pour l'accessibilité
+    modalRef.value.focus();
   }
   emit("after-enter");
 };
@@ -235,92 +195,17 @@ onMounted(() => {
 
 /* Fond d'espace optimisé pour les performances */
 .space-modal-backdrop {
-  overflow: hidden;
-  position: relative;
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Fond spatial ultra-optimisé */
-.space-background {
-  position: absolute;
-  inset: 0;
-  background: 
-    /* Nébuleuse simple mais efficace */ radial-gradient(
-      ellipse at 25% 30%,
-      rgba(var(--space-primary-rgb), 0.12) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 75% 70%,
-      rgba(var(--space-gold-rgb), 0.08) 0%,
-      transparent 40%
-    ),
-    /* Étoiles minimalistes */
-      radial-gradient(1px 1px at 15% 20%, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(
-      1px 1px at 85% 10%,
-      rgba(var(--space-gold-rgb), 0.7),
-      transparent
-    ),
-    radial-gradient(
-      1px 1px at 45% 80%,
-      rgba(var(--space-silver-rgb), 0.6),
-      transparent
-    ),
-    radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(
-      1px 1px at 25% 60%,
-      rgba(var(--space-bronze-rgb), 0.7),
-      transparent
-    );
-
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
-    100% 100%, 100% 100%;
-
-  opacity: 0.6;
-  /* Animation simple et légère */
-  animation: subtle-drift 40s ease-in-out infinite alternate;
-}
-
-@keyframes subtle-drift {
-  0%,
-  100% {
-    transform: translateX(0) translateY(0) scale(1);
-  }
-  50% {
-    transform: translateX(5px) translateY(3px) scale(1.01);
-  }
+  /* Fond simple et performant */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* Conteneur de la modale avec effet de lueur optimisé */
 .space-modal-content {
+  background-color: rgb(17, 24, 39); /* gray-900 solid */
+  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  /* Animation de lueur simplifiée et réduite */
   box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
     0 0 40px rgba(var(--space-primary-rgb), 0.08);
-  position: relative;
-  overflow: hidden;
-  background-color: rgba(var(--space-bg-rgb), 0.9);
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  /* Animation de lueur simplifiée */
-  animation: gentle-glow 6s infinite alternate ease-in-out;
-}
-
-@keyframes gentle-glow {
-  0% {
-    box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
-      0 0 40px rgba(var(--space-primary-rgb), 0.08);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(var(--space-gold-rgb), 0.18),
-      0 0 45px rgba(var(--space-gold-rgb), 0.1);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
-      0 0 40px rgba(var(--space-primary-rgb), 0.08);
-  }
 }
 
 /* Holographic scanline effect optimisé */
@@ -334,112 +219,24 @@ onMounted(() => {
     transparent 100%
   );
   background-size: 100% 12px;
-  opacity: 0.15;
-  animation: scan-lines 12s linear infinite;
+  opacity: 0.05; /* Réduit pour moins de distraction */
   pointer-events: none;
   z-index: 2;
 }
 
-@keyframes scan-lines {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100%;
-  }
-}
+/* Suppression des éléments décoratifs superflus pour la lisibilité */
 
-/* Titre de la modale optimisé */
+/* Titre de la modale simplifié */
 .space-modal-title {
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  background: linear-gradient(
-    90deg,
-    var(--space-text),
-    var(--space-primary-light),
-    var(--space-gold),
-    var(--space-text)
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  color: var(--space-text);
   position: relative;
-  animation: title-shimmer 8s linear infinite;
+  /* Suppression de l'animation pour plus de lisibilité */
 }
 
-@keyframes title-shimmer {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.title-underline {
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    var(--space-gold),
-    var(--space-primary-light),
-    transparent
-  );
-  background-size: 150% 100%;
-  animation: underline-flow 6s linear infinite;
-}
-
-@keyframes underline-flow {
-  0%,
-  100% {
-    background-position: 100% 0%;
-  }
-  50% {
-    background-position: 0% 0%;
-  }
-}
-
-.title-glow {
-  position: absolute;
-  width: 25px;
-  height: 8px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(var(--space-primary-rgb), 0.4),
-    transparent 80%
-  );
-  filter: blur(3px);
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  opacity: 0.6;
-  animation: title-glow-travel 6s ease-in-out infinite;
-}
-
-@keyframes title-glow-travel {
-  0%,
-  100% {
-    left: 0;
-    opacity: 0;
-  }
-  25%,
-  75% {
-    opacity: 0.6;
-  }
-  50% {
-    left: calc(100% - 25px);
-    opacity: 0.6;
-  }
-}
+/* Suppression des animations de titre pour la lisibilité */
 
 /* Bouton de fermeture amélioré */
 .close-button {
