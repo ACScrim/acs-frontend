@@ -8,29 +8,121 @@
       mission="LEVEL-MGMT"
     >
       <template #badge v-if="filteredPlayerLevels.length > 0">
-        <SpaceBadge variant="secondary" size="lg">{{
-          filteredPlayerLevels.length
-        }}</SpaceBadge>
+        <div class="flex items-center gap-2">
+          <SpaceBadge variant="secondary" size="lg">{{
+            filteredPlayerLevels.length
+          }}</SpaceBadge>
+          <div v-if="hasActiveFilters" class="flex items-center gap-1">
+            <SpaceBadge variant="accent" size="sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3 mr-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Filtré
+            </SpaceBadge>
+          </div>
+        </div>
       </template>
     </SpaceHeader>
-
-    <!-- Panel principal -->
+    <!-- Panel de recherche et filtres -->
     <SpaceCard
       variant="primary"
       :stars="true"
       :decorated="true"
-      className="mb-8"
+      className="mb-6"
     >
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <template #header>
+        <div class="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 mr-2 text-space-primary-light"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg">Recherche et Filtres</SpaceTitle>
+        </div>
+      </template>
+
+      <!-- Barre de recherche principale -->
+      <div class="mb-6">
+        <label
+          for="searchInput"
+          class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Rechercher un joueur
+        </label>
+        <SpaceInput
+          id="searchInput"
+          v-model="searchTerm"
+          placeholder="Nom d'utilisateur, pseudo Discord, pseudo dans le jeu..."
+          className="w-full"
+          @keydown.esc="searchTerm = ''"
+        >
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+        </SpaceInput>
+
+        <!-- Raccourcis clavier -->
+        <div class="flex flex-wrap gap-2 mt-2 text-xs text-space-text-muted">
+          <span class="flex items-center">
+            <kbd
+              class="px-2 py-1 bg-space-bg-light/20 rounded border border-space-bg-light/30 font-mono"
+              >Esc</kbd
+            >
+            <span class="ml-1">Effacer la recherche</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Filtres avancés -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <!-- Sélection de jeu -->
         <div>
           <label
             for="gameSelect"
-            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 mr-1"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -38,13 +130,14 @@
                 d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
               />
             </svg>
-            Sélectionner un jeu
+            Jeu
           </label>
           <SpaceDropdown
             id="gameSelect"
             v-model="selectedGameId"
             @change="fetchPlayerLevels"
             placeholder="Tous les jeux"
+            size="sm"
           >
             <option value="">Tous les jeux</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
@@ -53,15 +146,79 @@
           </SpaceDropdown>
         </div>
 
-        <!-- Sélection de tournoi (affiché uniquement si un jeu est sélectionné) -->
-        <div v-if="selectedGameId">
+        <!-- Filtre par niveau -->
+        <div>
           <label
-            for="tournamentSelect"
-            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+            for="levelFilter"
+            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 mr-1"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Niveau
+          </label>
+          <SpaceDropdown
+            id="levelFilter"
+            v-model="selectedLevel"
+            placeholder="Tous les niveaux"
+            size="sm"
+          >
+            <option value="">Tous les niveaux</option>
+            <option value="débutant">Débutant</option>
+            <option value="intermédiaire">Intermédiaire</option>
+            <option value="avancé">Avancé</option>
+            <option value="expert">Expert</option>
+          </SpaceDropdown>
+        </div>
+
+        <!-- Filtre par statut de rang -->
+        <div>
+          <label
+            for="rankFilter"
+            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-1"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+              />
+            </svg>
+            Rang
+          </label>
+          <SpaceDropdown
+            id="rankFilter"
+            v-model="selectedRankFilter"
+            placeholder="Tous les joueurs"
+            size="sm"
+          >
+            <option value="">Tous les joueurs</option>
+            <option value="ranked">Avec rang</option>
+            <option value="unranked">Sans rang</option>
+          </SpaceDropdown>
+        </div>
+
+        <!-- Sélection de tournoi -->
+        <div v-if="selectedGameId">
+          <label
+            for="tournamentSelect"
+            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-1"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -69,13 +226,14 @@
                 d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"
               />
             </svg>
-            Filtrer par tournoi (optionnel)
+            Tournoi
           </label>
           <SpaceDropdown
             id="tournamentSelect"
             v-model="selectedTournamentId"
             @change="filterPlayersByTournament"
             placeholder="Tous les joueurs"
+            size="sm"
           >
             <option value="">Tous les joueurs</option>
             <option
@@ -86,6 +244,110 @@
               {{ tournament.name }} - {{ formatDate(tournament.date) }}
             </option>
           </SpaceDropdown>
+        </div>
+      </div>
+      <!-- Boutons d'action rapide et options d'affichage -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <SpaceButton @click="clearAllFilters" variant="outline" size="sm">
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Effacer les filtres
+          </SpaceButton>
+
+          <!-- Options de tri -->
+          <SpaceDropdown v-model="sortBy" size="sm" placeholder="Trier par...">
+            <option value="">Ordre par défaut</option>
+            <option value="username">Nom d'utilisateur (A-Z)</option>
+            <option value="username-desc">Nom d'utilisateur (Z-A)</option>
+            <option value="level">Niveau (Débutant → Expert)</option>
+            <option value="level-desc">Niveau (Expert → Débutant)</option>
+            <option value="rank">Rang (Meilleur → Moins bon)</option>
+            <option value="gameUsername">Pseudo de jeu (A-Z)</option>
+          </SpaceDropdown>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Toggle vue tableau/cartes -->
+          <div class="hidden md:flex items-center gap-1">
+            <button
+              @click="viewMode = 'table'"
+              :class="[
+                'p-2 rounded transition-colors',
+                viewMode === 'table'
+                  ? 'bg-space-primary text-white'
+                  : 'text-space-text-muted hover:text-space-text',
+              ]"
+              title="Vue tableau"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <button
+              @click="viewMode = 'cards'"
+              :class="[
+                'p-2 rounded transition-colors',
+                viewMode === 'cards'
+                  ? 'bg-space-primary text-white'
+                  : 'text-space-text-muted hover:text-space-text',
+              ]"
+              title="Vue cartes"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="text-sm text-space-text-muted">
+            {{ filteredPlayerLevels.length }} joueur{{
+              filteredPlayerLevels.length > 1 ? "s" : ""
+            }}
+            trouvé{{ filteredPlayerLevels.length > 1 ? "s" : "" }}
+            <span
+              v-if="
+                searchTerm ||
+                selectedLevel ||
+                selectedRankFilter ||
+                selectedGameId
+              "
+              class="text-space-accent"
+            >
+              (filtré{{
+                filteredPlayerLevels.length !== playerLevels.length ? "s" : ""
+              }}
+              sur {{ playerLevels.length }})
+            </span>
+          </div>
         </div>
       </div>
     </SpaceCard>
@@ -157,10 +419,11 @@
       <div v-if="loading" class="flex justify-center py-12">
         <SpaceLoader size="lg" text="Analyse des niveaux de jeu en cours..." />
       </div>
-
       <!-- Message quand aucun jeu n'est sélectionné -->
       <SpaceTerminal
-        v-else-if="!selectedGameId && filteredPlayerLevels.length === 0"
+        v-else-if="
+          !selectedGameId && filteredPlayerLevels.length === 0 && !searchTerm
+        "
         command="scan --game-levels --all"
         title="Analyse des niveaux"
         :showCursor="true"
@@ -169,30 +432,56 @@
         <div class="text-space-text-muted">
           Aucun niveau de jeu défini pour le moment
         </div>
+        <div class="text-space-text-muted mt-2">
+          → Sélectionnez un jeu pour voir les niveaux des joueurs
+        </div>
       </SpaceTerminal>
 
-      <!-- Aucun résultat -->
+      <!-- Aucun résultat pour la recherche -->
+      <SpaceTerminal
+        v-else-if="filteredPlayerLevels.length === 0 && searchTerm"
+        command="search --levels --query='${searchTerm}'"
+        title="Recherche de joueurs"
+        :showCursor="true"
+        className="my-8"
+      >
+        <div class="text-space-error font-mono">
+          Erreur 404: Aucun joueur trouvé pour "{{ searchTerm }}".
+        </div>
+        <div class="text-space-text-muted mt-2">
+          → Vérifiez l'orthographe ou essayez un autre terme de recherche
+        </div>
+        <div class="text-space-text-muted">
+          → Recherche possible: nom d'utilisateur, pseudo Discord, pseudo de jeu
+        </div>
+      </SpaceTerminal>
+
+      <!-- Aucun résultat pour les filtres -->
       <SpaceTerminal
         v-else-if="filteredPlayerLevels.length === 0"
         :command="`search --levels ${
           selectedGameId ? '--game=' + selectedGameId : ''
         } ${
           selectedTournamentId ? '--tournament=' + selectedTournamentId : ''
+        } ${selectedLevel ? '--level=' + selectedLevel : ''} ${
+          selectedRankFilter ? '--rank-status=' + selectedRankFilter : ''
         }`"
-        title="Recherche de niveaux"
+        title="Recherche avec filtres"
         :showCursor="true"
         className="my-8"
       >
         <div class="text-space-error font-mono">
-          Erreur 404: Aucun joueur trouvé pour ce critère de recherche.
+          Erreur 404: Aucun joueur trouvé avec ces critères.
         </div>
         <div class="text-space-text-muted mt-2">
-          Essayez de modifier vos critères de recherche.
+          → Essayez de modifier vos filtres
+        </div>
+        <div class="text-space-text-muted">
+          → Ou cliquez sur "Effacer les filtres" pour tout voir
         </div>
       </SpaceTerminal>
-
       <!-- Tableau des joueurs - Version desktop -->
-      <div v-else class="hidden md:block relative">
+      <div v-if="viewMode === 'table'" class="hidden md:block relative">
         <div
           ref="topScrollBarContainer"
           class="h-3 mb-1 rounded-lg bg-space-bg-dark/50 overflow-x-auto scrollbar-thin"
@@ -255,7 +544,7 @@
             </thead>
             <tbody class="divide-y divide-space-bg-light/10">
               <tr
-                v-for="playerLevel in filteredPlayerLevels"
+                v-for="playerLevel in paginatedPlayerLevels"
                 :key="playerLevel._id"
                 class="hover:bg-space-bg-light/5 transition-colors duration-150"
               >
@@ -453,11 +742,216 @@
           </table>
         </div>
       </div>
+      <!-- Vue en cartes - Desktop -->
+      <div v-else-if="viewMode === 'cards'" class="hidden md:block">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div
+            v-for="playerLevel in paginatedPlayerLevels"
+            :key="playerLevel._id"
+            class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
+          >
+            <!-- En-tête de la carte avec avatar et nom -->
+            <div
+              class="flex items-center mb-3 pb-2 border-b border-space-secondary/20"
+            >
+              <div class="avatar-container">
+                <img
+                  v-if="playerLevel.player.userInfo?.avatarUrl"
+                  :src="playerLevel.player.userInfo.avatarUrl"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                  alt="Avatar"
+                  loading="lazy"
+                  @error="handleImageError($event)"
+                />
+                <div
+                  v-else
+                  class="w-10 h-10 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+                >
+                  <span class="text-space-accent text-sm font-bold">
+                    {{
+                      getUserInitials(playerLevel.player.username || "inconnu")
+                    }}
+                  </span>
+                </div>
+              </div>
+              <div class="ml-3 flex-1">
+                <div class="text-base font-nasa text-space-text">
+                  {{ playerLevel.player.username }}
+                </div>
+                <div
+                  v-if="playerLevel.player.userInfo?.username"
+                  class="text-xs text-space-text-muted"
+                >
+                  {{ playerLevel.player.userInfo.username }}
+                </div>
+              </div>
 
+              <!-- Badge de niveau à droite -->
+              <SpaceBadge
+                :variant="getLevelBadgeVariant(playerLevel.level)"
+                className="px-2 py-1"
+              >
+                {{ capitalizeFirstLetter(playerLevel.level) }}
+              </SpaceBadge>
+            </div>
+
+            <!-- Contenu de la carte en 2 colonnes -->
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <!-- Colonne gauche -->
+              <div class="space-y-3">
+                <!-- Jeu (si pas de filtre) -->
+                <div v-if="!selectedGameId" class="flex flex-col">
+                  <span
+                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    >Jeu</span
+                  >
+                  <div class="flex items-center">
+                    <img
+                      v-if="getGameImage(playerLevel)"
+                      :src="getGameImage(playerLevel)"
+                      class="w-5 h-5 rounded object-cover mr-2 flex-shrink-0"
+                      alt="Logo du jeu"
+                      loading="lazy"
+                      @error="handleImageError($event)"
+                    />
+                    <span
+                      class="text-space-text text-xs truncate"
+                      :title="getGameName(playerLevel)"
+                    >
+                      {{ getGameName(playerLevel) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Pseudo de jeu -->
+                <div class="flex flex-col">
+                  <span
+                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    >Pseudo jeu</span
+                  >
+                  <span class="text-space-text">
+                    {{ playerLevel.gameUsername || "Non renseigné" }}
+                  </span>
+                </div>
+
+                <!-- Rang -->
+                <div class="flex flex-col">
+                  <span
+                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    >Rang</span
+                  >
+                  <div
+                    v-if="playerLevel.isRanked && playerLevel.rank"
+                    class="flex items-center"
+                  >
+                    <span
+                      :class="[
+                        'h-2 w-2 rounded-full mr-2',
+                        getRankClass(playerLevel.rank).replace('text-', 'bg-'),
+                      ]"
+                      :style="{
+                        boxShadow: `0 0 5px ${getRankColor(playerLevel.rank)}`,
+                      }"
+                    ></span>
+                    <span
+                      :class="[
+                        'text-sm font-medium',
+                        getRankClass(playerLevel.rank),
+                      ]"
+                      :style="getRankStyle(playerLevel.rank)"
+                    >
+                      {{ playerLevel.rank }}
+                    </span>
+                  </div>
+                  <span v-else class="text-space-text-muted">Non classé</span>
+                </div>
+              </div>
+
+              <!-- Colonne droite -->
+              <div class="space-y-3">
+                <!-- Rôles -->
+                <div
+                  v-if="!selectedGameId || selectedGameHasRoles"
+                  class="flex flex-col"
+                >
+                  <span
+                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    >Rôles</span
+                  >
+                  <div
+                    v-if="
+                      playerLevel.selectedRoles &&
+                      playerLevel.selectedRoles.length > 0
+                    "
+                  >
+                    <SpaceBadge
+                      v-if="
+                        hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
+                      "
+                      variant="primary"
+                      className="text-xs px-2 py-1"
+                      :title="playerLevel.selectedRoles.join(', ')"
+                    >
+                      Fill
+                    </SpaceBadge>
+                    <div v-else class="flex flex-wrap gap-1">
+                      <span
+                        v-for="roleName in playerLevel.selectedRoles.slice(
+                          0,
+                          2
+                        )"
+                        :key="roleName"
+                        class="inline-flex items-center px-1.5 py-0.5 text-xs rounded border"
+                        :style="getRoleStyle(playerLevel.game, roleName)"
+                        :title="roleName"
+                      >
+                        {{
+                          roleName.length > 8
+                            ? roleName.slice(0, 8) + "..."
+                            : roleName
+                        }}
+                      </span>
+                      <span
+                        v-if="playerLevel.selectedRoles.length > 2"
+                        class="px-1.5 py-0.5 text-xs bg-space-bg-light/30 text-space-text-muted rounded border border-space-bg-light/50 cursor-help"
+                        :title="playerLevel.selectedRoles.slice(2).join(', ')"
+                      >
+                        +{{ playerLevel.selectedRoles.length - 2 }}
+                      </span>
+                    </div>
+                  </div>
+                  <span v-else class="text-space-text-muted">Non spécifié</span>
+                </div>
+
+                <!-- Commentaire -->
+                <div v-if="playerLevel.comment" class="flex flex-col">
+                  <span
+                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    >Commentaire</span
+                  >
+                  <div
+                    class="text-space-text text-xs leading-relaxed"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 3;
+                      line-clamp: 3;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                    :title="playerLevel.comment"
+                  >
+                    {{ playerLevel.comment }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Vue mobile - cartes empilées -->
       <div class="md:hidden space-y-4">
         <div
-          v-for="playerLevel in filteredPlayerLevels"
+          v-for="playerLevel in paginatedPlayerLevels"
           :key="playerLevel._id"
           class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
         >
@@ -655,6 +1149,49 @@
           </div>
         </div>
       </div>
+
+      <!-- Pagination et contrôles -->
+      <div v-if="filteredPlayerLevels.length > 0" class="mt-8 space-y-4">
+        <!-- Contrôles d'affichage -->
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
+          <div class="flex items-center gap-4">
+            <label class="text-sm text-space-text-muted font-nasa">
+              Afficher par page :
+            </label>
+            <SpaceDropdown
+              v-model="itemsPerPage"
+              @change="currentPage = 1"
+              size="sm"
+              className="w-20"
+            >
+              <option :value="10">10</option>
+              <option :value="20">20</option>
+              <option :value="50">50</option>
+              <option :value="100">100</option>
+            </SpaceDropdown>
+          </div>
+
+          <div class="text-sm text-space-text-muted">
+            Affichage de {{ (currentPage - 1) * itemsPerPage + 1 }} à
+            {{
+              Math.min(currentPage * itemsPerPage, filteredPlayerLevels.length)
+            }}
+            sur {{ filteredPlayerLevels.length }} résultats
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <SpacePagination
+          v-if="totalPages > 1"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @prev-page="currentPage = Math.max(1, currentPage - 1)"
+          @next-page="currentPage = Math.min(totalPages, currentPage + 1)"
+          @page-select="currentPage = $event"
+        />
+      </div>
     </SpaceCard>
 
     <!-- Messages d'état -->
@@ -705,11 +1242,46 @@ const tournamentPlayers = ref<string[]>([]);
 const selectedGameId = ref("");
 const selectedTournamentId = ref("");
 
+// Nouveaux filtres
+const searchTerm = ref("");
+const selectedLevel = ref("");
+const selectedRankFilter = ref("");
+
+// Pagination
+const currentPage = ref(1);
+const itemsPerPage = ref(20);
+
+// Options d'affichage et tri
+const viewMode = ref<"table" | "cards">("table");
+const sortBy = ref("");
+
 // Propriétés calculées
 const selectedGameName = computed(() => {
   if (!selectedGameId.value) return "";
   const game = games.value.find((g) => g._id === selectedGameId.value);
   return game ? game.name : "";
+});
+
+// Pagination calculée
+const totalPages = computed(() =>
+  Math.ceil(filteredPlayerLevels.value.length / itemsPerPage.value)
+);
+
+const paginatedPlayerLevels = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  return filteredPlayerLevels.value.slice(startIndex, endIndex);
+});
+
+// Vérifier si des filtres sont actifs
+const hasActiveFilters = computed(() => {
+  return !!(
+    searchTerm.value ||
+    selectedGameId.value ||
+    selectedTournamentId.value ||
+    selectedLevel.value ||
+    selectedRankFilter.value
+  );
 });
 
 // Références pour la synchronisation du défilement
@@ -757,6 +1329,75 @@ const filteredPlayerLevels = computed(() => {
         return tournamentPlayers.value.includes(playerId ?? "");
       });
     }
+  }
+
+  // Filtrer par terme de recherche
+  if (searchTerm.value.trim()) {
+    const search = searchTerm.value.toLowerCase().trim();
+    filtered = filtered.filter((level) => {
+      const playerName = level.player?.username?.toLowerCase() || "";
+      const discordName = level.player?.userInfo?.username?.toLowerCase() || "";
+      const gameUsername = level.gameUsername?.toLowerCase() || "";
+
+      return (
+        playerName.includes(search) ||
+        discordName.includes(search) ||
+        gameUsername.includes(search)
+      );
+    });
+  }
+
+  // Filtrer par niveau
+  if (selectedLevel.value) {
+    filtered = filtered.filter((level) => level.level === selectedLevel.value);
+  }
+
+  // Filtrer par statut de rang
+  if (selectedRankFilter.value) {
+    if (selectedRankFilter.value === "ranked") {
+      filtered = filtered.filter((level) => level.isRanked && level.rank);
+    } else if (selectedRankFilter.value === "unranked") {
+      filtered = filtered.filter((level) => !level.isRanked || !level.rank);
+    }
+  }
+
+  // Appliquer le tri
+  if (sortBy.value) {
+    filtered.sort((a, b) => {
+      switch (sortBy.value) {
+        case "username":
+          return (a.player?.username || "").localeCompare(
+            b.player?.username || ""
+          );
+        case "username-desc":
+          return (b.player?.username || "").localeCompare(
+            a.player?.username || ""
+          );
+        case "level":
+          const levelOrder = ["débutant", "intermédiaire", "avancé", "expert"];
+          return levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level);
+        case "level-desc":
+          const levelOrderDesc = [
+            "expert",
+            "avancé",
+            "intermédiaire",
+            "débutant",
+          ];
+          return (
+            levelOrderDesc.indexOf(a.level) - levelOrderDesc.indexOf(b.level)
+          );
+        case "rank":
+          // Trier par rang (les non-classés à la fin)
+          if (!a.rank && !b.rank) return 0;
+          if (!a.rank) return 1;
+          if (!b.rank) return -1;
+          return a.rank.localeCompare(b.rank);
+        case "gameUsername":
+          return (a.gameUsername || "").localeCompare(b.gameUsername || "");
+        default:
+          return 0;
+      }
+    });
   }
 
   return filtered;
@@ -1100,6 +1741,24 @@ const exportToCSV = () => {
 };
 
 /**
+ * Effacer tous les filtres et réinitialiser la recherche
+ */
+const clearAllFilters = () => {
+  searchTerm.value = "";
+  selectedGameId.value = "";
+  selectedTournamentId.value = "";
+  selectedLevel.value = "";
+  selectedRankFilter.value = "";
+  tournaments.value = [];
+  tournamentPlayers.value = [];
+
+  // Recharger tous les niveaux
+  fetchAllPlayerLevels();
+
+  showMessage("success", "Filtres effacés avec succès");
+};
+
+/**
  * Afficher un message
  */
 const showMessage = (type: "success" | "error", message: string) => {
@@ -1146,6 +1805,13 @@ watch(selectedGameId, () => {
     selectedTournamentId.value = "";
     tournaments.value = [];
   }
+  // Réinitialiser la pagination
+  currentPage.value = 1;
+});
+
+// Observer les changements de filtres pour réinitialiser la pagination
+watch([searchTerm, selectedLevel, selectedRankFilter], () => {
+  currentPage.value = 1;
 });
 
 watch(

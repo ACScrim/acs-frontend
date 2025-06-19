@@ -13,7 +13,7 @@ import Alert from "@/components/ui/molecules/Alert.vue";
 import Modal from "@/components/ui/molecules/Modal.vue";
 import Loader from "@/components/ui/molecules/Loader.vue";
 import Header from "@/components/ui/molecules/Header.vue";
-
+import MemberCard from "@/components/ui/molecules/MemberCard.vue";
 // Composants organismes
 import Pagination from "@/components/ui/organisms/Pagination.vue";
 import Terminal from "@/components/ui/organisms/Terminal.vue";
@@ -37,6 +37,7 @@ const components = {
   SpaceAlert: Alert,
   SpaceModal: Modal,
   SpaceHeader: Header,
+  SpaceMemberCard: MemberCard,
 
   // Organisms
   SpacePagination: Pagination,

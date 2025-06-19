@@ -1,56 +1,97 @@
 <template>
   <div class="space-pagination-container relative">
-    <!-- Orbite -->
-    <div class="space-pagination-orbit"></div>
+    <!-- Fond spatial avec particules -->
+    <div class="space-pagination-background">
+      <div class="space-particle particle-1"></div>
+      <div class="space-particle particle-2"></div>
+      <div class="space-particle particle-3"></div>
+    </div>
 
-    <div class="space-pagination flex items-center justify-between">
+    <!-- Ligne de connexion principale -->
+    <div class="space-pagination-line"></div>
+
+    <div class="space-pagination flex items-center justify-center gap-4">
       <!-- Bouton précédent -->
       <button
         @click="handlePrevPage"
         :disabled="currentPage === 1"
-        :class="[
-          'space-pagination-button prev',
-          { disabled: currentPage === 1 },
-        ]"
+        :class="['space-pagination-nav prev', { disabled: currentPage === 1 }]"
         :aria-label="prevLabel"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <span>{{ prevLabel }}</span>
+        <div class="nav-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <span class="nav-text">{{ prevLabel }}</span>
       </button>
 
-      <!-- Pages -->
-      <div class="space-pagination-pages">
-        <!-- Affichage du compteur de pages -->
-        <div class="space-pagination-counter">
-          <span class="current">{{ currentPage }}</span>
-          <span class="divider">/</span>
-          <span class="total">{{ totalPages }}</span>
+      <!-- Compteur central avec style spatial -->
+      <div class="space-pagination-center">
+        <div class="pagination-display">
+          <!-- Indicateur de page actuelle -->
+          <div class="current-page-indicator">
+            <span class="page-number">{{
+              String(currentPage).padStart(2, "0")
+            }}</span>
+            <div class="page-glow"></div>
+          </div>
+
+          <!-- Séparateur spatial -->
+          <div class="page-separator">
+            <div class="separator-line"></div>
+            <div class="separator-dot"></div>
+            <div class="separator-line"></div>
+          </div>
+
+          <!-- Total des pages -->
+          <div class="total-pages">
+            <span class="total-number">{{
+              String(totalPages).padStart(2, "0")
+            }}</span>
+          </div>
         </div>
 
-        <!-- Points pour la navigation (si nécessaire) -->
-        <div v-if="showDots" class="space-pagination-dots">
+        <!-- Barre de progression -->
+        <div class="progress-container">
+          <div class="progress-track">
+            <div
+              class="progress-fill"
+              :style="{ width: progressPercentage + '%' }"
+            ></div>
+            <div
+              class="progress-indicator"
+              :style="{ left: progressPercentage + '%' }"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Navigation par points (si beaucoup de pages) -->
+        <div v-if="showDots && totalPages > 3" class="space-pagination-dots">
           <button
             v-for="pageNum in displayedPages"
             :key="pageNum"
             @click="handlePageSelect(pageNum)"
             :class="[
-              'space-pagination-dot',
+              'space-dot',
               { active: currentPage === pageNum },
+              { nearby: Math.abs(currentPage - pageNum) === 1 },
             ]"
             :aria-label="`Aller à la page ${pageNum}`"
             :aria-current="currentPage === pageNum ? 'page' : undefined"
-          ></button>
+          >
+            <div class="dot-core"></div>
+            <div class="dot-ring"></div>
+          </button>
         </div>
       </div>
 
@@ -59,24 +100,26 @@
         @click="handleNextPage"
         :disabled="currentPage === totalPages"
         :class="[
-          'space-pagination-button next',
+          'space-pagination-nav next',
           { disabled: currentPage === totalPages },
         ]"
         :aria-label="nextLabel"
       >
-        <span>{{ nextLabel }}</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
+        <span class="nav-text">{{ nextLabel }}</span>
+        <div class="nav-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
       </button>
     </div>
   </div>
@@ -150,166 +193,509 @@ const handlePageSelect = (pageNum: number) => {
     emit("page-select", pageNum);
   }
 };
+
+// Calculer le pourcentage de progression
+const progressPercentage = computed(() => {
+  if (props.totalPages <= 1) return 0;
+  return ((props.currentPage - 1) / (props.totalPages - 1)) * 100;
+});
 </script>
 
 <style scoped>
 .space-pagination-container {
   position: relative;
-  padding: 1rem 0;
+  padding: 2rem 0;
   width: 100%;
   display: flex;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* Fond spatial avec particules */
+.space-pagination-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(109, 40, 217, 0.05) 0%,
+    transparent 70%
+  );
+  overflow: hidden;
+}
+
+.space-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--space-primary);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 6s ease-in-out infinite;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  top: 70%;
+  right: 20%;
+  animation-delay: 2s;
+}
+
+.particle-3 {
+  top: 40%;
+  right: 40%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Ligne de connexion principale */
+.space-pagination-line {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--space-bg-light) 20%,
+    var(--space-primary) 50%,
+    var(--space-bg-light) 80%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
+  opacity: 0.4;
 }
 
 .space-pagination {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 }
 
-/* Orbite en arrière-plan */
-.space-pagination-orbit {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--space-bg-light) 30%,
-    var(--space-bg-light) 70%,
-    transparent 100%
-  );
-  border-radius: 50%;
-  z-index: 0;
-  opacity: 0.5;
+/* Boutons de navigation */
+.space-pagination-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--space-text);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(109, 40, 217, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
   overflow: hidden;
 }
 
-.space-pagination-orbit::before {
+.space-pagination-nav::before {
   content: "";
   position: absolute;
   top: 0;
   left: -100%;
-  width: 20%;
+  width: 100%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--space-primary) 50%,
+    rgba(109, 40, 217, 0.1) 50%,
     transparent 100%
   );
-  animation: orbit-travel 3s linear infinite;
+  transition: left 0.5s ease;
 }
 
-@keyframes orbit-travel {
-  0% {
-    left: -20%;
-  }
-  100% {
-    left: 120%;
-  }
+.space-pagination-nav:not(.disabled):hover::before {
+  left: 100%;
 }
 
-/* Boutons de pagination */
-.space-pagination-button {
+.space-pagination-nav:not(.disabled):hover {
+  background: rgba(109, 40, 217, 0.15);
+  border-color: var(--space-primary);
+  box-shadow: 0 0 20px rgba(109, 40, 217, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.space-pagination-nav.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-icon {
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.875rem;
-  color: var(--space-text);
-  background-color: transparent;
-  border: 1px solid rgba(109, 40, 217, 0.3);
-  border-radius: 9999px;
-  transition: all 0.3s ease;
-  min-width: 100px;
-  justify-content: center;
-}
-
-.space-pagination-button.prev {
-  padding-left: 0.75rem;
-}
-
-.space-pagination-button.next {
-  padding-right: 0.75rem;
-}
-
-.space-pagination-button:not(.disabled):hover {
-  background-color: rgba(109, 40, 217, 0.1);
-  border-color: var(--space-primary);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.3);
-}
-
-.space-pagination-button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.space-pagination-button svg {
   transition: transform 0.3s ease;
 }
 
-.space-pagination-button.prev:hover svg {
+.space-pagination-nav.prev:hover .nav-icon {
   transform: translateX(-2px);
 }
 
-.space-pagination-button.next:hover svg {
+.space-pagination-nav.next:hover .nav-icon {
   transform: translateX(2px);
 }
 
-/* Compteur de pages */
-.space-pagination-counter {
+.nav-text {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+/* Centre spatial */
+.space-pagination-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-width: 200px;
+}
+
+.pagination-display {
   display: flex;
   align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(109, 40, 217, 0.3);
+  border-radius: 16px;
+  backdrop-filter: blur(15px);
+  position: relative;
+}
+
+.pagination-display::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(
+    45deg,
+    var(--space-primary),
+    var(--space-secondary),
+    var(--space-primary)
+  );
+  background-size: 200% 200%;
+  border-radius: 16px;
+  opacity: 0.3;
+  z-index: -1;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.current-page-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-number {
   font-family: "Space Mono", monospace;
-  font-size: 0.875rem;
-  color: var(--space-text-muted);
-}
-
-.space-pagination-counter .current {
-  color: var(--space-text);
+  font-size: 1.5rem;
   font-weight: bold;
+  color: var(--space-primary);
+  text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
+  position: relative;
+  z-index: 1;
 }
 
-.space-pagination-counter .divider {
-  margin: 0 0.25rem;
+.page-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3rem;
+  height: 3rem;
+  background: radial-gradient(
+    circle,
+    rgba(109, 40, 217, 0.2) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.page-separator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.separator-line {
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--space-bg-light) 50%,
+    transparent 100%
+  );
+}
+
+.separator-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--space-primary);
+  border-radius: 50%;
+  animation: dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+.total-pages {
+  display: flex;
+  align-items: center;
+}
+
+.total-number {
+  font-family: "Space Mono", monospace;
+  font-size: 1.25rem;
+  color: var(--space-text-muted);
+  font-weight: 500;
+}
+
+/* Barre de progression */
+.progress-container {
+  width: 100%;
+  max-width: 300px;
+  padding: 0 1rem;
+}
+
+.progress-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(109, 40, 217, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--space-primary) 0%,
+    var(--space-secondary) 50%,
+    var(--space-primary) 100%
+  );
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-indicator {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--space-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
+  transition: left 0.5s ease;
 }
 
 /* Points de navigation */
 .space-pagination-dots {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.75rem;
+  padding: 0.5rem;
 }
 
-.space-pagination-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--space-bg-light);
-  border: 1px solid rgba(109, 40, 217, 0.5);
+.space-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.space-pagination-dot.active {
-  background-color: var(--space-primary);
+.dot-core {
+  width: 100%;
+  height: 100%;
+  background: var(--space-bg-light);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.dot-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.space-dot.active .dot-core {
+  background: var(--space-primary);
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
   transform: scale(1.2);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
+}
+
+.space-dot.active .dot-ring {
+  border-color: rgba(109, 40, 217, 0.5);
+  opacity: 1;
+  animation: ring-pulse 2s ease-in-out infinite;
+}
+
+.space-dot.nearby .dot-core {
+  background: rgba(109, 40, 217, 0.6);
+  transform: scale(1.1);
+}
+
+.space-dot:hover .dot-core {
+  background: var(--space-primary);
+  transform: scale(1.3);
+}
+
+.space-dot:hover .dot-ring {
+  border-color: var(--space-primary);
+  opacity: 1;
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 1;
+  }
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .space-pagination-container {
+    padding: 1.5rem 0;
+  }
+
+  .space-pagination {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .pagination-display {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .page-number {
+    font-size: 1.25rem;
+  }
+
+  .total-number {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 640px) {
-  .space-pagination-button {
+  .nav-text {
+    display: none;
+  }
+
+  .space-pagination-nav {
+    padding: 0.75rem;
     min-width: auto;
   }
 
-  .space-pagination-button span {
-    display: none;
+  .progress-container {
+    max-width: 200px;
+  }
+
+  .space-pagination-dots {
+    gap: 0.5rem;
   }
 }
 </style>
