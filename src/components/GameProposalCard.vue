@@ -4,7 +4,14 @@
     :interactive="true"
     :stars="true"
     :decorated="true"
-    className="mb-4"
+    :className="[
+      'mb-4',
+      proposal.status === 'approved'
+        ? 'proposal-approved'
+        : proposal.status === 'pending'
+        ? 'proposal-pending'
+        : 'proposal-rejected',
+    ]"
   >
     <div class="flex flex-col sm:flex-row gap-4">
       <!-- Image du jeu -->
@@ -26,20 +33,16 @@
               class="absolute top-0 right-0 w-5 h-5 border-t border-r transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-space-success'
-                  : proposal.status === 'rejected'
-                  ? 'border-space-error'
-                  : 'border-space-warning',
+                  ? 'border-space-gold'
+                  : 'border-space-silver',
               ]"
             ></div>
             <div
               class="absolute bottom-0 left-0 w-5 h-5 border-b border-l transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-space-success'
-                  : proposal.status === 'rejected'
-                  ? 'border-space-error'
-                  : 'border-space-warning',
+                  ? 'border-space-gold'
+                  : 'border-space-silver',
               ]"
             ></div>
           </div>
@@ -53,7 +56,6 @@
           <h3 class="text-xl font-heading text-space-text font-medium">
             {{ proposal.name }}
           </h3>
-
           <!-- Badge statut -->
           <SpaceBadge
             v-if="proposal.status === 'approved'"
@@ -61,13 +63,6 @@
             size="sm"
           >
             Approuvé
-          </SpaceBadge>
-          <SpaceBadge
-            v-else-if="proposal.status === 'rejected'"
-            variant="error"
-            size="sm"
-          >
-            Rejeté
           </SpaceBadge>
           <SpaceBadge v-else variant="warning" size="sm">
             En attente
@@ -78,33 +73,6 @@
         <p class="text-space-text-muted text-sm mb-4 flex-grow">
           {{ proposal.description || "Aucune description fournie." }}
         </p>
-
-        <!-- Raison du rejet si applicable -->
-        <SpaceAlert
-          v-if="proposal.status === 'rejected' && proposal.rejectionReason"
-          variant="error"
-          className="mb-4"
-        >
-          <template #icon>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </template>
-          <div class="text-sm">
-            <p class="font-heading font-medium mb-1">Raison du rejet :</p>
-            <p>{{ proposal.rejectionReason }}</p>
-          </div>
-        </SpaceAlert>
-
         <!-- Footer avec informations proposant et système de vote -->
         <div
           class="flex flex-col sm:flex-row justify-between sm:items-end mt-2 space-y-3 sm:space-y-0"
@@ -136,11 +104,7 @@
               @click="handleVote(1)"
               size="sm"
               :variant="getVoteButtonVariant(1)"
-              :disabled="
-                !isAuthenticated ||
-                proposal.status === 'pending' ||
-                proposal.status === 'rejected'
-              "
+              :disabled="!isAuthenticated || proposal.status === 'pending'"
               aria-label="Vote positif"
             >
               <svg
@@ -170,11 +134,7 @@
               @click="handleVote(-1)"
               size="sm"
               :variant="getVoteButtonVariant(-1)"
-              :disabled="
-                !isAuthenticated ||
-                proposal.status === 'pending' ||
-                proposal.status === 'rejected'
-              "
+              :disabled="!isAuthenticated || proposal.status === 'pending'"
               aria-label="Vote négatif"
             >
               <svg
@@ -196,7 +156,7 @@
             <!-- Bouton d'information sur les votes -->
             <SpaceButton
               v-if="proposal.votes && proposal.votes.length > 0"
-              @click="toggleVoteInfo"
+              @click="$emit('show-vote-info', proposal)"
               variant="ghost"
               size="sm"
               aria-label="Voir qui a voté"
@@ -247,27 +207,6 @@
               </svg>
               Approuver
             </SpaceButton>
-            <SpaceButton
-              @click="$emit('reject', proposal._id)"
-              variant="error"
-              size="sm"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Rejeter
-            </SpaceButton>
           </template>
 
           <!-- Bouton de suppression (pour toutes les propositions) -->
@@ -296,148 +235,13 @@
       </div>
     </div>
   </SpaceCard>
-
-  <!-- Modale d'information sur les votes -->
-  <SpaceModal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
-    <div class="space-y-6">
-      <!-- Détails de la proposition -->
-      <div class="mb-4 text-center">
-        <h4 class="text-space-text text-lg font-heading mb-2">
-          {{ proposal.name }}
-        </h4>
-        <div
-          class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
-        >
-          <div>
-            <span class="text-space-secondary">Total:</span>
-            <span :class="getVoteCountClass()"> {{ displayVoteCount }}</span>
-          </div>
-          <div>
-            <span class="text-space-success">+{{ positiveVotes.length }}</span>
-            <span class="mx-1 text-space-text-muted">/</span>
-            <span class="text-space-error">-{{ negativeVotes.length }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Onglets Votes Pour/Contre -->
-      <div class="flex space-x-2">
-        <SpaceButton
-          @click="activeTab = 'positive'"
-          :variant="activeTab === 'positive' ? 'success' : 'outline'"
-          size="sm"
-          className="flex-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Pour ({{ positiveVotes.length }})
-        </SpaceButton>
-        <SpaceButton
-          @click="activeTab = 'negative'"
-          :variant="activeTab === 'negative' ? 'error' : 'outline'"
-          size="sm"
-          className="flex-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Contre ({{ negativeVotes.length }})
-        </SpaceButton>
-      </div>
-
-      <!-- Liste des votants -->
-      <SpaceCard
-        variant="dark"
-        className="h-60 overflow-y-auto p-0 border-none"
-      >
-        <div
-          v-if="currentVotesList.length === 0"
-          class="flex flex-col items-center justify-center h-full p-6"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12 text-space-text-muted mb-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <p class="text-sm text-space-text-muted font-mono">
-            Aucun vote {{ activeTab === "positive" ? "positif" : "négatif" }}
-          </p>
-        </div>
-
-        <div v-else class="divide-y divide-space-bg-light/10">
-          <div
-            v-for="(vote, index) in currentVotesList"
-            :key="index"
-            class="p-3 hover:bg-space-bg-light/10 transition-all flex items-center"
-            :class="{ 'space-voter-animate': true }"
-          >
-            <!-- Avatar (initiales) -->
-            <div
-              class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mr-3"
-              :class="[
-                activeTab === 'positive'
-                  ? 'bg-space-success/10 border border-space-success/30 text-space-success'
-                  : 'bg-space-error/10 border border-space-error/30 text-space-error',
-              ]"
-            >
-              {{ getInitials(getVoterName(vote)) }}
-            </div>
-
-            <!-- Infos du votant -->
-            <div>
-              <p class="font-heading text-sm">
-                {{ getVoterName(vote) }}
-              </p>
-              <p class="text-xs text-space-text-muted">
-                {{ formatDate(vote.createdAt || proposal.createdAt) }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </SpaceCard>
-    </div>
-
-    <template #footer>
-      <div class="flex justify-end">
-        <SpaceButton @click="showVoteInfo = false">Fermer</SpaceButton>
-      </div>
-    </template>
-  </SpaceModal>
 </template>
 
 <script setup lang="ts">
 // ================================================
 // IMPORTS ET DÉFINITIONS
 // ================================================
-import { ref, computed, onBeforeUnmount } from "vue";
+import { computed, onBeforeUnmount } from "vue";
 
 import type { GameProposal } from "../types";
 
@@ -461,14 +265,13 @@ const props = defineProps<{
  * Événements émis par le composant
  * @event vote - Émis lorsque l'utilisateur vote pour une proposition
  * @event approve - Émis lorsqu'un admin approuve une proposition
- * @event reject - Émis lorsqu'un admin rejette une proposition
  * @event delete - Émis lorsqu'un admin supprime une proposition
  */
 const emit = defineEmits<{
   (e: "vote", proposalId: string, value: number): void;
   (e: "approve", proposalId: string): void;
-  (e: "reject", proposalId: string): void;
   (e: "delete", proposalId: string): void;
+  (e: "show-vote-info", proposal: GameProposal): void; // Nouvel événement
 }>();
 
 // ================================================
@@ -514,11 +317,7 @@ const formatDate = (dateString: string) => {
  */
 const handleVote = (voteType: number) => {
   // Vérification des conditions préalables
-  if (
-    !props.isAuthenticated ||
-    props.proposal.status === "pending" ||
-    props.proposal.status === "rejected"
-  ) {
+  if (!props.isAuthenticated || props.proposal.status === "pending") {
     return;
   }
 
@@ -547,18 +346,14 @@ const handleVote = (voteType: number) => {
  */
 const getVoteButtonVariant = (voteType: number) => {
   // Si l'utilisateur n'est pas connecté ou la proposition n'est pas approuvée
-  if (
-    !props.isAuthenticated ||
-    props.proposal.status === "pending" ||
-    props.proposal.status === "rejected"
-  ) {
+  if (!props.isAuthenticated || props.proposal.status === "pending") {
     return "ghost";
   }
 
   // Si le bouton correspond au vote actuel de l'utilisateur
   if (props.proposal.userVote === voteType) {
     // Style différent selon le type de vote
-    return voteType === 1 ? "success" : "error";
+    return voteType === 1 ? "gold" : "error";
   }
 
   // Style par défaut (pas de vote ou vote opposé)
@@ -570,7 +365,7 @@ const getVoteButtonVariant = (voteType: number) => {
  * @returns {string} Les classes CSS à appliquer
  */
 const getVoteCountClass = () => {
-  if (displayVoteCount.value > 0) return "text-space-success";
+  if (displayVoteCount.value > 0) return "text-space-gold";
   if (displayVoteCount.value < 0) return "text-space-error";
   return "text-space-text";
 };
@@ -578,43 +373,6 @@ const getVoteCountClass = () => {
 // ================================================
 // MODALE DES VOTES
 // ================================================
-/**
- * État pour la modale d'information sur les votes
- */
-const showVoteInfo = ref(false);
-const activeTab = ref<"positive" | "negative">("positive");
-
-/**
- * Ouvre/ferme la modale des informations de vote
- */
-const toggleVoteInfo = () => {
-  showVoteInfo.value = !showVoteInfo.value;
-};
-
-/**
- * Liste des votes positifs
- */
-const positiveVotes = computed(() => {
-  if (!props.proposal.votes) return [];
-  return props.proposal.votes.filter((vote) => vote.value === 1);
-});
-
-/**
- * Liste des votes négatifs
- */
-const negativeVotes = computed(() => {
-  if (!props.proposal.votes) return [];
-  return props.proposal.votes.filter((vote) => vote.value === -1);
-});
-
-/**
- * Liste des votes actuellement affichés selon l'onglet actif
- */
-const currentVotesList = computed(() => {
-  return activeTab.value === "positive"
-    ? positiveVotes.value
-    : negativeVotes.value;
-});
 
 /**
  * Calcule le nombre de votes à afficher selon le mode sélectionné
@@ -628,47 +386,6 @@ const displayVoteCount = computed(() => {
     return props.proposal.totalVotes;
   }
 });
-
-/**
- * Récupère le nom d'un votant depuis un objet vote
- * @param {any} vote - L'objet vote
- * @returns {string} - Le nom du votant formaté
- */
-const getVoterName = (vote: any): string => {
-  if (!vote || !vote.player) return "Utilisateur inconnu";
-
-  if (typeof vote.player === "object" && vote.player && vote.player.username) {
-    return vote.player.username;
-  }
-
-  if (typeof vote.player === "string") {
-    return `Utilisateur #${vote.player.slice(-6)}`;
-  }
-
-  return "Utilisateur inconnu";
-};
-
-/**
- * Calcule les initiales d'un nom d'utilisateur
- * @param {string} name - Nom d'utilisateur
- * @returns {string} - Les initiales (max 2 caractères)
- */
-const getInitials = (name: string): string => {
-  if (!name) return "?";
-
-  // Si c'est un ID d'utilisateur
-  if (name.includes("#")) {
-    return name.slice(-2).toUpperCase();
-  }
-
-  // Sinon, extraire les initiales
-  const parts = name.split(" ");
-  if (parts.length === 1) {
-    return name.substring(0, 2).toUpperCase();
-  }
-
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
 
 // S'assurer que le défilement est réactivé quand le composant est détruit
 onBeforeUnmount(() => {

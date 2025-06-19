@@ -84,21 +84,18 @@ const voteProposal = async (
 /**
  * Modère une proposition (admin uniquement)
  * @param proposalId - Identifiant de la proposition
- * @param status - Nouveau statut (approved ou rejected)
- * @param rejectionReason - Raison du rejet (optionnel)
+ * @param status - Nouveau statut (approved ou pending)
  * @returns Proposition mise à jour
  */
 const moderateProposal = async (
   proposalId: string,
-  status: "approved" | "rejected",
-  rejectionReason?: string
+  status: "approved" | "pending"
 ): Promise<GameProposal> => {
   try {
     const response = await axios.patch(
       `${API_URL}/${proposalId}/moderate`,
       {
         status,
-        rejectionReason,
       },
       {
         withCredentials: true,

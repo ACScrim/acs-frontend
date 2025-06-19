@@ -23,14 +23,14 @@
       <SpaceCard variant="dark" className="p-4">
         <div class="space-tabs flex flex-wrap sm:flex-nowrap gap-2">
           <SpaceButton
-            @click="activeTab = 'assigned'"
+            @click="switchTab('assigned')"
             :variant="activeTab === 'assigned' ? 'primary' : 'outline'"
             className="flex-1"
           >
             <span class="font-nasa">BADGES ATTRIBUÉS</span>
           </SpaceButton>
           <SpaceButton
-            @click="activeTab = 'available'"
+            @click="switchTab('available')"
             :variant="activeTab === 'available' ? 'primary' : 'outline'"
             className="flex-1"
           >
@@ -63,7 +63,8 @@
             <select
               id="gameFilter"
               v-model="selectedGameFilter"
-              class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+              class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-3 appearance-none focus:ring-2 focus:ring-space-primary/50 focus:outline-none transition-all duration-300 hover:border-space-primary/50"
+              @change="handleFilterChange"
             >
               <option value="all">Tous les jeux</option>
               <option value="acs">Badges ACS (Général)</option>
@@ -92,106 +93,23 @@
           </div>
         </div>
       </SpaceCard>
-
       <!-- Liste des badges attribués -->
-      <div v-if="activeTab === 'assigned'">
-        <div v-if="assignedBadges.length > 0">
-          <!-- Section Badges ACS (visible seulement si selectedGameFilter est 'all' ou 'acs') -->
-          <div
-            v-if="
-              (selectedGameFilter === 'all' || selectedGameFilter === 'acs') &&
-              filteredAssignedAcsBadges.length > 0
-            "
-            class="mb-6"
-          >
-            <SpaceCard variant="secondary" className="overflow-hidden">
-              <div class="p-4 border-b border-space-bg-light/30">
-                <h2 class="text-xl font-heading text-space-text">Badges ACS</h2>
-              </div>
-
-              <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
-              >
-                <div
-                  v-for="badge in filteredAssignedAcsBadges"
-                  :key="badge._id"
-                  class="space-badge-card"
-                >
-                  <SpaceCard
-                    variant="dark"
-                    elevation="low"
-                    :stars="true"
-                    :interactive="true"
-                    :hover="true"
-                    @click="selectBadge(badge)"
-                    className="h-full"
-                  >
-                    <!-- En-tête du badge avec image et titre -->
-                    <div class="flex items-center mb-4">
-                      <div class="relative flex-shrink-0 mr-4">
-                        <img
-                          :src="badge.imageUrl"
-                          :alt="badge.title"
-                          class="h-16 w-16 rounded-full border-2 border-space-secondary-light object-cover"
-                          loading="lazy"
-                          @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
-                        />
-                        <div
-                          class="absolute inset-0 rounded-full shadow-glow-secondary"
-                        ></div>
-                      </div>
-                      <div class="flex-1">
-                        <h3 class="text-space-text text-lg font-heading">
-                          {{ badge.title }}
-                        </h3>
-                        <SpaceBadge
-                          variant="secondary"
-                          size="sm"
-                          className="mt-1"
-                          >ACS</SpaceBadge
-                        >
-                      </div>
-                    </div>
-
-                    <!-- Bouton pour voir les joueurs -->
-                    <SpaceButton
-                      variant="secondary"
-                      size="sm"
-                      className="w-full mt-auto"
-                      @click.stop="selectBadge(badge)"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                        />
-                      </svg>
-                      Voir les joueurs ({{
-                        badge._id ? getBadgePlayers(badge._id).length : 0
-                      }})
-                    </SpaceButton>
-                  </SpaceCard>
-                </div>
-              </div>
-            </SpaceCard>
-          </div>
-
-          <!-- Section Badges par jeu -->
-          <template v-for="game in gamesWithAssignedBadges" :key="game._id">
+      <transition name="fade" mode="out-in">
+        <div v-if="activeTab === 'assigned'" key="assigned">
+          <div v-if="assignedBadges.length > 0">
+            <!-- Section Badges ACS (visible seulement si selectedGameFilter est 'all' ou 'acs') -->
             <div
               v-if="
-                selectedGameFilter === 'all' || selectedGameFilter === game._id
+                (selectedGameFilter === 'all' ||
+                  selectedGameFilter === 'acs') &&
+                filteredAssignedAcsBadges.length > 0
               "
               class="mb-6"
             >
-              <SpaceCard variant="primary" className="overflow-hidden">
+              <SpaceCard variant="secondary" className="overflow-hidden">
                 <div class="p-4 border-b border-space-bg-light/30">
                   <h2 class="text-xl font-heading text-space-text">
-                    {{ game.name }}
+                    Badges ACS
                   </h2>
                 </div>
 
@@ -199,9 +117,10 @@
                   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                 >
                   <div
-                    v-for="badge in getAssignedBadgesByGame(game._id)"
+                    v-for="badge in filteredAssignedAcsBadges"
                     :key="badge._id"
                     class="space-badge-card"
+                    :class="getBadgeRarityClass(badge)"
                   >
                     <SpaceCard
                       variant="dark"
@@ -218,12 +137,12 @@
                           <img
                             :src="badge.imageUrl"
                             :alt="badge.title"
-                            class="h-16 w-16 rounded-full border-2 border-space-primary-light object-cover"
+                            class="h-16 w-16 rounded-full border-2 border-space-secondary-light object-cover badge-image"
                             loading="lazy"
                             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                           />
                           <div
-                            class="absolute inset-0 rounded-full shadow-glow-primary"
+                            class="absolute inset-0 rounded-full shadow-glow-secondary badge-glow"
                           ></div>
                         </div>
                         <div class="flex-1">
@@ -231,18 +150,17 @@
                             {{ badge.title }}
                           </h3>
                           <SpaceBadge
-                            variant="primary"
+                            variant="secondary"
                             size="sm"
-                            className="mt-1 max-w-full truncate"
+                            className="mt-1"
+                            >ACS</SpaceBadge
                           >
-                            {{ game.name }}
-                          </SpaceBadge>
                         </div>
                       </div>
 
                       <!-- Bouton pour voir les joueurs -->
                       <SpaceButton
-                        variant="primary"
+                        variant="secondary"
                         size="sm"
                         className="w-full mt-auto"
                         @click.stop="selectBadge(badge)"
@@ -266,135 +184,158 @@
                 </div>
               </SpaceCard>
             </div>
-          </template>
 
-          <!-- Message si aucun badge ne correspond au filtre sélectionné -->
+            <!-- Section Badges par jeu -->
+            <template v-for="game in gamesWithAssignedBadges" :key="game._id">
+              <div
+                v-if="
+                  selectedGameFilter === 'all' ||
+                  selectedGameFilter === game._id
+                "
+                class="mb-6"
+              >
+                <SpaceCard variant="primary" className="overflow-hidden">
+                  <div class="p-4 border-b border-space-bg-light/30">
+                    <h2 class="text-xl font-heading text-space-text">
+                      {{ game.name }}
+                    </h2>
+                  </div>
+
+                  <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
+                  >
+                    <div
+                      v-for="badge in getAssignedBadgesByGame(game._id)"
+                      :key="badge._id"
+                      class="space-badge-card"
+                      :class="getBadgeRarityClass(badge)"
+                    >
+                      <SpaceCard
+                        variant="dark"
+                        elevation="low"
+                        :stars="true"
+                        :interactive="true"
+                        :hover="true"
+                        @click="selectBadge(badge)"
+                        className="h-full"
+                      >
+                        <!-- En-tête du badge avec image et titre -->
+                        <div class="flex items-center mb-4">
+                          <div class="relative flex-shrink-0 mr-4">
+                            <img
+                              :src="badge.imageUrl"
+                              :alt="badge.title"
+                              class="h-16 w-16 rounded-full border-2 border-space-primary-light object-cover badge-image"
+                              loading="lazy"
+                              @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
+                            />
+                            <div
+                              class="absolute inset-0 rounded-full shadow-glow-primary badge-glow"
+                            ></div>
+                          </div>
+                          <div class="flex-1">
+                            <h3 class="text-space-text text-lg font-heading">
+                              {{ badge.title }}
+                            </h3>
+                            <SpaceBadge
+                              variant="primary"
+                              size="sm"
+                              className="mt-1 max-w-full truncate"
+                            >
+                              {{ game.name }}
+                            </SpaceBadge>
+                          </div>
+                        </div>
+
+                        <!-- Bouton pour voir les joueurs -->
+                        <SpaceButton
+                          variant="primary"
+                          size="sm"
+                          className="w-full mt-auto"
+                          @click.stop="selectBadge(badge)"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 mr-2"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+                            />
+                          </svg>
+                          Voir les joueurs ({{
+                            badge._id ? getBadgePlayers(badge._id).length : 0
+                          }})
+                        </SpaceButton>
+                      </SpaceCard>
+                    </div>
+                  </div>
+                </SpaceCard>
+              </div>
+            </template>
+
+            <!-- Message si aucun badge ne correspond au filtre sélectionné -->
+            <SpaceTerminal
+              v-if="filteredAssignedBadges.length === 0"
+              :command="`find_badges --type=assigned ${
+                selectedGameFilter !== 'all'
+                  ? '--game=' + selectedGameFilter
+                  : '--all'
+              }`"
+              title="Console de recherche"
+              showCursor
+              className="my-8"
+            >
+              <div class="text-space-error font-mono">
+                Erreur 404: Aucun badge ne correspond au filtre sélectionné
+              </div>
+              <div class="text-space-text-muted mt-2">
+                Il n'y a pas de badges attribués pour le jeu sélectionné.
+              </div>
+            </SpaceTerminal>
+          </div>
+
+          <!-- Message si aucun badge n'est attribué -->
           <SpaceTerminal
-            v-if="filteredAssignedBadges.length === 0"
-            :command="`find_badges --type=assigned ${
-              selectedGameFilter !== 'all'
-                ? '--game=' + selectedGameFilter
-                : '--all'
-            }`"
+            v-else-if="assignedBadges.length === 0"
+            command="search_assigned_badges --status=not_found"
             title="Console de recherche"
             showCursor
             className="my-8"
           >
             <div class="text-space-error font-mono">
-              Erreur 404: Aucun badge ne correspond au filtre sélectionné
+              Erreur 404: Aucun badge attribué
             </div>
             <div class="text-space-text-muted mt-2">
-              Il n'y a pas de badges attribués pour le jeu sélectionné.
+              Aucun joueur n'a encore reçu de badge. Les badges seront attribués
+              lors d'évènements spéciaux ou pour récompenser des
+              accomplissements.
             </div>
           </SpaceTerminal>
         </div>
-
-        <!-- Message si aucun badge n'est attribué -->
-        <SpaceTerminal
-          v-else-if="assignedBadges.length === 0"
-          command="search_assigned_badges --status=not_found"
-          title="Console de recherche"
-          showCursor
-          className="my-8"
-        >
-          <div class="text-space-error font-mono">
-            Erreur 404: Aucun badge attribué
-          </div>
-          <div class="text-space-text-muted mt-2">
-            Aucun joueur n'a encore reçu de badge. Les badges seront attribués
-            lors d'évènements spéciaux ou pour récompenser des accomplissements.
-          </div>
-        </SpaceTerminal>
-      </div>
+      </transition>
 
       <!-- Liste des badges disponibles (non attribués) -->
-      <div v-if="activeTab === 'available'">
-        <div v-if="availableBadges.length > 0">
-          <!-- Section Badges ACS disponibles -->
-          <div
-            v-if="
-              (selectedGameFilter === 'all' || selectedGameFilter === 'acs') &&
-              filteredAvailableAcsBadges.length > 0
-            "
-            class="mb-6"
-          >
-            <SpaceCard
-              variant="secondary"
-              className="overflow-hidden opacity-70"
-            >
-              <div class="p-4 border-b border-space-bg-light/30">
-                <h2 class="text-xl font-heading text-space-text-muted">
-                  Badges ACS
-                </h2>
-              </div>
-
-              <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
-              >
-                <div
-                  v-for="badge in filteredAvailableAcsBadges"
-                  :key="badge._id"
-                  class="space-badge-card"
-                >
-                  <SpaceCard
-                    variant="dark"
-                    elevation="low"
-                    className="h-full grayscale hover:grayscale-0 transition-all duration-300"
-                  >
-                    <!-- En-tête du badge avec image et titre -->
-                    <div class="flex items-center mb-4">
-                      <div class="relative flex-shrink-0 mr-4">
-                        <img
-                          :src="badge.imageUrl"
-                          :alt="badge.title"
-                          class="h-16 w-16 rounded-full border-2 border-space-bg-light object-cover opacity-70"
-                          loading="lazy"
-                          @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
-                        />
-                      </div>
-                      <div class="flex-1">
-                        <h3 class="text-space-text-muted text-lg font-heading">
-                          {{ badge.title }}
-                        </h3>
-                        <SpaceBadge
-                          variant="secondary"
-                          size="sm"
-                          className="mt-1 opacity-70"
-                          >ACS</SpaceBadge
-                        >
-                      </div>
-                    </div>
-
-                    <!-- Bouton pour voir les joueurs -->
-                    <SpaceButton
-                      variant="ghost"
-                      size="sm"
-                      className="w-full mt-auto opacity-75 cursor-not-allowed"
-                      disabled
-                    >
-                      Ce badge n'a pas encore été attribué
-                    </SpaceButton>
-                  </SpaceCard>
-                </div>
-              </div>
-            </SpaceCard>
-          </div>
-
-          <!-- Section Badges de Jeux disponibles (par jeu) -->
-          <template v-for="game in gamesWithAvailableBadges" :key="game._id">
+      <transition name="fade" mode="out-in">
+        <div v-if="activeTab === 'available'" key="available">
+          <div v-if="availableBadges.length > 0">
+            <!-- Section Badges ACS disponibles -->
             <div
               v-if="
-                selectedGameFilter === 'all' || selectedGameFilter === game._id
+                (selectedGameFilter === 'all' ||
+                  selectedGameFilter === 'acs') &&
+                filteredAvailableAcsBadges.length > 0
               "
               class="mb-6"
             >
               <SpaceCard
-                variant="primary"
+                variant="secondary"
                 className="overflow-hidden opacity-70"
               >
                 <div class="p-4 border-b border-space-bg-light/30">
                   <h2 class="text-xl font-heading text-space-text-muted">
-                    {{ game.name }}
+                    Badges ACS
                   </h2>
                 </div>
 
@@ -402,7 +343,7 @@
                   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                 >
                   <div
-                    v-for="badge in getAvailableBadgesByGame(game._id)"
+                    v-for="badge in filteredAvailableAcsBadges"
                     :key="badge._id"
                     class="space-badge-card"
                   >
@@ -429,12 +370,11 @@
                             {{ badge.title }}
                           </h3>
                           <SpaceBadge
-                            variant="primary"
+                            variant="secondary"
                             size="sm"
-                            className="mt-1 opacity-70 max-w-full truncate"
+                            className="mt-1 opacity-70"
+                            >ACS</SpaceBadge
                           >
-                            {{ game.name }}
-                          </SpaceBadge>
                         </div>
                       </div>
 
@@ -452,62 +392,139 @@
                 </div>
               </SpaceCard>
             </div>
-          </template>
 
-          <!-- Message si aucun badge disponible ne correspond au filtre -->
+            <!-- Section Badges de Jeux disponibles (par jeu) -->
+            <template v-for="game in gamesWithAvailableBadges" :key="game._id">
+              <div
+                v-if="
+                  selectedGameFilter === 'all' ||
+                  selectedGameFilter === game._id
+                "
+                class="mb-6"
+              >
+                <SpaceCard
+                  variant="primary"
+                  className="overflow-hidden opacity-70"
+                >
+                  <div class="p-4 border-b border-space-bg-light/30">
+                    <h2 class="text-xl font-heading text-space-text-muted">
+                      {{ game.name }}
+                    </h2>
+                  </div>
+
+                  <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
+                  >
+                    <div
+                      v-for="badge in getAvailableBadgesByGame(game._id)"
+                      :key="badge._id"
+                      class="space-badge-card"
+                    >
+                      <SpaceCard
+                        variant="dark"
+                        elevation="low"
+                        className="h-full grayscale hover:grayscale-0 transition-all duration-300"
+                      >
+                        <!-- En-tête du badge avec image et titre -->
+                        <div class="flex items-center mb-4">
+                          <div class="relative flex-shrink-0 mr-4">
+                            <img
+                              :src="badge.imageUrl"
+                              :alt="badge.title"
+                              class="h-16 w-16 rounded-full border-2 border-space-bg-light object-cover opacity-70"
+                              loading="lazy"
+                              @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
+                            />
+                          </div>
+                          <div class="flex-1">
+                            <h3
+                              class="text-space-text-muted text-lg font-heading"
+                            >
+                              {{ badge.title }}
+                            </h3>
+                            <SpaceBadge
+                              variant="primary"
+                              size="sm"
+                              className="mt-1 opacity-70 max-w-full truncate"
+                            >
+                              {{ game.name }}
+                            </SpaceBadge>
+                          </div>
+                        </div>
+
+                        <!-- Bouton pour voir les joueurs -->
+                        <SpaceButton
+                          variant="ghost"
+                          size="sm"
+                          className="w-full mt-auto opacity-75 cursor-not-allowed"
+                          disabled
+                        >
+                          Ce badge n'a pas encore été attribué
+                        </SpaceButton>
+                      </SpaceCard>
+                    </div>
+                  </div>
+                </SpaceCard>
+              </div>
+            </template>
+
+            <!-- Message si aucun badge disponible ne correspond au filtre -->
+            <SpaceTerminal
+              v-if="filteredAvailableBadges.length === 0"
+              :command="`find_badges --type=available ${
+                selectedGameFilter !== 'all'
+                  ? '--game=' + selectedGameFilter
+                  : '--all'
+              }`"
+              title="Console de recherche"
+              showCursor
+              className="my-8"
+            >
+              <div class="text-space-error font-mono">
+                Erreur 404: Aucun badge disponible pour ce filtre
+              </div>
+              <div class="text-space-text-muted mt-2">
+                Pour le jeu sélectionné, tous les badges ont déjà été attribués
+                à au moins un joueur.
+              </div>
+            </SpaceTerminal>
+          </div>
+
+          <!-- Message si tous les badges ont été attribués -->
           <SpaceTerminal
-            v-if="filteredAvailableBadges.length === 0"
-            :command="`find_badges --type=available ${
-              selectedGameFilter !== 'all'
-                ? '--game=' + selectedGameFilter
-                : '--all'
-            }`"
+            v-else
+            command="search_available_badges --status=none"
             title="Console de recherche"
             showCursor
             className="my-8"
           >
-            <div class="text-space-error font-mono">
-              Erreur 404: Aucun badge disponible pour ce filtre
-            </div>
+            <div class="text-space-success font-mono">Félicitations!</div>
             <div class="text-space-text-muted mt-2">
-              Pour le jeu sélectionné, tous les badges ont déjà été attribués à
-              au moins un joueur.
+              Tous les badges disponibles ont déjà été attribués à au moins un
+              joueur.
             </div>
           </SpaceTerminal>
         </div>
+      </transition>
 
-        <!-- Message si tous les badges ont été attribués -->
+      <!-- Message si aucun badge -->
+      <transition name="fade">
         <SpaceTerminal
-          v-else
-          command="search_available_badges --status=none"
-          title="Console de recherche"
+          v-if="!loading && badges.length === 0"
+          command="initialize_badge_system --status=pending"
+          title="Console de système"
           showCursor
           className="my-8"
         >
-          <div class="text-space-success font-mono">Félicitations!</div>
+          <div class="text-space-warning font-mono">
+            Système d'insignes en cours d'initialisation
+          </div>
           <div class="text-space-text-muted mt-2">
-            Tous les badges disponibles ont déjà été attribués à au moins un
-            joueur.
+            Le système de badges est en cours de développement. De nouveaux
+            badges seront ajoutés prochainement pour récompenser les joueurs.
           </div>
         </SpaceTerminal>
-      </div>
-
-      <!-- Message si aucun badge -->
-      <SpaceTerminal
-        v-if="!loading && badges.length === 0"
-        command="initialize_badge_system --status=pending"
-        title="Console de système"
-        showCursor
-        className="my-8"
-      >
-        <div class="text-space-warning font-mono">
-          Système d'insignes en cours d'initialisation
-        </div>
-        <div class="text-space-text-muted mt-2">
-          Le système de badges est en cours de développement. De nouveaux badges
-          seront ajoutés prochainement pour récompenser les joueurs.
-        </div>
-      </SpaceTerminal>
+      </transition>
     </div>
   </SpaceContainer>
 
@@ -520,32 +537,62 @@
     <div v-if="selectedBadge" class="space-y-6">
       <!-- Image et description du badge -->
       <div class="flex flex-col items-center">
-        <div class="relative mb-4">
+        <div class="relative mb-4" :class="getBadgeRarityClass(selectedBadge)">
           <img
             :src="selectedBadge.imageUrl"
             :alt="selectedBadge.title"
-            class="h-32 w-32 rounded-full border-4 border-space-primary object-cover"
+            class="h-32 w-32 rounded-full border-4 border-space-primary object-cover badge-detail-image"
             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
           />
-          <div class="absolute inset-0 rounded-full shadow-glow-primary"></div>
+          <div
+            class="absolute inset-0 rounded-full shadow-glow-primary badge-detail-glow"
+          ></div>
         </div>
 
-        <SpaceBadge
-          :variant="
-            selectedBadge.categoryType === 'acs' ? 'secondary' : 'primary'
-          "
-          size="lg"
-          className="mb-4"
-        >
-          {{
-            selectedBadge.categoryType === "acs"
-              ? "ACS"
-              : getGameName(selectedBadge.categoryId)
-          }}
-        </SpaceBadge>
+        <div class="flex items-center gap-2 mb-2">
+          <SpaceBadge
+            :variant="
+              selectedBadge.categoryType === 'acs' ? 'secondary' : 'primary'
+            "
+            size="lg"
+          >
+            {{
+              selectedBadge.categoryType === "acs"
+                ? "ACS"
+                : getGameName(selectedBadge.categoryId)
+            }}
+          </SpaceBadge>
+
+          <!-- Badge de rareté si applicable -->
+          <SpaceBadge
+            v-if="getBadgeRarityClass(selectedBadge) === 'special-badge-gold'"
+            variant="gold"
+            size="lg"
+          >
+            RARE
+          </SpaceBadge>
+          <SpaceBadge
+            v-else-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-silver'
+            "
+            variant="silver"
+            size="lg"
+          >
+            PEU COMMUN
+          </SpaceBadge>
+          <SpaceBadge
+            v-else-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-bronze'
+            "
+            variant="bronze"
+            size="lg"
+          >
+            SPÉCIAL
+          </SpaceBadge>
+        </div>
 
         <p
-          class="text-space-text-muted text-center bg-space-bg-light/20 p-4 rounded border border-space-bg-light/30 text-sm"
+          class="text-space-text-muted text-center bg-space-bg-light/20 p-4 rounded border border-space-bg-light/30 text-sm mt-4"
         >
           {{
             selectedBadge.description ||
@@ -583,10 +630,10 @@
             <div
               v-for="player in getBadgePlayers(selectedBadge._id)"
               :key="player._id"
-              class="flex items-center p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/30 transition-colors"
+              class="flex items-center p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/30 transition-all duration-300 transform-gpu hover:translate-x-1"
             >
               <div
-                class="h-10 w-10 rounded-full bg-space-bg-light flex items-center justify-center border border-space-primary-light text-white mr-3 overflow-hidden"
+                class="h-10 w-10 rounded-full bg-space-bg-light flex items-center justify-center border border-space-primary-light text-white mr-3 overflow-hidden transform-gpu transition-all duration-300 hover:scale-110"
               >
                 <img
                   v-if="getUserAvatar(player)"
@@ -600,7 +647,7 @@
               </div>
               <router-link
                 :to="`/profil/${player._id}`"
-                class="text-space-primary-light hover:text-space-primary transition-colors font-heading"
+                class="text-space-primary-light hover:text-space-primary transition-all duration-300 font-heading hover:underline"
               >
                 {{ player.username }}
               </router-link>
@@ -815,6 +862,67 @@ const getGameName = (gameId: string): string => {
 };
 
 // 4.3 Méthodes pour l'interface utilisateur
+const handleFilterChange = () => {
+  // Animation visuelle lors du changement de filtre
+  const filterCards = document.querySelectorAll(".space-badge-card");
+  filterCards.forEach((card) => {
+    (card as HTMLElement).style.opacity = "0.5";
+    setTimeout(() => {
+      (card as HTMLElement).style.opacity = "1";
+    }, 300);
+  });
+};
+
+const switchTab = (tab: string) => {
+  // Applique la transition avec un effet de scroll doux si nécessaire
+  activeTab.value = tab;
+
+  // Scroll en douceur vers le haut de la section des badges
+  setTimeout(() => {
+    const badgesElement = document.querySelector(".space-tabs");
+    if (badgesElement) {
+      badgesElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, 100);
+};
+
+const getBadgeRarityClass = (badge: Badge): string => {
+  if (!badge) return "";
+
+  // Si le badge a un champ rarity explicite
+  if (badge.rarity) {
+    switch (badge.rarity.toLowerCase()) {
+      case "gold":
+        return "special-badge-gold";
+      case "silver":
+        return "special-badge-silver";
+      case "bronze":
+        return "special-badge-bronze";
+      default:
+        return "";
+    }
+  }
+
+  // Sinon, détermine la rareté en fonction du nombre de joueurs qui ont ce badge
+  if (badge._id) {
+    const playersWithBadge = getBadgePlayers(badge._id).length;
+    const totalPlayers = players.value.length;
+
+    if (totalPlayers === 0) return "";
+
+    const percentage = (playersWithBadge / totalPlayers) * 100;
+
+    // Badge or: très rare (moins de 5% des joueurs)
+    if (percentage <= 5) return "special-badge-gold";
+    // Badge argent: rare (moins de 15% des joueurs)
+    if (percentage <= 15) return "special-badge-silver";
+    // Badge bronze: peu commun (moins de 30% des joueurs)
+    if (percentage <= 30) return "special-badge-bronze";
+  }
+
+  return "";
+};
+
 const getUserAvatar = (player: Player): string | undefined => {
   if (!player || !player.userId) return undefined;
   const user = users.value.find((u) => u._id === player.userId);
@@ -844,6 +952,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .shadow-glow-primary {
@@ -858,7 +967,7 @@ onMounted(() => {
 @keyframes scan-badge {
   0% {
     top: 0%;
-    opacity: 1;
+    opacity: 0.8;
   }
   100% {
     top: 100%;
@@ -866,32 +975,124 @@ onMounted(() => {
   }
 }
 
-.space-badge-card:hover::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
-  );
-  animation: scan-badge 2s ease-out;
-  animation-iteration-count: 1;
-  pointer-events: none;
-  z-index: 10;
+@keyframes pulse-badge {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-/* Responsive design */
-@media (max-width: 640px) {
-  .space-tabs {
-    flex-direction: column;
+@keyframes rotate-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.3);
   }
+  33% {
+    box-shadow: 0 0 18px rgba(var(--space-gold-rgb), 0.5);
+  }
+  66% {
+    box-shadow: 0 0 18px rgba(var(--space-secondary-rgb), 0.5);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.3);
+  }
+}
 
-  .space-badge-card {
-    min-height: 200px;
+/* Animation de transition pour le changement d'onglet */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Animation pour les onglets */
+.space-tabs .space-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.space-tabs .space-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--space-primary);
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.space-tabs .space-button:hover::after {
+  width: 80%;
+}
+
+/* Amélioration pour le loader */
+@keyframes rotate-colors {
+  0% {
+    border-color: var(--space-primary);
+    border-top-color: transparent;
   }
+  33% {
+    border-color: var(--space-gold);
+    border-top-color: transparent;
+  }
+  66% {
+    border-color: var(--space-secondary);
+    border-top-color: transparent;
+  }
+  100% {
+    border-color: var(--space-primary);
+    border-top-color: transparent;
+  }
+}
+
+/* Animations pour les badges spéciaux */
+.special-badge-gold,
+.special-badge-silver,
+.special-badge-bronze {
+  position: relative;
+}
+
+.special-badge-gold::before,
+.special-badge-silver::before,
+.special-badge-bronze::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.special-badge-gold:hover::before {
+  opacity: 0.15;
+  background: radial-gradient(circle, var(--space-gold) 0%, transparent 70%);
+}
+
+.special-badge-silver:hover::before {
+  opacity: 0.15;
+  background: radial-gradient(circle, var(--space-silver) 0%, transparent 70%);
+}
+
+.special-badge-bronze:hover::before {
+  opacity: 0.15;
+  background: radial-gradient(circle, var(--space-bronze) 0%, transparent 70%);
 }
 </style>

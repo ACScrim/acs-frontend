@@ -16,11 +16,10 @@ export interface GameProposal {
         avatarUrl?: string;
       }
     | null;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved";
   votes: ProposalVote[];
   totalVotes: number;
   userVote: number | null;
-  rejectionReason?: string;
   createdAt: string;
   expiresAt: string;
 }

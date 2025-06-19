@@ -120,7 +120,7 @@
         </div>
 
         <div class="relative z-10 flex flex-col items-center">
-          <CyberpunkLoader />
+          <SpaceLoader text="Chargement des streams..." />
           <div class="mt-6 text-center">
             <p class="text-white font-orbitron text-lg font-semibold mb-2">
               Initialisation des streams
@@ -432,7 +432,6 @@
 import { ref, computed, onMounted } from "vue";
 import streamService from "../../services/streamService";
 import type { StreamResponse, TwitchStream } from "../../types";
-import CyberpunkLoader from "@/shared/CyberpunkLoader.vue";
 import StreamCard from "./StreamCard.vue";
 import OfflineUserCard from "./OfflineUserCard.vue";
 

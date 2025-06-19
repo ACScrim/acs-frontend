@@ -20,12 +20,7 @@ const publicRoutes = [
     component: () => import("../views/Classement.vue"),
     meta: { title: "Classement" },
   },
-  {
-    path: "/calendar",
-    name: "Calendar",
-    component: () => import("../views/Calendar.vue"),
-    meta: { title: "Calendrier des Tournois" },
-  },
+
   {
     path: "/tournois/:id",
     name: "tournament-details",

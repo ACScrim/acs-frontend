@@ -17,8 +17,7 @@
       <!-- Description/Introduction -->
       <SpaceCard variant="dark" className="mb-6">
         <p class="text-space-text font-body">
-          Seuls les jeux approuvés par les administrateurs seront votables. Les
-          propositions rejetées seront supprimées après un certain délai.
+          Seuls les jeux approuvés par les administrateurs seront votables.
         </p>
       </SpaceCard>
 
@@ -109,11 +108,10 @@
                 </template>
               </SpaceInput>
             </div>
-
             <SpaceButton
               @click="showProposalForm = true"
               variant="accent"
-              className="w-full hover:scale-105 transition-transform duration-300"
+              className="w-full hover:scale-105 transition-transform duration-300 shine-effect"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -178,6 +176,11 @@
           v-for="proposal in paginatedProposals"
           :key="proposal._id"
           class="proposal-card-wrapper transform transition-all duration-300 hover:scale-[1.01]"
+          :class="[
+            proposal.status === 'approved'
+              ? 'proposal-approved'
+              : 'proposal-pending',
+          ]"
         >
           <game-proposal-card
             :proposal="proposal"
@@ -186,8 +189,8 @@
             :show-positive-only="onlyPositiveVotes"
             @vote="handleVote"
             @approve="approveProposal"
-            @reject="openRejectDialog"
             @delete="confirmDelete"
+            @show-vote-info="showVoteInfoModal"
             class="proposal-card"
           />
         </div>
@@ -308,34 +311,6 @@
       </template>
     </SpaceModal>
 
-    <!-- Modal de rejet -->
-    <SpaceModal v-model="showRejectDialog" title="MOTIF DU REJET">
-      <div>
-        <label
-          class="block text-sm font-medium text-space-error mb-1 font-nasa"
-        >
-          Raison du rejet (visible par tous les utilisateurs)
-        </label>
-        <textarea
-          v-model="rejectionReason"
-          rows="3"
-          placeholder="Expliquez pourquoi cette proposition ne convient pas..."
-          class="w-full rounded-lg border border-space-error/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-error/30 focus:outline-none transition-all duration-300 custom-scrollbar"
-        ></textarea>
-      </div>
-
-      <template #footer>
-        <div class="flex justify-end gap-2">
-          <SpaceButton @click="showRejectDialog = false" variant="outline">
-            Annuler
-          </SpaceButton>
-          <SpaceButton @click="rejectProposal" variant="error">
-            Rejeter la proposition
-          </SpaceButton>
-        </div>
-      </template>
-    </SpaceModal>
-
     <!-- Toast via le composant partagé -->
     <Toast
       v-if="toastInfo.visible"
@@ -365,6 +340,140 @@
       </template>
     </SpaceModal>
   </SpaceContainer>
+  <SpaceModal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
+    <div class="space-y-6" v-if="selectedProposal">
+      <!-- Détails de la proposition -->
+      <div class="mb-4 text-center">
+        <h4 class="text-space-text text-lg font-heading mb-2">
+          {{ selectedProposal.name }}
+        </h4>
+        <div
+          class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
+        >
+          <div>
+            <span class="text-space-secondary">Total:</span>
+            <span :class="getVoteCountClass(selectedProposal)">
+              {{ getDisplayVoteCount(selectedProposal) }}
+            </span>
+          </div>
+          <div>
+            <span class="text-space-gold">+{{ positiveVotes.length }}</span>
+            <span class="mx-1 text-space-text-muted">/</span>
+            <span class="text-space-error">-{{ negativeVotes.length }}</span>
+          </div>
+        </div>
+      </div>
+      <!-- Onglets Votes Pour/Contre -->
+      <div class="flex space-x-2">
+        <SpaceButton
+          @click="activeTab = 'positive'"
+          :variant="activeTab === 'positive' ? 'gold' : 'outline'"
+          size="sm"
+          className="flex-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Pour ({{ positiveVotes.length }})
+        </SpaceButton>
+        <SpaceButton
+          @click="activeTab = 'negative'"
+          :variant="activeTab === 'negative' ? 'error' : 'outline'"
+          size="sm"
+          className="flex-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Contre ({{ negativeVotes.length }})
+        </SpaceButton>
+      </div>
+      <!-- Liste des votants -->
+      <SpaceCard
+        variant="dark"
+        className="h-60 overflow-y-auto p-0 border-none"
+      >
+        <!-- Onglets de votes -->
+        <div
+          v-if="currentVotesList.length === 0"
+          class="flex flex-col items-center justify-center h-full p-6"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-12 w-12 text-space-text-muted mb-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p class="text-sm text-space-text-muted font-mono">
+            Aucun vote {{ activeTab === "positive" ? "positif" : "négatif" }}
+          </p>
+        </div>
+
+        <div v-else class="divide-y divide-space-bg-light/10">
+          <div
+            v-for="(vote, index) in currentVotesList"
+            :key="index"
+            class="p-3 hover:bg-space-bg-light/10 transition-all flex items-center"
+            :class="{ 'space-voter-animate': true }"
+          >
+            <!-- Avatar (initiales) -->
+            <div
+              class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+              :class="[
+                activeTab === 'positive'
+                  ? 'bg-space-gold/20 border border-space-gold/50 text-space-gold'
+                  : 'bg-space-error/10 border border-space-error/30 text-space-error',
+              ]"
+            >
+              {{ getInitials(getVoterName(vote)) }}
+            </div>
+
+            <!-- Infos du votant -->
+            <div>
+              <p class="font-heading text-sm">
+                {{ getVoterName(vote) }}
+              </p>
+              <p class="text-xs text-space-text-muted">
+                {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </SpaceCard>
+    </div>
+
+    <template #footer>
+      <div class="flex justify-end">
+        <SpaceButton @click="showVoteInfo = false">Fermer</SpaceButton>
+      </div>
+    </template>
+  </SpaceModal>
 </template>
 
 <script setup lang="ts">
@@ -380,6 +489,10 @@ import SpaceContainer from "@/components/ui/layout/Container.vue";
 // ===================================
 // ÉTAT ET RÉFÉRENCES
 // ===================================
+
+const showVoteInfo = ref(false);
+const activeTab = ref<"positive" | "negative">("positive");
+const selectedProposal = ref<GameProposal | null>(null);
 
 // État utilisateur
 const userStore = useUserStore();
@@ -424,11 +537,6 @@ let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 // Dialog de suppression
 const deleteDialogVisible = ref(false);
 const proposalToDelete = ref<string>("");
-
-// Modal de rejet
-const showRejectDialog = ref(false);
-const rejectionReason = ref("");
-const proposalToReject = ref("");
 
 // Notification toast
 const toastInfo = ref({
@@ -553,6 +661,82 @@ watch(onlyPositiveVotes, () => {
   currentPage.value = 1;
 });
 
+// Ouvrir la modale d'information des votes
+const showVoteInfoModal = (proposal: GameProposal) => {
+  selectedProposal.value = proposal;
+  activeTab.value = "positive"; // Reset à l'onglet positif par défaut
+  showVoteInfo.value = true;
+};
+
+// Listes des votes
+const positiveVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === 1);
+});
+
+const negativeVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === -1);
+});
+
+const currentVotesList = computed(() => {
+  return activeTab.value === "positive"
+    ? positiveVotes.value
+    : negativeVotes.value;
+});
+
+// Récupère le nombre de votes à afficher selon le mode sélectionné
+const getDisplayVoteCount = (proposal: GameProposal) => {
+  if (onlyPositiveVotes.value) {
+    // Si on veut voir uniquement les votes positifs, compter seulement ceux-ci
+    return proposal.votes?.filter((v) => v.value > 0).length || 0;
+  } else {
+    // Sinon afficher le total normal (votes pour - votes contre)
+    return proposal.totalVotes;
+  }
+};
+
+// Détermine les classes CSS pour l'affichage du nombre de votes
+const getVoteCountClass = (proposal: GameProposal) => {
+  const count = getDisplayVoteCount(proposal);
+  if (count > 0) return "text-space-gold";
+  if (count < 0) return "text-space-error";
+  return "text-space-text";
+};
+
+// Récupère le nom d'un votant depuis un objet vote
+const getVoterName = (vote: any): string => {
+  if (!vote || !vote.player) return "Utilisateur inconnu";
+
+  if (typeof vote.player === "object" && vote.player && vote.player.username) {
+    return vote.player.username;
+  }
+
+  if (typeof vote.player === "string") {
+    return `Utilisateur #${vote.player.slice(-6)}`;
+  }
+
+  return "Utilisateur inconnu";
+};
+
+// Calcule les initiales d'un nom d'utilisateur
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+
+  // Si c'est un ID d'utilisateur
+  if (name.includes("#")) {
+    return name.slice(-2).toUpperCase();
+  }
+
+  // Sinon, extraire les initiales
+  const parts = name.split(" ");
+  if (parts.length === 1) {
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
 // ===================================
 // CHARGEMENT DES DONNÉES
 // ===================================
@@ -666,6 +850,34 @@ const resetProposalForm = () => {
   };
 };
 
+/**
+ * Formate une date pour l'affichage
+ */
+const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) return "Date inconnue";
+
+  try {
+    const date = new Date(dateString);
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) {
+      return "Date invalide";
+    }
+
+    // Formater la date avec l'API Intl pour le support des locales
+    return new Intl.DateTimeFormat("fr-FR", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  } catch (error) {
+    console.error("Erreur de formatage de date:", error);
+    return "Erreur de date";
+  }
+};
+
 // ===================================
 // RECHERCHE DE JEUX (RAWG API)
 // ===================================
@@ -724,34 +936,6 @@ const approveProposal = async (proposalId: string) => {
     await loadProposals();
   } catch (error) {
     showToast("Erreur lors de l'approbation", "error");
-  }
-};
-
-/**
- * Ouvre le modal de rejet
- */
-const openRejectDialog = (proposalId: string) => {
-  proposalToReject.value = proposalId;
-  rejectionReason.value = "";
-  showRejectDialog.value = true;
-};
-
-/**
- * Rejette une proposition (admin)
- */
-const rejectProposal = async () => {
-  try {
-    await gameProposalService.moderateProposal(
-      proposalToReject.value,
-      "rejected",
-      rejectionReason.value
-    );
-
-    showRejectDialog.value = false;
-    showToast("Proposition rejetée", "success");
-    await loadProposals();
-  } catch (error) {
-    showToast("Erreur lors du rejet", "error");
   }
 };
 
@@ -833,14 +1017,16 @@ onMounted(() => {
   gap: 1.5rem;
 }
 
-/* Stylisation des cartes de proposition */
+/* Stylisation des cartes de proposition avec effets spatiaux */
 .proposal-card-wrapper {
   position: relative;
   transition: all 0.3s ease;
+  will-change: transform, box-shadow;
 }
 
 .proposal-card-wrapper:hover {
-  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(var(--space-primary-rgb), 0.2);
   z-index: 2;
 }
 
@@ -849,16 +1035,17 @@ onMounted(() => {
   backdrop-filter: blur(5px);
 }
 
-/* Animations */
+/* Animations améliorées */
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 15px rgba(109, 40, 217, 0.5);
+    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5),
+      0 0 30px rgba(var(--space-primary-rgb), 0.2);
   }
   100% {
-    box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
   }
 }
 
@@ -915,5 +1102,94 @@ onMounted(() => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(109, 40, 217, 0.7);
+}
+
+/* Ajouter les styles pour l'animation des votants */
+.space-voter-animate {
+  position: relative;
+  overflow: hidden;
+}
+
+.space-voter-animate::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: voter-slide 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes voter-slide {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+/* Styles spécifiques pour les propositions de différents statuts */
+.proposal-approved {
+  border-left: 3px solid var(--space-gold);
+}
+
+.proposal-pending {
+  border-left: 3px solid var(--space-secondary);
+}
+
+/* Amélioration des transitions */
+.proposal-card-wrapper,
+.game-search-result,
+.space-voter-animate {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Effet de surbrillance pour les boutons importants */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shine 4s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(30deg);
+  }
+}
+
+/* Réactivité améliorée */
+@media (max-width: 640px) {
+  .proposals-grid {
+    gap: 1rem;
+  }
 }
 </style>
