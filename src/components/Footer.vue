@@ -174,7 +174,7 @@
               >
                 <div class="space-version-chip mr-2 relative overflow-hidden">
                   <div class="space-version-blip"></div>
-                  <span>v{{ appVersion }}</span>
+                  <span> v{{ appVersion }}</span>
                 </div>
                 <div class="space-version-status text-xs text-space-success">
                   ONLINE

@@ -1,7 +1,7 @@
 <template>
   <div
     class="stream-card bg-slate-800/70 rounded-lg border border-green-500/30 overflow-hidden hover:border-green-500/50 transition-all cursor-pointer transform hover:scale-105"
-    @click="selectStream"
+    @click="$emit('openTwitch', user.stream)"
   >
     <!-- Thumbnail du stream -->
     <div class="relative aspect-video bg-gray-900">
@@ -64,15 +64,8 @@
       <p class="text-xs text-purple-400 mt-1">
         {{ user.stream?.gameName }}
       </p>
-
       <div class="flex justify-between items-center mt-3">
         <span class="text-xs text-gray-500">@{{ user.twitchUsername }}</span>
-        <button
-          @click.stop="$emit('openTwitch', user.stream)"
-          class="text-xs text-purple-400 hover:text-purple-300 transition-colors"
-        >
-          Ouvrir sur Twitch
-        </button>
       </div>
     </div>
   </div>
@@ -92,9 +85,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
+defineEmits<{
   openTwitch: [stream: any];
-  streamSelected: [stream: any];
 }>();
 
 // ========================================
@@ -118,10 +110,6 @@ const formatViewers = () => {
 const formatDuration = () => {
   if (!props.user.stream?.startedAt) return "0m";
   return streamService.getStreamDuration(props.user.stream.startedAt);
-};
-
-const selectStream = () => {
-  emit("streamSelected", props.user.stream);
 };
 </script>
 

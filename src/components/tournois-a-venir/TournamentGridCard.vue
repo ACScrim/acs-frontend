@@ -1,16 +1,11 @@
 <template>
   <SpaceCard
-    :variant="tournament.finished ? 'success' : 'primary'"
+    :variant="getTournamentCardVariant"
     :stars="true"
     :interactive="true"
     :hover="true"
     :decorated="true"
-    :className="
-      [
-        'tournament-grid-card h-full',
-        tournament.finished ? 'finished-tournament' : '',
-      ].join(' ')
-    "
+    :className="getTournamentCardClass"
     @click="navigateToTournamentDetails"
   >
     <!-- Image du jeu ou placeholder avec effet spatial -->
@@ -46,17 +41,17 @@
           />
         </svg>
       </div>
-
-      <!-- Badge statut du tournoi avec meilleure visibilité -->
-      <div class="absolute top-3 right-3">
+      <!-- Badge statut du tournoi (uniquement pour les tournois terminés) -->
+      <div v-if="tournament.finished" class="absolute top-3 right-3">
         <SpaceBadge
-          v-if="tournament.finished"
           variant="success"
           size="sm"
           className="flex items-center gap-1 font-bold shadow-md"
           style="
-            background-color: rgba(var(--space-success-rgb), 0.9);
+            background-color: rgba(var(--space-success-rgb), 1) !important;
+            color: white !important;
             padding: 0.35rem 0.7rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
           "
         >
           <svg
@@ -64,6 +59,7 @@
             class="h-4 w-4"
             viewBox="0 0 20 20"
             fill="currentColor"
+            style="color: white !important"
           >
             <path
               fill-rule="evenodd"
@@ -123,12 +119,12 @@
           </svg>
           <span>{{ tournament.game.name }}</span>
         </div>
-
-        <!-- Participants -->
-        <div class="flex items-center text-space-text">
+        <!-- Participants avec couleur dynamique selon le remplissage -->
+        <div class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-space-accent"
+            class="h-4 w-4 mr-2"
+            :style="getParticipantsDisplayStyle"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -136,7 +132,9 @@
               d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
             />
           </svg>
-          <span :class="participantsTextClass">{{ formatParticipants() }}</span>
+          <span :style="getParticipantsDisplayStyle">{{
+            formatParticipants()
+          }}</span>
           <SpaceBadge
             v-if="isTournamentFull"
             variant="error"
@@ -564,23 +562,89 @@ const formatParticipants = () => {
 };
 
 /**
- * Détermine la classe CSS pour le texte du nombre de participants
- * basé sur le ratio de remplissage du tournoi
+ * Détermine le style inline pour l'affichage des participants
+ * basé sur le ratio de remplissage du tournoi - utilise des styles inline pour forcer les couleurs
  */
-const participantsTextClass = computed(() => {
+const getParticipantsDisplayStyle = computed(() => {
   if (!props.tournament.playerCap || props.tournament.playerCap <= 0) {
-    return "text-space-text";
+    return "color: var(--space-text); font-weight: 500;";
+  }
+
+  const percentage = fillPercentage.value;
+
+  if (percentage >= 100) {
+    return "color: var(--space-error) !important; font-weight: 700 !important;"; // Complet - rouge vif
+  } else if (percentage >= 85) {
+    return "color: var(--space-warning) !important; font-weight: 700 !important;"; // Presque plein (85%+) - orange
+  } else if (percentage >= 60) {
+    return "color: var(--space-accent) !important; font-weight: 600 !important;"; // Se remplit bien - jaune/doré
+  } else if (percentage >= 30) {
+    return "color: var(--space-secondary) !important; font-weight: 500 !important;"; // Quelques places prises - violet
+  } else {
+    return "color: var(--space-primary) !important; font-weight: 500 !important;"; // Beaucoup de places libres - bleu
+  }
+});
+
+/**
+ * Calcule le pourcentage de remplissage du tournoi
+ */
+const fillPercentage = computed(() => {
+  if (!props.tournament.playerCap || props.tournament.playerCap <= 0) {
+    return 0; // Pas de limite de places
   }
 
   const playerCount = props.tournament.players
     ? props.tournament.players.length
     : 0;
-  const ratio = playerCount / props.tournament.playerCap;
+  return (playerCount / props.tournament.playerCap) * 100;
+});
 
-  if (ratio >= 1) return "text-space-error font-medium"; // Complet
-  if (ratio >= 0.75) return "text-space-warning font-medium"; // Presque plein
-  if (ratio >= 0.5) return "text-space-success"; // À moitié plein
-  return "text-space-text-muted"; // Peu rempli
+/**
+ * Détermine la variante de couleur de la carte basée sur le remplissage
+ */
+const getTournamentCardVariant = computed(() => {
+  if (props.tournament.finished) {
+    return "success";
+  }
+
+  const percentage = fillPercentage.value;
+
+  if (percentage >= 100) {
+    return "error"; // Complet - rouge
+  } else if (percentage >= 85) {
+    return "warning"; // Presque plein - orange
+  } else if (percentage >= 60) {
+    return "accent"; // Se remplit - jaune/doré
+  } else if (percentage >= 30) {
+    return "secondary"; // Quelques places prises - violet
+  } else {
+    return "primary"; // Beaucoup de places libres - bleu
+  }
+});
+
+/**
+ * Détermine les classes CSS de la carte basées sur le remplissage
+ */
+const getTournamentCardClass = computed(() => {
+  const baseClass = "tournament-grid-card h-full";
+  const percentage = fillPercentage.value;
+
+  let classes = [baseClass];
+
+  if (props.tournament.finished) {
+    classes.push("finished-tournament");
+  } else if (percentage >= 100) {
+    classes.push("tournament-full");
+  } else if (percentage >= 85) {
+    classes.push("tournament-almost-full");
+  } else if (percentage >= 60) {
+    classes.push("tournament-filling");
+  } else if (percentage >= 30) {
+    classes.push("tournament-some-places");
+  } else {
+    classes.push("tournament-open");
+  }
+  return classes.join(" ");
 });
 // #endregion
 
@@ -700,5 +764,143 @@ onMounted(() => {
 .finished-tournament {
   border: 2px solid var(--space-success) !important;
   box-shadow: 0 0 10px rgba(var(--space-success-rgb), 0.3) !important;
+}
+
+/* Styles pour les différents niveaux de remplissage */
+.tournament-full {
+  border: 2px solid var(--space-error) !important;
+  box-shadow: 0 0 15px rgba(var(--space-error-rgb), 0.4) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--space-error-rgb), 0.1) 0%,
+    rgba(var(--space-bg-rgb), 0.8) 100%
+  ) !important;
+}
+
+.tournament-full:hover {
+  box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+.tournament-almost-full {
+  border: 2px solid var(--space-warning) !important;
+  box-shadow: 0 0 12px rgba(var(--space-warning-rgb), 0.35) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--space-warning-rgb), 0.08) 0%,
+    rgba(var(--space-bg-rgb), 0.8) 100%
+  ) !important;
+}
+
+.tournament-almost-full:hover {
+  box-shadow: 0 0 18px rgba(var(--space-warning-rgb), 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+.tournament-filling {
+  border: 2px solid var(--space-accent) !important;
+  box-shadow: 0 0 10px rgba(var(--space-accent-rgb), 0.3) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--space-accent-rgb), 0.06) 0%,
+    rgba(var(--space-bg-rgb), 0.8) 100%
+  ) !important;
+}
+
+.tournament-filling:hover {
+  box-shadow: 0 0 15px rgba(var(--space-accent-rgb), 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.tournament-some-places {
+  border: 2px solid var(--space-secondary) !important;
+  box-shadow: 0 0 8px rgba(var(--space-secondary-rgb), 0.25) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--space-secondary-rgb), 0.04) 0%,
+    rgba(var(--space-bg-rgb), 0.8) 100%
+  ) !important;
+}
+
+.tournament-some-places:hover {
+  box-shadow: 0 0 12px rgba(var(--space-secondary-rgb), 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.tournament-open {
+  border: 2px solid var(--space-primary) !important;
+  box-shadow: 0 0 6px rgba(var(--space-primary-rgb), 0.2) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--space-primary-rgb), 0.02) 0%,
+    rgba(var(--space-bg-rgb), 0.8) 100%
+  ) !important;
+}
+
+.tournament-open:hover {
+  box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Animation de pulsation pour les tournois presque pleins */
+.tournament-full,
+.tournament-almost-full {
+  animation: urgent-pulse 3s ease-in-out infinite;
+}
+
+@keyframes urgent-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.5);
+  }
+}
+
+/* Effet de scan personnalisé selon le remplissage */
+.tournament-full:hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-error),
+    transparent
+  );
+}
+
+.tournament-almost-full:hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-warning),
+    transparent
+  );
+}
+
+.tournament-filling:hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-accent),
+    transparent
+  );
+}
+
+.tournament-some-places:hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-secondary),
+    transparent
+  );
+}
+
+.tournament-open:hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--space-primary),
+    transparent
+  );
 }
 </style>

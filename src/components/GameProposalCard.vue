@@ -6,7 +6,7 @@
     :decorated="true"
     :className="
       [
-        'mb-4',
+        'mb-4 cursor-pointer',
         proposal.status === 'approved'
           ? 'proposal-approved'
           : proposal.status === 'pending'
@@ -14,6 +14,7 @@
           : 'proposal-rejected',
       ].join(' ')
     "
+    @click="$emit('show-vote-info', proposal)"
   >
     <div class="flex flex-col sm:flex-row gap-4">
       <!-- Image du jeu -->
@@ -99,9 +100,8 @@
               <span>{{ formatDate(proposal.createdAt) }}</span>
             </div>
           </div>
-
           <!-- Système de vote -->
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-4" @click.stop>
             <SpaceButton
               @click="handleVote(1)"
               size="sm"
@@ -154,37 +154,13 @@
                 />
               </svg>
             </SpaceButton>
-
-            <!-- Bouton d'information sur les votes -->
-            <SpaceButton
-              v-if="proposal.votes && proposal.votes.length > 0"
-              @click="$emit('show-vote-info', proposal)"
-              variant="ghost"
-              size="sm"
-              aria-label="Voir qui a voté"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </SpaceButton>
           </div>
         </div>
-
         <!-- Actions admin -->
         <div
           v-if="isAdmin"
           class="mt-4 flex justify-end space-x-3 border-t border-space-bg-light/20 pt-3"
+          @click.stop
         >
           <!-- Actions sur les propositions en attente -->
           <template v-if="proposal.status === 'pending'">

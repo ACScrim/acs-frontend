@@ -373,23 +373,204 @@
     <!-- Toasts -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
+    <!-- Modal de confirmation de fin de tournoi -->
+    <Modal
+      v-model="showConfirmationDialog"
+      title="MISSION: TERMINER TOURNOI"
+      className="max-w-lg"
+    >
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-error"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg" className="text-space-error">
+            CONFIRMATION REQUISE
+          </SpaceTitle>
+        </div>
+      </template>
 
-    <!-- Confirmation Dialog -->
-    <ConfirmationDialog
-      v-if="showConfirmationDialog"
-      :title="'Confirmer la fin du tournoi'"
-      :message="'Êtes-vous sûr de vouloir terminer ce tournoi ? Les résultats seront comptabilisés dans le classement des joueurs. Le rôle sera supprimé du discord.'"
-      @confirm="finishTournament"
-      @cancel="showConfirmationDialog = false"
-    />
-    <!-- Confirmation Dialog pour annuler la finalisation -->
-    <ConfirmationDialog
-      v-if="showUnfinishConfirmationDialog"
-      title="Confirmer l'annulation de la finalisation"
-      message="Êtes-vous sûr de vouloir annuler la finalisation de ce tournoi ? Les points attribués aux joueurs seront recalculés lors de la prochaine finalisation."
-      @confirm="unfinishTournament"
-      @cancel="showUnfinishConfirmationDialog = false"
-    />
+      <div class="space-y-4">
+        <SpaceAlert variant="warning">
+          <div class="text-space-text">
+            <strong>Attention :</strong> Cette action est irréversible !
+          </div>
+        </SpaceAlert>
+
+        <div class="text-space-text-muted leading-relaxed">
+          Êtes-vous sûr de vouloir terminer ce tournoi ? Les conséquences seront
+          :
+        </div>
+
+        <div
+          class="space-y-2 bg-space-bg-light/20 p-4 rounded-lg border border-space-primary/20"
+        >
+          <div class="flex items-center gap-2 text-space-text">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-space-success"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span
+              >Les résultats seront comptabilisés dans le classement des
+              joueurs</span
+            >
+          </div>
+          <div class="flex items-center gap-2 text-space-text">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-space-error"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>Le rôle Discord du tournoi sera supprimé</span>
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <SpaceButton
+            @click="showConfirmationDialog = false"
+            variant="ghost"
+            size="md"
+          >
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="finishTournament" variant="error" size="md">
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Terminer le tournoi
+          </SpaceButton>
+        </div>
+      </template>
+    </Modal>
+
+    <!-- Modal de confirmation d'annulation de finalisation -->
+    <Modal
+      v-model="showUnfinishConfirmationDialog"
+      title="MISSION: ANNULER FINALISATION"
+      className="max-w-lg"
+    >
+      <template #header>
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-space-warning"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <SpaceTitle size="lg" className="text-space-warning">
+            ANNULATION FINALISATION
+          </SpaceTitle>
+        </div>
+      </template>
+
+      <div class="space-y-4">
+        <SpaceAlert variant="info">
+          <div class="text-space-text">
+            Cette action permettra de modifier à nouveau les résultats du
+            tournoi.
+          </div>
+        </SpaceAlert>
+
+        <div class="text-space-text-muted leading-relaxed">
+          Êtes-vous sûr de vouloir annuler la finalisation de ce tournoi ?
+        </div>
+
+        <div
+          class="bg-space-bg-light/20 p-4 rounded-lg border border-space-secondary/20"
+        >
+          <div class="flex items-center gap-2 text-space-text">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-space-info"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span
+              >Les points attribués aux joueurs seront recalculés lors de la
+              prochaine finalisation</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <SpaceButton
+            @click="showUnfinishConfirmationDialog = false"
+            variant="ghost"
+            size="md"
+          >
+            Annuler
+          </SpaceButton>
+          <SpaceButton @click="unfinishTournament" variant="warning" size="md">
+            <template #icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </template>
+            Annuler la finalisation
+          </SpaceButton>
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -397,7 +578,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import gameService from "../../services/gameService";
 import tournamentService from "../../services/tournamentService";
-import ConfirmationDialog from "@/shared/ConfirmationDialog.vue";
+import Modal from "@/components/ui/molecules/Modal.vue";
 import type { Game, Tournament, Team, Player } from "../../types";
 import Toast from "@/shared/Toast.vue";
 
