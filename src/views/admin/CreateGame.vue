@@ -121,7 +121,7 @@
               placeholder="Entrez une description du jeu (optionnel)"
               :rows="4"
               :error="errors.description"
-              maxlength="100"
+              maxlength="200"
             >
             </SpaceInput>
           </div>
@@ -225,12 +225,12 @@
             >
               <div
                 v-if="game.roles && game.roles.length > 0"
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
               >
                 <div
                   v-for="(role, index) in game.roles"
                   :key="index"
-                  class="flex items-center justify-between p-3 bg-space-bg-light/30 rounded-md transition-all duration-300 group relative overflow-hidden"
+                  class="bg-space-bg-light/30 rounded-md transition-all duration-300 group relative overflow-hidden min-h-[4rem] flex flex-col justify-between p-3"
                   :style="{
                     borderColor: `${role.color}50`,
                     borderWidth: '1px',
@@ -245,30 +245,33 @@
                     }"
                   ></div>
 
-                  <div class="flex items-center z-10">
+                  <!-- Nom du rôle avec indicateur de couleur -->
+                  <div class="flex items-center z-10 mb-2">
                     <div
-                      class="w-4 h-4 rounded-full mr-3 shadow-glow transition-all duration-300 group-hover:scale-110"
+                      class="w-4 h-4 rounded-full mr-3 shadow-glow transition-all duration-300 group-hover:scale-110 flex-shrink-0"
                       :style="{
                         backgroundColor: role.color || '#6B7280',
                         boxShadow: `0 0 6px ${role.color}`,
                       }"
                     ></div>
-                    <span class="text-space-text font-medium font-nasa">{{
-                      role.name
-                    }}</span>
+                    <span
+                      class="text-space-text font-medium font-nasa truncate"
+                      >{{ role.name }}</span
+                    >
                   </div>
 
-                  <div class="flex space-x-1 z-10">
+                  <!-- Boutons d'action -->
+                  <div class="flex justify-end space-x-1 z-10">
                     <SpaceButton
                       @click.prevent="editRole(index)"
                       variant="secondary"
                       size="xs"
-                      className="p-1.5"
+                      className="p-1.5 flex-shrink-0"
                       :title="'Modifier ' + role.name"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
+                        class="h-3.5 w-3.5"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -281,12 +284,12 @@
                       @click.prevent="removeRole(index)"
                       variant="error"
                       size="xs"
-                      className="p-1.5"
+                      className="p-1.5 flex-shrink-0"
                       :title="'Supprimer ' + role.name"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
+                        class="h-3.5 w-3.5"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -764,7 +767,14 @@ const selectGame = async (rawgGame: RawgGame) => {
 
     // Mettre à jour le formulaire
     game.value.name = gameDetails.name;
-    game.value.description = gameDetails.description_raw || rawgGame.name;
+
+    // Limiter la description à 200 caractères maximum
+    const description = gameDetails.description_raw || rawgGame.name;
+    game.value.description =
+      description.length > 200
+        ? description.substring(0, 200).trim()
+        : description;
+
     game.value.imageUrl = gameDetails.background_image || "";
 
     // Réinitialiser les erreurs
@@ -988,11 +998,10 @@ const validateForm = (isEditMode = false): boolean => {
     errors.value.name = "Le nom du jeu ne doit pas dépasser 50 caractères";
     return false;
   }
-
   // Limiter la longueur de la description
-  if (game.value.description && game.value.description.length > 2000) {
+  if (game.value.description && game.value.description.length > 200) {
     errors.value.description =
-      "La description ne doit pas dépasser 2000 caractères";
+      "La description ne doit pas dépasser 200 caractères";
     return false;
   }
 

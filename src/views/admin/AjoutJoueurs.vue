@@ -87,25 +87,8 @@
         </form>
       </SpaceCard>
       <!-- Notifications -->
-      <SpaceAlert
-        v-if="error"
-        variant="error"
-        :title="'Erreur'"
-        dismissible
-        className="mb-4"
-      >
-        {{ error }}
-      </SpaceAlert>
-
-      <SpaceAlert
-        v-if="success"
-        variant="success"
-        :title="'Succès'"
-        dismissible
-        className="mb-4"
-      >
-        {{ success }}
-      </SpaceAlert>
+      <Toast v-if="error" type="error" :message="error" />
+      <Toast v-if="success" type="success" :message="success" />
 
       <!-- Bouton pour afficher les joueurs existants -->
       <SpaceButton
@@ -259,6 +242,7 @@ import { ref, onMounted } from "vue";
  * Services pour l'accès aux données
  */
 import playerService from "../../services/playerService";
+import Toast from "../../shared/Toast.vue";
 
 /**
  * Composants UI
