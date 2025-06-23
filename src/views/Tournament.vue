@@ -563,7 +563,7 @@
           <button
             @click="activeTab = 'description'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-xl flex items-center',
+              'space-tab px-4 py-3 font-heading text-lg flex items-center',
               activeTab === 'description'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -588,7 +588,7 @@
           <button
             @click="activeTab = 'participants'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-xl flex items-center',
+              'space-tab px-4 py-3 font-heading text-lg flex items-center',
               activeTab === 'participants'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -605,7 +605,7 @@
               />
             </svg>
             Participants
-            <span class="ml-1 text-xl opacity-80">
+            <span class="ml-1 text-lg opacity-80">
               ({{ getParticipantsCount() }})
             </span>
           </button>
@@ -615,7 +615,7 @@
             v-if="shouldShowTwitchTab"
             @click="activeTab = 'twitch'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-xl flex items-center',
+              'space-tab px-4 py-3 font-heading text-lg flex items-center',
               activeTab === 'twitch'
                 ? 'text-space-accent-light bg-space-bg-light/20 border-b-2 border-space-accent'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -634,7 +634,7 @@
             v-if="tournament.finished"
             @click="activeTab = 'results'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-xl flex items-center',
+              'space-tab px-4 py-3 font-heading text-lg flex items-center',
               activeTab === 'results'
                 ? 'text-space-success-light bg-space-bg-light/20 border-b-2 border-space-success'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -950,7 +950,7 @@
               <SpaceCard variant="warning" className="p-3">
                 <!-- En-tête du tableau -->
                 <div
-                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-xl font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
+                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-lg font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
                 >
                   <div>Position</div>
                   <div>Joueur</div>
