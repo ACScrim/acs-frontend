@@ -4,16 +4,36 @@ on:
   push:
     branches:
       - main
+      - staging  # Branche pour tester la refonte
 
 jobs:
-  deploy:
+  # Job pour la production (main)
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connexion SSH et déploiement du Frontend
+      - name: Connexion SSH et déploiement du Frontend (Production)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: /var/www/deploy-frontend.sh
+
+  # Job pour le staging (staging)
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connexion SSH et déploiement du Frontend (Staging)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www
+            # Déployer dans un sous-dossier staging
+            ./deploy-frontend-staging.sh
