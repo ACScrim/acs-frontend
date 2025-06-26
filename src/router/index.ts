@@ -162,6 +162,16 @@ const adminRoutes = [
     component: () => import("../views/UserSettings.vue"),
     meta: { requiresAuth: true, title: "Informations Profil" },
   },
+  {
+    path: "/notification-test",
+    name: "NotificationTest",
+    component: () => import("../views/NotificationTest.vue"),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: "Test des Notifications",
+    },
+  },
 ];
 
 // Combinaison de toutes les routes

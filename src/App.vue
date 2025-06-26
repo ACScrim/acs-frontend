@@ -1,56 +1,24 @@
 <template>
   <div
     class="relative min-h-screen overflow-x-hidden overflow-y-auto scroll-smooth flex flex-col"
-  >
-    <!-- Fond dynamique pour le mode normal (non allégé) -->
+  >    <!-- Fond dynamique pour le mode normal (non allégé) - Optimisé -->
     <div
       v-if="isLightMode"
       class="fixed inset-0 w-full h-full z-10"
       aria-hidden="true"
     >
-      <!-- Couches d'étoiles -->
+      <!-- Seulement les éléments essentiels pour réduire le lag -->
       <div class="stars-layer stars-small"></div>
       <div class="stars-layer stars-medium"></div>
-      <div class="stars-layer stars-large"></div>
 
-      <!-- Nébuleuses -->
+      <!-- Nébuleuses simplifiées -->
       <div class="nebula-layer">
         <div class="nebula-purple"></div>
-        <div class="nebula-blue"></div>
       </div>
 
-      <!-- Planètes -->
+      <!-- Moins de planètes -->
       <div class="planet-jupiter"></div>
       <div class="planet-rings"></div>
-      <div class="planet-saturn"></div>
-
-      <!-- Nouvelles planètes plus grandes -->
-      <div class="planet-gas-giant"></div>
-      <div class="planet-ice"></div>
-
-      <!-- Astronaute et fusée -->
-      <div class="astronaut"></div>
-      <div class="rocket">
-        <div class="rocket-body"></div>
-        <div class="rocket-window"></div>
-        <div class="rocket-engine"></div>
-        <div class="rocket-flames"></div>
-      </div>
-
-      <!-- Voiture Rocket League -->
-      <div class="rocket-car">
-        <div class="rocket-car-body"></div>
-        <div class="rocket-car-roof"></div>
-        <div class="rocket-car-window"></div>
-        <div class="rocket-car-boost"></div>
-        <div class="rocket-car-wheels"></div>
-        <div class="rocket-car-wheels rocket-car-wheels-back"></div>
-      </div>
-
-      <!-- Étoiles filantes -->
-      <div class="shooting-star shooting-star-1"></div>
-      <div class="shooting-star shooting-star-2"></div>
-      <div class="shooting-star shooting-star-3"></div>
     </div>
 
     <!-- Fond vidéo pour le mode allégé -->
@@ -76,13 +44,15 @@
       <!-- Overlay pour ajuster la luminosité/contraste si nécessaire -->
       <div class="video-background__overlay"></div>
     </div>
-
     <div class="relative z-20 flex flex-col min-h-screen">
       <Navbar />
       <main class="flex-grow pb-safe">
         <router-view></router-view>
       </main>
       <Footer />
+
+      <!-- Composants PWA -->
+      <PWAInstallPrompt />
     </div>
   </div>
 </template>
@@ -91,6 +61,7 @@
 import { computed, onMounted, watch } from "vue";
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
+import PWAInstallPrompt from "./components/PWAInstallPrompt.vue";
 import { useSettingsStore } from "./stores/settingsStore";
 
 const settingsStore = useSettingsStore();

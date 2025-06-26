@@ -106,7 +106,6 @@
           Badges
         </router-link>
       </div>
-
       <!-- Toggle mode allégé -->
       <SpaceToggle
         v-model="isLightMode"
@@ -115,6 +114,12 @@
         tooltip="Activer/désactiver le fond vidéo"
         containerClassName="hidden sm:flex items-center mr-6"
       />
+
+      <!-- Centre de notifications -->
+      <div class="notification-center hidden md:flex items-center mr-4">
+        <NotificationCenter />
+      </div>
+
       <!-- Menu utilisateur -->
       <div class="relative user-menu items-center hidden md:flex">
         <button
@@ -794,6 +799,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useUserStore } from "../stores/userStore";
 import { useRouter, useRoute } from "vue-router";
 import { useSettingsStore } from "../stores/settingsStore";
+import NotificationCenter from "./NotificationCenter.vue";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
