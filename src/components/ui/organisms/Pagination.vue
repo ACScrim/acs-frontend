@@ -9,8 +9,9 @@
 
     <!-- Ligne de connexion principale -->
     <div class="space-pagination-line"></div>
-
-    <div class="space-pagination flex items-center justify-center gap-4">
+    <div
+      class="space-pagination flex items-center justify-center gap-2 sm:gap-4"
+    >
       <!-- Bouton précédent -->
       <button
         @click="handlePrevPage"
@@ -21,7 +22,7 @@
         <div class="nav-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4 sm:h-5 sm:w-5"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -36,7 +37,7 @@
       </button>
 
       <!-- Compteur central avec style spatial -->
-      <div class="space-pagination-center">
+      <div class="space-pagination-center flex-1">
         <div class="pagination-display">
           <!-- Indicateur de page actuelle -->
           <div class="current-page-indicator">
@@ -109,7 +110,7 @@
         <div class="nav-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4 sm:h-5 sm:w-5"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -290,6 +291,7 @@ const progressPercentage = computed(() => {
   z-index: 1;
   width: 100%;
   max-width: 600px;
+  padding: 0 1rem;
 }
 
 /* Boutons de navigation */
@@ -297,18 +299,30 @@ const progressPercentage = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem;
   font-family: "Orbitron", sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--space-text);
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(109, 40, 217, 0.3);
-  border-radius: 12px;
+  border-radius: 8px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0;
+}
+
+/* Responsive pour les boutons */
+@media (min-width: 640px) {
+  .space-pagination-nav {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    border-radius: 12px;
+  }
 }
 
 .space-pagination-nav::before {
@@ -369,20 +383,40 @@ const progressPercentage = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  min-width: 200px;
+  gap: 0.5rem;
+  min-width: 120px;
+  width: 100%;
+  max-width: 220px;
+}
+
+@media (min-width: 640px) {
+  .space-pagination-center {
+    gap: 1rem;
+    min-width: 200px;
+    max-width: 320px;
+  }
 }
 
 .pagination-display {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
+  gap: 0.375rem;
+  padding: 0.375rem 0.5rem;
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(109, 40, 217, 0.3);
-  border-radius: 16px;
+  border-radius: 8px;
   backdrop-filter: blur(15px);
   position: relative;
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .pagination-display {
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+  }
 }
 
 .pagination-display::before {
@@ -424,7 +458,7 @@ const progressPercentage = computed(() => {
 
 .page-number {
   font-family: "Space Mono", monospace;
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: bold;
   color: var(--space-primary);
   text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
@@ -432,13 +466,19 @@ const progressPercentage = computed(() => {
   z-index: 1;
 }
 
+@media (min-width: 640px) {
+  .page-number {
+    font-size: 1.5rem;
+  }
+}
+
 .page-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   background: radial-gradient(
     circle,
     rgba(109, 40, 217, 0.2) 0%,
@@ -446,6 +486,13 @@ const progressPercentage = computed(() => {
   );
   border-radius: 50%;
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .page-glow {
+    width: 3rem;
+    height: 3rem;
+  }
 }
 
 @keyframes pulse-glow {
@@ -463,11 +510,17 @@ const progressPercentage = computed(() => {
 .page-separator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .page-separator {
+    gap: 0.5rem;
+  }
 }
 
 .separator-line {
-  width: 20px;
+  width: 12px;
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -477,12 +530,25 @@ const progressPercentage = computed(() => {
   );
 }
 
+@media (min-width: 640px) {
+  .separator-line {
+    width: 20px;
+  }
+}
+
 .separator-dot {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   background: var(--space-primary);
   border-radius: 50%;
   animation: dot-pulse 1.5s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .separator-dot {
+    width: 4px;
+    height: 4px;
+  }
 }
 
 @keyframes dot-pulse {
@@ -504,25 +570,44 @@ const progressPercentage = computed(() => {
 
 .total-number {
   font-family: "Space Mono", monospace;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--space-text-muted);
   font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  .total-number {
+    font-size: 1.25rem;
+  }
 }
 
 /* Barre de progression */
 .progress-container {
   width: 100%;
-  max-width: 300px;
-  padding: 0 1rem;
+  max-width: 150px;
+  padding: 0 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .progress-container {
+    max-width: 300px;
+    padding: 0 1rem;
+  }
 }
 
 .progress-track {
   position: relative;
   width: 100%;
-  height: 4px;
+  height: 3px;
   background: rgba(109, 40, 217, 0.1);
   border-radius: 2px;
   overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .progress-track {
+    height: 4px;
+  }
 }
 
 .progress-fill {
@@ -656,46 +741,79 @@ const progressPercentage = computed(() => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .space-pagination-container {
-    padding: 1.5rem 0;
+    padding: 1rem 0;
   }
 
   .space-pagination {
-    max-width: 100%;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
+    gap: 0.5rem;
   }
 
-  .pagination-display {
-    padding: 0.75rem 1rem;
-    gap: 0.75rem;
+  /* Sur mobile, garder les points mais les réduire */
+  .space-pagination-dots {
+    gap: 0.375rem;
   }
 
-  .page-number {
-    font-size: 1.25rem;
+  .space-dot {
+    width: 8px;
+    height: 8px;
   }
 
-  .total-number {
-    font-size: 1rem;
+  .dot-ring {
+    width: 12px;
+    height: 12px;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 479px) {
   .nav-text {
     display: none;
   }
 
   .space-pagination-nav {
-    padding: 0.75rem;
+    padding: 0.375rem;
     min-width: auto;
+    gap: 0;
+  }
+
+  .space-pagination {
+    gap: 0.375rem;
+  }
+
+  .pagination-display {
+    padding: 0.25rem 0.375rem;
+    gap: 0.25rem;
   }
 
   .progress-container {
-    max-width: 200px;
+    max-width: 120px;
+    padding: 0 0.125rem;
   }
 
+  .page-separator {
+    gap: 0.125rem;
+  }
+
+  .separator-line {
+    width: 6px;
+  }
+
+  /* Masquer les points sur très petit écran pour économiser l'espace */
   .space-pagination-dots {
-    gap: 0.5rem;
+    display: none;
+  }
+}
+
+/* Améliorer l'affichage sur tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .space-pagination {
+    max-width: 500px;
+  }
+
+  .space-pagination-center {
+    max-width: 300px;
   }
 }
 </style>

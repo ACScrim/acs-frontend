@@ -276,18 +276,6 @@
 
         <!-- Statistiques des médailles -->
         <div class="flex flex-wrap justify-center gap-4 mb-4">
-          <!-- Or -->
-          <SpaceCard
-            variant="gold"
-            :stars="true"
-            className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
-          >
-            <div class="text-space-gold text-lg font-nasa mb-1">🥇 Or</div>
-            <div class="text-2xl font-bold text-white">
-              {{ medalCount.gold }}
-            </div>
-            <div class="text-xs text-space-text-muted">victoires</div>
-          </SpaceCard>
           <!-- Argent -->
           <SpaceCard
             variant="silver"
@@ -302,6 +290,19 @@
             </div>
             <div class="text-xs text-space-text-muted">2e places</div>
           </SpaceCard>
+          <!-- Or -->
+          <SpaceCard
+            variant="gold"
+            :stars="true"
+            className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
+          >
+            <div class="text-space-gold text-lg font-nasa mb-1">🥇 Or</div>
+            <div class="text-2xl font-bold text-white">
+              {{ medalCount.gold }}
+            </div>
+            <div class="text-xs text-space-text-muted">victoires</div>
+          </SpaceCard>
+
           <!-- Bronze -->
           <SpaceCard
             variant="bronze"
@@ -1160,11 +1161,12 @@
             >
               <SpaceCard variant="dark" className="w-full">
                 <div
-                  class="flex flex-col sm:flex-row sm:items-center justify-between w-full"
+                  class="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-3"
                 >
-                  <div class="flex items-center mb-2 sm:mb-0 flex-1">
+                  <!-- Partie gauche : icône + nom du tournoi -->
+                  <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="h-8 w-8 rounded-full bg-space-primary/20 flex items-center justify-center mr-3 border border-space-primary/50"
+                      class="h-8 w-8 rounded-full bg-space-primary/20 flex items-center justify-center mr-3 border border-space-primary/50 flex-shrink-0"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1179,24 +1181,39 @@
                         />
                       </svg>
                     </div>
-                    <span class="text-space-text font-nasa">{{
+                    <span class="text-space-text font-nasa truncate">{{
                       tournament.name
                     }}</span>
                   </div>
-                  <div class="flex items-center space-x-4">
-                    <span class="text-space-text-muted text-sm font-mono">{{
-                      formatDate(tournament.date)
-                    }}</span>
+
+                  <!-- Partie droite : responsive avec date, badge et bouton -->
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4"
+                  >
+                    <!-- Date -->
+                    <span
+                      class="text-space-text-muted text-sm font-mono order-1 sm:order-none"
+                      >{{ formatDate(tournament.date) }}</span
+                    >
+
+                    <!-- Badge de placement -->
                     <SpaceBadge
                       v-if="tournament && 'rank' in tournament"
                       :variant="getRankingBadgeVariant(tournament.rank ?? 0)"
                       size="sm"
+                      className="self-start sm:self-center order-2 sm:order-none"
                     >
-                      {{ getRankingLabel(tournament.rank ?? 0) }} /
-                      {{ tournament.numberOfTeams }}
+                      <span class="text-xs sm:text-sm whitespace-nowrap">
+                        {{ getRankingLabel(tournament.rank ?? 0) }} /
+                        {{ tournament.numberOfTeams }}
+                      </span>
                     </SpaceBadge>
-                    <!-- Bouton détails du tournoi -->
-                    <router-link :to="`/tournois/${tournament._id}`">
+
+                    <!-- Bouton détails -->
+                    <router-link
+                      :to="`/tournois/${tournament._id}`"
+                      class="order-3 sm:order-none"
+                    >
                       <SpaceButton variant="primary" size="xs" icon>
                         <template #icon>
                           <svg

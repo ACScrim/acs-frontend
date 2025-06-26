@@ -1,19 +1,29 @@
 <template>
   <div class="space-header mb-8">
-    <SpaceTitle
-      :size="titleSize"
-      :decorated="decorated"
-      class="mx-auto space-header-title"
-    >
-      {{ title }}
-    </SpaceTitle>
+    <div class="space-header-content">
+      <SpaceTitle
+        :size="titleSize"
+        :decorated="decorated"
+        class="space-header-title"
+      >
+        {{ title }}
+      </SpaceTitle>
 
-    <div v-if="showMissionInfo" class="space-header-coordinates">
-      <span class="space-header-coordinates-label">MISSION:</span>
-      {{ mission || `EXPLORER-${new Date().getFullYear()}` }}
-      <span class="space-header-coordinates-separator">|</span>
-      <span class="space-header-coordinates-label">STAR DATE:</span>
-      {{ starDate || formatStarDate() }}
+      <div v-if="showMissionInfo" class="space-header-coordinates">
+        <div class="space-header-coordinates-item">
+          <span class="space-header-coordinates-label">MISSION:</span>
+          <span class="space-header-coordinates-value">{{
+            mission || `EXPLORER-${new Date().getFullYear()}`
+          }}</span>
+        </div>
+        <span class="space-header-coordinates-separator">|</span>
+        <div class="space-header-coordinates-item">
+          <span class="space-header-coordinates-label">STAR DATE:</span>
+          <span class="space-header-coordinates-value">{{
+            starDate || formatStarDate()
+          }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -59,28 +69,114 @@ const formatStarDate = () => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.space-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Responsivité pour desktop */
+@media (min-width: 1024px) {
+  .space-header-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
 .space-header-title {
   font-family: var(--font-nasa);
   text-transform: uppercase;
   letter-spacing: 3px;
+  text-align: center;
+  flex: 1;
+}
+
+/* Sur desktop, titre à gauche */
+@media (min-width: 1024px) {
+  .space-header-title {
+    text-align: left;
+    flex: none;
+  }
 }
 
 .space-header-coordinates {
-  position: absolute;
-  right: 0;
-  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--space-text-muted);
 }
 
+/* Sur tablet et plus, affichage horizontal */
+@media (min-width: 640px) {
+  .space-header-coordinates {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
+
+.space-header-coordinates-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Sur tablet et plus, affichage en ligne */
+@media (min-width: 640px) {
+  .space-header-coordinates-item {
+    flex-direction: row;
+    gap: 4px;
+  }
+}
+
 .space-header-coordinates-label {
   font-family: var(--font-nasa);
   color: var(--space-secondary);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Sur tablet et plus, taille normale */
+@media (min-width: 640px) {
+  .space-header-coordinates-label {
+    font-size: 0.75rem;
+  }
+}
+
+.space-header-coordinates-value {
+  font-weight: 500;
+  color: var(--space-text);
 }
 
 .space-header-coordinates-separator {
-  margin: 0 8px;
   color: var(--space-primary);
+  font-weight: bold;
+  display: none;
+}
+
+/* Afficher le séparateur sur tablet et plus */
+@media (min-width: 640px) {
+  .space-header-coordinates-separator {
+    display: inline;
+  }
+}
+
+/* Animations et transitions */
+.space-header-coordinates-item {
+  transition: all 0.3s ease;
+}
+
+.space-header-coordinates-item:hover .space-header-coordinates-label {
+  color: var(--space-primary);
+}
+
+.space-header-coordinates-item:hover .space-header-coordinates-value {
+  color: var(--space-primary-light);
 }
 </style>
