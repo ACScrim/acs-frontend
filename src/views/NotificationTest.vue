@@ -83,14 +83,15 @@
               class="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg font-medium hover:from-orange-700 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               🧪 Envoyer notification test
-            </button>            <button
+            </button>
+            <button
               @click="createTestTournament"
               :disabled="!isSubscribed"
               class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               🎮 Créer tournoi test (serveur)
             </button>
-            
+
             <button
               @click="simulateLocalNotification"
               class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-blue-700 transition-all duration-300"
@@ -263,31 +264,36 @@ const createTestTournament = async () => {
     addLog("info", "Création tournoi test via API...");
 
     // Utiliser l'API réelle pour créer un tournoi de test
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/tournaments`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: 'Tournoi Test ' + new Date().toLocaleTimeString(),
-        game: '676cf6d4e29e1b7b421a0e71', // ID d'un jeu existant (vous devrez adapter)
-        date: new Date(Date.now() + 24 * 60 * 60 * 1000), // Demain
-        description: 'Tournoi créé pour tester les notifications push',
-        playerCap: 8,
-        players: [],
-        discordChannelName: 'test-notifications'
-      })
-    });
-    
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/tournaments`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "Tournoi Test " + new Date().toLocaleTimeString(),
+          game: "676cf6d4e29e1b7b421a0e71", // ID d'un jeu existant (vous devrez adapter)
+          date: new Date(Date.now() + 24 * 60 * 60 * 1000), // Demain
+          description: "Tournoi créé pour tester les notifications push",
+          playerCap: 8,
+          players: [],
+          discordChannelName: "test-notifications",
+        }),
+      }
+    );
+
     if (response.ok) {
       const tournament = await response.json();
-      addLog("success", `Tournoi créé: ${tournament.name} - Notification envoyée !`);
+      addLog(
+        "success",
+        `Tournoi créé: ${tournament.name} - Notification envoyée !`
+      );
     } else {
       const error = await response.text();
       addLog("error", `Erreur API: ${error}`);
     }
-    
   } catch (error) {
     addLog("error", `Erreur création tournoi: ${error}`);
   }
@@ -312,17 +318,17 @@ const checkServiceWorker = async () => {
 
 const simulateLocalNotification = async () => {
   try {
-    addLog('info', 'Test notification locale...');
-    
-    await notificationService.showLocalNotification('🧪 Test Local ACS', {
-      body: 'Ceci est une notification de test locale',
-      icon: '/Logo_ACS.png',
-      tag: 'local-test'
+    addLog("info", "Test notification locale...");
+
+    await notificationService.showLocalNotification("🧪 Test Local ACS", {
+      body: "Ceci est une notification de test locale",
+      icon: "/Logo_ACS.png",
+      tag: "local-test",
     });
-    
-    addLog('success', 'Notification locale affichée !');
+
+    addLog("success", "Notification locale affichée !");
   } catch (error) {
-    addLog('error', `Erreur notification locale: ${error}`);
+    addLog("error", `Erreur notification locale: ${error}`);
   }
 };
 

@@ -193,7 +193,7 @@ const handleBeforeInstallPrompt = (e: Event) => {
   const dismissedTime = localStorage.getItem("pwa-dismissed-time");
 
   // Ne pas afficher si déjà installé ou refusé récemment
-  if (window.matchMedia('(display-mode: standalone)').matches) {
+  if (window.matchMedia("(display-mode: standalone)").matches) {
     return; // Déjà installé
   }
 
@@ -218,17 +218,20 @@ const handleAppInstalled = () => {
 };
 
 const checkForUpdates = async () => {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     try {
       const registration = await navigator.serviceWorker.ready;
-      
+
       // Vérifier s'il y a une mise à jour en attente
       if (registration.waiting) {
         const lastUpdateCheck = localStorage.getItem("last-update-check");
         const now = Date.now();
-        
+
         // Ne montrer la popup de mise à jour qu'une fois par heure
-        if (!lastUpdateCheck || now - parseInt(lastUpdateCheck) > 60 * 60 * 1000) {
+        if (
+          !lastUpdateCheck ||
+          now - parseInt(lastUpdateCheck) > 60 * 60 * 1000
+        ) {
           showUpdatePrompt.value = true;
           localStorage.setItem("last-update-check", now.toString());
         }
@@ -239,12 +242,18 @@ const checkForUpdates = async () => {
         const newWorker = registration.installing;
         if (newWorker) {
           newWorker.addEventListener("statechange", () => {
-            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
               const lastUpdateCheck = localStorage.getItem("last-update-check");
               const now = Date.now();
-              
+
               // Ne montrer qu'une fois par heure
-              if (!lastUpdateCheck || now - parseInt(lastUpdateCheck) > 60 * 60 * 1000) {
+              if (
+                !lastUpdateCheck ||
+                now - parseInt(lastUpdateCheck) > 60 * 60 * 1000
+              ) {
                 showUpdatePrompt.value = true;
                 localStorage.setItem("last-update-check", now.toString());
               }
@@ -252,7 +261,7 @@ const checkForUpdates = async () => {
           });
         }
       });
-      
+
       swRegistration = registration;
     } catch (error) {
       console.error("Erreur lors de la vérification des mises à jour:", error);

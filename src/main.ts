@@ -31,7 +31,10 @@ if ("serviceWorker" in navigator) {
         const newWorker = registration.installing;
         if (newWorker) {
           newWorker.addEventListener("statechange", () => {
-            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
               console.log("Nouvelle version du Service Worker disponible");
               // Ne pas forcer la notification ici, laisser PWAInstallPrompt gérer
             }

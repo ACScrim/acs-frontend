@@ -48,18 +48,18 @@ export const useNotificationStore = defineStore("notifications", () => {
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      
+
       if (subscription) {
         // Vérifier auprès du serveur si l'abonnement est toujours valide
         try {
           const response = await fetch(
             `${import.meta.env.VITE_API_URL}/notifications/status`,
             {
-              method: 'GET',
-              credentials: 'include',
+              method: "GET",
+              credentials: "include",
             }
           );
-          
+
           if (response.ok) {
             const data = await response.json();
             isSubscribed.value = data.isSubscribed;

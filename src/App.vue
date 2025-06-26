@@ -1,7 +1,8 @@
 <template>
   <div
     class="relative min-h-screen overflow-x-hidden overflow-y-auto scroll-smooth flex flex-col"
-  >    <!-- Fond dynamique pour le mode normal (non allégé) - Optimisé -->
+  >
+    <!-- Fond dynamique pour le mode normal (non allégé) - Optimisé -->
     <div
       v-if="isLightMode"
       class="fixed inset-0 w-full h-full z-10"
