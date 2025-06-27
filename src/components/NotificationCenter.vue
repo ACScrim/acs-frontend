@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative notification-center">
     <!-- Bouton de notification dans la navbar -->
     <button
       @click="togglePanel"
@@ -211,6 +211,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useNotificationStore } from "../stores/notificationStore";
+import { storeToRefs } from "pinia";
 import type { Notification } from "../stores/notificationStore";
 
 // Store et router
@@ -220,13 +221,18 @@ const router = useRouter();
 // État local
 const isPanelOpen = ref(false);
 
-// Computed
+// Computed - Utiliser storeToRefs pour préserver la réactivité
 const { recentNotifications, unreadCount, isSubscribed, permission, loading } =
-  notificationStore;
+  storeToRefs(notificationStore);
 
 // Méthodes
-const togglePanel = () => {
+const togglePanel = async () => {
   isPanelOpen.value = !isPanelOpen.value;
+  
+  // Rafraîchir les notifications quand on ouvre le panel
+  if (isPanelOpen.value) {
+    await notificationStore.refreshNotifications();
+  }
 };
 
 const closePanel = () => {

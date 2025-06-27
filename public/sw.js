@@ -36,30 +36,34 @@ self.addEventListener("push", (event) => {
     }
   }
 
-  const notificationPromise = self.registration.showNotification(
-    notificationData.title,
-    {
-      body: notificationData.body,
-      icon: notificationData.icon,
-      badge: notificationData.badge,
-      tag: notificationData.tag,
-      requireInteraction: notificationData.requireInteraction,
-      data: notificationData.data,
-      actions: [
-        {
-          action: "view",
-          title: "Voir",
-          icon: "/Logo_ACS.png",
-        },
-        {
-          action: "dismiss",
-          title: "Ignorer",
-        },
-      ],
-    }
-  );
+  const promises = [
+    saveNotificationToIndexedDB(notificationData), // Sauvegarder dans IndexedDB
+    self.registration.showNotification(
+      notificationData.title,
+      {
+        body: notificationData.body,
+        icon: notificationData.icon,
+        badge: notificationData.badge,
+        tag: notificationData.tag,
+        requireInteraction: notificationData.requireInteraction,
+        data: notificationData.data,
+        actions: [
+          {
+            action: "view",
+            title: "Voir",
+            icon: "/Logo_ACS.png",
+          },
+          {
+            action: "dismiss",
+            title: "Ignorer",
+          },
+        ],
+      }
+    ),
+    notifyActiveClients(notificationData)
+  ]
 
-  event.waitUntil(notificationPromise);
+  event.waitUntil(Promise.all(promises));
 });
 
 // Gestion des clics sur les notifications
@@ -118,3 +122,70 @@ self.addEventListener("fetch", (event) => {
   // On peut implémenter un cache ici si nécessaire pour le mode hors ligne
   // Pour l'instant, on laisse passer toutes les requêtes
 });
+
+
+// FUNCTIONS
+
+async function saveNotificationToIndexedDB(notificationData) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ACS_Notifications", 2); // Même version que le store
+
+    request.onerror = () => reject(request.error);
+
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction(['notifications'], 'readwrite');
+      const store = transaction.objectStore('notifications');
+
+      const notification = {
+        id: `sw_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        title: notificationData.title,
+        body: notificationData.body,
+        icon: notificationData.icon || "/Logo_ACS.png",
+        badge: notificationData.badge || "/Logo_ACS.png",
+        type: notificationData.data?.type || 'system',
+        url: notificationData.data?.url,
+        timestamp: Date.now(),
+        read: false,
+        tag: notificationData.tag,
+        data: notificationData.data
+      };
+
+      store.put(notification); // Utiliser put au lieu de add
+      transaction.oncomplete = () => resolve(notification);
+    };
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      
+      // Supprimer l'ancien object store s'il existe
+      if (db.objectStoreNames.contains("notifications")) {
+        db.deleteObjectStore("notifications");
+      }
+      
+      // Créer le nouvel object store avec les mêmes index que le store
+      const store = db.createObjectStore('notifications', { keyPath: 'id' });
+      store.createIndex('timestamp', 'timestamp', { unique: false });
+      store.createIndex('read', 'read', { unique: false });
+      store.createIndex('type', 'type', { unique: false });
+    };
+  });
+}
+
+async function notifyActiveClients(notificationData) {
+  const clients = await self.clients.matchAll();
+  clients.forEach(client => {
+    client.postMessage({
+      type: 'NEW_NOTIFICATION',
+      notification: {
+        id: Date.now().toString(),
+        title: notificationData.title,
+        body: notificationData.body,
+        type: notificationData.data?.type || 'system',
+        url: notificationData.data?.url,
+        timestamp: Date.now(),
+        read: false
+      }
+    });
+  });
+}
