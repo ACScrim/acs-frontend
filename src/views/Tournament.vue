@@ -1,12 +1,16 @@
 <template>
-  <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 relative max-w-7xl">
-    <div class="mb-6 flex justify-between items-center">
+  <div
+    class="container mx-auto p-3 sm:p-4 lg:p-6 pt-20 sm:pt-24 relative max-w-7xl"
+  >
+    <div
+      class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
+    >
       <!-- Bouton retour -->
       <SpaceButton
         @click="goBackToTournaments"
         variant="secondary"
         size="sm"
-        className="flex items-center"
+        className="flex items-center justify-center sm:justify-start w-full sm:w-auto"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -20,60 +24,111 @@
             clip-rule="evenodd"
           />
         </svg>
-        Retour aux tournois
+        <span class="hidden xs:inline">Retour aux tournois</span>
+        <span class="xs:hidden">Retour</span>
       </SpaceButton>
 
       <!-- Navigation mobile entre tournois -->
-      <div v-if="hasNavigation" class="sm:hidden">
-        <div class="flex items-center gap-2">
-          <SpaceButton
-            v-if="previousTournament"
-            @click="navigateToTournament(previousTournament._id!)"
-            variant="outline"
-            size="sm"
-            className="p-2"
-            :title="previousTournament.name"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+      <div v-if="hasNavigation" class="w-full sm:hidden">
+        <SpaceCard
+          variant="dark"
+          className="px-3 py-2 border border-space-primary/30"
+        >
+          <div class="flex items-center justify-between">
+            <!-- Bouton précédent -->
+            <SpaceButton
+              v-if="previousTournament"
+              @click="navigateToTournament(previousTournament._id!)"
+              variant="outline"
+              size="sm"
+              className="p-2 hover:scale-105 transition-transform flex-shrink-0"
+              :title="previousTournament.name"
             >
-              <path
-                fill-rule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </SpaceButton>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </SpaceButton>
 
-          <SpaceBadge variant="primary" size="md" className="px-3 py-1">
-            {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
-          </SpaceBadge>
+            <!-- Espace vide si pas de tournoi précédent -->
+            <div v-else class="w-8 flex-shrink-0"></div>
 
-          <SpaceButton
-            v-if="nextTournament"
-            @click="navigateToTournament(nextTournament._id!)"
-            variant="outline"
-            size="sm"
-            className="p-2"
-            :title="nextTournament.name"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+            <!-- Indicateur central avec design spatial -->
+            <div class="flex flex-col items-center mx-2 sm:mx-4 min-w-0 flex-1">
+              <div
+                class="text-xs text-space-primary-light font-nasa mb-1 text-center"
+              >
+                TOURNOI
+              </div>
+              <div class="flex items-center space-x-1 sm:space-x-2">
+                <SpaceBadge
+                  variant="primary"
+                  size="md"
+                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
+                >
+                  {{ currentTournamentIndex + 1 }}
+                </SpaceBadge>
+                <span
+                  class="text-space-text-muted font-mono text-sm sm:text-base"
+                  >/</span
+                >
+                <SpaceBadge
+                  variant="secondary"
+                  size="md"
+                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
+                >
+                  {{ allTournaments.length }}
+                </SpaceBadge>
+              </div>
+
+              <!-- Barre de progression -->
+              <div
+                class="w-16 sm:w-20 h-1 bg-space-bg-light/30 rounded-full mt-2 overflow-hidden"
+              >
+                <div
+                  class="h-full bg-gradient-to-r from-space-primary to-space-secondary rounded-full transition-all duration-500"
+                  :style="`width: ${
+                    ((currentTournamentIndex + 1) / allTournaments.length) * 100
+                  }%`"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Bouton suivant -->
+            <SpaceButton
+              v-if="nextTournament"
+              @click="navigateToTournament(nextTournament._id!)"
+              variant="outline"
+              size="sm"
+              className="p-2 hover:scale-105 transition-transform flex-shrink-0"
+              :title="nextTournament.name"
             >
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </SpaceButton>
-        </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </SpaceButton>
+
+            <!-- Espace vide si pas de tournoi suivant -->
+            <div v-else class="w-8 flex-shrink-0"></div>
+          </div>
+        </SpaceCard>
       </div>
     </div>
     <div v-if="hasNavigation" class="hidden sm:block">
@@ -170,7 +225,7 @@
     </SpaceTerminal>
 
     <!-- Affichage du tournoi -->
-    <div v-else class="tournament-details flex flex-col gap-6">
+    <div v-else class="tournament-details flex flex-col gap-4 sm:gap-6">
       <!-- En-tête avec les informations principales -->
       <SpaceCard
         variant="primary"
@@ -180,7 +235,7 @@
       >
         <!-- Image de bannière du jeu -->
         <div
-          class="relative h-40 sm:h-56 md:h-64 -mx-6 -mt-6 mb-6 overflow-hidden"
+          class="relative h-32 sm:h-40 md:h-56 lg:h-64 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-4 sm:mb-6 overflow-hidden"
         >
           <!-- Image du jeu si elle existe -->
           <template v-if="tournament.game.imageUrl && !imageError">
@@ -200,7 +255,7 @@
             <div class="text-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-24 w-24 text-space-primary/60 mx-auto"
+                class="h-16 sm:h-20 lg:h-24 w-16 sm:w-20 lg:w-24 text-space-primary/60 mx-auto"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -208,7 +263,9 @@
                   d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
                 />
               </svg>
-              <div class="text-space-text font-heading mt-2">
+              <div
+                class="text-space-text font-heading mt-2 text-sm sm:text-base"
+              >
                 {{ tournament.game.name }}
               </div>
             </div>
@@ -219,16 +276,16 @@
           ></div>
 
           <!-- Badge "Terminé" -->
-          <div class="absolute top-4 right-4">
+          <div class="absolute top-2 sm:top-4 right-2 sm:right-4">
             <SpaceBadge
               v-if="tournament.finished"
               variant="success"
               size="md"
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 text-xs sm:text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                class="h-4 w-4 sm:h-5 sm:w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -238,22 +295,27 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Tournoi terminé
+              <span class="hidden sm:inline">Tournoi terminé</span>
+              <span class="sm:hidden">Terminé</span>
             </SpaceBadge>
           </div>
 
           <!-- Titre et informations principales -->
-          <div class="absolute bottom-0 left-0 right-0 p-6">
-            <h1 class="text-3xl md:text-4xl text-white font-heading">
+          <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-6">
+            <h1
+              class="text-xl sm:text-2xl md:text-2xl lg:text-3xl text-white font-heading break-words"
+            >
               {{ tournament.name }}
             </h1>
           </div>
         </div>
 
         <!-- Informations détaillées -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-lg">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 text-sm sm:text-base"
+        >
           <!-- Colonne 1: Date et jeu -->
-          <div class="space-y-4">
+          <div class="space-y-3 sm:space-y-4">
             <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -267,9 +329,13 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <div>
-                <div class="font-heading text-space-text-muted">Date</div>
-                <div class="text-space-text">
+              <div class="min-w-0 flex-1">
+                <div
+                  class="font-heading text-space-text-muted text-xs sm:text-sm"
+                >
+                  Date
+                </div>
+                <div class="text-space-text break-words">
                   {{ formatLocalDate(tournament.date) }}
                 </div>
               </div>
@@ -288,9 +354,15 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <div>
-                <div class="font-heading text-space-text-muted">Jeu</div>
-                <div class="text-space-text">{{ tournament.game.name }}</div>
+              <div class="min-w-0 flex-1">
+                <div
+                  class="font-heading text-space-text-muted text-xs sm:text-sm"
+                >
+                  Jeu
+                </div>
+                <div class="text-space-text break-words">
+                  {{ tournament.game.name }}
+                </div>
               </div>
             </div>
 
@@ -309,10 +381,13 @@
                   />
                 </svg>
                 <div>
-                  <div class="font-heading text-space-text-muted">Places</div>
-                  <div class="text-space-text">
-                    {{ tournament.players.length }} / {{ tournament.playerCap }}
+                  <div
+                    class="font-heading text-space-text-muted text-xs sm:text-sm"
+                  >
+                    Places
                   </div>
+
+                  {{ tournament.players.length }} / {{ tournament.playerCap }}
                 </div>
               </div>
 
@@ -348,14 +423,16 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <div>
-                  <div class="font-heading text-space-text-muted">
+                <div class="min-w-0 flex-1">
+                  <div
+                    class="font-heading text-space-text-muted text-xs sm:text-sm"
+                  >
                     Liste d'attente
                   </div>
                   <div class="text-space-text">{{ waitlistCount }} joueurs</div>
                   <p
                     v-if="isUserInWaitlist"
-                    class="text-xl text-space-warning mt-1"
+                    class="text-base sm:text-lg text-space-warning mt-1 break-words"
                   >
                     Vous êtes en liste d'attente {{ getUserWaitlistPosition }}
                   </p>
@@ -365,7 +442,7 @@
           </div>
 
           <!-- Colonne 2: Participants et Discord -->
-          <div class="space-y-4">
+          <div class="space-y-3 sm:space-y-4">
             <div class="flex items-start gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -378,7 +455,9 @@
                 />
               </svg>
               <div>
-                <div class="font-heading text-space-text-muted">
+                <div
+                  class="font-heading text-space-text-muted text-xs sm:text-sm"
+                >
                   Participants
                 </div>
                 <div class="text-space-text">{{ getParticipantsCount() }}</div>
@@ -398,9 +477,13 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <div>
-                <div class="font-heading text-space-text-muted">Discord</div>
-                <div class="text-space-text">
+              <div class="min-w-0 flex-1">
+                <div
+                  class="font-heading text-space-text-muted text-xs sm:text-sm"
+                >
+                  Discord
+                </div>
+                <div class="text-space-text break-words">
                   {{ tournament.discordChannelName || "Non spécifié" }}
                 </div>
               </div>
@@ -410,7 +493,7 @@
           <!-- Colonne 3: Actions (inscription/désinscription/check-in) -->
           <div
             v-if="!tournament.finished && user"
-            class="flex flex-col space-y-3"
+            class="flex flex-col space-y-3 lg:col-span-1"
           >
             <!-- Inscription normale -->
             <SpaceButton
@@ -557,13 +640,13 @@
       <SpaceCard variant="dark" :stars="true" className="overflow-hidden">
         <!-- Navigation des onglets -->
         <div
-          class="space-tabs flex flex-wrap border-b border-space-bg-light/30 overflow-x-auto"
+          class="space-tabs flex flex-wrap border-b border-space-bg-light/30 overflow-x-auto scrollbar-thin"
         >
           <!-- Onglet Description -->
           <button
             @click="activeTab = 'description'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-lg flex items-center',
+              'space-tab px-3 sm:px-4 py-2 sm:py-3 font-heading text-sm sm:text-base flex items-center whitespace-nowrap',
               activeTab === 'description'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -571,7 +654,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -588,7 +671,7 @@
           <button
             @click="activeTab = 'participants'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-lg flex items-center',
+              'space-tab px-3 sm:px-4 py-2 sm:py-3 font-heading text-sm sm:text-base flex items-center whitespace-nowrap',
               activeTab === 'participants'
                 ? 'text-space-primary-light bg-space-bg-light/20 border-b-2 border-space-primary'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -596,7 +679,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -604,8 +687,9 @@
                 d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
               />
             </svg>
-            Participants
-            <span class="ml-1 text-lg opacity-80">
+            <span class="hidden sm:inline">Participants</span>
+            <span class="sm:hidden">Joueurs</span>
+            <span class="ml-1 text-sm sm:text-lg opacity-80">
               ({{ getParticipantsCount() }})
             </span>
           </button>
@@ -615,18 +699,23 @@
             v-if="shouldShowTwitchTab"
             @click="activeTab = 'twitch'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-lg flex items-center',
+              'space-tab px-3 sm:px-4 py-2 sm:py-3 font-heading text-sm sm:text-base flex items-center whitespace-nowrap',
               activeTab === 'twitch'
                 ? 'text-space-accent-light bg-space-bg-light/20 border-b-2 border-space-accent'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
             ]"
           >
-            <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
               <path
                 d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.429h-3.429l-3 3v-3H6.857V1.714h13.714Z"
               />
             </svg>
-            Streams Live
+            <span class="hidden sm:inline">Streams Live</span>
+            <span class="sm:hidden">Live</span>
           </button>
 
           <!-- Onglet Résultats (pour les tournois terminés) -->
@@ -634,7 +723,7 @@
             v-if="tournament.finished"
             @click="activeTab = 'results'"
             :class="[
-              'space-tab px-4 py-3 font-heading text-lg flex items-center',
+              'space-tab px-3 sm:px-4 py-2 sm:py-3 font-heading text-sm sm:text-base flex items-center whitespace-nowrap',
               activeTab === 'results'
                 ? 'text-space-success-light bg-space-bg-light/20 border-b-2 border-space-success'
                 : 'text-space-text-muted hover:text-space-text hover:bg-space-bg-light/10',
@@ -642,7 +731,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2"
+              class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -677,18 +766,18 @@
         </div>
 
         <!-- Contenu des onglets -->
-        <div class="p-6">
+        <div class="p-3 sm:p-6">
           <!-- Onglet Description -->
           <div
             v-if="activeTab === 'description'"
             class="min-h-[150px] space-fade-in"
           >
             <h3
-              class="text-xl text-space-text font-heading mb-4 flex items-center"
+              class="text-base sm:text-lg text-space-text font-heading mb-3 sm:mb-4 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-primary"
+                class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-space-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -700,13 +789,16 @@
               </svg>
               Détails du tournoi
             </h3>
-            <SpaceCard variant="dark" className="p-4">
+            <SpaceCard variant="dark" className="p-3 sm:p-4">
               <p
                 v-if="tournament.description"
-                class="text-space-text leading-relaxed"
+                class="text-space-text leading-relaxed text-sm sm:text-base break-words"
                 v-html="formatDescription(tournament.description)"
               ></p>
-              <p v-else class="text-space-text-muted italic">
+              <p
+                v-else
+                class="text-space-text-muted italic text-sm sm:text-base"
+              >
                 Pas de description disponible pour ce tournoi.
               </p>
             </SpaceCard>
@@ -725,11 +817,11 @@
             class="min-h-[150px] space-fade-in"
           >
             <h3
-              class="text-xl text-space-text font-heading mb-4 flex items-center"
+              class="text-base sm:text-lg text-space-text font-heading mb-3 sm:mb-4 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-primary"
+                class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-space-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -749,12 +841,12 @@
                 !tournament.finished
               "
               variant="warning"
-              className="mb-6"
+              className="mb-4 sm:mb-6"
             >
               <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
+                  class="h-5 w-5 sm:h-6 sm:w-6"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -765,7 +857,9 @@
                   />
                 </svg>
               </template>
-              <p>Équipes en cours de création...</p>
+              <p class="text-sm sm:text-base">
+                Équipes en cours de création...
+              </p>
             </SpaceAlert>
 
             <!-- Affichage des équipes -->
@@ -776,7 +870,7 @@
                 (tournament.teamsPublished || tournament.finished) &&
                 !hasEmptyTeams
               "
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
             >
               <SpaceCard
                 v-for="team in tournament.teams"
@@ -785,7 +879,7 @@
                 className="p-3"
               >
                 <h4
-                  class="text-lg text-space-text font-heading border-b border-space-bg-light/30 pb-2 mb-2 truncate"
+                  class="text-sm sm:text-base text-space-text font-heading border-b border-space-bg-light/30 pb-2 mb-2 truncate"
                 >
                   {{ team.name }}
                 </h4>
@@ -793,21 +887,26 @@
                   <li
                     v-for="teamPlayer in team.players"
                     :key="teamPlayer._id"
-                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-xl"
+                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-sm sm:text-base"
                   >
                     <router-link
                       v-if="teamPlayer._id"
                       :to="{ name: 'Profil', params: { id: teamPlayer._id } }"
-                      class="text-space-text hover:text-space-secondary-light transition-colors truncate"
+                      class="text-space-text hover:text-space-secondary-light transition-colors truncate min-w-0 flex-1"
                     >
                       {{ teamPlayer.username }}
                     </router-link>
-                    <span v-else class="text-space-text truncate">
+                    <span
+                      v-else
+                      class="text-space-text truncate min-w-0 flex-1"
+                    >
                       {{ teamPlayer.username || "Joueur inconnu" }}
                     </span>
 
                     <!-- Badge pour les streams live -->
-                    <div class="flex items-center gap-2 ml-auto">
+                    <div
+                      class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
+                    >
                       <a
                         v-if="getPlayerLiveStatus(teamPlayer)"
                         :href="`https://twitch.tv/${getPlayerTwitchUsername(
@@ -833,12 +932,14 @@
                         "
                       >
                         <SpaceBadge variant="success" size="xs">
-                          Check-in
+                          <span class="hidden sm:inline">Check-in</span>
+                          <span class="sm:hidden">✓</span>
                         </SpaceBadge>
                       </span>
                       <span v-else-if="isCheckInAvailable">
                         <SpaceBadge variant="error" size="xs">
-                          En attente
+                          <span class="hidden sm:inline">En attente</span>
+                          <span class="sm:hidden">⏳</span>
                         </SpaceBadge>
                       </span>
                     </div>
@@ -859,56 +960,62 @@
                 )
               "
             >
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              >
                 <div
                   v-for="player in tournament.players"
                   :key="player._id"
-                  class="flex items-center p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-xl"
+                  class="flex items-center justify-between p-2 sm:p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0"
                 >
                   <router-link
                     v-if="player._id"
                     :to="{ name: 'Profil', params: { id: player._id } }"
-                    class="text-space-text hover:text-space-primary-light transition-colors truncate"
+                    class="text-space-text hover:text-space-primary-light transition-colors truncate min-w-0 flex-1"
                   >
                     {{ player.username }}
                   </router-link>
-                  <span v-else class="text-space-text truncate">
+                  <span v-else class="text-space-text truncate min-w-0 flex-1">
                     {{ player.username || "Joueur inconnu" }}
                   </span>
 
-                  <!-- Badge pour les streams live -->
-                  <a
-                    v-if="getPlayerLiveStatus(player)"
-                    :href="`https://twitch.tv/${getPlayerTwitchUsername(
-                      player
-                    )}`"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="ml-2"
+                  <div
+                    class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
                   >
-                    <SpaceBadge
-                      variant="accent"
-                      size="xs"
-                      className="animate-pulse"
+                    <!-- Badge pour les streams live -->
+                    <a
+                      v-if="getPlayerLiveStatus(player)"
+                      :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                        player
+                      )}`"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      LIVE
-                    </SpaceBadge>
-                  </a>
+                      <SpaceBadge
+                        variant="accent"
+                        size="xs"
+                        className="animate-pulse"
+                      >
+                        LIVE
+                      </SpaceBadge>
+                    </a>
 
-                  <!-- Badge check-in -->
-                  <span
-                    v-if="player._id && tournament?.checkIns?.[player._id]"
-                    class="ml-auto"
-                  >
-                    <SpaceBadge variant="success" size="xs">
-                      Check-in
-                    </SpaceBadge>
-                  </span>
-                  <span v-else-if="isCheckInAvailable" class="ml-auto">
-                    <SpaceBadge variant="error" size="xs">
-                      En attente
-                    </SpaceBadge>
-                  </span>
+                    <!-- Badge check-in -->
+                    <span
+                      v-if="player._id && tournament?.checkIns?.[player._id]"
+                    >
+                      <SpaceBadge variant="success" size="xs">
+                        <span class="hidden sm:inline">Check-in</span>
+                        <span class="sm:hidden">✓</span>
+                      </SpaceBadge>
+                    </span>
+                    <span v-else-if="isCheckInAvailable">
+                      <SpaceBadge variant="error" size="xs">
+                        <span class="hidden sm:inline">En attente</span>
+                        <span class="sm:hidden">⏳</span>
+                      </SpaceBadge>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -917,21 +1024,21 @@
             <SpaceAlert
               v-else
               variant="info"
-              className="bg-space-bg-light/10 text-center py-6"
+              className="bg-space-bg-light/10 text-center py-4 sm:py-6"
             >
-              <p class="text-space-text-muted italic">
+              <p class="text-space-text-muted italic text-sm sm:text-base">
                 Aucun participant inscrit pour ce tournoi.
               </p>
             </SpaceAlert>
 
             <!-- Section Liste d'attente -->
-            <div v-if="hasWaitlist" class="mt-8 space-fade-in">
+            <div v-if="hasWaitlist" class="mt-6 sm:mt-8 space-fade-in">
               <h3
-                class="text-xl text-space-text font-heading mb-4 flex items-center"
+                class="text-lg sm:text-xl text-space-text font-heading mb-3 sm:mb-4 flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2 text-space-warning"
+                  class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-space-warning"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -941,16 +1048,17 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                Liste d'attente
+                <span class="hidden sm:inline">Liste d'attente</span>
+                <span class="sm:hidden">Attente</span>
                 <SpaceBadge variant="warning" size="sm" className="ml-2">
                   {{ waitlistCount }}
                 </SpaceBadge>
               </h3>
 
               <SpaceCard variant="warning" className="p-3">
-                <!-- En-tête du tableau -->
+                <!-- En-tête du tableau - caché sur mobile -->
                 <div
-                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-lg font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
+                  class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-base sm:text-lg font-heading text-space-text-muted border-b border-space-bg-light/20 pb-2"
                 >
                   <div>Position</div>
                   <div>Joueur</div>
@@ -964,12 +1072,21 @@
                     :key="player._id"
                     class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-2 rounded-md text-space-text hover:bg-space-bg-light/10 transition-colors"
                   >
+                    <!-- Position (mobile: inline, desktop: column) -->
                     <div class="sm:text-center">
+                      <span class="sm:hidden text-xs text-space-text-muted"
+                        >Position:
+                      </span>
                       <SpaceBadge variant="warning" size="xs">
                         {{ index + 1 }}
                       </SpaceBadge>
                     </div>
+
+                    <!-- Joueur -->
                     <div>
+                      <span class="sm:hidden text-xs text-space-text-muted"
+                        >Joueur:
+                      </span>
                       <router-link
                         v-if="player._id"
                         :to="{ name: 'Profil', params: { id: player._id } }"
@@ -981,7 +1098,10 @@
                         player.username || "Joueur inconnu"
                       }}</span>
                     </div>
-                    <div class="text-space-text-muted text-xl">
+
+                    <!-- Temps d'attente -->
+                    <div class="text-space-text-muted text-sm sm:text-base">
+                      <span class="sm:hidden text-xs">Depuis: </span>
                       {{
                         player._id
                           ? formatWaitingTime(player._id)
@@ -992,7 +1112,10 @@
                 </ul>
 
                 <!-- Message si liste vide -->
-                <p v-else class="text-space-text-muted italic text-center py-4">
+                <p
+                  v-else
+                  class="text-space-text-muted italic text-center py-4 text-sm sm:text-base"
+                >
                   Liste d'attente vide
                 </p>
               </SpaceCard>
@@ -1025,10 +1148,10 @@
       >
         <!-- En-tête -->
         <div
-          class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4"
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3"
         >
           <h3
-            class="text-xl font-heading flex items-center text-space-text mb-2 sm:mb-0"
+            class="text-lg sm:text-xl font-heading flex items-center text-space-text"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1040,14 +1163,24 @@
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
               />
             </svg>
-            <span>Gagnants du tournoi précédent</span>
+            <span class="text-sm sm:text-base lg:text-lg"
+              >Gagnants du tournoi précédent</span
+            >
           </h3>
 
-          <div class="flex items-center space-x-2">
-            <SpaceBadge variant="primary" size="sm">
+          <div class="flex flex-wrap items-center gap-2">
+            <SpaceBadge
+              variant="primary"
+              size="sm"
+              className="text-xs sm:text-sm"
+            >
               {{ formatLocalDate(lastFinishedTournament.date) }}
             </SpaceBadge>
-            <SpaceBadge variant="secondary" size="sm">
+            <SpaceBadge
+              variant="secondary"
+              size="sm"
+              className="text-xs sm:text-sm break-words"
+            >
               {{ lastFinishedTournament.name }}
             </SpaceBadge>
           </div>
@@ -1071,17 +1204,23 @@
             <div
               class="p-3 bg-space-success/20 flex items-center justify-between"
             >
-              <div class="flex items-center">
-                <SpaceBadge variant="accent" size="sm" className="mr-3">
+              <div class="flex items-center min-w-0 flex-1">
+                <SpaceBadge
+                  variant="accent"
+                  size="sm"
+                  className="mr-2 sm:mr-3 flex-shrink-0"
+                >
                   1
                 </SpaceBadge>
-                <h5 class="text-space-text font-heading">
+                <h5
+                  class="text-space-text font-heading text-sm sm:text-base truncate"
+                >
                   {{ team.name }}
                 </h5>
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-space-success"
+                class="h-5 w-5 sm:h-6 sm:w-6 text-space-success flex-shrink-0"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -1099,16 +1238,19 @@
                 <div
                   v-for="player in team.players"
                   :key="player._id"
-                  class="flex items-center p-2 bg-space-bg-light/10 hover:bg-space-bg-light/20 transition-colors rounded-md"
+                  class="flex items-center p-2 bg-space-bg-light/10 hover:bg-space-bg-light/20 transition-colors rounded-md min-w-0"
                 >
                   <router-link
                     v-if="player._id"
                     :to="{ name: 'Profil', params: { id: player._id } }"
-                    class="text-space-text hover:text-space-primary-light transition-colors"
+                    class="text-space-text hover:text-space-primary-light transition-colors text-sm sm:text-base truncate min-w-0 flex-1"
                   >
                     {{ player.username }}
                   </router-link>
-                  <span v-else class="text-space-text">
+                  <span
+                    v-else
+                    class="text-space-text text-sm sm:text-base truncate min-w-0 flex-1"
+                  >
                     {{ player.username || "Joueur inconnu" }}
                   </span>
                 </div>
@@ -1120,8 +1262,9 @@
         <!-- Bouton pour voir le détail -->
         <div class="mt-4 text-center">
           <router-link :to="`/tournois/${lastFinishedTournament._id}`">
-            <SpaceButton variant="secondary" size="sm">
-              <span>Voir le détail du tournoi</span>
+            <SpaceButton variant="secondary" size="sm" className="text-sm">
+              <span class="hidden sm:inline">Voir le détail du tournoi</span>
+              <span class="sm:hidden">Voir détail</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-4 ml-2"
@@ -1145,12 +1288,12 @@
           @click="scrollToTop"
           variant="primary"
           size="sm"
-          className="rounded-full p-2"
+          className="rounded-full p-2 shadow-lg"
           :title="'Retour en haut de page'"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
+            class="h-5 w-5 sm:h-6 sm:w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -1179,8 +1322,8 @@
           : 'ANNULATION'
       }`"
     >
-      <div class="space-y-4">
-        <p class="text-space-text">
+      <div class="space-y-3 sm:space-y-4">
+        <p class="text-space-text text-sm sm:text-base">
           Voulez-vous
           <span class="text-space-primary-light font-bold">
             {{
@@ -1194,7 +1337,7 @@
             }}
           </span>
           au tournoi
-          <span class="text-space-secondary-light font-bold">
+          <span class="text-space-secondary-light font-bold break-words">
             {{ selectedTournament?.name }}
           </span>
           ?
@@ -1205,7 +1348,7 @@
           variant="info"
           className="mb-4"
         >
-          <p class="text-xl">
+          <p class="text-sm sm:text-base lg:text-xl">
             <span v-if="actionType === 'register'">
               N'oubliez pas de venir vous check-in 24h avant le début du tournoi
               pour confirmer votre participation.
@@ -1223,7 +1366,7 @@
           variant="warning"
           className="mb-4"
         >
-          <p class="text-xl">
+          <p class="text-sm sm:text-base lg:text-xl">
             <span v-if="actionType === 'unregister'">
               Attention: Si vous vous désinscrivez, votre place sera attribuée à
               une personne en liste d'attente.
@@ -1236,8 +1379,13 @@
       </div>
 
       <template #footer>
-        <div class="flex justify-end gap-2">
-          <SpaceButton @click="closePopup" variant="outline" size="sm">
+        <div class="flex flex-col sm:flex-row justify-end gap-2">
+          <SpaceButton
+            @click="closePopup"
+            variant="outline"
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             Annuler
           </SpaceButton>
           <SpaceButton
@@ -1248,6 +1396,7 @@
                 ? 'error'
                 : 'primary'
             "
+            className="w-full sm:w-auto"
           >
             Confirmer
           </SpaceButton>
@@ -1256,15 +1405,15 @@
     </SpaceModal>
 
     <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
-      <div class="space-y-4">
-        <p class="text-space-text">
+      <div class="space-y-3 sm:space-y-4">
+        <p class="text-space-text text-sm sm:text-base">
           Vous n'avez pas encore défini votre niveau pour
-          <span class="text-space-primary-light font-bold">{{
+          <span class="text-space-primary-light font-bold break-words">{{
             levelPromptGameName
           }}</span
           >.
         </p>
-        <p class="text-space-text-muted">
+        <p class="text-space-text-muted text-sm sm:text-base">
           Définir votre niveau aide à l'organisation des tournois et au
           matchmaking. Vous pouvez:
         </p>
@@ -1272,22 +1421,31 @@
           <SpaceButton
             @click="goToLevelDefinition"
             variant="primary"
-            className="w-full"
+            className="w-full text-sm sm:text-base"
           >
-            Définir mon niveau maintenant
+            <span class="hidden sm:inline">Définir mon niveau maintenant</span>
+            <span class="sm:hidden">Définir niveau</span>
           </SpaceButton>
           <SpaceButton
             @click="registerWithoutLevel"
             variant="outline"
-            className="w-full"
+            className="w-full text-sm sm:text-base"
           >
-            S'inscrire sans définir de niveau
+            <span class="hidden sm:inline"
+              >S'inscrire sans définir de niveau</span
+            >
+            <span class="sm:hidden">S'inscrire sans niveau</span>
           </SpaceButton>
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton @click="closeLevelPrompt" variant="ghost" size="sm">
+          <SpaceButton
+            @click="closeLevelPrompt"
+            variant="ghost"
+            size="sm"
+            className="text-sm"
+          >
             Annuler
           </SpaceButton>
         </div>
@@ -2167,5 +2325,122 @@ watch(activeTab, (newTab) => {
 .space-tabs::-webkit-scrollbar-thumb {
   background-color: var(--space-bg-light);
   border-radius: 4px;
+}
+
+/* Responsive breakpoints personnalisés */
+@media (max-width: 440px) {
+  .xs\:hidden {
+    display: none;
+  }
+
+  .xs\:inline {
+    display: inline;
+  }
+}
+
+/* Amélioration de la gestion du texte sur mobile */
+@media (max-width: 640px) {
+  .tournament-details {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Ajustement des grilles sur très petits écrans */
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Espacement réduit sur mobile */
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Padding réduit pour les cartes sur mobile */
+  .mobile-card-padding {
+    padding: 0.75rem;
+  }
+}
+
+/* Optimisation pour les très petits écrans */
+@media (max-width: 375px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  /* Réduction de la taille des badges sur très petits écrans */
+  .space-badge-xs {
+    font-size: 0.6rem;
+    padding: 0.125rem 0.25rem;
+  }
+}
+
+/* Amélioration de la scrollabilité horizontale des onglets */
+.space-tabs {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Amélioration des interactions tactiles sur mobile */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:scale-105:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+  }
+
+  .hover\:bg-space-bg-light\/10:hover {
+    background-color: rgba(var(--space-bg-light-rgb), 0.15);
+  }
+}
+
+/* Fix pour les éléments fixed sur mobile */
+@media (max-width: 640px) {
+  .fixed.bottom-4.right-4 {
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 40;
+  }
+}
+
+/* Amélioration de la lisibilité sur mobile */
+@media (max-width: 640px) {
+  .text-xs {
+    font-size: 0.7rem;
+  }
+
+  .text-sm {
+    font-size: 0.8rem;
+  }
+
+  .text-base {
+    font-size: 0.9rem;
+  }
+}
+
+/* Scrollbar fine pour les éléments en overflow */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
 }
 </style>

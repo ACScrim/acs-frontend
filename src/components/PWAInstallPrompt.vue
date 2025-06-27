@@ -185,30 +185,33 @@ const dismissUpdate = () => {
 
 // Gestionnaires d'événements
 const handleBeforeInstallPrompt = (e: Event) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  // Vérifier si l'utilisateur n'a pas déjà refusé récemment
+  // Vérifier d'abord si on veut vraiment intercepter l'événement
   const dismissed = localStorage.getItem("pwa-dismissed");
   const dismissedTime = localStorage.getItem("pwa-dismissed-time");
 
-  // Ne pas afficher si déjà installé ou refusé récemment
+  // Ne pas intercepter si déjà installé
   if (window.matchMedia("(display-mode: standalone)").matches) {
-    return; // Déjà installé
+    return; // Laisser le navigateur gérer
   }
 
-  if (
-    !dismissed ||
-    (dismissedTime &&
-      Date.now() - parseInt(dismissedTime) > 7 * 24 * 60 * 60 * 1000)
-  ) {
-    // Afficher après 10 secondes pour ne pas être intrusif
-    setTimeout(() => {
-      if (deferredPrompt && !showInstallPrompt.value) {
-        showInstallPrompt.value = true;
-      }
-    }, 10000);
+  // Ne pas intercepter si récemment refusé
+  if (dismissed && dismissedTime) {
+    const timeSinceDismiss = Date.now() - parseInt(dismissedTime);
+    if (timeSinceDismiss <= 7 * 24 * 60 * 60 * 1000) {
+      return; // Laisser le navigateur gérer
+    }
   }
+
+  // Maintenant on peut intercepter en toute sécurité
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Afficher après 10 secondes pour ne pas être intrusif
+  setTimeout(() => {
+    if (deferredPrompt && !showInstallPrompt.value) {
+      showInstallPrompt.value = true;
+    }
+  }, 10000);
 };
 
 const handleAppInstalled = () => {
@@ -237,11 +240,11 @@ const checkForUpdates = async () => {
         }
       }
 
-      // Écouter les nouvelles mises à jour
-      registration.addEventListener("updatefound", () => {
+      // Écouter les nouvelles mises à jour (une seule fois)
+      const handleUpdateFound = () => {
         const newWorker = registration.installing;
         if (newWorker) {
-          newWorker.addEventListener("statechange", () => {
+          const handleStateChange = () => {
             if (
               newWorker.state === "installed" &&
               navigator.serviceWorker.controller
@@ -258,10 +261,16 @@ const checkForUpdates = async () => {
                 localStorage.setItem("last-update-check", now.toString());
               }
             }
-          });
+            // Nettoyer l'event listener
+            newWorker.removeEventListener("statechange", handleStateChange);
+          };
+          newWorker.addEventListener("statechange", handleStateChange);
         }
-      });
+        // Nettoyer l'event listener
+        registration.removeEventListener("updatefound", handleUpdateFound);
+      };
 
+      registration.addEventListener("updatefound", handleUpdateFound);
       swRegistration = registration;
     } catch (error) {
       console.error("Erreur lors de la vérification des mises à jour:", error);
@@ -282,6 +291,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   window.removeEventListener("appinstalled", handleAppInstalled);
+
+  // Nettoyer les event listeners du Service Worker si ils existent
+  if (swRegistration) {
+    swRegistration.removeEventListener("updatefound", () => {});
+  }
 });
 </script>
 

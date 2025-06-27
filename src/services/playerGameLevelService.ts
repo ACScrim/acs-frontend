@@ -71,13 +71,25 @@ const playerGameLevelService = {
     try {
       const response = await axios.get(
         `${API_URL}/player/${playerId}/game/${gameId}`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          // Empêche axios de lancer une erreur pour 404
+          // car c'est un comportement attendu quand le joueur n'a pas de niveau
+          validateStatus: (status) =>
+            (status >= 200 && status < 300) || status === 404,
+        }
       );
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
+
+      // Si 404, le joueur n'a pas de niveau pour ce jeu
+      if (response.status === 404) {
         return null;
       }
+
+      return response.data;
+    } catch (error) {
+      // Cette gestion d'erreur ne devrait plus être nécessaire avec validateStatus,
+      // mais on la garde pour d'autres erreurs réseau
+      console.error("Erreur lors de la récupération du niveau:", error);
       throw error;
     }
   },
