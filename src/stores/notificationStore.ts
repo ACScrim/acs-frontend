@@ -13,7 +13,7 @@ export interface Notification {
   data?: any;
   timestamp: number;
   read: boolean;
-  type: "tournament" | "badge" | "system" | "update";
+  type: "tournaments" | "badges" | "system" | "update";
 }
 
 export const useNotificationStore = defineStore("notifications", () => {
@@ -31,6 +31,7 @@ export const useNotificationStore = defineStore("notifications", () => {
   const recentNotifications = computed(() =>
     notifications.value.sort((a, b) => b.timestamp - a.timestamp).slice(0, 10)
   );
+
   // Actions
   const initializeNotifications = async () => {
     if (!notificationService.isSupported()) {
@@ -195,7 +196,7 @@ export const useNotificationStore = defineStore("notifications", () => {
     await addLocalNotification({
       title: "🏆 Nouveau tournoi disponible !",
       body: `${tournament.name} - Inscriptions ouvertes`,
-      type: "tournament",
+      type: "tournaments",
       url: `/tournois-a-venir`,
       data: { tournamentId: tournament._id },
       tag: `tournament-${tournament._id}`,
@@ -206,7 +207,7 @@ export const useNotificationStore = defineStore("notifications", () => {
     await addLocalNotification({
       title: "⏰ Rappel de tournoi",
       body: `${tournament.name} commence bientôt !`,
-      type: "tournament",
+      type: "tournaments",
       url: `/tournois/${tournament._id}`,
       data: { tournamentId: tournament._id },
       tag: `reminder-${tournament._id}`,
@@ -217,7 +218,7 @@ export const useNotificationStore = defineStore("notifications", () => {
     await addLocalNotification({
       title: "🏅 Nouveau badge obtenu !",
       body: `Félicitations ! Vous avez obtenu : ${badge.title}`,
-      type: "badge",
+      type: "badges",
       url: "/badges",
       data: { badgeId: badge._id },
       tag: `badge-${badge._id}`,
