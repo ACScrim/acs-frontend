@@ -116,7 +116,7 @@
       />
 
       <!-- Centre de notifications -->
-      <div class="notification-center hidden md:flex items-center mr-4">
+      <div class="notification-center flex items-center mr-4">
         <NotificationCenter />
       </div>
 

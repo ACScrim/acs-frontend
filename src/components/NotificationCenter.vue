@@ -17,7 +17,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M15 17h5l-5 5v-5zM11 4.5v10.38a3 3 0 110 1.12V4.5a1.5 1.5 0 00-3 0v10.38a3 3 0 110-1.12V4.5a1.5 1.5 0 00-3 0z"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
         />
       </svg>
 
@@ -153,8 +153,8 @@
                     <div
                       class="w-2 h-2 rounded-full"
                       :class="{
-                        'bg-space-primary': notification.type === 'tournament',
-                        'bg-space-accent': notification.type === 'badge',
+                        'bg-space-primary': notification.type === 'tournaments',
+                        'bg-space-accent': notification.type === 'badges',
                         'bg-space-warning': notification.type === 'system',
                         'bg-space-secondary': notification.type === 'update',
                       }"
@@ -228,7 +228,7 @@ const { recentNotifications, unreadCount, isSubscribed, permission, loading } =
 // Méthodes
 const togglePanel = async () => {
   isPanelOpen.value = !isPanelOpen.value;
-  
+
   // Rafraîchir les notifications quand on ouvre le panel
   if (isPanelOpen.value) {
     await notificationStore.refreshNotifications();
