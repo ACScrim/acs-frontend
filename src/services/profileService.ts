@@ -48,7 +48,7 @@ const getUsersWithGameRole = async (gameId: string) => {
 
 // Dans profileService.ts
 const getNotificationPreferences = async (userId: string) => {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications-subscriptions`, {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications/status`, {
     withCredentials: true
   });
   return response.data;
@@ -59,7 +59,7 @@ const updateNotificationPreferences = async (data: {
   type: string;
   enabled: boolean;
 }) => {
-  const response = await axios.put(`${import.meta.env.VITE_API_URL}/notifications-subscriptions`, {
+  const response = await axios.put(`${import.meta.env.VITE_API_URL}/notifications/preferences`, {
     isActive: true, 
     preferences: {
       [data.type]: data.enabled

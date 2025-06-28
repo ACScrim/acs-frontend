@@ -1,9 +1,11 @@
+import axios from "axios";
+
 // Service de gestion des notifications push
 export class NotificationService {
   private static instance: NotificationService;
   private vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): NotificationService {
     if (!NotificationService.instance) {
@@ -186,6 +188,58 @@ export class NotificationService {
   }
 
   /**
+   * Envoie une notification système
+   */
+  public async notifySystem(
+    title: string,
+    message: string,
+    tag: string
+  ): Promise<boolean> {
+    const payload = {
+      title: title || "🔔 Notification système",
+      body: message,
+      tag: tag || "system-notification"
+    };
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/notifications/admin/broadcast`, payload, { withCredentials: true });
+      if (response.status !== 200) {
+        throw new Error("Erreur lors de l'envoi de la notification système");
+      }
+      return true;
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de la notification système:", error);
+      throw error;
+    }
+  }
+
+  public async getNotifications(): Promise<NotificationType[]> {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications`, { withCredentials: true });
+      if (response.status !== 200) {
+        throw new Error("Erreur lors de la récupération des notifications");
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des notifications:", error);
+      throw error;
+    }
+  }
+
+  public async getStats(): Promise<any> {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications/admin/stats`, { withCredentials: true });
+      if (response.status !== 200) {
+        throw new Error("Erreur lors de la récupération des statistiques de notifications");
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des statistiques de notifications:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Convertit une clé VAPID base64 en Uint8Array
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
@@ -202,6 +256,39 @@ export class NotificationService {
     }
     return outputArray;
   }
+}
+
+export interface NotificationType {
+  _id: string;
+  users: string[];
+  title: string;
+  body: string;
+  tag: string;
+  url: string;
+  type: string;
+  icon: string;
+  badge: string;
+  totalSent: number;
+  totalClicks: number;
+  totalErrors: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NotificationStats {
+  total: number;
+  totalThisWeek: number;
+  subscribedUsers: number;
+  newSubscribersThisWeek: number;
+  deliveryRate: number;
+  topType: string;
+  topTypeCount: number;
+  byType: {
+    tournaments: number;
+    badges: number;
+    reminders: number;
+    system: number;
+  };
 }
 
 export const notificationService = NotificationService.getInstance();

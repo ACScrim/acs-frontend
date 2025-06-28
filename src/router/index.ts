@@ -157,6 +157,16 @@ const adminRoutes = [
     },
   },
   {
+    path: "/gestion-notifications",
+    name: "GestionNotifications",
+    component: () => import("../views/admin/GestionNotifications.vue"),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: "Gestion des notifications",
+    },
+  },
+  {
     path: "/parametres",
     name: "UserSettings",
     component: () => import("../views/UserSettings.vue"),

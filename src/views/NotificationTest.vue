@@ -235,7 +235,7 @@ const sendTestNotification = async () => {
     });
 
     // Puis test notification push via serveur
-    const response = await fetch("/api/notifications/test", {
+    const response = await fetch(import.meta.env.VITE_API_URL + "/notifications/test", {
       method: "POST",
       credentials: "include",
       headers: {
