@@ -73,7 +73,7 @@
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-3xl font-bold text-space-primary mb-2">{{ stats.total || 0 }}</div>
-            <div class="text-space-text-muted text-sm">Total envoyée{{ stats.total !== 1 ? "s" : "" }}</div>
+            <div class="text-space-text-muted text-sm">Total envoyée{{ stats.total > 1 ? "s" : "" }}</div>
             <div class="flex items-center justify-center mt-2 text-xs">
               <span class="text-space-success">+{{ stats.totalThisWeek || 0 }} cette semaine</span>
             </div>
@@ -84,7 +84,7 @@
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-3xl font-bold text-space-secondary mb-2">{{ stats.subscribedUsers || 0 }}</div>
-            <div class="text-space-text-muted text-sm">Utilisateur{{ stats.subscribedUsers !== 1 ? "s" : "" }} abonné{{ stats.subscribedUsers !== 1 ? "s" : "" }}</div>
+            <div class="text-space-text-muted text-sm">Utilisateur{{ stats.subscribedUsers > 1 ? "s" : "" }} abonné{{ stats.subscribedUsers > 1 ? "s" : "" }}</div>
             <div class="flex items-center justify-center mt-2 text-xs">
               <span class="text-space-warning">+{{ stats.newSubscribersThisWeek || 0 }} cette semaine</span>
             </div>
@@ -302,13 +302,19 @@
                       <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
                       </svg>
-                      {{ notification.users.length || 0 }} destinataire{{ notification.users.length !== 1 ? 's' : '' }}
+                      {{ notification.users.length || 0 }} destinataire{{ notification.users.length > 1 ? 's' : '' }}
                     </span>
                     <span class="flex items-center">
                       <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                       </svg>
-                      {{ notification.totalSent || 0 }} livrée{{ notification.totalSent !== 1 ? 's' : '' }}
+                      {{ notification.totalSent || 0 }} livrée{{ notification.totalSent > 1 ? 's' : '' }}
+                    </span>
+                    <span class="flex items-center">
+                      <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm1.707 7.293a1 1 0 00-1.414 0L9 10.586V7a1 1 0 10-2 0v6a1 1 0 001 1h6a1 1 0 100-2h-3.586l1.293-1.293a1 1 0 000-1.414z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ notification.totalClicks || 0 }} cliquée{{ notification.totalClicks > 1 ? 's' : '' }}
                     </span>
                   </div>
                 </div>

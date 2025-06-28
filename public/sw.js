@@ -1,3 +1,16 @@
+let appConfig = {
+  apiUrl: null,
+  isDev: false,
+};
+
+// Écouter les messages pour recevoir la configuration
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'CONFIG') {
+    appConfig = event.data.config;
+    console.log('Service Worker: Configuration reçue', appConfig);
+  }
+});
+
 // Service Worker pour les notifications push et PWA
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installation");
@@ -74,6 +87,25 @@ self.addEventListener("notificationclick", (event) => {
 
   if (event.action === "dismiss") {
     return;
+  }
+
+  const notificationId = event.notification.data.notificationId
+  if (notificationId) {
+    fetch(`${appConfig.apiUrl}/notifications/${notificationId}/click`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ clicked: true }),
+    }).then(response => {
+      if (!response.ok) {
+        console.error("Erreur lors de la mise à jour du clic de notification:", response.statusText);
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de la mise à jour du clic de notification:", error);
+    })
   }
 
   // Ouvrir ou focuser l'application

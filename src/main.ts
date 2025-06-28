@@ -26,6 +26,17 @@ if ("serviceWorker" in navigator) {
       });
       console.log("Service Worker enregistré avec succès:", registration);
 
+      if (registration.active) {
+        // Envoyer la configuration
+        registration.active.postMessage({
+          type: 'CONFIG',
+          config: {
+            apiUrl: import.meta.env.VITE_API_URL,
+            isDev: import.meta.env.DEV,
+          }
+        });
+      }
+
       // Vérifier les mises à jour du service worker de manière moins agressive
       registration.addEventListener("updatefound", () => {
         const newWorker = registration.installing;
@@ -37,6 +48,15 @@ if ("serviceWorker" in navigator) {
             ) {
               console.log("Nouvelle version du Service Worker disponible");
               // Ne pas forcer la notification ici, laisser PWAInstallPrompt gérer
+            }
+            if (newWorker.state === "activated") {
+              newWorker.postMessage({
+                type: "CONFIG",
+                config: {
+                  apiUrl: import.meta.env.VITE_API_URL,
+                  dev: import.meta.env.DEV,
+                }
+              })
             }
           });
         }
