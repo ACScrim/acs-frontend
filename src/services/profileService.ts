@@ -46,7 +46,31 @@ const getUsersWithGameRole = async (gameId: string) => {
   }
 };
 
+// Dans profileService.ts
+const getNotificationPreferences = async (userId: string) => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications-subscriptions`, {
+    withCredentials: true
+  });
+  return response.data;
+};
+
+const updateNotificationPreferences = async (data: {
+  userId: string;
+  type: string;
+  enabled: boolean;
+}) => {
+  const response = await axios.put(`${import.meta.env.VITE_API_URL}/notifications-subscriptions`, {
+    isActive: true, 
+    preferences: {
+      [data.type]: data.enabled
+    }
+  }, { withCredentials: true });
+  return response.data;
+};
+
 export default {
   updateUserProfile,
   getUsersWithGameRole,
+  getNotificationPreferences,
+  updateNotificationPreferences,
 };
