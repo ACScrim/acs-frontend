@@ -102,7 +102,7 @@
           </SpaceCard>
 
           <!-- Liste des préférences de notifications -->
-          <div class="space-y-4">
+          <div class="space-y-4" v-if="notificationActivated">
             <!-- Notifications de tournois -->
             <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
@@ -410,6 +410,16 @@
               </div>
             </SpaceCard>
           </div>
+          <div v-else>
+            <div class="text-space-text-muted text-sm">
+              Les notifications push sont désactivées. Veuillez activer les notifications dans les paramètres de votre
+              navigateur.
+            </div>
+            <button @click="enableNotifications"
+              class="mt-4 px-4 py-2 bg-space-primary hover:bg-space-primary-dark text-white rounded-md">
+              Activer les notifications
+            </button>
+          </div>
 
           <!-- Indicateur de statut global -->
           <div class="mt-6 pt-4 border-t border-space-border">
@@ -444,7 +454,7 @@
                   <span class="font-mono">Tout sauvegardé</span>
                 </div>
                 <div v-else class="text-space-text-muted font-mono">
-                  Prêt
+                  {{ notificationActivated ? "Prêt" : "Notifications désactivées" }}
                 </div>
               </div>
             </div>
@@ -689,6 +699,7 @@ import gameService from "../services/gameService";
 import type { Game } from "../types";
 import type { GameRoles } from "../types/User";
 import Toast from "@/shared/Toast.vue";
+import { notificationService } from "../services/notificationService";
 
 // ========================================
 // SECTION: STORES ET DONNÉES RÉACTIVES
@@ -1109,6 +1120,8 @@ onMounted(async () => {
 // SECTION: GESTION DES NOTIFICATIONS
 // ========================================
 
+const notificationActivated = ref(false);
+
 // Nouvelles propriétés réactives pour les notifications
 const notificationPreferences = ref({
   tournaments: true,
@@ -1222,6 +1235,36 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
   }, 1500); // 1.5 secondes de délai
 };
 
+const subscribeToPush = async () => {
+  try {
+    const subscription = await notificationService.subscribeToPush();
+    if (subscription) {
+      notificationActivated.value = true;
+    } else {
+      showMessage("Échec de l'abonnement", "error");
+    }
+  } catch (error) {
+    showMessage(`Erreur abonnement: ${error}`, "error");
+  }
+};
+
+const enableNotifications = () => {
+  if (window.Notification && Notification.permission !== "granted") {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        subscribeToPush();
+        showMessage("Notifications activées avec succès !", "success");
+      } else {
+        notificationActivated.value = false;
+        showMessage("Notifications refusées. Vous pouvez les activer plus tard.", "error");
+      }
+    });
+  } else {
+    notificationActivated.value = true;
+    showMessage("Notifications déjà activées.", "success");
+  }
+};
+
 // Modifier la fonction onMounted pour charger les préférences
 onMounted(async () => {
   loading.value = true;
@@ -1239,6 +1282,8 @@ onMounted(async () => {
         "Utilisateur non connecté. Veuillez vous reconnecter pour accéder à vos paramètres.";
       return;
     }
+
+    notificationActivated.value = window.Notification && Notification.permission === "granted";
 
     // Initialiser les données du formulaire et charger les jeux et préférences
     initializeUserProfile();

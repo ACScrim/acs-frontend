@@ -72,7 +72,7 @@ export const useNotificationStore = defineStore("notifications", () => {
     try {
       const db = await initializeIndexedDB();
       
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, _) => {
         const transaction = db.transaction(["notifications"], "readonly");
         const store = transaction.objectStore("notifications");
         const index = store.index("timestamp");
