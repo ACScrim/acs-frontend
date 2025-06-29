@@ -68,57 +68,6 @@
       </div>
     </SpaceCard>
   </div>
-
-  <!-- Notification pour les mises à jour -->
-  <div v-if="showUpdatePrompt" class="fixed bottom-4 left-4 z-50">
-    <SpaceCard
-      variant="accent"
-      :stars="true"
-      className="p-4 max-w-sm shadow-2xl"
-    >
-      <div class="flex items-start space-x-3">
-        <div class="flex-shrink-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-accent"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-            />
-          </svg>
-        </div>
-
-        <div class="flex-1">
-          <h3 class="text-space-text font-nasa text-sm font-bold mb-1">
-            Mise à jour disponible
-          </h3>
-          <p class="text-space-text-muted text-xs mb-3">
-            Une nouvelle version de l'application est disponible
-          </p>
-
-          <div class="flex space-x-2">
-            <SpaceButton
-              @click="updateApp"
-              size="sm"
-              variant="accent"
-              :loading="updating"
-            >
-              Mettre à jour
-            </SpaceButton>
-            <SpaceButton @click="dismissUpdate" size="sm" variant="secondary">
-              Plus tard
-            </SpaceButton>
-          </div>
-        </div>
-      </div>
-    </SpaceCard>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -126,13 +75,10 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 
 // État des prompts
 const showInstallPrompt = ref(false);
-const showUpdatePrompt = ref(false);
 const installing = ref(false);
-const updating = ref(false);
 
 // Événement d'installation PWA
 let deferredPrompt: any = null;
-let swRegistration: ServiceWorkerRegistration | null = null;
 
 // Méthodes
 const installApp = async () => {
@@ -161,26 +107,6 @@ const dismissPrompt = () => {
   showInstallPrompt.value = false;
   localStorage.setItem("pwa-dismissed", "true");
   localStorage.setItem("pwa-dismissed-time", Date.now().toString());
-};
-
-const updateApp = async () => {
-  updating.value = true;
-
-  try {
-    if (swRegistration) {
-      await swRegistration.update();
-      window.location.reload();
-    }
-    showUpdatePrompt.value = false;
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour:", error);
-  } finally {
-    updating.value = false;
-  }
-};
-
-const dismissUpdate = () => {
-  showUpdatePrompt.value = false;
 };
 
 // Gestionnaires d'événements
@@ -220,82 +146,16 @@ const handleAppInstalled = () => {
   localStorage.setItem("pwa-installed", "true");
 };
 
-const checkForUpdates = async () => {
-  if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-
-      // Vérifier s'il y a une mise à jour en attente
-      if (registration.waiting) {
-        const lastUpdateCheck = localStorage.getItem("last-update-check");
-        const now = Date.now();
-
-        // Ne montrer la popup de mise à jour qu'une fois par heure
-        if (
-          !lastUpdateCheck ||
-          now - parseInt(lastUpdateCheck) > 60 * 60 * 1000
-        ) {
-          showUpdatePrompt.value = true;
-          localStorage.setItem("last-update-check", now.toString());
-        }
-      }
-
-      // Écouter les nouvelles mises à jour (une seule fois)
-      const handleUpdateFound = () => {
-        const newWorker = registration.installing;
-        if (newWorker) {
-          const handleStateChange = () => {
-            if (
-              newWorker.state === "installed" &&
-              navigator.serviceWorker.controller
-            ) {
-              const lastUpdateCheck = localStorage.getItem("last-update-check");
-              const now = Date.now();
-
-              // Ne montrer qu'une fois par heure
-              if (
-                !lastUpdateCheck ||
-                now - parseInt(lastUpdateCheck) > 60 * 60 * 1000
-              ) {
-                showUpdatePrompt.value = true;
-                localStorage.setItem("last-update-check", now.toString());
-              }
-            }
-            // Nettoyer l'event listener
-            newWorker.removeEventListener("statechange", handleStateChange);
-          };
-          newWorker.addEventListener("statechange", handleStateChange);
-        }
-        // Nettoyer l'event listener
-        registration.removeEventListener("updatefound", handleUpdateFound);
-      };
-
-      registration.addEventListener("updatefound", handleUpdateFound);
-      swRegistration = registration;
-    } catch (error) {
-      console.error("Erreur lors de la vérification des mises à jour:", error);
-    }
-  }
-};
-
 // Lifecycle
 onMounted(() => {
   // Écouter l'événement d'installation PWA
   window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   window.addEventListener("appinstalled", handleAppInstalled);
-
-  // Vérifier les mises à jour
-  checkForUpdates();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   window.removeEventListener("appinstalled", handleAppInstalled);
-
-  // Nettoyer les event listeners du Service Worker si ils existent
-  if (swRegistration) {
-    swRegistration.removeEventListener("updatefound", () => {});
-  }
 });
 </script>
 

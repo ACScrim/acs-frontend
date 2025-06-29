@@ -34,7 +34,7 @@
     <transition name="space-fade">
       <div
         v-if="isPanelOpen"
-        class="absolute top-full right-0 mt-2 w-80 max-w-[90vw] z-50"
+        class="absolute top-full z-50 mt-2 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-0 sm:transform-none w-80 sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-[90vw]"
       >
         <SpaceCard
           variant="dark"
@@ -42,31 +42,58 @@
           className="shadow-2xl border border-space-primary/20"
         >
           <!-- En-tête -->
-          <div class="p-4 border-b border-space-primary/20">
+          <div class="p-3 sm:p-4 border-b border-space-primary/20">
             <div class="flex items-center justify-between">
-              <h3 class="text-space-text font-nasa text-lg font-bold">
+              <h3
+                class="text-space-text font-nasa text-base sm:text-lg font-bold truncate mr-2"
+              >
                 Notifications
               </h3>
 
-              <div class="flex items-center space-x-2">
+              <div
+                class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
+              >
                 <!-- Bouton d'abonnement -->
                 <button
                   v-if="!isSubscribed && permission !== 'denied'"
                   @click="handleSubscribe"
                   :disabled="loading"
-                  class="px-3 py-1 bg-space-primary/20 hover:bg-space-primary/30 text-space-primary text-xs rounded-md transition-colors font-nasa"
+                  class="px-2 sm:px-3 py-1 bg-space-primary/20 hover:bg-space-primary/30 text-space-primary text-xs rounded-md transition-colors font-nasa whitespace-nowrap"
                 >
-                  {{ loading ? "Activation..." : "Activer" }}
+                  {{ loading ? "..." : "Activer" }}
                 </button>
 
                 <!-- Marquer toutes comme lues -->
                 <button
                   v-if="unreadCount > 0"
                   @click="markAllAsRead"
-                  class="text-space-text-muted hover:text-space-text text-xs transition-colors"
+                  class="text-space-text-muted hover:text-space-text text-xs transition-colors whitespace-nowrap hidden sm:block"
                   title="Marquer toutes comme lues"
                 >
                   ✓ Tout lire
+                </button>
+
+                <!-- Version mobile du bouton "tout lire" -->
+                <button
+                  v-if="unreadCount > 0"
+                  @click="markAllAsRead"
+                  class="text-space-text-muted hover:text-space-text transition-colors sm:hidden"
+                  title="Marquer toutes comme lues"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
                 </button>
 
                 <!-- Fermer -->
@@ -104,7 +131,7 @@
                 v-else-if="permission === 'denied'"
                 class="text-space-error"
               >
-                ● Notifications bloquées par le navigateur
+                ● Notifications bloquées
               </span>
               <span v-else class="text-space-warning">
                 ● Notifications désactivées
@@ -113,15 +140,15 @@
           </div>
 
           <!-- Liste des notifications -->
-          <div class="max-h-96 overflow-y-auto">
+          <div class="max-h-80 sm:max-h-96 overflow-y-auto">
             <div
               v-if="recentNotifications.length === 0"
-              class="p-4 text-center"
+              class="p-4 sm:p-6 text-center"
             >
               <div class="text-space-text-muted text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-12 w-12 mx-auto mb-2 opacity-50"
+                  class="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-2 opacity-50"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -133,7 +160,8 @@
                     d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-2 2m0 0l-2-2m2 2v6"
                   />
                 </svg>
-                Aucune notification
+                <span class="hidden sm:inline">Aucune notification</span>
+                <span class="sm:hidden">Aucune notification</span>
               </div>
             </div>
 
@@ -143,11 +171,11 @@
               class="border-b border-space-primary/10 last:border-b-0"
             >
               <div
-                class="p-3 hover:bg-space-bg-light/50 transition-colors cursor-pointer"
+                class="p-3 sm:p-4 hover:bg-space-bg-light/50 transition-colors cursor-pointer"
                 :class="{ 'bg-space-primary/5': !notification.read }"
                 @click="handleNotificationClick(notification)"
               >
-                <div class="flex items-start space-x-3">
+                <div class="flex items-start space-x-2 sm:space-x-3">
                   <!-- Icône de type -->
                   <div class="flex-shrink-0 mt-1">
                     <div
@@ -164,21 +192,24 @@
                   <!-- Contenu -->
                   <div class="flex-1 min-w-0">
                     <h4
-                      class="text-sm font-semibold text-space-text font-nasa"
+                      class="text-sm font-semibold text-space-text font-nasa leading-tight"
                       :class="{ 'text-space-primary': !notification.read }"
                     >
                       {{ notification.title }}
                     </h4>
-                    <p class="text-xs text-space-text-muted mt-1 line-clamp-2">
+                    <p
+                      class="text-xs text-space-text-muted mt-1 line-clamp-2 sm:line-clamp-3 leading-relaxed"
+                    >
                       {{ notification.body }}
                     </p>
                     <div class="flex items-center justify-between mt-2">
-                      <span class="text-xs text-space-text-muted">
+                      <span class="text-xs text-space-text-muted truncate mr-2">
                         {{ formatTime(notification.timestamp) }}
                       </span>
                       <button
                         @click.stop="deleteNotification(notification.id)"
-                        class="text-space-text-muted hover:text-space-error text-xs transition-colors"
+                        class="text-space-text-muted hover:text-space-error text-xs transition-colors flex-shrink-0 p-1"
+                        title="Supprimer"
                       >
                         ✕
                       </button>
@@ -198,7 +229,10 @@
               @click="clearAllNotifications"
               class="text-space-text-muted hover:text-space-error text-xs transition-colors"
             >
-              Effacer toutes les notifications
+              <span class="hidden sm:inline"
+                >Effacer toutes les notifications</span
+              >
+              <span class="sm:hidden">Tout effacer</span>
             </button>
           </div>
         </SpaceCard>
