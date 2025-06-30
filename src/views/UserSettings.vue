@@ -1164,7 +1164,7 @@ const loadNotificationPreferences = async () => {
 
   try {
     // Appel API pour récupérer les préférences
-    const response = await profileService.getNotificationPreferences(user.value._id);
+    const response = await profileService.getNotificationPreferences();
     const { preferences } = response;
     notificationPreferences.value = {
       tournaments: preferences.tournaments ?? true,
