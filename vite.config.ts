@@ -13,17 +13,21 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,mp4}"],
+        // Exclure les routes d'authentification du cache
+        navigateFallbackDenylist: [
+          /^\/api\//,           // Toutes les routes API
+          /\/auth\//,           // Routes d'authentification
+          /\/discord\/callback/ // Callback Discord spécifiquement
+        ],
+        // Exclure du précaching
+        globIgnores: [
+          "**/api/**",
+          "**/auth/**"
+        ],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\..*\/.*/i,
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "api-cache",
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24, // 24 heures
-              },
-            },
+            urlPattern: /^https:\/\/acscrim\.fr\/api\/.*/,
+            handler: "NetworkOnly", // Jamais de cache pour l'API
           },
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,

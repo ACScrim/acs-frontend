@@ -153,6 +153,17 @@ const urlsToCache = ["/", "/manifest.json", "/Logo_ACS.png"];
 self.addEventListener("fetch", (event) => {
   // On peut implémenter un cache ici si nécessaire pour le mode hors ligne
   // Pour l'instant, on laisse passer toutes les requêtes
+  const url = new URL(event.request.url);
+  
+  // Exclure toutes les routes API et d'authentification
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.includes('/auth/') ||
+    url.pathname.includes('/discord/callback')
+  ) {
+    // Laisser passer sans interception
+    return;
+  }
 });
 
 
