@@ -167,6 +167,16 @@ const adminRoutes = [
     },
   },
   {
+    path: "/messages-discord",
+    name: "MessagesDiscord",
+    component: () => import("../views/admin/MessagesDiscord.vue"),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: "Messages Discord",
+    },
+  },
+  {
     path: "/parametres",
     name: "UserSettings",
     component: () => import("../views/UserSettings.vue"),

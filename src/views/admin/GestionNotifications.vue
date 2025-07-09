@@ -494,8 +494,6 @@ const sendNotification = async () => {
       newNotification.value.tag
     );
 
-    console.log('Notification sent:', success);
-
     if (success) {
       newNotification.value.title = '';
       newNotification.value.message = '';
