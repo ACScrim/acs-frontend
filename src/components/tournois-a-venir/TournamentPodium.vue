@@ -372,7 +372,7 @@
     <SpaceCard v-if="tournament.mvpVoteOpen">
       <template #header>
         <div class="flex flex-row justify-between items-center">
-          <SpaceTitle size="xl" class="uppercase">Votez pour le mvp</SpaceTitle>
+          <SpaceTitle size="xl" class="uppercase">Vote pour le mvp</SpaceTitle>
           <SpaceButton v-if="user?.role === 'admin' || user?.role === 'superadmin'" class="bg-red-500!"
             @click="handleCloseVote()">
             Fermer le vote
