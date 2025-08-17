@@ -585,12 +585,42 @@
         </SpaceTerminal>
       </div>
     </SpaceCard>
+    <!-- Votes MVPS -->
+    <SpaceCard>
+      <template #header>
+        <SpaceTitle size="xl" class="uppercase">Votez pour le mvp</SpaceTitle>
+      </template>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <SpaceCard v-for="player in tournament.players">
+          <div class="flex flex-row justify-between items-center w-full">
+            <p class="w-auto">
+              {{ player.username }}
+              <span v-if="tournament.teams?.find(t => t.ranking === 1)?.players.filter(p => p.userId === player.userId).length">🏆</span>
+            </p>
+            <SpaceButton
+              v-if="user?._id && !tournament.mvps.find(mvp => mvp.player.toString() === player._id)?.votes.includes(user?._id)"
+              class="p-1! px-2!" 
+              @click="handleVoteForMvp(player._id)"
+            >
+              Votez
+            </SpaceButton>
+          </div>
+        </SpaceCard>
+      </div>
+    </SpaceCard>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Tournament } from "../../types";
+import tournamentService from "../../services/tournamentService";
+import { useUserStore } from "../../stores/userStore";
+import router from "../../router";
+
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
 
 const props = defineProps({
   tournament: {
@@ -604,6 +634,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["toggle-other-rankings"]);
+
+const handleVoteForMvp = async (playerId?: string) => {
+  if (!playerId) return
+  if (!props.tournament._id) return
+  await tournamentService.voteForMvp(props.tournament._id, playerId)
+  router.go(0)
+}
 
 /**
  * Récupère toutes les équipes ayant un rang spécifique dans le tournoi

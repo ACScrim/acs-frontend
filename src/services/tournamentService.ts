@@ -306,6 +306,17 @@ const toggleTeamsPublication = async (
   return response.data.tournament;
 };
 
+const voteForMvp = async (tournamentId: string, playerId: string): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/vote-mvp`,
+    { playerId },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data.tournament;
+}
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -325,4 +336,5 @@ export default {
   unmarkTournamentAsFinished,
   deleteAllTeams,
   toggleTeamsPublication,
+  voteForMvp
 };

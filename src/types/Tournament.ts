@@ -38,6 +38,7 @@ export interface Tournament {
   waitlistRegistrationDates?: { [key: string]: string }; // Nouvelle propriété
   discordReminderDate: Date;
   privateReminderDate: Date;
+  mvps: { player: Player; votes: string[]; isMvp: boolean }[];
 }
 
 /**
