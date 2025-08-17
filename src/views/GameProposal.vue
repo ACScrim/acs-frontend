@@ -15,9 +15,13 @@
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Description/Introduction -->
-      <SpaceCard variant="dark" className="mb-6">
+      <SpaceCard variant="dark" className="mb-6 text-center">
         <p class="text-space-text font-body">
           Seuls les jeux approuvés par les administrateurs seront votables.
+        </p>
+        <br />
+        <p class="font-body text-red-400 font-bold">
+          En proposant des jeux sur serveurs privés, vous vous engagez à gérer les serveurs si votre jeu est choisi
         </p>
       </SpaceCard>
 
