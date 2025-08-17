@@ -317,6 +317,17 @@ const voteForMvp = async (tournamentId: string, playerId: string): Promise<Tourn
   return response.data.tournament;
 }
 
+const closeMvpVote = async (tournamentId: string): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/close-mvp-vote`,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data.tournament;
+};
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -336,5 +347,6 @@ export default {
   unmarkTournamentAsFinished,
   deleteAllTeams,
   toggleTeamsPublication,
-  voteForMvp
+  voteForMvp,
+  closeMvpVote
 };

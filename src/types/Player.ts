@@ -23,6 +23,7 @@ export interface TournamentParticipation {
   rank: number | null;
   teamName: string;
   numberOfTeams: number;
+  isMvp: boolean;
 }
 
 export interface PlayerRanking {

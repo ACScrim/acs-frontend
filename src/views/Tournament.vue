@@ -1131,6 +1131,7 @@
               :tournament="tournament"
               :is-other-rankings-expanded="showOtherRankings"
               @toggle-other-rankings="toggleOtherRankings"
+              @refetch="refetchTournament"
             />
           </div>
         </div>
@@ -1752,6 +1753,33 @@ const updateStreamData = async () => {
 // ========================================
 // MÉTHODES PRINCIPALES
 // ========================================
+
+const refetchTournament = async () => {
+  if (!tournamentId.value) {
+    error.value = "ID de tournoi manquant";
+    return;
+  }
+
+  error.value = null;
+
+  try {
+    console.log("🔄 Chargement du tournoi:", tournamentId.value);
+
+    const data = await tournamentService.getTournamentById(tournamentId.value);
+
+    if (!data) {
+      error.value = "Tournoi non trouvé";
+      return;
+    }
+
+    console.log("✅ Tournoi chargé:", data.name);
+    tournament.value = data;
+  } catch (err) {
+    console.error("❌ Erreur lors de la récupération du tournoi:", err);
+    error.value = "Impossible de charger les données du tournoi";
+    tournament.value = null;
+  }
+};
 
 /**
  * Récupère les données du tournoi

@@ -1209,6 +1209,10 @@
                       </span>
                     </SpaceBadge>
 
+                    <SpaceBadge v-if="tournament.isMvp" variant="gold">
+                      MVP
+                    </SpaceBadge>
+
                     <!-- Bouton détails -->
                     <router-link
                       :to="`/tournois/${tournament._id}`"
