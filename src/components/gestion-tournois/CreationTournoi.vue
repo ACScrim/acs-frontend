@@ -607,6 +607,8 @@ const createTournament = async () => {
       playerCap: parseInt(playerCap.value) || 0,
       finished: false,
       checkIns,
+      mvpVoteOpen: true,
+      mvps: []
     };
 
     await tournamentService.createTournament(tournament);

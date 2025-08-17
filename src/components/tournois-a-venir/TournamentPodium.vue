@@ -389,7 +389,7 @@
                 v-if="tournament.teams?.find(t => t.ranking === 1)?.players.filter(p => p.userId === player.userId).length">🏆</span>
             </p>
             <SpaceButton
-              :disabled="user?._id && tournament.mvps.find(mvp => mvp.player._id === player._id)?.votes.includes(user?._id)"
+              :disabled="user?._id && tournament.mvps?.find(mvp => mvp.player._id === player._id)?.votes.includes(user?._id)"
               class="p-1! px-2! disabled:opacity-5" @click="handleVoteForMvp(player._id)">
               Votez
             </SpaceButton>
@@ -398,12 +398,12 @@
         </SpaceCard>
       </div>
     </SpaceCard>
-    <SpaceCard v-else-if="tournament.mvps.length > 0">
+    <SpaceCard v-else-if="tournament.mvps && tournament.mvps.length > 0">
       <template #header>
         <SpaceTitle size="xl" class="uppercase">MVP du tournoi</SpaceTitle>
       </template>
 
-      <div v-for="mvp in tournament.mvps.filter(mvp => mvp.isMvp)">
+      <div v-for="mvp in tournament.mvps?.filter(mvp => mvp.isMvp)">
         <SpaceCard id="profil" variant="primary" section="profile" :stars="true" :decorated="true"
           className="mb-8 overflow-hidden">
           <!-- Structure simplifiée : tout centré -->
