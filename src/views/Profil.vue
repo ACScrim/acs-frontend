@@ -97,6 +97,43 @@
           <div
             class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"
           ></div>
+
+          <!-- Titres de Champion de Saisons -->
+          <div v-if="seasonChampionships.length > 0" class="mt-6">
+            <div class="flex flex-wrap justify-center gap-2">
+              <SpaceBadge
+                v-for="championship in seasonChampionships"
+                :key="championship.seasonId"
+                variant="gold"
+                size="lg"
+                :filled="true"
+                className="transform transition-all hover:scale-110 duration-300 shadow-glow-gold animate-pulse"
+                :title="`Champion de la saison ${championship.seasonNumber} avec ${championship.totalVictories} victoires en ${championship.totalTournaments} tournois`"
+              >
+                <div class="flex items-center space-x-2">
+                  <span class="text-lg">👑</span>
+                  <span class="font-bold">
+                    {{
+                      championship.seasonNumber === 0
+                        ? "Alors ça chill"
+                        : `Saison ${championship.seasonNumber}`
+                    }}
+                  </span>
+                </div>
+              </SpaceBadge>
+            </div>
+            <div class="text-center mt-2">
+              <span
+                class="text-xs text-space-gold font-nasa uppercase tracking-wide"
+              >
+                {{
+                  seasonChampionships.length === 1
+                    ? "Champion"
+                    : "Multi-Champion"
+                }}
+              </span>
+            </div>
+          </div>
         </div>
       </SpaceCard>
       <!-- Section des statistiques - Version simplifiée -->
@@ -1324,6 +1361,7 @@ import type {
   User,
   ExtendedStats,
 } from "../types";
+import type { SeasonChampionship } from "../types/SeasonChampionship";
 
 //-------------------------------------------------------
 // SECTION: États réactifs principaux
@@ -1334,6 +1372,7 @@ const player = ref<Player | null>(null);
 const user = ref<User | null>(null);
 const playerRanking = ref<PlayerRanking | null>(null);
 const extendedStats = ref<ExtendedStats | null>(null);
+const seasonChampionships = ref<SeasonChampionship[]>([]);
 
 // États de l'interface
 const loading = ref(true);
@@ -1842,6 +1881,17 @@ const fetchPlayerProfile = async () => {
         rankings.find((ranking) => ranking.playerId === playerId) || null;
     } catch (rankErr) {
       console.error("Erreur classement:", rankErr);
+    }
+
+    // Récupération des championnats de saisons
+    try {
+      const championships = await playerService.getPlayerSeasonChampionships(
+        playerId
+      );
+      seasonChampionships.value = championships;
+    } catch (champErr) {
+      console.error("Erreur championnats:", champErr);
+      seasonChampionships.value = [];
     }
   } catch (err) {
     console.error("Erreur profil joueur:", err);

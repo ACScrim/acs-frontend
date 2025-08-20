@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { Player, PlayerRanking, ExtendedStats } from "../types";
+import type { SeasonChampionship } from "../types/SeasonChampionship";
 
 /**
  * URL de base pour les opérations sur les joueurs
@@ -159,6 +160,28 @@ const getExtendedStats = async (playerId: string): Promise<ExtendedStats> => {
   }
 };
 
+/**
+ * Récupère les championnats de saisons d'un joueur
+ * @param id - ID du joueur
+ * @returns Liste des saisons où le joueur a été champion
+ */
+const getPlayerSeasonChampionships = async (
+  id: string
+): Promise<SeasonChampionship[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}/season-championships`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des championnats de saisons:",
+      error
+    );
+    throw error;
+  }
+};
+
 export default {
   addPlayer,
   getPlayers,
@@ -172,4 +195,5 @@ export default {
   getPlayerByIdUser,
   getPlayerProfile,
   getExtendedStats,
+  getPlayerSeasonChampionships,
 };
