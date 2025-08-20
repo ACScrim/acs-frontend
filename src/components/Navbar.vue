@@ -58,7 +58,7 @@
         <router-link to="/" class="logo-container">
           <div class="logo-glow"></div>
           <img
-            src="../assets/Logo_ACS.png"
+            src="../assets/sanslueur.png"
             alt="Logo ACS"
             class="navbar-logo"
           />
