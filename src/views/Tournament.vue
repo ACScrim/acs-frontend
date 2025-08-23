@@ -199,19 +199,22 @@
                   clip-rule="evenodd" />
               </svg>
               <div class="min-w-0 flex-1">
-                <!-- Ligne titre + icônes à droite -->
-                <div class="flex items-center justify-between">
-                  <div class="font-heading text-space-text-muted text-xs sm:text-sm">
-                    Date
-                  </div>
+                <div class="font-heading text-space-text-muted text-xs sm:text-sm">
+                  Date
+                </div>
 
+                <!-- Valeur -->
+                <div class="flex items-center gap-x-4">
+                  <div class="text-space-text break-words">
+                    {{ formatLocalDate(tournament.date) }}
+                  </div>
                   <!-- Icônes calendrier compactes (ne prennent pas de ligne supplémentaire) -->
                   <div v-if="tournament.date" class="flex items-center gap-1">
                     <a :href="generateGoogleCalendarLink(tournament.date)" target="_blank" rel="noopener noreferrer"
                       aria-label="Ajouter à Google Calendar" title="Ajouter à Google Calendar"
                       class="p-1 rounded hover:bg-space-bg-light/30 transition-colors text-[#4285F4] hover:text-[#3367D6]">
                       <!-- Pictogramme calendrier générique, coloré Google -->
-                      <svg class="size-6 block" x="0px" y="0px" viewBox="0 0 200 200" enable-background="new 0 0 200 200"
+                      <svg class="size-5 block" x="0px" y="0px" viewBox="0 0 200 200" enable-background="new 0 0 200 200"
                         xml:space="preserve">
                         <g>
                           <g transform="translate(3.75 3.75)">
@@ -241,7 +244,7 @@
                       aria-label="Ajouter à Outlook Calendar" title="Ajouter à Outlook Calendar"
                       class="p-1 rounded hover:bg-space-bg-light/30 transition-colors text-[#0078D4] hover:text-[#005A9E]">
                       <!-- Pictogramme calendrier générique, coloré Outlook -->
-                      <svg id="Livello_1" x="0px" y="0px" viewBox="0 0 1831.085 1703.335" class="size-6 block"
+                      <svg id="Livello_1" x="0px" y="0px" viewBox="0 0 1831.085 1703.335" class="size-5 block"
                         enable-background="new 0 0 1831.085 1703.335" xml:space="preserve">
                         <path fill="#0A2767"
                           d="M1831.083,894.25c0.1-14.318-7.298-27.644-19.503-35.131h-0.213l-0.767-0.426l-634.492-375.585  c-2.74-1.851-5.583-3.543-8.517-5.067c-24.498-12.639-53.599-12.639-78.098,0c-2.934,1.525-5.777,3.216-8.517,5.067L446.486,858.693  l-0.766,0.426c-19.392,12.059-25.337,37.556-13.278,56.948c3.553,5.714,8.447,10.474,14.257,13.868l634.492,375.585  c2.749,1.835,5.592,3.527,8.517,5.068c24.498,12.639,53.599,12.639,78.098,0c2.925-1.541,5.767-3.232,8.517-5.068l634.492-375.585  C1823.49,922.545,1831.228,908.923,1831.083,894.25z" />
@@ -293,11 +296,6 @@
                       </svg>
                     </a>
                   </div>
-                </div>
-
-                <!-- Valeur -->
-                <div class="text-space-text break-words">
-                  {{ formatLocalDate(tournament.date) }}
                 </div>
               </div>
             </div>
