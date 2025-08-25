@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative max-w-6xl space-container-effect"
+    class="container mx-auto p-3 sm:p-6 pt-16 sm:pt-24 relative max-w-6xl west-container-surface"
   >
     <slot></slot>
   </div>
@@ -15,7 +15,7 @@
  * - Marges automatiques pour centrage
  * - Espacement standardisé sur tous les écrans
  * - Padding supérieur adapté pour éviter la navbar
- * - Effet "zoomé" avec ombre et fond translucide
+ * - Surface cuir/parchemin avec ombres douces
  *
  * Usage :
  * ```vue
@@ -42,18 +42,25 @@ defineOptions({
   overflow: visible;
 }
 
-/* Effet "zoomé" premium pour le container */
-.space-container-effect {
-  background-color: rgba(30, 30, 45, 0.7);
-  box-shadow: 0 0 30px rgba(109, 40, 217, 0.2);
+/* Surface Far West (cuir sombre, lisible) */
+.west-container-surface {
   border-radius: 16px;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(109, 40, 217, 0.1);
+  backdrop-filter: blur(8px);
+  background: radial-gradient(
+      120% 80% at 0% 0%,
+      rgba(255, 255, 255, 0.02),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.12)),
+    rgba(var(--color-card-bg-rgb, 26, 19, 12), 0.88);
+  border: 1px solid rgba(var(--color-card-border-rgb, 194, 143, 44), 0.35);
+  box-shadow: var(--shadow-card-base, 0 6px 24px rgba(0, 0, 0, 0.4));
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.space-container-effect:hover {
-  box-shadow: 0 0 40px rgba(109, 40, 217, 0.3);
-  transform: scale(1.005);
+.west-container-surface:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-color: rgba(var(--color-card-border-rgb, 194, 143, 44), 0.5);
 }
 </style>

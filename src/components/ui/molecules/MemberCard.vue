@@ -2,27 +2,27 @@
 <template>
   <div
     :class="[
-      'space-member-card relative overflow-hidden rounded-xl',
-      'bg-background-bg-dark/80 backdrop-blur-sm border',
+      'west-member-card relative overflow-hidden rounded-xl',
+      'backdrop-blur-sm border',
       memberTypeClass,
       className,
     ]"
   >
     <!-- En-tête de la carte avec badge de rôle -->
     <div
-      class="space-member-header relative z-10 p-3 flex justify-between items-center border-b border-color-primary/10"
+      class="west-member-header relative z-10 p-3 flex justify-between items-center border-b"
     >
       <SpaceBadge :variant="badgeVariant" size="sm" :className="badgeClasses">
         {{ roleLabel }}
       </SpaceBadge>
-      <div class="text-normal-text-muted text-xs font-mono">
+      <div class="id-chip text-normal-text text-xs font-mono font-medium">
         ID: {{ userId ? userId.substring(0, 8) : "N/A" }}
       </div>
     </div>
 
     <!-- Corps de la carte -->
     <div
-      class="space-member-body relative z-10 p-4 flex flex-col items-center text-center"
+      class="west-member-body relative z-10 p-4 flex flex-col items-center text-center"
     >
       <!-- Container Avatar simplifié -->
       <div class="avatar-container mb-4 relative">
@@ -62,28 +62,23 @@
               : {}
           "
           :class="[
-            'block text-xl font-bold font-nasa transition-colors',
-            hasProfile
-              ? 'text-color-primary-light hover:text-color-primary cursor-pointer'
-              : 'text-normal-text',
+            'block text-xl font-bold member-username transition-colors',
+            { 'member-username--link': hasProfile },
           ]"
         >
           {{ username }}
         </component>
-        <div class="text-normal-text-muted text-sm mt-1 font-mono">
-          {{ roleLabel }}
-        </div>
       </div>
 
       <!-- Boutons d'action -->
-      <div class="space-member-actions w-full flex flex-col gap-2">
+      <div class="west-member-actions w-full flex flex-col gap-2">
         <!-- Bouton Voir le profil (si joueur) -->
         <SpaceButton
           v-if="hasProfile"
           :to="{ name: 'Profil', params: { id: playerId } }"
           variant="primary"
           size="sm"
-          className="space-view-profile-button space-member-cta"
+          className="west-view-profile-button west-member-cta"
         >
           <template #icon>
             <svg
@@ -105,7 +100,7 @@
         <!-- Message si pas de profil joueur -->
         <div
           v-else
-          class="space-restricted-access text-center p-2 rounded text-xs text-normal-text-muted border border-color-primary/20"
+          class="west-restricted-access text-center p-2 rounded text-xs text-normal-text-muted border"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -196,9 +191,9 @@ const badgeVariant = computed((): ComponentVariant => {
 
 const memberTypeClass = computed(() => {
   if (hasProfile.value) {
-    return `space-member-card-player space-member-card-${props.role}`;
+    return `west-member-card-player west-member-card-${props.role}`;
   }
-  return `space-member-card-basic space-member-card-${props.role}`;
+  return `west-member-card-basic west-member-card-${props.role}`;
 });
 
 const avatarBorderClass = computed(() => {
@@ -237,86 +232,135 @@ const handleImageError = (e: Event) => {
 </script>
 
 <style scoped>
-/* Base card styles - optimisé pour performance */
-.space-member-card {
+/* Base card styles - Far West */
+.west-member-card {
   height: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   contain: layout style;
+  /* Parchment background */
+  background: radial-gradient(
+      120% 80% at 0% 0%,
+      rgba(0, 0, 0, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(100% 60% at 100% 0%, rgba(0, 0, 0, 0.06), transparent 55%),
+    linear-gradient(
+      180deg,
+      rgba(var(--background-bg-light-rgb, 243, 231, 218), 0.96),
+      rgba(var(--background-bg-light-rgb, 243, 231, 218), 0.92)
+    );
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
-/* Avatar styles simplifiés */
+.west-member-card::before {
+  /* Subtle rope edge */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(var(--color-accent-rgb, 210, 160, 80), 0.18) 0px,
+    rgba(var(--color-accent-rgb, 210, 160, 80), 0.18) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px;
+  border: 0 solid transparent; /* just to enable content-box */
+  opacity: 0.5;
+}
+
+/* Header band - leather tint */
+.west-member-header {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.04));
+  border-color: rgba(0, 0, 0, 0.22);
+}
+
+/* Avatar styles */
 .avatar-container {
   position: relative;
   z-index: 1;
 }
 
-/* Classes de types de membres simplifiées */
-.space-member-card-user {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 15, 30, 0.85),
-    rgba(20, 20, 35, 0.95)
-  );
+/* Member type modifiers - light tints and borders */
+.west-member-card-player {
+  box-shadow: inset 0 0 0 1px rgba(var(--color-accent-rgb, 210, 160, 80), 0.25);
 }
 
-.space-member-card-admin {
-  background: linear-gradient(
-    135deg,
-    rgba(25, 15, 45, 0.85),
-    rgba(30, 18, 50, 0.95)
-  );
+.west-member-card-basic {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
-.space-member-card-superadmin {
-  background: linear-gradient(
-    135deg,
-    rgba(36, 14, 40, 0.85),
-    rgba(34, 13, 38, 0.95)
-  );
+.west-member-card-user {
+  border-color: rgba(0, 0, 0, 0.18);
 }
 
-.space-member-card-player {
-  background: linear-gradient(
-    135deg,
-    rgba(25, 17, 45, 0.85),
-    rgba(23, 15, 41, 0.95)
-  );
+.west-member-card-admin {
+  border-color: rgba(var(--color-accent-rgb, 210, 160, 80), 0.35);
 }
 
-.space-member-card-basic {
-  background: linear-gradient(
-    135deg,
-    rgba(20, 20, 35, 0.85),
-    rgba(15, 15, 30, 0.95)
-  );
+.west-member-card-superadmin {
+  border-color: rgba(var(--color-accent-rgb, 210, 160, 80), 0.5);
 }
 
 /* Boutons et actions simplifiés */
-.space-view-profile-button {
+.west-view-profile-button {
   position: relative;
   z-index: 1;
 }
 
-.space-member-cta {
+.west-member-cta {
   position: relative;
 }
 
-.space-restricted-access {
+.west-restricted-access {
   background: rgba(var(--background-bg-light-rgb), 0.1);
   backdrop-filter: blur(2px);
 }
 
-/* Performance optimisée - suppression de toutes les animations coûteuses */
-.space-member-card *,
-.space-member-card *::before,
-.space-member-card *::after {
+/* Performance: avoid heavy animations inside card */
+.west-member-card *,
+.west-member-card *::before,
+.west-member-card *::after {
   animation: none !important;
   transition: opacity 0.1s ease !important;
 }
 
-/* Responsive simplifié */
+/* Western display font for username */
+.member-username {
+  font-family: var(--font-display, "Rye", serif);
+  letter-spacing: 0.02em;
+  color: var(--heading-text, rgba(34, 27, 20, 0.95));
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.member-username--link {
+  cursor: pointer;
+}
+
+.member-username--link:hover {
+  color: rgb(var(--color-primary-rgb, 140, 90, 40));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ID chip for better contrast */
+.id-chip {
+  padding: 2px 8px;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
 @media (max-width: 640px) {
-  .space-member-card {
+  .west-member-card {
     margin-bottom: 1rem;
   }
 }

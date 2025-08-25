@@ -67,32 +67,7 @@
       <div class="color-card-corner bottom-left"></div>
     </div>
 
-    <!-- Effet de particules d'étoiles -->
-    <div v-if="stars" class="color-card-stars pointer-events-none">
-      <div
-        v-for="n in 5"
-        :key="n"
-        class="space-star"
-        :style="{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 4}s`,
-        }"
-      ></div>
-    </div>
-
-    <!-- Système orbital décoratif -->
-    <div class="orbit-system">
-      <div class="planet-orbit">
-        <div class="planet planet-1"></div>
-      </div>
-      <div class="planet-orbit orbit-2">
-        <div class="planet planet-2"></div>
-      </div>
-      <div class="planet-orbit orbit-3">
-        <div class="planet planet-3"></div>
-      </div>
-    </div>
+    <!-- Décors spatiaux supprimés pour le style Far West -->
   </div>
 </template>
 
@@ -184,7 +159,22 @@ const elevationClasses = computed(() => {
   background: var(--color-card-bg) !important;
   backdrop-filter: blur(10px);
   border: 1px solid var(--color-card-border) !important;
+  /* Warm, dusty glow for Far West */
   box-shadow: var(--shadow-card-base), 0 0 15px var(--color-card-shadow) !important;
+  /* Parchment/leather-like texture (no denim stripes) */
+  background-image: radial-gradient(
+      120% 100% at 50% 0%,
+      rgba(0, 0, 0, 0.08),
+      transparent 65%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(var(--background-bg-light-rgb), 0.06),
+      rgba(var(--background-bg-light-rgb), 0.02)
+    ),
+    radial-gradient(circle at 20% 15%, rgba(0, 0, 0, 0.05), transparent 35%),
+    radial-gradient(circle at 80% 85%, rgba(0, 0, 0, 0.04), transparent 40%);
+  background-blend-mode: multiply, normal, multiply, multiply;
 }
 
 .color-card--interactive {
@@ -193,7 +183,8 @@ const elevationClasses = computed(() => {
 
 .color-card--hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px -10px var(--background-bg-dark);
+  /* Slightly warmer drop shadow */
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.6);
 }
 
 .color-card--floating {
@@ -210,12 +201,20 @@ const elevationClasses = computed(() => {
   }
 }
 
+/* Decorative stitches (replaces sci-fi lines) */
 .color-card-line {
   position: absolute;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  height: 2px;
   width: 50%;
-  opacity: 0.5;
+  /* Subtle burn-like line, no dots */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    currentColor 20%,
+    currentColor 80%,
+    transparent 100%
+  );
+  opacity: 0.22;
 }
 
 .color-card-line.top {
@@ -228,12 +227,13 @@ const elevationClasses = computed(() => {
   right: 25%;
 }
 
+/* Rope-like corner notches */
 .color-card-corner {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-color: currentColor;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .color-card-corner.top-right {
@@ -250,27 +250,7 @@ const elevationClasses = computed(() => {
   border-left: 1px solid;
 }
 
-.space-star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background-color: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 4s ease-in-out infinite;
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.8);
-  }
-}
+/* Stars removed */
 
 .color-card--interactive.color-card:hover
   .color-card-decorations
@@ -305,6 +285,8 @@ const elevationClasses = computed(() => {
   color: var(--color-bronze);
 }
 
+/* No orbit tinting */
+
 .color-card-header {
   border-bottom: 1px solid var(--color-card-border);
   padding-bottom: 0.75rem;
@@ -325,98 +307,7 @@ const elevationClasses = computed(() => {
   );
 }
 
-.color-card-orbit-system {
-  position: relative;
-}
-
-.orbit-system {
-  position: absolute;
-  right: -60px;
-  top: -60px;
-  width: 200px;
-  height: 200px;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.planet-orbit {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 1px dashed var(--space-orbit-border);
-  border-radius: 50%;
-  animation: rotate 60s linear infinite;
-}
-
-.orbit-2 {
-  width: 70%;
-  height: 70%;
-  top: 15%;
-  left: 15%;
-  animation-duration: 40s;
-}
-
-.orbit-3 {
-  width: 40%;
-  height: 40%;
-  top: 30%;
-  left: 30%;
-  animation-duration: 20s;
-}
-
-.planet {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.planet-1 {
-  top: 0;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet1-start),
-    var(--space-planet1-end)
-  );
-  box-shadow: 0 0 10px var(--space-planet1-glow);
-}
-
-.planet-2 {
-  top: 0;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet2-start),
-    var(--space-planet2-end)
-  );
-  box-shadow: 0 0 8px var(--space-planet2-glow);
-}
-
-.planet-3 {
-  top: 0;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet3-start),
-    var(--space-planet3-end)
-  );
-  box-shadow: 0 0 6px var(--space-planet3-glow);
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Orbit/planet rules removed */
 
 /* Section-specific card styles */
 .color-card--section-profile {

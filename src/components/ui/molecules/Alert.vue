@@ -1,4 +1,3 @@
-S
 <template>
   <div
     :class="[
@@ -8,6 +7,7 @@ S
       className,
     ]"
     role="alert"
+    :data-variant="variant"
   >
     <!-- Icône de l'alerte -->
     <div class="flex">
@@ -213,6 +213,20 @@ const messageColor = computed(() => {
 <style scoped>
 .space-alert {
   position: relative;
+  /* Subtle parchment texture and vignette for Far West vibe */
+  background-image: radial-gradient(
+      120% 80% at 50% 0%,
+      rgba(0, 0, 0, 0.08),
+      transparent 60%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(var(--background-bg-light-rgb), 0.08) 0px,
+      rgba(var(--background-bg-light-rgb), 0.08) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  background-blend-mode: multiply, normal;
 }
 
 .space-alert::before {
@@ -223,57 +237,83 @@ const messageColor = computed(() => {
   bottom: 0;
   width: 4px;
   border-radius: 2px 0 0 2px;
+  /* Rope-like accent using the variant color */
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(var(--alert-accent-rgb, var(--color-info-rgb)), 0.65) 0px,
+    rgba(var(--alert-accent-rgb, var(--color-info-rgb)), 0.65) 6px,
+    rgba(var(--alert-accent-rgb, var(--color-info-rgb)), 0.35) 6px,
+    rgba(var(--alert-accent-rgb, var(--color-info-rgb)), 0.35) 12px
+  );
 }
 
 .bg-color-info\/10 {
-  background-color: rgba(96, 165, 250, 0.1);
+  background-color: rgba(var(--color-info-rgb), 0.1);
 }
 .border-color-info\/30 {
-  border-color: rgba(96, 165, 250, 0.3);
+  border-color: rgba(var(--color-info-rgb), 0.3);
 }
 .bg-color-info\/20 {
-  background-color: rgba(96, 165, 250, 0.2);
+  background-color: rgba(var(--color-info-rgb), 0.2);
 }
 .text-color-info {
   color: var(--color-info);
 }
 
 .bg-color-success\/10 {
-  background-color: rgba(74, 222, 128, 0.1);
+  background-color: rgba(var(--color-success-rgb), 0.1);
 }
 .border-color-success\/30 {
-  border-color: rgba(74, 222, 128, 0.3);
+  border-color: rgba(var(--color-success-rgb), 0.3);
 }
 .bg-color-success\/20 {
-  background-color: rgba(74, 222, 128, 0.2);
+  background-color: rgba(var(--color-success-rgb), 0.2);
 }
 .text-color-success {
   color: var(--color-success);
 }
 
 .bg-color-warning\/10 {
-  background-color: rgba(250, 204, 21, 0.1);
+  background-color: rgba(var(--color-warning-rgb), 0.1);
 }
 .border-color-warning\/30 {
-  border-color: rgba(250, 204, 21, 0.3);
+  border-color: rgba(var(--color-warning-rgb), 0.3);
 }
 .bg-color-warning\/20 {
-  background-color: rgba(250, 204, 21, 0.2);
+  background-color: rgba(var(--color-warning-rgb), 0.2);
 }
 .text-color-warning {
   color: var(--color-warning);
 }
 
 .bg-color-error\/10 {
-  background-color: rgba(248, 113, 113, 0.1);
+  background-color: rgba(var(--color-error-rgb), 0.1);
 }
 .border-color-error\/30 {
-  border-color: rgba(248, 113, 113, 0.3);
+  border-color: rgba(var(--color-error-rgb), 0.3);
 }
 .bg-color-error\/20 {
-  background-color: rgba(248, 113, 113, 0.2);
+  background-color: rgba(var(--color-error-rgb), 0.2);
 }
 .text-color-error {
   color: var(--color-error);
+}
+
+/* Bind accent color per variant via data attribute */
+.space-alert[data-variant="info"] {
+  --alert-accent: var(--color-info);
+  --alert-accent-rgb: var(--color-info-rgb);
+}
+.space-alert[data-variant="success"] {
+  --alert-accent: var(--color-success);
+  --alert-accent-rgb: var(--color-success-rgb);
+}
+.space-alert[data-variant="warning"] {
+  --alert-accent: var(--color-warning);
+  --alert-accent-rgb: var(--color-warning-rgb);
+}
+.space-alert[data-variant="error"] {
+  --alert-accent: var(--color-error);
+  --alert-accent-rgb: var(--color-error-rgb);
 }
 </style>

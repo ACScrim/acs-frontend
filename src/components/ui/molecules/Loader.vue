@@ -1,34 +1,10 @@
 <template>
-  <div :class="['space-loader-container', sizeClass]">
-    <div class="space-loader">
-      <!-- Cercle orbital principal -->
-      <div class="space-loader-orbit">
-        <div class="space-loader-planet"></div>
+  <div :class="['loader-container', sizeClass]">
+    <div class="loader" role="status" aria-live="polite">
+      <div class="lasso">
+        <span class="knot" aria-hidden="true"></span>
       </div>
-
-      <!-- Cercle orbital secondaire -->
-      <div class="space-loader-orbit secondary">
-        <div class="space-loader-moon"></div>
-      </div>
-
-      <!-- Étoiles en arrière-plan -->
-      <div
-        v-for="n in 8"
-        :key="`star-${n}`"
-        class="space-loader-star"
-        :style="{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 2}s`,
-          width: `${Math.random() * 2 + 1}px`,
-          height: `${Math.random() * 2 + 1}px`,
-        }"
-      ></div>
-
-      <!-- Texte de chargement -->
-      <div v-if="showText" class="space-loader-text">
-        {{ text }}
-      </div>
+      <div v-if="showText" class="loader-text">{{ text }}</div>
     </div>
   </div>
 </template>
@@ -51,9 +27,9 @@ const props = withDefaults(defineProps<Props>(), {
 const sizeClass = computed(() => {
   switch (props.size) {
     case "sm":
-      return "space-loader--small";
+      return "loader--small";
     case "lg":
-      return "space-loader--large";
+      return "loader--large";
     default:
       return "";
   }
@@ -61,7 +37,7 @@ const sizeClass = computed(() => {
 </script>
 
 <style scoped>
-.space-loader-container {
+.loader-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,86 +45,50 @@ const sizeClass = computed(() => {
   width: 100%;
 }
 
-.space-loader {
+.loader {
   position: relative;
   width: 80px;
   height: 80px;
 }
 
-.space-loader--small .space-loader {
+.loader--small .loader {
   width: 50px;
   height: 50px;
 }
 
-.space-loader--large .space-loader {
+.loader--large .loader {
   width: 120px;
   height: 120px;
 }
 
-.space-loader-orbit {
+.lasso {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  inset: 0;
+  border: 3px dashed rgba(var(--color-accent-rgb, 210, 160, 80), 0.7);
   border-radius: 50%;
-  animation: spin 6s linear infinite;
+  animation: spin 1.6s linear infinite;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
-.space-loader-orbit.secondary {
-  width: 60%;
-  height: 60%;
-  top: 20%;
-  left: 20%;
-  border-color: rgba(56, 189, 248, 0.3);
-  animation: spin 4s linear infinite reverse;
-}
-
-.space-loader-planet {
-  position: absolute;
-  top: -6px;
-  left: calc(50% - 6px);
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-light)
-  );
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
-}
-
-.space-loader-moon {
+.lasso .knot {
   position: absolute;
   top: -4px;
-  left: calc(50% - 4px);
-  width: 8px;
-  height: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--color-secondary),
-    var(--color-secondary-light)
-  );
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background: rgba(var(--color-accent-rgb, 210, 160, 80), 0.95);
+  border: 2px solid rgba(0, 0, 0, 0.25);
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(2, 132, 199, 0.7);
+  box-shadow: 0 0 6px rgba(var(--color-accent-rgb, 210, 160, 80), 0.45);
 }
 
-.space-loader-star {
-  position: absolute;
-  background-color: white;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: twinkle 3s ease-in-out infinite;
-}
-
-.space-loader-text {
+.loader-text {
   position: absolute;
   width: 100%;
   text-align: center;
   bottom: -30px;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-body, "Roboto Slab", serif);
   font-size: 0.875rem;
   color: var(--normal-text);
   animation: pulse 2s infinite;
@@ -163,18 +103,6 @@ const sizeClass = computed(() => {
   }
 }
 
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-}
-
 @keyframes pulse {
   0%,
   100% {
@@ -185,13 +113,12 @@ const sizeClass = computed(() => {
   }
 }
 
-/* Responsive */
 @media (max-width: 640px) {
-  .space-loader-container {
+  .loader-container {
     padding: 1rem;
   }
 
-  .space-loader--large .space-loader {
+  .loader--large .loader {
     width: 100px;
     height: 100px;
   }

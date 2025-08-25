@@ -4,7 +4,7 @@
     <SpaceHeader
       title="MEMBRES DE L'ÉQUIPAGE"
       :showMissionInfo="true"
-      mission="CREWMATES-2025"
+      :wantedCandidates="memberStore.members.map((m) => m.username)"
     >
       <template #badge>
         <div class="flex items-center gap-3">

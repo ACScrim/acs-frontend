@@ -1,13 +1,13 @@
 <template>
   <transition
-    name="space-modal"
+    name="west-modal"
     @after-enter="onAfterEnter"
     @after-leave="onAfterLeave"
   >
     <div v-if="modelValue" class="fixed inset-0 z-[9999]">
       <!-- Arrière-plan optimisé avec CSS pur -->
       <div
-        class="fixed inset-0 bg-black/80 space-modal-backdrop"
+        class="fixed inset-0 west-modal-backdrop"
         @click="$emit('update:modelValue', false)"
       ></div>
 
@@ -20,10 +20,10 @@
           <div
             ref="modalRef"
             :class="[
-              'space-modal-container relative max-h-[85vh] overflow-y-auto',
-              'rounded-lg bg-gray-900 z-10 w-full max-w-md',
-              'border border-color-primary/30 shadow-xl shadow-color-primary/20',
-              'transform transition-all space-modal-content',
+              'west-modal-container relative max-h-[85vh] overflow-y-auto',
+              'rounded-lg z-10 w-full max-w-md',
+              'border shadow-xl',
+              'transform transition-all west-modal-content',
               'overscroll-contain',
               className,
             ]"
@@ -36,7 +36,7 @@
             <!-- En-tête -->
             <div
               v-if="title || $slots.header"
-              class="space-modal-header p-5 border-b border-color-primary/20 flex items-center justify-between sticky top-0 bg-gray-900 z-10"
+              class="west-modal-header p-5 border-b flex items-center justify-between sticky top-0 z-10"
             >
               <div v-if="$slots.header" class="modal-header-content">
                 <slot name="header"></slot>
@@ -44,7 +44,7 @@
               <h3
                 v-else-if="title"
                 id="modal-title"
-                class="text-lg font-nasa text-normal-text space-modal-title relative"
+                class="text-lg west-modal-title text-normal-text relative"
               >
                 {{ title }}
               </h3>
@@ -72,14 +72,14 @@
               </button>
             </div>
             <!-- Corps -->
-            <div class="space-modal-body p-5 relative z-1 bg-gray-900">
+            <div class="west-modal-body p-5 relative z-1">
               <slot></slot>
             </div>
 
             <!-- Pied de page -->
             <div
               v-if="$slots.footer"
-              class="space-modal-footer p-5 border-t border-color-primary/20 sticky bottom-0 bg-gray-900 z-10"
+              class="west-modal-footer p-5 border-t sticky bottom-0 z-10"
             >
               <slot name="footer"></slot>
             </div>
@@ -178,76 +178,100 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.space-modal-enter-active,
-.space-modal-leave-active {
-  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+/* Transitions */
+.west-modal-enter-active,
+.west-modal-leave-active {
+  transition: opacity 0.18s ease-out, transform 0.2s ease-out;
 }
 
-.space-modal-enter-from {
+.west-modal-enter-from {
   opacity: 0;
-  transform: scale(0.96);
+  transform: translateY(6px) scale(0.98);
 }
 
-.space-modal-leave-to {
+.west-modal-leave-to {
   opacity: 0;
-  transform: scale(0.98);
+  transform: translateY(4px) scale(0.99);
 }
 
-/* Fond d'espace optimisé pour les performances */
-.space-modal-backdrop {
-  /* Fond simple et performant */
-  background-color: rgba(0, 0, 0, 0.8);
+/* Backdrop */
+.west-modal-backdrop {
+  background: radial-gradient(
+      70% 60% at 50% 40%,
+      rgba(0, 0, 0, 0.65),
+      rgba(0, 0, 0, 0.8)
+    ),
+    linear-gradient(180deg, rgba(40, 26, 12, 0.25), rgba(24, 16, 10, 0.25));
 }
 
-/* Conteneur de la modale avec effet de lueur optimisé */
-.space-modal-content {
-  background-color: rgb(17, 24, 39); /* gray-900 solid */
-  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
-  /* Animation de lueur simplifiée et réduite */
-  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.15),
-    0 0 40px rgba(var(--color-primary-rgb), 0.08);
+/* Container */
+.west-modal-content {
+  /* Dark leather background */
+  background: radial-gradient(
+      120% 80% at 0% 0%,
+      rgba(255, 200, 120, 0.03),
+      transparent 60%
+    ),
+    radial-gradient(
+      100% 60% at 100% 0%,
+      rgba(255, 220, 160, 0.025),
+      transparent 55%
+    ),
+    linear-gradient(180deg, rgba(42, 28, 18, 0.98), rgba(32, 22, 15, 0.98));
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 2px 8px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.3);
+  /* Light text on dark */
+  color: rgba(252, 247, 240, 0.95);
 }
 
-/* Holographic scanline effect optimisé */
-.holographic-effect {
+.west-modal-content::before {
+  /* Rope edge */
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(var(--color-primary-rgb), 0.02) 50%,
-    transparent 100%
-  );
-  background-size: 100% 12px;
-  opacity: 0.05; /* Réduit pour moins de distraction */
   pointer-events: none;
-  z-index: 2;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(var(--color-accent-rgb, 210, 160, 80), 0.18) 0,
+    rgba(var(--color-accent-rgb, 210, 160, 80), 0.18) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px;
+  border: 0 solid transparent;
+  opacity: 0.45;
 }
 
-/* Suppression des éléments décoratifs superflus pour la lisibilité */
-
-/* Titre de la modale simplifié */
-.space-modal-title {
-  display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--normal-text);
-  position: relative;
-  /* Suppression de l'animation pour plus de lisibilité */
+/* Header */
+.west-modal-header {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.12));
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(252, 247, 240, 0.98);
 }
 
-/* Suppression des animations de titre pour la lisibilité */
+.west-modal-title {
+  font-family: var(--font-display, "Rye", serif);
+  letter-spacing: 0.04em;
+  color: rgba(252, 247, 240, 0.98);
+}
 
-/* Bouton de fermeture amélioré */
+/* Close button */
 .close-button {
   position: relative;
   transition: all 0.3s ease;
   z-index: 5;
+  cursor: pointer;
 }
 
 .close-button:hover {
-  transform: rotate(90deg) scale(1.1);
-  color: var(--color-primary-light);
+  transform: scale(1.06);
+  color: var(--color-primary);
 }
 
 .close-button-glow {
@@ -256,7 +280,7 @@ onMounted(() => {
   border-radius: 50%;
   background: radial-gradient(
     circle at center,
-    rgba(var(--color-primary-rgb), 0.2),
+    rgba(var(--color-accent-rgb, 210, 160, 80), 0.28),
     transparent 70%
   );
   opacity: 0;
@@ -267,326 +291,66 @@ onMounted(() => {
   opacity: 1;
 }
 
-/* Décorations améliorées */
-.space-modal-decoration {
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  opacity: 0.8;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
-}
-
-.space-modal-decoration.top-left {
-  top: 0;
-  left: 0;
-  border-top: 2px solid var(--color-primary);
-  border-left: 2px solid var(--color-primary);
-  border-top-left-radius: 8px;
-}
-
-.space-modal-decoration.top-right {
-  top: 0;
-  right: 0;
-  border-top: 2px solid var(--color-primary);
-  border-right: 2px solid var(--color-primary);
-  border-top-right-radius: 8px;
-}
-
-.space-modal-decoration.bottom-left {
-  bottom: 0;
-  left: 0;
-  border-bottom: 2px solid var(--color-primary);
-  border-left: 2px solid var(--color-primary);
-  border-bottom-left-radius: 8px;
-}
-
-.space-modal-decoration.bottom-right {
-  bottom: 0;
-  right: 0;
-  border-bottom: 2px solid var(--color-primary);
-  border-right: 2px solid var(--color-primary);
-  border-bottom-right-radius: 8px;
-}
-
-.space-modal-container:hover .space-modal-decoration {
-  width: 30px;
-  height: 30px;
-  border-color: var(--color-gold);
-}
-
-/* Animation pour les accents de coin */
-.corner-accent {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: var(--color-primary-light);
-  border-radius: 50%;
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-.top-left .corner-accent {
-  top: -4px;
-  left: -4px;
-}
-
-.top-right .corner-accent {
-  top: -4px;
-  right: -4px;
-}
-
-.bottom-left .corner-accent {
-  bottom: -4px;
-  left: -4px;
-}
-
-.bottom-right .corner-accent {
-  bottom: -4px;
-  right: -4px;
-}
-
-.space-modal-container:hover .corner-accent {
-  opacity: 1;
-  background-color: var(--color-gold);
-  box-shadow: 0 0 10px 2px rgba(var(--color-gold-rgb), 0.5);
-}
-
-/* Grille futuriste optimisée */
-.modal-grid {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(
-      to right,
-      rgba(var(--color-primary-rgb), 0.03) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(var(--color-primary-rgb), 0.03) 1px,
-      transparent 1px
-    );
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.3;
-  animation: grid-gentle 10s infinite alternate ease-in-out;
-}
-
-@keyframes grid-gentle {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-/* Orbites décoratives optimisées */
-.orbital-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px dashed rgba(var(--color-primary-rgb), 0.2);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
-
-.orbital-ring-1 {
-  width: 120px;
-  height: 120px;
-  top: -20px;
-  right: -40px;
-  animation: orbit-slow 30s linear infinite;
-  border-color: rgba(var(--color-gold-rgb), 0.25);
-}
-
-.orbital-ring-2 {
-  width: 100px;
-  height: 100px;
-  bottom: -20px;
-  left: -40px;
-  animation: orbit-slow 25s linear reverse infinite;
-  border-color: rgba(var(--color-silver-rgb), 0.25);
-}
-
-.orbital-ring-3 {
-  width: 140px;
-  height: 140px;
-  bottom: -40px;
-  right: -50px;
-  animation: orbit-slow 35s linear infinite;
-  border-color: rgba(var(--color-bronze-rgb), 0.2);
-}
-
-@keyframes orbit-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Points orbitaux */
-.orbital-dot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.orbital-dot.gold {
-  background-color: var(--color-gold);
-  box-shadow: 0 0 8px 2px rgba(var(--color-gold-rgb), 0.5);
-}
-
-.orbital-dot.silver {
-  background-color: var(--color-silver);
-  box-shadow: 0 0 8px 2px rgba(var(--color-silver-rgb), 0.5);
-}
-
-.orbital-dot.bronze {
-  background-color: var(--color-bronze);
-  box-shadow: 0 0 8px 2px rgba(var(--color-bronze-rgb), 0.5);
-}
-
-/* Bordure lumineuse optimisée */
-.modal-glow-border {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), 0.25),
-    0 0 12px 1px rgba(var(--color-primary-rgb), 0.15);
-  z-index: 0;
-}
-
-.space-modal-container:hover .modal-glow-border {
-  opacity: 1;
-  animation: border-gentle-glow 6s infinite alternate ease-in-out;
-}
-
-@keyframes border-gentle-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), 0.25),
-      0 0 12px 1px rgba(var(--color-primary-rgb), 0.15);
-  }
-  50% {
-    box-shadow: 0 0 0 1px rgba(var(--color-gold-rgb), 0.3),
-      0 0 15px 1px rgba(var(--color-gold-rgb), 0.18);
-  }
-}
-
-/* Stylisation de la scrollbar */
-.space-modal-container::-webkit-scrollbar {
+/* Scrollbar (subtle) */
+.west-modal-container::-webkit-scrollbar {
   width: 6px;
 }
 
-.space-modal-container::-webkit-scrollbar-track {
-  background: rgba(var(--background-bg-rgb), 0.2);
+.west-modal-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 0 4px 4px 0;
 }
 
-.space-modal-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    to bottom,
-    rgba(var(--color-primary-rgb), 0.5),
-    rgba(var(--color-gold-rgb), 0.5),
-    rgba(var(--color-silver-rgb), 0.5),
-    rgba(var(--color-bronze-rgb), 0.5)
-  );
+.west-modal-container::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-accent-rgb, 210, 160, 80), 0.5);
   border-radius: 3px;
 }
 
-.space-modal-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    to bottom,
-    rgba(var(--color-primary-rgb), 0.7),
-    rgba(var(--color-gold-rgb), 0.7),
-    rgba(var(--color-silver-rgb), 0.7),
-    rgba(var(--color-bronze-rgb), 0.7)
-  );
-}
-
-/* Animations et effets pour le contenu de la modale */
+/* Content z-index helpers */
 .modal-header-content,
-.space-modal-body,
-.space-modal-footer {
+.west-modal-body,
+.west-modal-footer {
   position: relative;
   z-index: 1;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* Ajout d'un fond de contraste pour les textes */
-.space-modal-body {
-  background-color: rgba(var(--background-bg-rgb), 0.4);
+/* Body light inset for separation */
+.west-modal-body {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.015)
+  );
   border-radius: 4px;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+  color: rgba(252, 247, 240, 0.94);
 }
 
-/* Amélioration pour la navigation tactile (mobile) */
+/* Improve contrast for utility classes inside the modal */
+.west-modal-content .text-normal-text-muted {
+  color: rgba(252, 247, 240, 0.7);
+}
+
+.west-modal-content .text-normal-text {
+  color: rgba(252, 247, 240, 0.95);
+}
+
+/* Links inside modal */
+
+.west-modal-content a {
+  color: rgba(255, 208, 120, 0.95);
+  text-underline-offset: 2px;
+}
+
+.west-modal-content a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile tweaks */
 @media (max-width: 768px) {
-  .space-modal-container {
+  .west-modal-container {
     -webkit-overflow-scrolling: touch;
-    max-height: 80vh !important; /* Réduire légèrement la hauteur sur mobile pour une meilleure visibilité */
+    max-height: 80vh !important;
     width: 90%;
   }
-
-  .orbital-ring-3 {
-    display: none; /* Masquer la troisième orbite sur mobile pour plus de légèreté */
-  }
-
-  .holographic-effect {
-    opacity: 0.2; /* Réduire l'opacité de l'effet holographique sur mobile */
-  }
-
-  .floating-particle {
-    display: none; /* Masquer les particules sur mobile pour améliorer les performances */
-  }
-
-  .space-modal-decoration {
-    width: 15px;
-    height: 15px;
-  }
-}
-
-/* Animation de bienvenue simplifiée pour la modale */
-@keyframes welcome-pulse {
-  0% {
-    transform: scale(0.98);
-  }
-  50% {
-    transform: scale(1.01);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.space-modal-enter-active .space-modal-container {
-  animation: welcome-pulse 0.4s ease-out;
-}
-
-/* Overlay de contraste pour améliorer la lisibilité */
-.modal-contrast-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    transparent 30%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.5;
 }
 </style>

@@ -1,22 +1,15 @@
 <template>
-  <div class="space-pagination-container relative">
-    <!-- Fond spatial avec particules -->
-    <div class="space-pagination-background">
-      <div class="space-particle particle-1"></div>
-      <div class="space-particle particle-2"></div>
-      <div class="space-particle particle-3"></div>
-    </div>
-
-    <!-- Ligne de connexion principale -->
-    <div class="space-pagination-line"></div>
+  <div class="west-pagination-container relative">
+    <!-- Liseré décoratif (corde) -->
+    <div class="west-pagination-line"></div>
     <div
-      class="space-pagination flex items-center justify-center gap-2 sm:gap-4"
+      class="west-pagination flex items-center justify-center gap-2 sm:gap-4"
     >
       <!-- Bouton précédent -->
       <button
         @click="handlePrevPage"
         :disabled="currentPage === 1"
-        :class="['space-pagination-nav prev', { disabled: currentPage === 1 }]"
+        :class="['west-pagination-nav prev', { disabled: currentPage === 1 }]"
         :aria-label="prevLabel"
       >
         <div class="nav-icon">
@@ -37,21 +30,18 @@
       </button>
 
       <!-- Compteur central avec style spatial -->
-      <div class="space-pagination-center flex-1">
+      <div class="west-pagination-center flex-1">
         <div class="pagination-display">
           <!-- Indicateur de page actuelle -->
           <div class="current-page-indicator">
             <span class="page-number">{{
               String(currentPage).padStart(2, "0")
             }}</span>
-            <div class="page-glow"></div>
           </div>
 
-          <!-- Séparateur spatial -->
-          <div class="page-separator">
-            <div class="separator-line"></div>
-            <div class="separator-dot"></div>
-            <div class="separator-line"></div>
+          <!-- Séparateur (brand/chevron) -->
+          <div class="page-separator" aria-hidden="true">
+            <div class="separator-brand"></div>
           </div>
 
           <!-- Total des pages -->
@@ -77,13 +67,13 @@
         </div>
 
         <!-- Navigation par points (si beaucoup de pages) -->
-        <div v-if="showDots && totalPages > 3" class="space-pagination-dots">
+        <div v-if="showDots && totalPages > 3" class="west-pagination-dots">
           <button
             v-for="pageNum in displayedPages"
             :key="pageNum"
             @click="handlePageSelect(pageNum)"
             :class="[
-              'space-dot',
+              'west-dot',
               { active: currentPage === pageNum },
               { nearby: Math.abs(currentPage - pageNum) === 1 },
             ]"
@@ -101,7 +91,7 @@
         @click="handleNextPage"
         :disabled="currentPage === totalPages"
         :class="[
-          'space-pagination-nav next',
+          'west-pagination-nav next',
           { disabled: currentPage === totalPages },
         ]"
         :aria-label="nextLabel"
@@ -203,7 +193,7 @@ const progressPercentage = computed(() => {
 </script>
 
 <style scoped>
-.space-pagination-container {
+.west-pagination-container {
   position: relative;
   padding: 2rem 0;
   width: 100%;
@@ -212,81 +202,22 @@ const progressPercentage = computed(() => {
   overflow: hidden;
 }
 
-/* Fond spatial avec particules */
-.space-pagination-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(109, 40, 217, 0.05) 0%,
-    transparent 70%
-  );
-  overflow: hidden;
-}
-
-.space-particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: float 6s ease-in-out infinite;
-}
-
-.particle-1 {
-  top: 20%;
-  left: 15%;
-  animation-delay: 0s;
-}
-
-.particle-2 {
-  top: 70%;
-  right: 20%;
-  animation-delay: 2s;
-}
-
-.particle-3 {
-  top: 40%;
-  right: 40%;
-  animation-delay: 4s;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-10px) scale(1.2);
-    opacity: 1;
-  }
-}
-
 /* Ligne de connexion principale */
-.space-pagination-line {
+.west-pagination-line {
   position: absolute;
   top: 50%;
   left: 10%;
   right: 10%;
-  height: 1px;
-  background: linear-gradient(
+  height: 2px;
+  background: repeating-linear-gradient(
     90deg,
-    transparent 0%,
-    var(--background-bg-light) 20%,
-    var(--color-primary) 50%,
-    var(--background-bg-light) 80%,
-    transparent 100%
+    rgba(var(--color-accent-rgb, 194, 143, 44), 0.6) 0 12px,
+    rgba(0, 0, 0, 0.25) 12px 13px
   );
   transform: translateY(-50%);
-  opacity: 0.4;
+  opacity: 0.5;
 }
-
-.space-pagination {
+.west-pagination {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -295,65 +226,45 @@ const progressPercentage = computed(() => {
 }
 
 /* Boutons de navigation */
-.space-pagination-nav {
+.west-pagination-nav {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  font-family: "Orbitron", sans-serif;
+  font-family: var(--font-body, "Roboto Slab", serif);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--normal-text);
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(109, 40, 217, 0.3);
+  background: rgba(32, 22, 15, 0.8);
+  border: 1px solid rgba(var(--color-card-border-rgb, 194, 143, 44), 0.35);
   border-radius: 8px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   white-space: nowrap;
   min-width: fit-content;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 /* Responsive pour les boutons */
 @media (min-width: 640px) {
-  .space-pagination-nav {
+  .west-pagination-nav {
     padding: 0.75rem 1.25rem;
     font-size: 0.875rem;
     border-radius: 12px;
   }
 }
-
-.space-pagination-nav::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(109, 40, 217, 0.1) 50%,
-    transparent 100%
-  );
-  transition: left 0.5s ease;
-}
-
-.space-pagination-nav:not(.disabled):hover::before {
-  left: 100%;
-}
-
-.space-pagination-nav:not(.disabled):hover {
-  background: rgba(109, 40, 217, 0.15);
-  border-color: var(--color-primary);
-  box-shadow: 0 0 20px rgba(109, 40, 217, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+.west-pagination-nav:not(.disabled):hover {
+  background: rgba(48, 32, 22, 0.9);
+  border-color: rgba(var(--color-card-border-rgb, 194, 143, 44), 0.55);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transform: translateY(-1px);
 }
 
-.space-pagination-nav.disabled {
+.west-pagination-nav.disabled {
   opacity: 0.4;
   cursor: not-allowed;
   background: rgba(0, 0, 0, 0.2);
@@ -365,11 +276,11 @@ const progressPercentage = computed(() => {
   transition: transform 0.3s ease;
 }
 
-.space-pagination-nav.prev:hover .nav-icon {
+.west-pagination-nav.prev:hover .nav-icon {
   transform: translateX(-2px);
 }
 
-.space-pagination-nav.next:hover .nav-icon {
+.west-pagination-nav.next:hover .nav-icon {
   transform: translateX(2px);
 }
 
@@ -379,7 +290,7 @@ const progressPercentage = computed(() => {
 }
 
 /* Centre spatial */
-.space-pagination-center {
+.west-pagination-center {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -390,7 +301,7 @@ const progressPercentage = computed(() => {
 }
 
 @media (min-width: 640px) {
-  .space-pagination-center {
+  .west-pagination-center {
     gap: 1rem;
     min-width: 200px;
     max-width: 320px;
@@ -402,10 +313,10 @@ const progressPercentage = computed(() => {
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.5rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(109, 40, 217, 0.3);
+  background: rgba(32, 22, 15, 0.75);
+  border: 1px solid rgba(var(--color-card-border-rgb, 194, 143, 44), 0.35);
   border-radius: 8px;
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(8px);
   position: relative;
   width: 100%;
   justify-content: center;
@@ -419,36 +330,6 @@ const progressPercentage = computed(() => {
   }
 }
 
-.pagination-display::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  background: linear-gradient(
-    45deg,
-    var(--color-primary),
-    var(--color-secondary),
-    var(--color-primary)
-  );
-  background-size: 200% 200%;
-  border-radius: 16px;
-  opacity: 0.3;
-  z-index: -1;
-  animation: gradient-shift 3s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
 .current-page-indicator {
   position: relative;
   display: flex;
@@ -457,11 +338,11 @@ const progressPercentage = computed(() => {
 }
 
 .page-number {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-mono, "Space Mono", monospace);
   font-size: 1.125rem;
   font-weight: bold;
-  color: var(--color-primary);
-  text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
+  color: var(--normal-text);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
   position: relative;
   z-index: 1;
 }
@@ -469,41 +350,6 @@ const progressPercentage = computed(() => {
 @media (min-width: 640px) {
   .page-number {
     font-size: 1.5rem;
-  }
-}
-
-.page-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2rem;
-  height: 2rem;
-  background: radial-gradient(
-    circle,
-    rgba(109, 40, 217, 0.2) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@media (min-width: 640px) {
-  .page-glow {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.8;
   }
 }
 
@@ -519,48 +365,23 @@ const progressPercentage = computed(() => {
   }
 }
 
-.separator-line {
-  width: 12px;
-  height: 1px;
+.separator-brand {
+  width: 36px;
+  height: 10px;
   background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--background-bg-light) 50%,
-    transparent 100%
-  );
-}
-
-@media (min-width: 640px) {
-  .separator-line {
-    width: 20px;
-  }
-}
-
-.separator-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  animation: dot-pulse 1.5s ease-in-out infinite;
-}
-
-@media (min-width: 640px) {
-  .separator-dot {
-    width: 4px;
-    height: 4px;
-  }
-}
-
-@keyframes dot-pulse {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.5);
-  }
+      90deg,
+      transparent 0 4px,
+      rgba(0, 0, 0, 0.25) 4px 5px,
+      transparent 5px
+    ),
+    radial-gradient(100% 100% at 0 100%, rgba(0, 0, 0, 0.25), transparent 60%),
+    radial-gradient(100% 100% at 100% 0, rgba(0, 0, 0, 0.25), transparent 60%),
+    linear-gradient(
+      180deg,
+      rgba(var(--color-accent-rgb, 194, 143, 44), 0.7),
+      rgba(var(--color-accent-rgb, 194, 143, 44), 0.5)
+    );
+  border-radius: 6px;
 }
 
 .total-pages {
@@ -569,7 +390,7 @@ const progressPercentage = computed(() => {
 }
 
 .total-number {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-mono, "Space Mono", monospace);
   font-size: 1rem;
   color: var(--normal-text-muted);
   font-weight: 500;
@@ -599,7 +420,7 @@ const progressPercentage = computed(() => {
   position: relative;
   width: 100%;
   height: 3px;
-  background: rgba(109, 40, 217, 0.1);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -614,38 +435,12 @@ const progressPercentage = computed(() => {
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--color-primary) 0%,
-    var(--color-secondary) 50%,
-    var(--color-primary) 100%
+    rgba(var(--color-accent-rgb, 194, 143, 44), 0.9),
+    rgba(var(--color-primary-light-rgb, 164, 90, 42), 0.9)
   );
   border-radius: 2px;
   transition: width 0.5s ease;
   position: relative;
-}
-
-.progress-fill::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 100%
-  );
-  animation: shimmer 2s linear infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
 }
 
 .progress-indicator {
@@ -653,22 +448,22 @@ const progressPercentage = computed(() => {
   top: 50%;
   width: 8px;
   height: 8px;
-  background: var(--color-primary);
+  background: rgba(var(--color-accent-rgb, 194, 143, 44), 1);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   transition: left 0.5s ease;
 }
 
 /* Points de navigation */
-.space-pagination-dots {
+.west-pagination-dots {
   display: flex;
   justify-content: center;
   gap: 0.75rem;
   padding: 0.5rem;
 }
 
-.space-dot {
+.west-dot {
   position: relative;
   width: 12px;
   height: 12px;
@@ -681,7 +476,7 @@ const progressPercentage = computed(() => {
 .dot-core {
   width: 100%;
   height: 100%;
-  background: var(--background-bg-light);
+  background: rgba(0, 0, 0, 0.35);
   border-radius: 50%;
   transition: all 0.3s ease;
   position: relative;
@@ -695,68 +490,55 @@ const progressPercentage = computed(() => {
   transform: translate(-50%, -50%);
   width: 16px;
   height: 16px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(var(--color-accent-rgb, 194, 143, 44), 0.4);
   border-radius: 50%;
   transition: all 0.3s ease;
-  opacity: 0;
+  opacity: 0.3;
 }
 
-.space-dot.active .dot-core {
-  background: var(--color-primary);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
+.west-dot.active .dot-core {
+  background: rgba(var(--color-accent-rgb, 194, 143, 44), 0.9);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
   transform: scale(1.2);
 }
 
-.space-dot.active .dot-ring {
-  border-color: rgba(109, 40, 217, 0.5);
-  opacity: 1;
-  animation: ring-pulse 2s ease-in-out infinite;
+.west-dot.active .dot-ring {
+  border-color: rgba(var(--color-accent-rgb, 194, 143, 44), 0.7);
+  opacity: 0.8;
 }
 
-.space-dot.nearby .dot-core {
-  background: rgba(109, 40, 217, 0.6);
+.west-dot.nearby .dot-core {
+  background: rgba(var(--color-accent-rgb, 194, 143, 44), 0.6);
   transform: scale(1.1);
 }
 
-.space-dot:hover .dot-core {
-  background: var(--color-primary);
+.west-dot:hover .dot-core {
+  background: rgba(var(--color-accent-rgb, 194, 143, 44), 0.9);
   transform: scale(1.3);
 }
 
-.space-dot:hover .dot-ring {
-  border-color: var(--color-primary);
+.west-dot:hover .dot-ring {
+  border-color: rgba(var(--color-accent-rgb, 194, 143, 44), 1);
   opacity: 1;
-}
-
-@keyframes ring-pulse {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.3);
-    opacity: 1;
-  }
 }
 
 /* Responsive */
 @media (max-width: 767px) {
-  .space-pagination-container {
+  .west-pagination-container {
     padding: 1rem 0;
   }
 
-  .space-pagination {
+  .west-pagination {
     padding: 0 0.5rem;
     gap: 0.5rem;
   }
 
   /* Sur mobile, garder les points mais les réduire */
-  .space-pagination-dots {
+  .west-pagination-dots {
     gap: 0.375rem;
   }
 
-  .space-dot {
+  .west-dot {
     width: 8px;
     height: 8px;
   }
@@ -772,13 +554,13 @@ const progressPercentage = computed(() => {
     display: none;
   }
 
-  .space-pagination-nav {
+  .west-pagination-nav {
     padding: 0.375rem;
     min-width: auto;
     gap: 0;
   }
 
-  .space-pagination {
+  .west-pagination {
     gap: 0.375rem;
   }
 
@@ -796,23 +578,19 @@ const progressPercentage = computed(() => {
     gap: 0.125rem;
   }
 
-  .separator-line {
-    width: 6px;
-  }
-
   /* Masquer les points sur très petit écran pour économiser l'espace */
-  .space-pagination-dots {
+  .west-pagination-dots {
     display: none;
   }
 }
 
 /* Améliorer l'affichage sur tablets */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .space-pagination {
+  .west-pagination {
     max-width: 500px;
   }
 
-  .space-pagination-center {
+  .west-pagination-center {
     max-width: 300px;
   }
 }

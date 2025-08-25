@@ -1,48 +1,35 @@
 <template>
-  <div :class="['space-terminal', className]">
-    <!-- En-tête du terminal -->
-    <div class="space-terminal-header">
-      <div class="space-terminal-controls">
-        <div class="space-terminal-control"></div>
-        <div class="space-terminal-control"></div>
-        <div class="space-terminal-control"></div>
+  <div :class="['west-wanted', className]" role="region" aria-label="Avis de recherche">
+    <!-- En-tête de l'affiche WANTED -->
+    <div class="west-wanted-header">
+      <div class="west-wanted-rivets" aria-hidden="true">
+        <span class="rivet"></span>
+        <span class="rivet"></span>
+        <span class="rivet"></span>
       </div>
-      <div class="space-terminal-title">{{ title }}</div>
-      <div class="space-terminal-icon">
+      <div class="west-wanted-title" aria-hidden="true">WANTED</div>
+      <div class="west-wanted-stamp">
         <slot name="icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-              clip-rule="evenodd"
-            />
+          <!-- Sceau par défaut -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l1.546 3.134 3.458.502-2.502 2.438.59 3.44L12 10.77 8.908 11.514l.59-3.44L7 5.636l3.458-.502L12 2z"/>
           </svg>
         </slot>
       </div>
     </div>
 
-    <!-- Corps du terminal -->
-    <div class="space-terminal-body">
-      <!-- Lignes de commande -->
-      <div class="space-terminal-line">
-        <span class="space-terminal-prompt">></span>
-        <span class="space-terminal-command">{{ command }}</span>
-      </div>
+    <!-- Corps de l'affiche -->
+    <div class="west-wanted-body">
+      <div class="wanted-subject">{{ title }}</div>
+      <div class="wanted-message" v-if="command">{{ command }}</div>
 
-      <!-- Contenu -->
-      <div class="space-terminal-content">
+      <div class="west-wanted-content">
         <slot></slot>
       </div>
 
-      <!-- Ligne de curseur -->
-      <div v-if="showCursor" class="space-terminal-line">
-        <span class="space-terminal-prompt">></span>
-        <span class="space-terminal-cursor blink">_</span>
+      <div v-if="showCursor" class="wanted-footer-hint">
+        <span class="hint-text">Repassez plus tard pour plus d'infos</span>
+        <span class="hint-blink">_</span>
       </div>
     </div>
   </div>
@@ -50,138 +37,138 @@
 
 <script setup lang="ts">
 interface Props {
-  title?: string;
-  command?: string;
-  showCursor?: boolean;
-  className?: string;
+  title?: string;       // Sujet/entité recherchée ou message principal
+  command?: string;     // Message secondaire: raison, état, etc.
+  showCursor?: boolean; // Affiche un petit curseur clignotant d'attente
+  className?: string;   // Classes additionnelles
 }
 
 withDefaults(defineProps<Props>(), {
-  title: "Terminal",
+  title: "Informations manquantes",
   command: "",
-  showCursor: true,
+  showCursor: false,
   className: "",
 });
 </script>
 
 <style scoped>
-.space-terminal {
-  background-color: rgba(0, 0, 0, 0.9);
-  border-radius: 0.5rem;
+.west-wanted {
+  position: relative;
+  background: linear-gradient(180deg, rgba(245, 231, 200, 0.9), rgba(230, 210, 175, 0.92));
+  border: 1px solid rgba(var(--color-card-border-rgb, 194, 143, 44), 0.6);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   overflow: hidden;
-  font-family: "Space Mono", monospace;
-  border: 1px solid var(--background-bg-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-body, "Roboto Slab", serif);
+}
+
+/* Bordure corde/chanvre */
+.west-wanted::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  padding: 8px;
+  background:
+    radial-gradient(circle at 10px 10px, rgba(0,0,0,0.25), transparent 10px) top left,
+    radial-gradient(circle at calc(100% - 10px) 10px, rgba(0,0,0,0.25), transparent 10px) top right,
+    radial-gradient(circle at 10px calc(100% - 10px), rgba(0,0,0,0.25), transparent 10px) bottom left,
+    radial-gradient(circle at calc(100% - 10px) calc(100% - 10px), rgba(0,0,0,0.25), transparent 10px) bottom right,
+    repeating-linear-gradient(90deg, rgba(120, 80, 40, 0.6) 0 10px, rgba(60, 35, 20, 0.55) 10px 12px);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.west-wanted-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, rgba(53, 37, 25, 0.9), rgba(43, 30, 20, 0.92));
+  color: var(--normal-text);
+  border-bottom: 1px solid rgba(var(--color-card-border-rgb, 194, 143, 44), 0.5);
   position: relative;
 }
 
-.space-terminal-header {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: rgba(30, 41, 59, 0.5);
-  border-bottom: 1px solid var(--background-bg-light);
-}
-
-.space-terminal-controls {
+.west-wanted-rivets {
   display: flex;
   gap: 0.375rem;
-  margin-right: 1rem;
 }
 
-.space-terminal-control {
-  width: 0.75rem;
-  height: 0.75rem;
+.rivet {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background-color: var(--background-bg-light);
-  border: 1px solid rgba(30, 41, 59, 0.7);
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(167, 119, 44, 0.9));
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.2);
+  border: 1px solid rgba(95, 66, 30, 0.8);
 }
 
-.space-terminal-title {
-  flex-grow: 1;
-  font-size: 0.75rem;
-  color: var(--normal-text-muted);
-  text-align: center;
+.west-wanted-title {
+  margin: 0 auto;
+  font-family: var(--font-display, "Rye", serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.25rem;
+  color: rgba(245, 231, 200, 0.95);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
 }
 
-.space-terminal-icon {
+.west-wanted-stamp {
+  color: rgba(var(--color-accent-rgb, 194, 143, 44), 0.95);
+  transform: rotate(-12deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-secondary);
 }
 
-.space-terminal-body {
-  padding: 1rem;
-  min-height: 100px;
+.west-wanted-body {
+  padding: 1rem 1.25rem 1.25rem;
 }
 
-.space-terminal-line {
-  display: flex;
-  margin-bottom: 0.5rem;
-  align-items: baseline;
+.wanted-subject {
+  font-family: var(--font-display, "Rye", serif);
+  font-size: 1.25rem;
+  color: #2c1e14;
+  text-align: center;
+  line-height: 1.2;
 }
 
-.space-terminal-prompt {
-  color: var(--color-primary);
-  margin-right: 0.5rem;
-  font-weight: bold;
+@media (min-width: 640px) {
+  .wanted-subject { font-size: 1.5rem; }
 }
 
-.space-terminal-command {
-  color: var(--color-secondary-light);
-  font-weight: 500;
+.wanted-message {
+  margin-top: 0.25rem;
+  text-align: center;
+  color: #3b2a1e;
+  opacity: 0.9;
 }
 
-.space-terminal-content {
-  margin: 1rem 0;
+.west-wanted-content {
+  margin: 0.75rem auto 0;
   color: var(--normal-text);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-.space-terminal-cursor {
-  color: var(--color-primary-light);
+.wanted-footer-hint {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: #3b2a1e;
+}
+
+.hint-text { opacity: 0.9; }
+.hint-blink {
   font-weight: bold;
-}
-
-.blink {
   animation: blink 1s step-end infinite;
 }
 
 @keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-/* Effet de scan de ligne */
-.space-terminal::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(109, 40, 217, 0.5),
-    transparent
-  );
-  animation: scan-line 6s linear infinite;
-  opacity: 0.5;
-}
-
-@keyframes scan-line {
-  0% {
-    top: 0;
-  }
-  100% {
-    top: 100%;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 </style>
