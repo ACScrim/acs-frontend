@@ -5,9 +5,9 @@
       'font-heading relative',
       sizeClasses,
       {
-        'space-title--animated': animated,
-        'space-title--glitch': glitch,
-        'space-title--hovered': isHovered,
+        'title--animated': animated,
+        'title--glitch': glitch,
+        'title--hovered': isHovered,
       },
       className,
     ]"
@@ -16,19 +16,16 @@
     :data-content="getSlotContent()"
   >
     <!-- Élément décoratif supérieur -->
-    <div v-if="decorated" class="space-title-decoration top-decoration"></div>
+    <div v-if="decorated" class="title-decoration top-decoration"></div>
 
     <!-- Contenu avec effet de scan -->
-    <div class="space-title-content">
+    <div class="title-content">
       <slot></slot>
-      <div v-if="scan" class="space-title-scan"></div>
+      <div v-if="scan" class="title-scan"></div>
     </div>
 
     <!-- Élément décoratif inférieur -->
-    <div
-      v-if="decorated"
-      class="space-title-decoration bottom-decoration"
-    ></div>
+    <div v-if="decorated" class="title-decoration bottom-decoration"></div>
   </component>
 </template>
 
@@ -95,135 +92,127 @@ const sizeClasses = computed(() => {
 </script>
 
 <style scoped>
-component {
-  font-family: var(--font-heading);
+/* Far West title styling while preserving API and class names */
+.title--animated {
+  transition: all 0.25s ease;
+}
+.title--animated:hover {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(var(--color-accent-rgb), 0.35);
+  letter-spacing: 0.04em;
 }
 
-.space-title--animated {
-  transition: all 0.3s ease;
-}
-
-.space-title--animated:hover {
-  text-shadow: 0 0 10px var(--color-primary),
-    0 0 20px var(--color-primary-light);
-  letter-spacing: 1px;
-}
-
-.space-title-decoration {
+/* Rope-like decorative lines */
+.title-decoration {
   position: absolute;
-  height: 1px;
-  width: 30%;
-  background: linear-gradient(
+  height: 2px;
+  width: 36%;
+  background: repeating-linear-gradient(
     90deg,
-    transparent,
-    var(--color-primary),
-    transparent
+    rgba(var(--color-accent-rgb), 0.9) 0 6px,
+    rgba(var(--color-accent-rgb), 0.4) 6px 10px,
+    transparent 10px 14px
   );
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
 }
-
 .top-decoration {
   top: -8px;
   left: 0;
+  animation: rope-sway 7s ease-in-out infinite;
 }
-
 .bottom-decoration {
   bottom: -8px;
   right: 0;
+  animation: rope-sway 7s ease-in-out infinite reverse;
 }
 
-.space-title-scan {
+/* Ensure overlay blends relative to the title only */
+.title-content {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+}
+
+/* Campfire glow shimmer (replaces vertical scan bar) */
+.title-scan {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 45%,
-    rgba(139, 92, 246, 0.2) 50%,
-    transparent 55%
-  );
-  background-size: 100% 300%;
-  animation: scan-vertical 3s linear infinite;
+  inset: 0;
   pointer-events: none;
+  /* warm glow from below + faint sky tint above */
+  background: radial-gradient(
+      120% 80% at 50% 110%,
+      rgba(var(--color-accent-rgb), 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(var(--color-primary-rgb), 0.12),
+      transparent 60%
+    );
+  mix-blend-mode: screen;
+  z-index: 1;
+  opacity: 0.35;
+  animation: ember-flicker 2.8s ease-in-out infinite;
 }
-
-@keyframes scan-vertical {
-  0%,
-  100% {
-    background-position: 0 0%;
+@keyframes ember-flicker {
+  0% {
+    opacity: 0.3;
+  }
+  25% {
+    opacity: 0.45;
   }
   50% {
-    background-position: 0 100%;
+    opacity: 0.25;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.3;
   }
 }
 
-.space-title--glitch.space-title--hovered {
+@keyframes rope-sway {
+  0%,
+  100% {
+    transform: rotate(0.2deg);
+  }
+  50% {
+    transform: rotate(-0.3deg);
+  }
+}
+
+/* Reinterpret "glitch" as warm brand shadow wobble */
+.title--glitch.title--hovered {
   position: relative;
 }
-
-.space-title--glitch.space-title--hovered::before,
-.space-title--glitch.space-title--hovered::after {
+.title--glitch.title--hovered::before,
+.title--glitch.title--hovered::after {
   content: attr(data-content);
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  clip: rect(0, 0, 0, 0);
+  inset: 0;
+  color: currentColor;
+  opacity: 0.6;
+  filter: blur(0.4px);
 }
-
-.space-title--glitch.space-title--hovered::before {
-  left: 2px;
-  text-shadow: -1px 0 var(--color-secondary);
-  animation: glitch-animation-1 0.3s linear infinite;
+.title--glitch.title--hovered::before {
+  transform: translate(1px, 1px);
+  text-shadow: 1px 0 rgba(var(--color-primary-rgb), 0.8);
+  animation: brand-wobble 0.9s ease-in-out infinite alternate;
 }
-
-.space-title--glitch.space-title--hovered::after {
-  left: -2px;
-  text-shadow: 1px 0 var(--color-accent);
-  animation: glitch-animation-2 0.3s linear infinite;
+.title--glitch.title--hovered::after {
+  transform: translate(-1px, 0);
+  text-shadow: -1px 0 rgba(var(--color-accent-rgb), 0.8);
+  animation: brand-wobble 1.2s ease-in-out infinite alternate;
 }
-
-@keyframes glitch-animation-1 {
+@keyframes brand-wobble {
   0% {
-    clip: rect(30px, 9999px, 10px, 0);
-  }
-  20% {
-    clip: rect(10px, 9999px, 80px, 0);
-  }
-  40% {
-    clip: rect(50px, 9999px, 15px, 0);
-  }
-  60% {
-    clip: rect(5px, 9999px, 60px, 0);
-  }
-  80% {
-    clip: rect(20px, 9999px, 45px, 0);
+    transform: translate(-1px, 0) skewX(0.5deg);
+    opacity: 0.5;
   }
   100% {
-    clip: rect(40px, 9999px, 30px, 0);
-  }
-}
-
-@keyframes glitch-animation-2 {
-  0% {
-    clip: rect(15px, 9999px, 50px, 0);
-  }
-  20% {
-    clip: rect(40px, 9999px, 15px, 0);
-  }
-  40% {
-    clip: rect(10px, 9999px, 40px, 0);
-  }
-  60% {
-    clip: rect(60px, 9999px, 10px, 0);
-  }
-  80% {
-    clip: rect(30px, 9999px, 20px, 0);
-  }
-  100% {
-    clip: rect(5px, 9999px, 60px, 0);
+    transform: translate(1px, 1px) skewX(-0.5deg);
+    opacity: 0.8;
   }
 }
 </style>

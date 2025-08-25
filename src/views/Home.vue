@@ -41,15 +41,18 @@
         class="flex flex-col items-center justify-center"
         :class="!user ? 'max-w-md' : ''"
       >
-        <!-- Titre principal avec effet spatial -->
-        <div class="title-container relative mb-3 sm:mb-4 mt-0">
-          <div class="title-bg"></div>
-          <h1
-            class="title-text font-nasa text-center leading-tight relative z-10"
-          >
-            ALORS, <br />ÇA SCRIM ?
-          </h1>
-        </div>
+        <!-- Titre principal utilisant le nouveau composant Title (effet Far West) -->
+        <Title
+          tag="h1"
+          size="3xl"
+          :animated="true"
+          :glitch="true"
+          :scan="true"
+          :decorated="true"
+          className="mb-3 sm:mb-4 mt-0 text-center leading-tight"
+        >
+          ALORS, <br />ÇA SCRIM ?
+        </Title>
         <!-- Logo -->
         <div
           class="relative my-4 sm:my-6 flex items-center justify-center group"
@@ -605,6 +608,7 @@ import playerService from "../services/playerService";
 import CountdownTimer from "@/components/ui/molecules/CountdownTimer.vue";
 import TournamentCard from "@/components/ui/molecules/TournamentCard.vue";
 import Toast from "../shared/Toast.vue";
+import Title from "@/components/ui/atoms/Title.vue";
 
 //-------------------------------------------------------
 // SECTION: État du composant

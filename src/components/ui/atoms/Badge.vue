@@ -2,7 +2,7 @@
   <span
     :class="[
       'inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs',
-      'font-heading border transition-all duration-300',
+      'font-heading border transition-all duration-300 uppercase tracking-wide badge-west',
       variantClasses,
       filled ? 'badge-filled' : '',
       size === 'sm'
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
   className: "",
 });
 
-// Classes de variante
+// Classes de variante (utilise les variables du thème far west)
 const variantClasses = computed(() => {
   if (props.filled) {
     switch (props.variant) {
@@ -74,11 +74,11 @@ const variantClasses = computed(() => {
   } else {
     switch (props.variant) {
       case "primary":
-        return "bg-color-primary/20 text-color-primary-light border-color-primary-light/30";
+        return "bg-color-primary/20 text-color-primary border-color-primary/30";
       case "secondary":
-        return "bg-color-secondary/20 text-color-secondary-light border-color-secondary-light/30";
+        return "bg-color-secondary/20 text-color-secondary border-color-secondary/30";
       case "accent":
-        return "bg-color-accent/20 text-color-accent-light border-color-accent-light/30";
+        return "bg-color-accent/20 text-color-accent border-color-accent/30";
       case "gold":
         return "bg-color-gold/20 text-color-gold border-color-gold/30";
       case "silver":
@@ -94,106 +94,162 @@ const variantClasses = computed(() => {
       case "info":
         return "bg-info/20 text-info border-info/30";
       default:
-        return "bg-color-primary/20 text-color-primary-light border-color-primary-light/30";
+        return "bg-color-primary/20 text-color-primary border-color-primary/30";
     }
   }
 });
 </script>
 
 <style scoped>
-/* Styles spécifiques pour les badges */
-
+/* Base Far West badge look */
 .inline-flex {
   font-family: var(--font-heading);
 }
-
-.badge-filled {
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(var(--r), var(--g), var(--b), 0.5);
+.badge-west {
+  letter-spacing: 0.04em;
 }
 
+/* Filled badges: subtle grain + glow using theme RGB */
+.badge-filled {
+  font-weight: 700;
+  position: relative;
+  box-shadow: 0 0 10px rgba(var(--badge-rgb), 0.35);
+}
+.badge-filled::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.04));
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* Outline look: rope-like dashed overlay */
+.badge-west:not(.badge-filled) {
+  position: relative;
+}
+.badge-west:not(.badge-filled)::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 9999px;
+  border: 1px dashed rgba(var(--color-accent-rgb), 0.35);
+  pointer-events: none;
+}
+
+/* Semantic helpers using theme variables */
 .bg-success\/20 {
-  background-color: rgba(74, 222, 128, 0.2);
+  background-color: rgba(var(--color-success-rgb), 0.2);
 }
 .text-success {
   color: var(--color-success);
 }
 .border-success\/30 {
-  border-color: rgba(74, 222, 128, 0.3);
+  border-color: rgba(var(--color-success-rgb), 0.3);
+}
+.border-success {
+  border-color: var(--color-success);
 }
 
 .bg-warning\/20 {
-  background-color: rgba(250, 204, 21, 0.2);
+  background-color: rgba(var(--color-warning-rgb), 0.2);
 }
 .text-warning {
   color: var(--color-warning);
 }
 .border-warning\/30 {
-  border-color: rgba(250, 204, 21, 0.3);
+  border-color: rgba(var(--color-warning-rgb), 0.3);
+}
+.border-warning {
+  border-color: var(--color-warning);
 }
 
 .bg-error\/20 {
-  background-color: rgba(248, 113, 113, 0.2);
+  background-color: rgba(var(--color-error-rgb), 0.2);
 }
 .text-error {
   color: var(--color-error);
 }
 .border-error\/30 {
-  border-color: rgba(248, 113, 113, 0.3);
+  border-color: rgba(var(--color-error-rgb), 0.3);
+}
+.border-error {
+  border-color: var(--color-error);
 }
 
 .bg-info\/20 {
-  background-color: rgba(96, 165, 250, 0.2);
+  background-color: rgba(var(--color-info-rgb), 0.2);
 }
 .text-info {
   color: var(--color-info);
 }
 .border-info\/30 {
-  border-color: rgba(96, 165, 250, 0.3);
+  border-color: rgba(var(--color-info-rgb), 0.3);
+}
+.border-info {
+  border-color: var(--color-info);
 }
 
-/* Styles pour les badges pleins */
+/* Filled background classes also define badge RGB for glow */
 .bg-color-primary {
   background-color: var(--color-primary);
-  --r: var(--color-primary-rgb);
+  --badge-rgb: var(--color-primary-rgb);
 }
 .bg-color-secondary {
   background-color: var(--color-secondary);
-  --r: var(--color-secondary-rgb);
+  --badge-rgb: var(--color-secondary-rgb);
 }
 .bg-color-accent {
   background-color: var(--color-accent);
-  --r: var(--color-accent-rgb);
+  --badge-rgb: var(--color-accent-rgb);
 }
 .bg-success {
   background-color: var(--color-success);
-  --r: var(--color-success-rgb);
+  --badge-rgb: var(--color-success-rgb);
 }
 .bg-warning {
   background-color: var(--color-warning);
-  --r: var(--color-warning-rgb);
+  --badge-rgb: var(--color-warning-rgb);
 }
 .bg-error {
   background-color: var(--color-error);
-  --r: var(--color-error-rgb);
+  --badge-rgb: var(--color-error-rgb);
 }
 .bg-info {
   background-color: var(--color-info);
-  --r: var(--color-info-rgb);
+  --badge-rgb: var(--color-info-rgb);
 }
 .bg-color-gold {
   background-color: var(--color-gold);
-  --r: var(--color-gold-rgb);
+  --badge-rgb: var(--color-gold-rgb);
 }
 .bg-color-silver {
   background-color: var(--color-silver);
-  --r: var(--color-silver-rgb);
+  --badge-rgb: var(--color-silver-rgb);
 }
 .bg-color-bronze {
   background-color: var(--color-bronze);
-  --r: var(--color-bronze-rgb);
+  --badge-rgb: var(--color-bronze-rgb);
 }
 
+/* Outlined helpers for primary/secondary/accent */
+.bg-color-primary\/20 {
+  background-color: rgba(var(--color-primary-rgb), 0.2);
+}
+.bg-color-secondary\/20 {
+  background-color: rgba(var(--color-secondary-rgb), 0.2);
+}
+.bg-color-accent\/20 {
+  background-color: rgba(var(--color-accent-rgb), 0.2);
+}
+.border-color-secondary\/30 {
+  border-color: rgba(var(--color-secondary-rgb), 0.3);
+}
+.border-color-accent\/30 {
+  border-color: rgba(var(--color-accent-rgb), 0.3);
+}
+
+/* Metals outlined (already used by component) */
 .bg-color-gold\/20 {
   background-color: rgba(var(--color-gold-rgb), 0.2);
 }
@@ -203,7 +259,6 @@ const variantClasses = computed(() => {
 .border-color-gold\/30 {
   border-color: rgba(var(--color-gold-rgb), 0.3);
 }
-
 .bg-color-silver\/20 {
   background-color: rgba(var(--color-silver-rgb), 0.2);
 }
@@ -213,7 +268,6 @@ const variantClasses = computed(() => {
 .border-color-silver\/30 {
   border-color: rgba(var(--color-silver-rgb), 0.3);
 }
-
 .bg-color-bronze\/20 {
   background-color: rgba(var(--color-bronze-rgb), 0.2);
 }

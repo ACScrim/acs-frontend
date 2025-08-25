@@ -1,5 +1,5 @@
 <template>
-  <div class="space-input-container">
+  <div class="west-input-container">
     <label
       v-if="label"
       :for="id"
@@ -7,7 +7,7 @@
     >
       {{ label }}
     </label>
-    <div class="relative">
+    <div class="relative west-field">
       <!-- Icône à gauche -->
       <div
         v-if="$slots.icon"
@@ -76,14 +76,7 @@
         <slot name="rightIcon"></slot>
       </div>
 
-      <!-- Effets spatiaux (petites étoiles) -->
-      <div
-        class="absolute inset-0 pointer-events-none overflow-hidden rounded-lg"
-      >
-        <div class="star-particle"></div>
-        <div class="star-particle delay-1"></div>
-        <div class="star-particle delay-2"></div>
-      </div>
+      <!-- Effets Far West: la déco est gérée par :focus-within du conteneur -->
     </div>
 
     <!-- Message d'erreur -->
@@ -125,41 +118,39 @@ defineEmits(["update:modelValue"]);
 </script>
 
 <style scoped>
-.space-input-container input:focus {
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2),
-    0 0 15px rgba(109, 40, 217, 0.1);
+/* Focus et ambiance Far West */
+.west-input-container input:focus {
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.25),
+    0 0 12px rgba(var(--color-accent-rgb), 0.15);
 }
 
-.star-particle {
+/* Texture subtile façon cuir/papier */
+.west-input-container input {
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.04),
+    rgba(255, 255, 255, 0.03)
+  );
+}
+
+.west-input-container input::placeholder {
+  color: var(--normal-text-muted);
+}
+
+/* Rope border (pointillé) au focus via le wrapper */
+.west-field {
+  position: relative;
+}
+.west-field::after {
+  content: "";
   position: absolute;
-  width: 2px;
-  height: 2px;
-  background-color: white;
-  border-radius: 50%;
+  inset: 2px;
+  border-radius: 0.5rem; /* match rounded-lg */
+  border: 1px dashed rgba(var(--color-accent-rgb), 0.35);
   opacity: 0;
-  top: 50%;
-  left: 5px;
-  animation: twinkle 4s ease-in-out infinite;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
 }
-
-.delay-1 {
-  left: 80%;
-  animation-delay: 1s;
-}
-
-.delay-2 {
-  left: 40%;
-  top: 25%;
-  animation-delay: 2s;
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.8;
-  }
+.west-field:focus-within::after {
+  opacity: 1;
 }
 </style>
