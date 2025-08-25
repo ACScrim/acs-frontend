@@ -2,7 +2,7 @@
   <button
     :class="[
       'inline-flex items-center justify-center rounded-md transition-all duration-300',
-      'font-heading text-normal-text border tracking-wider uppercase',
+      'font-heading text-normal-text border tracking-wider uppercase cursor-pointer select-none',
       sizeClasses,
       variantClasses,
       {
@@ -59,21 +59,7 @@
       ></div>
     </div>
 
-    <!-- Effet de particules pour les boutons secondaires -->
-    <div
-      v-if="variant === 'secondary' && !disabled && !loading"
-      class="absolute inset-0 overflow-hidden rounded-md pointer-events-none"
-    >
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-1"
-      ></div>
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-2"
-      ></div>
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-3"
-      ></div>
-    </div>
+  <!-- Retrait des particules "étoiles" pour un rendu Far West plus cohérent -->
 
     <!-- Effet de pulsation pour tous les autres boutons -->
     <div
@@ -135,11 +121,11 @@ const sizeClasses = computed(() => {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative western-grain";
+  return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative western-grain western-stitched western-brand";
     case "secondary":
-      return "bg-color-secondary hover:bg-color-secondary-light border-color-secondary-dark text-white shadow-glow-secondary hover:shadow-lg western-grain";
+  return "bg-color-secondary hover:bg-color-secondary-light border-color-secondary-dark text-white shadow-glow-secondary hover:shadow-lg western-grain western-stitched western-brand";
     case "accent":
-      return "bg-color-accent hover:bg-color-accent-light border-color-accent-dark text-background-bg shadow-glow-accent hover:shadow-lg western-grain";
+  return "bg-color-accent hover:bg-color-accent-light border-color-accent-dark text-background-bg shadow-glow-accent hover:shadow-lg western-grain western-stitched western-brand";
     case "outline":
       return "bg-transparent hover:bg-background-bg-light border-color-primary text-color-primary hover:text-color-primary-light western-ink";
     case "ghost":
@@ -230,76 +216,42 @@ button {
   );
 }
 
-/* Nouvelles animations de particules (keep subtle dust motes) */
-.animate-particle-1 {
-  animation: particle1 10s ease-in-out infinite;
+/* Couture/pointillés façon selle de cheval */
+.western-stitched {
+  position: relative;
+}
+.western-stitched::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 0.3rem;
+  border: 1px dashed rgba(var(--color-accent-rgb), 0.35);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.western-stitched:hover::after {
+  opacity: 1;
 }
 
-.animate-particle-2 {
-  animation: particle2 15s ease-in-out infinite;
-  animation-delay: 1s;
-}
+/* Suppression des particules astro (non-western) */
 
-.animate-particle-3 {
-  animation: particle3 12s ease-in-out infinite;
-  animation-delay: 2s;
+/* Effet "marque au fer" (branding) au clic */
+.western-brand {
+  position: relative;
 }
-
-@keyframes particle1 {
-  0%,
-  100% {
-    top: 10%;
-    left: 10%;
-    opacity: 0.7;
-  }
-  25% {
-    top: 70%;
-    left: 30%;
-    opacity: 0.4;
-  }
-  50% {
-    top: 30%;
-    left: 80%;
-    opacity: 0.6;
-  }
-  75% {
-    top: 60%;
-    left: 50%;
-    opacity: 0.8;
-  }
+.western-brand::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, rgba(176,83,69,0), rgba(176,83,69,0) 30%, rgba(0,0,0,0) 31%);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  pointer-events: none;
 }
-
-@keyframes particle2 {
-  0%,
-  100% {
-    top: 50%;
-    left: 10%;
-    opacity: 0.5;
-  }
-  33% {
-    top: 20%;
-    left: 80%;
-    opacity: 0.7;
-  }
-  66% {
-    top: 70%;
-    left: 30%;
-    opacity: 0.3;
-  }
-}
-
-@keyframes particle3 {
-  0%,
-  100% {
-    top: 30%;
-    left: 60%;
-    opacity: 0.6;
-  }
-  50% {
-    top: 60%;
-    left: 20%;
-    opacity: 0.8;
-  }
+.western-brand:active::before {
+  background: radial-gradient(circle at 50% 60%, rgba(176,83,69,0.35), rgba(0,0,0,0.2) 45%, rgba(0,0,0,0) 65%);
+  opacity: 1;
 }
 
 /* Animation de pulsation luisante */

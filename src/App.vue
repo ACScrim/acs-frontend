@@ -7,13 +7,9 @@
       v-if="isLightMode"
       class="absolute inset-0 w-full h-full z-10 desert-background"
       aria-hidden="true"
-    >
-      <!-- Dunes/Grain overlay -->
-      <div class="desert-grain-layer"></div>
-      <div class="cactus-silhouette"></div>
-    </div>
+    ></div>
 
-    <!-- Fond vidéo coucher de soleil Far West (mode non léger) -->
+    <!-- Fond vidéo (mode non léger) -->
     <div
       v-else
       class="absolute inset-0 w-full h-full z-10 video-background"
@@ -29,10 +25,7 @@
         playsinline
         preload="auto"
       >
-        <source
-          src="https://storage.googleapis.com/gh-copilot-assets/wildwest-sunset-loop.mp4"
-          type="video/mp4"
-        />
+        <source src="https://acscrim.fr/badge/space.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -118,35 +111,9 @@ html {
       rgba(26, 19, 12, 0.5) 50%,
       rgba(14, 10, 6, 0.9)
     ),
-    url("https://storage.googleapis.com/gh-copilot-assets/desert-dunes.jpg");
+    url("https://m.media-amazon.com/images/I/81DnUJiDpCL._UF1000,1000_QL80_.jpg");
   background-size: cover;
   background-position: center bottom;
   filter: saturate(0.9) contrast(1.05);
-}
-
-.desert-grain-layer {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(
-    rgba(255, 255, 255, 0.03),
-    rgba(0, 0, 0, 0) 40%
-  );
-  opacity: 0.6;
-}
-
-.cactus-silhouette {
-  position: absolute;
-  bottom: 8%;
-  left: 6%;
-  width: 140px;
-  height: 180px;
-  background: radial-gradient(
-    80% 100% at 50% 100%,
-    rgba(0, 0, 0, 0.35),
-    transparent 70%
-  );
-  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 160"><path fill="%23000" d="M57 0h14v160H57zM22 50c0-8 6-14 14-14s14 6 14 14v20H36v-20H22zm56 0c0-8 6-14 14-14s14 6 14 14v20H92v-20H78z"/></svg>')
-    center / contain no-repeat;
-  opacity: 0.25;
 }
 </style>
