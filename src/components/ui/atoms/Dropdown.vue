@@ -31,6 +31,32 @@
         </option>
         <slot></slot>
       </select>
+      <!-- Chevron décoratif Far West (double chevrons) -->
+      <span class="dropdown-chevron pointer-events-none" aria-hidden="true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+        >
+          <path
+            d="M6 8l6 6 6-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M6 5l6 6 6-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            opacity="0.65"
+          />
+        </svg>
+      </span>
     </div>
 
     <div v-if="error" class="text-color-error text-sm mt-1">{{ error }}</div>
@@ -78,23 +104,7 @@ defineEmits(["update:modelValue", "change"]);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  /* Draw a single chevron using background gradients on the select itself */
-  background-image: linear-gradient(
-      45deg,
-      var(--normal-text) 50%,
-      transparent 50%
-    ),
-    linear-gradient(-45deg, var(--normal-text) 50%, transparent 50%),
-    linear-gradient(
-      to bottom,
-      rgba(var(--background-bg-light-rgb), 0.4),
-      rgba(var(--background-bg-light-rgb), 0.4)
-    );
-  background-position: right 1.125rem calc(50% + 1px),
-    right 0.75rem calc(50% + 1px), right 0 top;
-  background-size: 6px 6px, 6px 6px, 2.25rem 100%;
-  background-origin: padding-box, padding-box, border-box;
-  background-repeat: no-repeat;
+  /* Padding right already set via class pr-9 to leave room for the chevrons */
   box-shadow: inset 0 0 0 1px rgba(var(--color-accent-rgb), 0.1);
 }
 
@@ -111,6 +121,28 @@ defineEmits(["update:modelValue", "change"]);
 /* wrapper kept simple; no pseudo-elements so we avoid any second arrow */
 .space-dropdown .select-wrapper {
   position: relative;
+}
+
+/* Chevron overlay */
+.space-dropdown .dropdown-chevron {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  color: var(--normal-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Highlight on focus */
+.space-dropdown:focus-within .dropdown-chevron {
+  color: var(--color-primary-light);
+}
+
+/* Dim when disabled */
+.space-dropdown select:disabled + .dropdown-chevron {
+  opacity: 0.6;
 }
 
 .space-dropdown select:disabled {

@@ -1,18 +1,28 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24">
     <!-- En-tête avec SpaceHeader -->
-    <SpaceHeader
-      title="NIVEAUX DE JEU"
-      :decorated="true"
-      mission="PLAYER-SKILLS-25"
-    />
+    <SpaceHeader title="NIVEAUX DE JEU" :decorated="true" />
 
-    <SpaceCard variant="primary" :stars="true" className="mb-8 mt-6">
+    <SpaceCard variant="primary" className="mb-8 mt-6">
       <div v-if="loading" class="flex justify-center py-12">
         <SpaceLoader text="Analyse des compétences en cours..." />
       </div>
 
       <template v-else>
+        <!-- État vide -->
+        <SpaceTerminal
+          v-if="playerLevels.length === 0"
+          command="levels_status"
+          title="Niveaux du joueur"
+          :showCursor="true"
+          className="mb-8"
+        >
+          <div class="text-color-error">Aucun niveau défini pour l'instant</div>
+          <div class="text-normal-text-muted mt-2">
+            Ajoutez votre premier niveau en sélectionnant un jeu ci-dessous
+          </div>
+        </SpaceTerminal>
+
         <!-- Section des jeux avec niveau défini -->
         <div v-if="playerLevels.length > 0" class="mb-10">
           <SpaceTitle
@@ -40,7 +50,6 @@
               v-for="level in playerLevels"
               :key="level._id"
               variant="secondary"
-              :stars="true"
               className="relative overflow-hidden transform transition-all hover:scale-105 duration-300"
             >
               <!-- En-tête avec image de jeu -->
@@ -49,7 +58,7 @@
                   v-if="getGameImage(level)"
                   :src="getGameImage(level)"
                   :alt="getGameName(level)"
-                  class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                  class="w-full h-full object-cover transition-transform duration-500 ease-out"
                   @error="handleImageError"
                 />
                 <div
@@ -75,53 +84,19 @@
 
                 <!-- Badge de niveau -->
                 <div class="absolute bottom-3 right-3">
-                  <!-- Badge avec fond opaque et bordure -->
-                  <div
-                    class="bg-background-bg px-2 py-1 rounded-full shadow-lg border-2 flex items-center justify-center"
-                    :class="{
-                      'border-green-500':
-                        level.level.toLowerCase() === 'débutant',
-                      'border-[var(--color-primary)]':
-                        level.level.toLowerCase() === 'intermédiaire',
-                      'border-[var(--color-secondary)]':
-                        level.level.toLowerCase() === 'avancé',
-                      'border-[var(--color-accent)]':
-                        level.level.toLowerCase() === 'expert',
-                    }"
+                  <SpaceBadge
+                    :variant="getLevelBadgeVariant(level.level)"
+                    :filled="true"
+                    size="sm"
+                    className="shadow-lg"
                   >
-                    <span
-                      class="uppercase tracking-wide font-bold text-xs"
-                      :class="{
-                        'text-green-400':
-                          level.level.toLowerCase() === 'débutant',
-                        'text-[var(--color-primary-light)]':
-                          level.level.toLowerCase() === 'intermédiaire',
-                        'text-[var(--color-secondary-light)]':
-                          level.level.toLowerCase() === 'avancé',
-                        'text-[var(--color-accent-light)]':
-                          level.level.toLowerCase() === 'expert',
-                      }"
-                    >
-                      {{ level.level }}
-                    </span>
-                    <!-- Icône pour expert uniquement -->
-                    <svg
-                      v-if="level.level.toLowerCase() === 'expert'"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3.5 w-3.5 ml-1 text-yellow-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
-                  </div>
+                    {{ level.level }}
+                  </SpaceBadge>
                 </div>
 
                 <!-- Nom du jeu -->
                 <div class="absolute bottom-3 left-3 right-16">
-                  <h3 class="text-lg text-white font-nasa truncate">
+                  <h3 class="text-lg text-white font-heading truncate">
                     {{ getGameName(level) }}
                   </h3>
                 </div>
@@ -325,7 +300,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <p class="text-color-accent-light font-nasa text-lg">
+              <p class="text-color-accent-light font-heading text-lg uppercase">
                 Définir un nouveau niveau
               </p>
               <p
@@ -432,7 +407,7 @@
 
             <!-- Informations du jeu -->
             <div class="flex-grow min-w-0">
-              <h4 class="text-white font-nasa">{{ game.name }}</h4>
+              <h4 class="text-white font-heading uppercase">{{ game.name }}</h4>
               <p
                 v-if="game.description"
                 class="text-normal-text-muted text-sm line-clamp-1"
@@ -443,7 +418,7 @@
 
             <!-- Indicateur de niveau déjà défini -->
             <div v-if="hasLevelForGame(game)" class="ml-3">
-              <SpaceBadge variant="outline" size="sm">
+              <SpaceBadge variant="primary" size="sm">
                 {{ getLevelForGame(game)?.level }}
               </SpaceBadge>
             </div>
@@ -472,7 +447,9 @@
       <form @submit.prevent="saveLevel" class="space-y-6">
         <!-- Sélection du niveau -->
         <div>
-          <label class="block text-color-primary-light text-sm font-nasa mb-3">
+          <label
+            class="block text-color-primary-light text-sm font-heading uppercase mb-3"
+          >
             Niveau de jeu
             <span class="text-color-error ml-1">*</span>
           </label>
@@ -494,7 +471,7 @@
                   class="w-3 h-3 rounded-full mr-3"
                   :class="getLevelColorClass(levelOption.value)"
                 ></div>
-                <span class="text-normal-text font-nasa text-sm">{{
+                <span class="text-normal-text font-heading text-sm uppercase">{{
                   levelOption.label
                 }}</span>
               </div>
@@ -519,7 +496,7 @@
         <div>
           <label
             for="gameUsername"
-            class="block text-color-primary-light text-sm font-nasa mb-2"
+            class="block text-color-primary-light text-sm font-heading uppercase mb-2"
           >
             Pseudo dans le jeu (optionnel)
           </label>
@@ -553,7 +530,7 @@
           <div v-if="isRanked" class="mt-3">
             <label
               for="rank"
-              class="block text-color-primary-light text-sm font-nasa mb-2"
+              class="block text-color-primary-light text-sm font-heading uppercase mb-2"
             >
               Rang actuel
               <span class="text-color-error ml-1">*</span>
@@ -599,7 +576,7 @@
           "
         >
           <label
-            class="flex items-center justify-between text-color-primary-light text-sm font-nasa mb-2"
+            class="flex items-center justify-between text-color-primary-light text-sm font-heading uppercase mb-2"
           >
             <span class="flex items-center">
               Rôles préférés
@@ -665,9 +642,10 @@
                   class="w-3 h-3 rounded-full mr-2 flex-shrink-0"
                   :style="{ backgroundColor: role.color || '#6B7280' }"
                 ></div>
-                <span class="text-normal-text font-nasa text-sm truncate">{{
-                  role.name
-                }}</span>
+                <span
+                  class="text-normal-text font-heading text-sm uppercase truncate"
+                  >{{ role.name }}</span
+                >
               </label>
             </div>
           </div>
@@ -695,7 +673,7 @@
         <div>
           <label
             for="comment"
-            class="block text-color-primary-light text-sm font-nasa mb-2"
+            class="block text-color-primary-light text-sm font-heading uppercase mb-2"
           >
             Commentaire (optionnel)
           </label>
@@ -780,7 +758,7 @@
 
         <p class="text-normal-text">
           Êtes-vous sûr de vouloir supprimer votre niveau pour
-          <span class="text-color-primary-light font-nasa">
+          <span class="text-color-primary-light font-heading">
             {{ levelToDelete ? getGameName(levelToDelete) : "Jeu inconnu" }}
           </span>
           ?
@@ -867,6 +845,28 @@ const toast = ref({
   type: "success" as "success" | "error",
 });
 // #endregion
+
+// Map level label to badge variant for Far West look
+const getLevelBadgeVariant = (
+  levelLabel: string
+):
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
+  | "gold"
+  | "silver"
+  | "bronze" => {
+  const lvl = (levelLabel || "").toLowerCase();
+  if (lvl.includes("débutant")) return "success"; // green vibe
+  if (lvl.includes("intermédiaire")) return "primary"; // primary
+  if (lvl.includes("avancé")) return "secondary"; // secondary
+  if (lvl.includes("expert")) return "accent"; // accent (golden/heroic)
+  return "primary";
+};
 
 // -----------------------------------------------
 // #region DONNÉES STATIQUES

@@ -108,6 +108,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(["update:modelValue", "after-enter", "after-leave"]);
 
+// Declare known slots for better TS/volar support
+defineSlots<{
+  default?: () => any;
+  header?: () => any;
+  footer?: () => any;
+}>();
+
 // Fonction pour restaurer le scroll
 const restoreScroll = () => {
   // Simplement rétablir le scroll normal

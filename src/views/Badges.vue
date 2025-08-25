@@ -1,11 +1,7 @@
 <template>
   <SpaceContainer>
-    <!-- En-tête de la page avec style spatial -->
-    <SpaceHeader
-      title="COLLECTION DE BADGES"
-      mission="BADGES-EXPLORER"
-      :showMissionInfo="true"
-    >
+    <!-- En-tête de la page (Far West) -->
+    <SpaceHeader title="COLLECTION DE BADGES" :showMissionInfo="true">
       <template #badge v-if="badges.length > 0">
         <SpaceBadge variant="secondary" size="lg">{{
           badges.length
@@ -13,28 +9,28 @@
       </template>
     </SpaceHeader>
 
-    <!-- Loader spatial -->
+    <!-- Loader -->
     <div v-if="loading" class="flex justify-center my-12">
-      <SpaceLoader text="Analyse des insignes spatiaux..." />
+      <SpaceLoader text="Recensement des insignes en cours..." />
     </div>
 
     <div v-else class="flex flex-col gap-6 mt-6">
       <!-- Onglets de navigation -->
       <SpaceCard variant="dark" className="p-4">
-        <div class="space-tabs flex flex-wrap sm:flex-nowrap gap-2">
+        <div class="west-tabs flex flex-wrap sm:flex-nowrap gap-2">
           <SpaceButton
             @click="switchTab('assigned')"
             :variant="activeTab === 'assigned' ? 'primary' : 'outline'"
-            className="flex-1"
+            className="flex-1 tab-button"
           >
-            <span class="font-nasa">BADGES ATTRIBUÉS</span>
+            <span>BADGES ATTRIBUÉS</span>
           </SpaceButton>
           <SpaceButton
             @click="switchTab('available')"
             :variant="activeTab === 'available' ? 'primary' : 'outline'"
-            className="flex-1"
+            className="flex-1 tab-button"
           >
-            <span class="font-nasa">BADGES À OBTENIR</span>
+            <span>BADGES À OBTENIR</span>
           </SpaceButton>
         </div>
       </SpaceCard>
@@ -42,55 +38,17 @@
       <!-- Filtre par jeu -->
       <SpaceCard variant="primary" className="overflow-hidden">
         <div>
-          <label for="gameFilter" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-nasa text-color-primary-light flex items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
-                />
-              </svg>
-              Filtrer par jeu
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="gameFilter"
-              v-model="selectedGameFilter"
-              class="w-full rounded-lg border border-color-primary/30 bg-background-bg-light text-normal-text px-4 py-3 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:outline-none transition-all duration-300 hover:border-color-primary/50"
-              @change="handleFilterChange"
-            >
-              <option value="all">Tous les jeux</option>
-              <option value="acs">Badges ACS (Général)</option>
-              <option v-for="game in games" :key="game._id" :value="game._id">
-                {{ game.name }}
-              </option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+          <SpaceDropdown
+            v-model="selectedGameFilter"
+            label="Filtrer par jeu"
+            @change="handleFilterChange"
+          >
+            <option value="all">Tous les jeux</option>
+            <option value="acs">Badges ACS (Général)</option>
+            <option v-for="game in games" :key="game._id" :value="game._id">
+              {{ game.name }}
+            </option>
+          </SpaceDropdown>
         </div>
       </SpaceCard>
       <!-- Liste des badges attribués -->
@@ -141,9 +99,7 @@
                             loading="lazy"
                             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                           />
-                          <div
-                            class="absolute inset-0 rounded-full shadow-glow-secondary badge-glow"
-                          ></div>
+                          <!-- Far West: pas de halo lumineux -->
                         </div>
                         <div class="flex-1">
                           <h3 class="text-normal-text text-lg font-heading">
@@ -229,9 +185,7 @@
                               loading="lazy"
                               @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                             />
-                            <div
-                              class="absolute inset-0 rounded-full shadow-glow-primary badge-glow"
-                            ></div>
+                            <!-- Far West: pas de halo lumineux -->
                           </div>
                           <div class="flex-1">
                             <h3 class="text-normal-text text-lg font-heading">
@@ -278,20 +232,20 @@
             <!-- Message si aucun badge ne correspond au filtre sélectionné -->
             <SpaceTerminal
               v-if="filteredAssignedBadges.length === 0"
-              :command="`find_badges --type=assigned ${
+              :command="`Filtre: ${
                 selectedGameFilter !== 'all'
-                  ? '--game=' + selectedGameFilter
-                  : '--all'
+                  ? 'jeu=' + selectedGameFilter
+                  : 'tous les jeux'
               }`"
-              title="Console de recherche"
-              showCursor
+              title="Avis de recherche : Badges attribués"
+              :showCursor="false"
               className="my-8"
             >
               <div class="text-color-error font-mono">
-                Erreur 404: Aucun badge ne correspond au filtre sélectionné
+                Aucun badge ne correspond au filtre sélectionné
               </div>
               <div class="text-normal-text-muted mt-2">
-                Il n'y a pas de badges attribués pour le jeu sélectionné.
+                Aucun badge attribué pour le jeu sélectionné.
               </div>
             </SpaceTerminal>
           </div>
@@ -299,14 +253,12 @@
           <!-- Message si aucun badge n'est attribué -->
           <SpaceTerminal
             v-else-if="assignedBadges.length === 0"
-            command="search_assigned_badges --status=not_found"
-            title="Console de recherche"
-            showCursor
+            command="Aucun badge attribué pour le moment"
+            title="Avis de recherche : Badges attribués"
+            :showCursor="false"
             className="my-8"
           >
-            <div class="text-color-error font-mono">
-              Erreur 404: Aucun badge attribué
-            </div>
+            <div class="text-color-error font-mono">Aucun badge attribué</div>
             <div class="text-normal-text-muted mt-2">
               Aucun joueur n'a encore reçu de badge. Les badges seront attribués
               lors d'évènements spéciaux ou pour récompenser des
@@ -471,17 +423,17 @@
             <!-- Message si aucun badge disponible ne correspond au filtre -->
             <SpaceTerminal
               v-if="filteredAvailableBadges.length === 0"
-              :command="`find_badges --type=available ${
+              :command="`Filtre: ${
                 selectedGameFilter !== 'all'
-                  ? '--game=' + selectedGameFilter
-                  : '--all'
+                  ? 'jeu=' + selectedGameFilter
+                  : 'tous les jeux'
               }`"
-              title="Console de recherche"
-              showCursor
+              title="Avis de recherche : Badges disponibles"
+              :showCursor="false"
               className="my-8"
             >
               <div class="text-color-error font-mono">
-                Erreur 404: Aucun badge disponible pour ce filtre
+                Aucun badge disponible pour ce filtre
               </div>
               <div class="text-normal-text-muted mt-2">
                 Pour le jeu sélectionné, tous les badges ont déjà été attribués
@@ -493,9 +445,9 @@
           <!-- Message si tous les badges ont été attribués -->
           <SpaceTerminal
             v-else
-            command="search_available_badges --status=none"
-            title="Console de recherche"
-            showCursor
+            command="Tous les badges disponibles ont été attribués à au moins un joueur"
+            title="Avis de recherche : Badges disponibles"
+            :showCursor="false"
             className="my-8"
           >
             <div class="text-color-success font-mono">Félicitations!</div>
@@ -511,13 +463,13 @@
       <transition name="fade">
         <SpaceTerminal
           v-if="!loading && badges.length === 0"
-          command="initialize_badge_system --status=pending"
-          title="Console de système"
-          showCursor
+          command="Système d'insignes en cours d'initialisation"
+          title="Informations système"
+          :showCursor="false"
           className="my-8"
         >
           <div class="text-color-warning font-mono">
-            Système d'insignes en cours d'initialisation
+            Initialisation en cours
           </div>
           <div class="text-normal-text-muted mt-2">
             Le système de badges est en cours de développement. De nouveaux
@@ -544,9 +496,7 @@
             class="h-32 w-32 rounded-full border-4 border-color-primary object-cover badge-detail-image"
             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
           />
-          <div
-            class="absolute inset-0 rounded-full shadow-glow-primary badge-detail-glow"
-          ></div>
+          <!-- Far West: pas de halo lumineux -->
         </div>
 
         <div class="flex items-center gap-2 mb-2">
@@ -971,56 +921,6 @@ onMounted(() => {
   position: relative;
 }
 
-.shadow-glow-primary {
-  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5);
-}
-
-.shadow-glow-secondary {
-  box-shadow: 0 0 15px rgba(var(--color-secondary-rgb), 0.5);
-}
-
-/* Animation de scan pour les badges */
-@keyframes scan-badge {
-  0% {
-    top: 0%;
-    opacity: 0.8;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-badge {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes rotate-glow {
-  0% {
-    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.3);
-  }
-  33% {
-    box-shadow: 0 0 18px rgba(var(--color-gold-rgb), 0.5);
-  }
-  66% {
-    box-shadow: 0 0 18px rgba(var(--color-secondary-rgb), 0.5);
-  }
-  100% {
-    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.3);
-  }
-}
-
 /* Animation de transition pour le changement d'onglet */
 .fade-enter-active,
 .fade-leave-active {
@@ -1032,50 +932,33 @@ onMounted(() => {
   transform: translateY(10px);
 }
 
-/* Animation pour les onglets */
-.space-tabs .space-button {
+/* Onglets Western: soulignement discret au hover */
+.west-tabs .tab-button {
   position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
 }
-
-.space-tabs .space-button::after {
+.west-tabs .tab-button::after {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
+  left: 10%;
+  right: 10%;
+  bottom: -2px;
   height: 2px;
-  background-color: var(--color-primary);
-  transition: all 0.3s ease-in-out;
-  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--color-card-border-rgb, 194, 143, 44), 0.8),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.west-tabs .tab-button:hover::after {
+  opacity: 1;
 }
 
-.space-tabs .space-button:hover::after {
-  width: 80%;
-}
+/* Pas d'effets de lueur cyclique pour Far West */
 
-/* Amélioration pour le loader */
-@keyframes rotate-colors {
-  0% {
-    border-color: var(--color-primary);
-    border-top-color: transparent;
-  }
-  33% {
-    border-color: var(--color-gold);
-    border-top-color: transparent;
-  }
-  66% {
-    border-color: var(--color-secondary);
-    border-top-color: transparent;
-  }
-  100% {
-    border-color: var(--color-primary);
-    border-top-color: transparent;
-  }
-}
-
-/* Animations pour les badges spéciaux */
+/* Encarts spéciaux (garde la structure, supprime les halos agressifs) */
 .special-badge-legendary,
 .special-badge-gold,
 .special-badge-silver,
@@ -1099,17 +982,10 @@ onMounted(() => {
   transition: opacity 0.5s ease-in-out;
 }
 
+/* Légende: adoucit l'effet (sans animation) */
 .special-badge-legendary:hover::before {
-  opacity: 0.2;
-  background: radial-gradient(
-    circle,
-    var(--color-primary) 0%,
-    var(--color-gold) 25%,
-    var(--color-secondary) 50%,
-    var(--color-bronze) 75%,
-    transparent 100%
-  );
-  animation: legendary-glow 2s ease-in-out infinite alternate;
+  opacity: 0.12;
+  background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);
 }
 
 .special-badge-gold:hover::before {
@@ -1127,19 +1003,5 @@ onMounted(() => {
   background: radial-gradient(circle, var(--color-bronze) 0%, transparent 70%);
 }
 
-/* Animation spéciale pour les badges légendaires */
-@keyframes legendary-glow {
-  0% {
-    transform: scale(1) rotate(0deg);
-    filter: hue-rotate(0deg);
-  }
-  50% {
-    transform: scale(1.02) rotate(180deg);
-    filter: hue-rotate(180deg);
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-}
+/* Suppression des animations de lueur tournante */
 </style>

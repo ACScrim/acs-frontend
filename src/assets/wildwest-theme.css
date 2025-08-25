@@ -168,6 +168,12 @@ body {
 .text-color-accent {
   color: var(--color-accent);
 }
+.text-color-error {
+  color: var(--color-error);
+}
+.text-color-gold {
+  color: var(--color-gold);
+}
 
 .border-color-primary {
   border-color: var(--color-primary);

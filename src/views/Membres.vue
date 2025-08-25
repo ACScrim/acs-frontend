@@ -1,42 +1,23 @@
 <template>
   <SpaceContainer>
-    <!-- En-tête de la page avec notre nouveau composant SpaceHeader -->
+    <!-- En-tête de la page avec notre composant SpaceHeader Far West -->
     <SpaceHeader
       title="MEMBRES DE L'ÉQUIPAGE"
       :showMissionInfo="true"
       :wantedCandidates="memberStore.members.map((m) => m.username)"
-    >
-      <template #badge>
-        <div class="flex items-center gap-3">
-          <SpaceBadge variant="secondary" size="lg">
-            {{ memberStore.members.length }} membre{{
-              memberStore.members.length > 1 ? "s" : ""
-            }}
-          </SpaceBadge>
-          <SpaceBadge
-            v-if="searchResults.length !== memberStore.members.length"
-            variant="accent"
-            size="md"
-          >
-            {{ searchResults.length }} trouvé{{
-              searchResults.length > 1 ? "s" : ""
-            }}
-          </SpaceBadge>
-        </div>
-      </template>
-    </SpaceHeader>
+    />
 
     <!-- Statistiques rapides -->
     <SpaceCard variant="primary" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-3xl font-bold text-color-primary-light font-nasa">
+          <div class="text-3xl font-bold text-color-primary font-heading">
             {{ memberStore.members.length }}
           </div>
           <div class="text-normal-text-muted">Total membres</div>
         </div>
         <div class="text-center">
-          <div class="text-3xl font-bold text-color-secondary-light font-nasa">
+          <div class="text-3xl font-bold text-color-secondary font-heading">
             {{ memberStats.admins }}
           </div>
           <div class="text-normal-text-muted">Administrateurs</div>
@@ -50,9 +31,7 @@
         <!-- Recherche -->
         <div>
           <label for="member-search" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-nasa text-color-primary-light flex items-center gap-2"
-            >
+            <div class="font-heading text-normal-text flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -72,114 +51,30 @@
             id="member-search"
             v-model="searchTerm"
             placeholder="Nom, rôle..."
-            variant="primary"
-            :stars="true"
           />
         </div>
 
         <!-- Filtre par rôle -->
         <div>
-          <label for="role-filter" class="mb-3 flex items-center gap-2">
-            <div class="font-nasa text-color-accent flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Filtrer par rôle
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="role-filter"
-              v-model="roleFilter"
-              class="w-full rounded-lg border border-color-accent/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-accent/30 focus:outline-none transition-all duration-300"
-            >
-              <option value="">Tous les rôles</option>
-              <option value="user">Membres</option>
-              <option value="admin">Administrateurs</option>
-              <option value="superadmin">Super Admin</option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-accent"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+          <SpaceDropdown v-model="roleFilter" label="Filtrer par rôle">
+            <option value="">Tous les rôles</option>
+            <option value="user">Membres</option>
+            <option value="admin">Administrateurs</option>
+            <option value="superadmin">Super Admin</option>
+          </SpaceDropdown>
         </div>
 
         <!-- Options de tri -->
         <div>
-          <label for="sort-select" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-nasa text-color-secondary-light flex items-center gap-2"
+          <SpaceDropdown v-model="currentSort" label="Trier par">
+            <option
+              v-for="option in sortOptions"
+              :key="option.id"
+              :value="option.id"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
-                />
-              </svg>
-              Trier par
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="sort-select"
-              v-model="currentSort"
-              class="w-full rounded-lg border border-color-secondary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
-            >
-              <option
-                v-for="option in sortOptions"
-                :key="option.id"
-                :value="option.id"
-              >
-                {{ option.label }}
-              </option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-secondary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+              {{ option.label }}
+            </option>
+          </SpaceDropdown>
         </div>
       </div>
 
@@ -214,7 +109,7 @@
 
     <!-- État de chargement -->
     <div v-if="memberStore.loading" class="flex justify-center py-12">
-      <SpaceLoader text="Scan des données biométriques en cours..." />
+      <SpaceLoader text="Recensement des membres en cours..." />
     </div>
 
     <!-- État d'erreur -->
@@ -246,20 +141,15 @@
     <!-- Liste vide -->
     <SpaceTerminal
       v-else-if="sortedUsers.length === 0"
-      :command="`find_users ${
-        searchTerm ? '--search=\'' + searchTerm + '\'' : '--all'
-      }${roleFilter ? ' --role=' + roleFilter : ''}`"
-      title="Console de recherche"
-      showCursor
+      :command="emptyStateMessage"
+      title="Avis de recherche : Membres"
+      :showCursor="false"
       className="my-8"
     >
-      <div class="text-color-error font-mono">
-        Erreur 404: Aucun membre ne correspond à cette recherche.
+      <div class="text-normal-text-muted mt-2 mb-4 text-center">
+        Aucun membre ne correspond à ces critères.
       </div>
-      <div class="text-normal-text-muted mt-2 mb-4">
-        {{ emptyStateMessage }}
-      </div>
-      <div v-if="searchTerm || roleFilter" class="flex gap-3">
+      <div v-if="searchTerm || roleFilter" class="flex gap-3 justify-center">
         <SpaceButton @click="resetFilters" variant="primary" size="sm">
           Réinitialiser les filtres
         </SpaceButton>
@@ -304,6 +194,16 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
 import SpaceContainer from "@/components/ui/layout/Container.vue";
+import SpaceHeader from "@/components/ui/molecules/Header.vue";
+import SpaceCard from "@/components/ui/molecules/Card.vue";
+import SpaceInput from "@/components/ui/atoms/Input.vue";
+import SpaceDropdown from "@/components/ui/atoms/Dropdown.vue";
+import SpaceButton from "@/components/ui/atoms/Button.vue";
+import SpaceLoader from "@/components/ui/molecules/Loader.vue";
+import SpacePagination from "@/components/ui/organisms/Pagination.vue";
+import SpaceTerminal from "@/components/ui/organisms/Terminal.vue";
+import SpaceAlert from "@/components/ui/molecules/Alert.vue";
+import SpaceMemberCard from "@/components/ui/molecules/MemberCard.vue";
 
 // Utilisation du store
 const memberStore = useMemberStore();
@@ -474,19 +374,6 @@ watch(currentSort, () => {
   margin-bottom: 1.5rem;
 }
 
-/* Style pour les filtres - optimisé */
-select {
-  background-color: rgba(30, 30, 45, 0.8);
-  border: 1px solid rgba(109, 40, 217, 0.3);
-  color: var(--normal-text);
-  transition: border-color 0.15s ease;
-}
-
-select:focus {
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
-}
-
 /* Suppression des animations coûteuses */
 .grid > * {
   transition: none;
@@ -508,12 +395,6 @@ select:focus {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
-}
-
-/* Amélioration de l'accessibilité sans animations */
-select:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 /* Performance optimisée */

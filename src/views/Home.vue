@@ -2,32 +2,16 @@
   <div
     class="relative flex items-center justify-center min-h-screen p-4 pb-16 navbar-spacing overflow-hidden"
   >
-    <!-- Grille spatiale en arrière-plan -->
+    <!-- Décor Far West en arrière-plan -->
     <div
-      class="space-grid absolute inset-0 opacity-10 pointer-events-none"
-    ></div>
-
-    <!-- Étoiles en arrière-plan -->
-    <div
-      v-for="n in 25"
-      :key="`star-${n}`"
-      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
-      :style="{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 3 + 2}s`,
-        opacity: Math.random() * 0.7 + 0.3,
-      }"
-    ></div>
-
-    <!-- "Planète" décorative en arrière-plan -->
-    <div
-      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-color-primary-dark/10 to-color-primary/5 opacity-30 blur-xl pointer-events-none"
-    ></div>
-    <div
-      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-color-accent-dark/10 to-color-accent/5 opacity-20 blur-xl pointer-events-none"
-    ></div>
+      class="west-hero-bg absolute inset-0 pointer-events-none"
+      aria-hidden="true"
+    >
+      <div class="west-hero-vignette"></div>
+      <div class="west-hero-sun"></div>
+      <div class="west-hero-haze"></div>
+      <div class="west-hero-dust"></div>
+    </div>
     <div
       class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3 animate-fade-in-up"
       :class="
@@ -46,8 +30,8 @@
           tag="h1"
           size="3xl"
           :animated="true"
-          :glitch="true"
-          :scan="true"
+          :glitch="false"
+          :scan="false"
           :decorated="true"
           className="mb-3 sm:mb-4 mt-0 text-center leading-tight"
         >
@@ -73,7 +57,7 @@
           @click="loginWithDiscord"
           variant="primary"
           size="lg"
-          className="mt-4 sm:mt-6 space-discord-button"
+          className="mt-4 sm:mt-6"
         >
           <template #icon>
             <svg
@@ -123,9 +107,7 @@
               </svg>
             </div>
             <div>
-              <p
-                class="capitalize font-nasa text-lg text-color-secondary-light"
-              >
+              <p class="capitalize text-lg text-color-secondary-light">
                 Bienvenue, {{ user.username }}!
               </p>
               <p class="text-xs text-normal-text-muted mt-1">
@@ -186,6 +168,7 @@
           </div>
           <div v-else-if="nextTournament" class="space-y-3">
             <TournamentCard :tournament="nextTournament" variant="primary">
+              <!-- @vue-ignore: named slot defined in TournamentCard -->
               <template #content>
                 <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
                   <div
@@ -317,9 +300,7 @@
               variant="dark"
               className="mt-3 py-1 px-2 max-w-xs mx-auto"
             >
-              <div
-                class="text-2xs text-normal-text-muted mb-1 font-nasa text-center"
-              >
+              <div class="text-2xs text-normal-text-muted mb-1 text-center">
                 Commence dans:
               </div>
               <CountdownTimer :units="countdownUnits" variant="primary" />
@@ -328,13 +309,13 @@
 
           <div v-else>
             <SpaceTerminal
-              command="find_next_tournament"
-              title="SYSTÈME DE TOURNOIS"
-              :showCursor="true"
+              command="Aucune piste trouvée pour le prochain tournoi"
+              title="Avis de recherche : Prochain tournoi"
+              :showCursor="false"
               className="mb-4"
             >
               <div class="text-color-primary-light">
-                Aucun tournoi à venir n'a été trouvé dans la base de données.
+                Aucun tournoi à venir n'a été trouvé pour le moment.
               </div>
               <div class="text-normal-text-muted mt-2">
                 Consultez la page des tournois pour plus d'informations.
@@ -388,6 +369,7 @@
               :tournament="lastFinishedTournament"
               variant="secondary"
             >
+              <!-- @vue-ignore: named slot defined in TournamentCard -->
               <template #content>
                 <div
                   class="text-sm text-normal-text-muted flex items-center mt-1"
@@ -397,7 +379,7 @@
 
             <!-- Podium -->
             <div class="space-y-3">
-              <div class="text-sm text-normal-text font-nasa mb-2">Podium:</div>
+              <div class="text-sm text-normal-text mb-2">Podium:</div>
               <div class="space-y-2">
                 <SpaceCard
                   v-for="(team, index) in podiumTeams"
@@ -455,7 +437,7 @@
                       </template>
                     </div>
                     <div
-                      class="flex-1 truncate font-nasa"
+                      class="flex-1 truncate"
                       :class="
                         index === 0
                           ? 'text-amber-400'
@@ -564,17 +546,16 @@
 
           <div v-else>
             <SpaceTerminal
-              command="find_finished_tournaments"
-              title="SYSTÈME DE TOURNOIS"
-              :showCursor="true"
+              command="Aucune archive de résultats trouvée"
+              title="Avis de recherche : Résultats"
+              :showCursor="false"
               className="mb-4"
             >
               <div class="text-color-secondary-light">
-                Aucun tournoi terminé n'a été trouvé dans la base de données.
+                Aucun tournoi terminé n'a été trouvé pour l'instant.
               </div>
               <div class="text-normal-text-muted mt-2">
-                Les résultats des tournois seront affichés ici lorsqu'ils seront
-                disponibles.
+                Les résultats seront affichés ici dès qu'ils seront disponibles.
               </div>
             </SpaceTerminal>
           </div>
@@ -1107,15 +1088,72 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Grille spatiale en arrière-plan */
-.space-grid {
-  background-image: linear-gradient(
-      rgba(109, 40, 217, 0.1) 1px,
-      transparent 1px
+/* Arrière-plan Far West pour la hero */
+.west-hero-bg {
+  position: absolute;
+  inset: 0;
+}
+.west-hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at 50% 70%,
+      rgba(0, 0, 0, 0.25),
+      transparent 60%
     ),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center center;
+    radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.15), transparent 55%);
+  pointer-events: none;
+}
+.west-hero-sun {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 218, 124, 0.35),
+    rgba(255, 218, 124, 0.15) 50%,
+    transparent 70%
+  );
+  filter: blur(2px);
+}
+.west-hero-haze {
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 480px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(164, 90, 42, 0.12),
+    transparent 70%
+  );
+  filter: blur(8px);
+}
+.west-hero-dust {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background-image: radial-gradient(
+      1px 1px at 10% 80%,
+      rgba(0, 0, 0, 0.25) 50%,
+      transparent 50%
+    ),
+    radial-gradient(
+      1px 1px at 25% 60%,
+      rgba(0, 0, 0, 0.15) 50%,
+      transparent 50%
+    ),
+    radial-gradient(1px 1px at 40% 75%, rgba(0, 0, 0, 0.2) 50%, transparent 50%),
+    radial-gradient(
+      1px 1px at 65% 65%,
+      rgba(0, 0, 0, 0.15) 50%,
+      transparent 50%
+    ),
+    radial-gradient(1px 1px at 80% 70%, rgba(0, 0, 0, 0.2) 50%, transparent 50%);
 }
 
 /* Animation pulse lente */
@@ -1179,76 +1217,7 @@ onUnmounted(() => {
   animation: fade-in-up 0.6s ease-out forwards;
 }
 
-/* Style du bouton Discord */
-.space-discord-button {
-  position: relative;
-  overflow: hidden;
-}
-
-.space-discord-button::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transform: rotate(45deg);
-  transition: all 0.3s ease;
-  opacity: 0;
-}
-
-.space-discord-button:hover::after {
-  animation: shine-effect 1.5s;
-  opacity: 1;
-}
-
-@keyframes shine-effect {
-  0% {
-    transform: rotate(45deg) translateX(-100%);
-  }
-  100% {
-    transform: rotate(45deg) translateX(100%);
-  }
-}
-
-.title-container {
-  position: relative;
-  padding: 1.25rem 1rem;
-  margin-bottom: 1.5rem;
-  overflow: hidden;
-  width: 100%;
-}
-
-.title-bg {
-  position: absolute;
-  inset: 0;
-}
-
-.title-text {
-  font-size: 3rem;
-  letter-spacing: 0.15em;
-  color: white;
-  text-shadow: 0 0 10px rgba(109, 40, 217, 0.8),
-    0 0 20px rgba(109, 40, 217, 0.5), 0 0 30px rgba(109, 40, 217, 0.3);
-  position: relative;
-  z-index: 10;
-  transform: perspective(500px) rotateX(5deg);
-}
-
-@media (max-width: 640px) {
-  .title-text {
-    font-size: 2.25rem;
-  }
-}
-
-/* Styles pour l'image du jeu - DÉPLACÉ dans TournamentCard.vue */
-/* La classe game-image-container et game-image-glow sont maintenant dans TournamentCard.vue */
+/* Styles d'images spécifiques sont gérés dans TournamentCard.vue */
 
 /* Ajustements responsifs pour les cards de tournoi */
 @media (min-width: 768px) {

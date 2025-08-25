@@ -1,17 +1,7 @@
 <template>
   <SpaceContainer>
     <!-- En-tête de la page -->
-    <SpaceHeader
-      title="PROPOSITIONS DE JEUX"
-      mission="GAMES-DISCOVERY"
-      :showMissionInfo="true"
-    >
-      <template #badge v-if="proposals.length > 0">
-        <SpaceBadge variant="accent" size="lg">{{
-          proposals.length
-        }}</SpaceBadge>
-      </template>
-    </SpaceHeader>
+    <SpaceHeader title="PROPOSITIONS DE JEUX" :showMissionInfo="true" />
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Description/Introduction -->
@@ -20,7 +10,7 @@
           Seuls les jeux approuvés par les administrateurs seront votables.
         </p>
         <br />
-        <p class="font-body text-red-400 font-bold">
+        <p class="font-heading text-color-error">
           En proposant des jeux sur serveurs privés, vous vous engagez à gérer
           les serveurs si votre jeu est choisi
         </p>
@@ -31,7 +21,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-primary-light"
+            <label class="block mb-2 font-heading text-normal-text"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
@@ -52,32 +42,24 @@
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-secondary-light"
+            <label class="block mb-2 font-heading text-normal-text"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
-              <select
-                v-model="sortOption"
-                class="w-full rounded-lg border border-color-secondary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
-              >
+              <SpaceDropdown v-model="sortOption" label="Trier par">
                 <option value="default">Tri par défaut</option>
                 <option value="votesDesc">Votes (+)</option>
                 <option value="votesAsc">Votes (-)</option>
-              </select>
+              </SpaceDropdown>
 
               <div
                 v-show="sortOption === 'votesDesc' || sortOption === 'votesAsc'"
-                class="flex items-center gap-2"
               >
-                <input
-                  type="checkbox"
-                  id="positiveVotesOnly"
+                <SpaceToggle
                   v-model="onlyPositiveVotes"
-                  class="rounded border-color-primary/30 bg-background-bg-light text-color-primary focus:ring-color-primary/30"
+                  size="sm"
+                  label="Votes positifs uniquement"
                 />
-                <label for="positiveVotesOnly" class="text-sm text-normal-text">
-                  Compter uniquement les votes positifs
-                </label>
               </div>
             </div>
           </div>
@@ -85,38 +67,20 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-nasa text-color-accent-light"
+              <label class="block mb-2 font-heading text-normal-text"
                 >Rechercher un jeu</label
               >
               <SpaceInput
                 v-model="searchTerm"
                 placeholder="Nom du jeu..."
                 @input="handleSearch"
-                variant="accent"
                 :clearable="true"
-              >
-                <template #icon>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-normal-text-muted"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </template>
-              </SpaceInput>
+              />
             </div>
             <SpaceButton
               @click="showProposalForm = true"
               variant="accent"
-              className="w-full hover:scale-105 transition-transform duration-300 shine-effect"
+              className="w-full"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -144,33 +108,25 @@
       <!-- Message si aucune proposition -->
       <SpaceTerminal
         v-else-if="proposals.length === 0"
-        :command="`list_proposals --filter=${activeFilter} ${
-          searchTerm ? '--search=\'' + searchTerm + '\'' : ''
-        }`"
-        title="Console de recherche"
-        showCursor
+        :command="emptyStateMessage"
+        title="Avis de recherche : Propositions"
+        :showCursor="false"
         className="my-8"
       >
-        <div class="text-color-error font-mono">
-          Erreur 404: Aucune proposition trouvée.
-        </div>
-        <div class="text-normal-text-muted mt-2">
-          {{ emptyStateMessage }}
+        <div class="text-normal-text-muted mt-1 text-center">
+          Aucun jeu proposé pour le moment. Devenez pionnier et proposez-en un.
         </div>
       </SpaceTerminal>
 
       <SpaceTerminal
         v-else-if="filteredProposals.length === 0"
-        :command="`search_proposals --query='${searchTerm}' --filter=${activeFilter}`"
-        title="Console de recherche"
-        showCursor
+        :command="emptyStateMessage"
+        title="Avis de recherche : Résultat introuvable"
+        :showCursor="false"
         className="my-8"
       >
-        <div class="text-color-error font-mono">
-          Erreur 404: Aucun résultat pour cette recherche.
-        </div>
-        <div class="text-normal-text-muted mt-2">
-          {{ emptyStateMessage }}
+        <div class="text-normal-text-muted mt-1 text-center">
+          Ajustez vos filtres ou votre recherche.
         </div>
       </SpaceTerminal>
 
@@ -180,7 +136,7 @@
         <div
           v-for="proposal in paginatedProposals"
           :key="proposal._id"
-          class="proposal-card-wrapper transform transition-all duration-300 hover:scale-[1.01]"
+          class="proposal-card-wrapper transform transition-all duration-300"
           :class="[
             proposal.status === 'approved'
               ? 'proposal-approved'
@@ -215,7 +171,7 @@
     </div>
 
     <!-- Modal de proposition de jeu -->
-    <SpaceModal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
+    <SpaceModalAny v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
       <div class="space-y-6">
         <div>
           <label
@@ -228,15 +184,7 @@
               v-model="searchQuery"
               @input="debounceSearch"
               placeholder="Entrez le nom d'un jeu..."
-              variant="primary"
-              :stars="true"
-            >
-              <template #rightIcon v-if="searching">
-                <div
-                  class="animate-spin h-4 w-4 border-2 border-t-color-primary rounded-full"
-                ></div>
-              </template>
-            </SpaceInput>
+            />
           </div>
 
           <!-- Résultats de recherche -->
@@ -295,7 +243,7 @@
         </div>
       </div>
 
-      <template #footer>
+      <template v-slot:footer>
         <div class="flex justify-end gap-2">
           <SpaceButton @click="showProposalForm = false" variant="outline">
             Annuler
@@ -314,7 +262,7 @@
           </SpaceButton>
         </div>
       </template>
-    </SpaceModal>
+    </SpaceModalAny>
 
     <!-- Toast via le composant partagé -->
     <Toast
@@ -324,7 +272,7 @@
     />
 
     <!-- Dialog de confirmation de suppression -->
-    <SpaceModal
+    <SpaceModalAny
       v-model="deleteDialogVisible"
       title="SUPPRIMER CETTE PROPOSITION"
     >
@@ -333,7 +281,7 @@
         jeu ? Cette action est irréversible.
       </p>
 
-      <template #footer>
+      <template v-slot:footer>
         <div class="flex justify-end gap-2">
           <SpaceButton @click="deleteDialogVisible = false" variant="outline">
             Annuler
@@ -343,9 +291,9 @@
           </SpaceButton>
         </div>
       </template>
-    </SpaceModal>
+    </SpaceModalAny>
   </SpaceContainer>
-  <SpaceModal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
+  <SpaceModalAny v-model="showVoteInfo" title="DÉTAILS DES VOTES">
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
@@ -444,8 +392,7 @@
           <div
             v-for="(vote, index) in currentVotesList"
             :key="index"
-            class="p-3 hover:bg-background-bg-light/10 transition-all flex items-center"
-            :class="{ 'space-voter-animate': true }"
+            class="p-3 hover:bg-background-bg-light/10 transition-colors flex items-center"
           >
             <!-- Avatar (initiales) -->
             <div
@@ -473,12 +420,12 @@
       </SpaceCard>
     </div>
 
-    <template #footer>
+    <template v-slot:footer>
       <div class="flex justify-end">
         <SpaceButton @click="showVoteInfo = false">Fermer</SpaceButton>
       </div>
     </template>
-  </SpaceModal>
+  </SpaceModalAny>
 </template>
 
 <script setup lang="ts">
@@ -490,6 +437,20 @@ import type { GameProposal, RawgGame } from "../types";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
 import SpaceContainer from "@/components/ui/layout/Container.vue";
+import SpaceHeader from "@/components/ui/molecules/Header.vue";
+import SpaceCard from "@/components/ui/molecules/Card.vue";
+import SpaceButton from "@/components/ui/atoms/Button.vue";
+import SpaceInput from "@/components/ui/atoms/Input.vue";
+import SpaceDropdown from "@/components/ui/atoms/Dropdown.vue";
+import SpaceToggle from "@/components/ui/atoms/Toggle.vue";
+import SpaceLoader from "@/components/ui/molecules/Loader.vue";
+import SpacePagination from "@/components/ui/organisms/Pagination.vue";
+import SpaceModal from "@/components/ui/molecules/Modal.vue";
+import SpaceTerminal from "@/components/ui/organisms/Terminal.vue";
+
+// Workaround: let template use a loosely-typed alias to avoid slot typing noise
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SpaceModalAny = SpaceModal as any;
 
 // ===================================
 // ÉTAT ET RÉFÉRENCES
@@ -1022,7 +983,7 @@ onMounted(() => {
   gap: 1.5rem;
 }
 
-/* Stylisation des cartes de proposition avec effets spatiaux */
+/* Stylisation des cartes de proposition (Far West) */
 .proposal-card-wrapper {
   position: relative;
   transition: all 0.3s ease;
@@ -1030,28 +991,14 @@ onMounted(() => {
 }
 
 .proposal-card-wrapper:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
   z-index: 2;
 }
 
 .proposal-card {
   height: 100%;
-  backdrop-filter: blur(5px);
-}
-
-/* Animations améliorées */
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5),
-      0 0 30px rgba(var(--color-primary-rgb), 0.2);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
-  }
+  backdrop-filter: blur(3px);
 }
 
 .game-search-result {
@@ -1059,35 +1006,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.game-search-result:hover::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-primary),
-    transparent
-  );
-  animation: scanline 1s ease-out;
-}
-
-@keyframes scanline {
-  0% {
-    top: 0;
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
+/* Suppression de l'effet scanline et glow futuristes */
 
 /* Scrollbar personnalisée */
 .custom-scrollbar::-webkit-scrollbar {
@@ -1101,46 +1020,15 @@ onMounted(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(109, 40, 217, 0.5);
+  background: rgba(143, 102, 52, 0.5);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(109, 40, 217, 0.7);
+  background: rgba(143, 102, 52, 0.7);
 }
 
-/* Ajouter les styles pour l'animation des votants */
-.space-voter-animate {
-  position: relative;
-  overflow: hidden;
-}
-
-.space-voter-animate::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  animation: voter-slide 2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes voter-slide {
-  0% {
-    left: -100%;
-  }
-  50%,
-  100% {
-    left: 100%;
-  }
-}
+/* Animation "voter-slide" retirée pour coller au thème Far West */
 
 /* Styles spécifiques pour les propositions de différents statuts */
 .proposal-approved {
@@ -1151,45 +1039,13 @@ onMounted(() => {
   border-left: 3px solid var(--color-secondary);
 }
 
-/* Amélioration des transitions */
+/* Transitions adoucies */
 .proposal-card-wrapper,
-.game-search-result,
-.space-voter-animate {
+.game-search-result {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Effet de surbrillance pour les boutons importants */
-.shine-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.shine-effect::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(30deg);
-  animation: shine 4s infinite linear;
-  pointer-events: none;
-}
-
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) rotate(30deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(30deg);
-  }
-}
+/* Suppression de l'effet shine futuriste */
 
 /* Réactivité améliorée */
 @media (max-width: 640px) {

@@ -1,6 +1,6 @@
 <template>
   <SpaceContainer>
-    <!-- En-tête de la page avec style NASA -->
+    <!-- En-tête de la page (Far West) -->
     <SpaceHeader title="CLASSEMENT" />
     <div class="flex flex-col gap-6">
       <!-- En-tête de la page -->
@@ -31,121 +31,35 @@
         </SpaceButton>
       </div>
 
-      <!-- Filtres -->
+      <!-- Filtres (UI Dropdown) -->
       <SpaceCard variant="primary" :stars="true" className="overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Sélecteur de jeux -->
           <div>
-            <label for="game" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-heading text-color-primary-light flex items-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                Filtrer par jeu
-              </div>
-            </label>
-            <div class="relative">
-              <select
-                id="game"
-                v-model="selectedGame"
-                class="w-full rounded-lg border border-color-primary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
-              >
-                <option value="">Tous les jeux</option>
-                <option v-for="game in games" :key="game._id" :value="game._id">
-                  {{ game.name }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
+            <SpaceDropdown v-model="selectedGame" label="Filtrer par jeu">
+              <option value="">Tous les jeux</option>
+              <option v-for="game in games" :key="game._id" :value="game._id">
+                {{ game.name }}
+              </option>
+            </SpaceDropdown>
           </div>
 
           <!-- Sélecteur de saisons -->
           <div>
-            <label for="season" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-heading text-color-secondary-light flex items-center gap-2"
+            <SpaceDropdown v-model="selectedSeason" label="Filtrer par saison">
+              <option value="">Classement général</option>
+              <option
+                v-for="season in seasons"
+                :key="season._id"
+                :value="season._id"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                Filtrer par saison
-              </div>
-            </label>
-            <div class="relative">
-              <select
-                id="season"
-                v-model="selectedSeason"
-                class="w-full rounded-lg border border-color-secondary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
-              >
-                <option value="">Classement général</option>
-                <option
-                  v-for="season in seasons"
-                  :key="season._id"
-                  :value="season._id"
-                >
-                  {{
-                    season.numero === 0
-                      ? "Alors ça chill"
-                      : `Saison ${season.numero}`
-                  }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-secondary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
+                {{
+                  season.numero === 0
+                    ? "Alors ça chill"
+                    : `Saison ${season.numero}`
+                }}
+              </option>
+            </SpaceDropdown>
           </div>
         </div>
       </SpaceCard>
@@ -158,18 +72,18 @@
       <!-- Message si aucun résultat -->
       <SpaceTerminal
         v-else-if="sortedRankings.length === 0"
-        :command="`search_players ${
-          selectedGame ? '-g game_id:' + selectedGame : ''
-        } ${selectedSeason ? '-s season_id:' + selectedSeason : ''}`"
-        title="Console de recherche"
-        showCursor
+        :command="`Filtre: ${
+          selectedGame ? 'jeu=' + selectedGame : 'tous les jeux'
+        } | ${selectedSeason ? 'saison=' + selectedSeason : 'général'}`"
+        title="Avis de recherche : Classement"
+        :showCursor="false"
         className="my-8"
       >
-        <div class="text-color-error font-mono">
-          Erreur 404: Aucun joueur n'a été trouvé pour cette recherche.
+        <div class="font-mono text-color-error">
+          Aucun joueur n'a été trouvé pour cette recherche.
         </div>
         <div class="text-normal-text-muted mt-2">
-          Essayez de modifier vos critères de recherche.
+          Modifiez vos critères pour élargir la recherche.
         </div>
       </SpaceTerminal>
 
@@ -182,8 +96,8 @@
       >
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
-          <table class="min-w-full shadow-lg">
-            <thead class="bg-background-bg-light/30">
+          <table class="min-w-full west-table shadow-sm">
+            <thead class="bg-background-bg-light/20">
               <tr>
                 <th
                   scope="col"
@@ -294,7 +208,7 @@
                       :variant="
                         getRankBadgeVariant(calculateGlobalRank(index) - 1)
                       "
-                      class="mr-2 transform scale-125 shadow-glow"
+                      class="mr-2 transform scale-125"
                     >
                       {{ calculateGlobalRank(index) }}
                     </SpaceBadge>
@@ -334,7 +248,7 @@
         <div class="block md:hidden">
           <!-- Barre de tri pour mobile -->
           <div
-            class="flex justify-between items-center p-3 bg-background-bg-light/20 border-b border-background-bg-light/30"
+            class="flex justify-between items-center p-3 bg-background-bg-light/10 border-b border-background-bg-light/20"
           >
             <div
               class="flex gap-2 items-center overflow-x-auto pb-2 hide-scrollbar"
@@ -770,17 +684,14 @@ onMounted(async () => {
 
 /* Améliorations pour la responsivité des mobiles */
 @media (max-width: 640px) {
-  .space-page-container {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  /* Assure que les cartes ne débordent pas sur mobile */
+  /* S'assurer que les cartes ne débordent pas sur mobile */
+  .west-table-wrapper,
   .color-card {
     overflow: hidden;
   }
 }
 
+/* Table Far West */
 th {
   position: relative;
   text-align: center;
@@ -807,24 +718,24 @@ td:not(:last-child)::after {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(109, 40, 217, 1),
+    rgba(var(--color-card-border-rgb, 194, 143, 44), 0.8),
     transparent
   );
 }
 
-/* Garder les styles existants pour les lignes alternées, mais en éclaircissant */
+/* Lignes alternées dans des tons bruns chauds */
 .row-even {
   background-color: transparent;
 }
 
 .row-odd {
-  background-color: rgba(109, 40, 217, 0.08); /* Plus claire que l'original */
+  background-color: rgba(var(--color-accent-rgb, 194, 143, 44), 0.06);
 }
 
 .row-hover:hover {
-  background-color: rgba(109, 40, 217, 0.15); /* Plus visible au survol */
+  background-color: rgba(var(--color-accent-rgb, 194, 143, 44), 0.12);
   z-index: 1;
-  box-shadow: inset 0 0 8px rgba(109, 40, 217, 0.2);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -838,21 +749,5 @@ tbody tr {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Effet de lueur pour les badges des premiers */
-.shadow-glow {
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  }
-}
+/* Pas de lueur flashy: style plus sobre Far West */
 </style>
