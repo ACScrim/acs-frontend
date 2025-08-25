@@ -26,7 +26,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-primary-light"
+              class="h-6 w-6 mr-2 text-color-primary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -82,7 +82,7 @@
                 </option>
               </SpaceDropdown>
               <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +142,7 @@
                   </option>
                 </SpaceDropdown>
                 <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +194,7 @@
                   </option>
                 </SpaceDropdown>
                 <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -326,10 +326,10 @@
 
         <!-- Indicateur d'onglet actif -->
         <div
-          class="relative h-1 mt-6 bg-space-bg-light/40 rounded hidden md:block"
+          class="relative h-1 mt-6 bg-background-bg-light/40 rounded hidden md:block"
         >
           <div
-            class="absolute h-full bg-space-accent rounded shadow-glow-accent transition-all duration-300 ease-in-out"
+            class="absolute h-full bg-color-accent rounded shadow-glow-accent transition-all duration-300 ease-in-out"
             :style="tabIndicatorStyle"
           ></div>
         </div>

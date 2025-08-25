@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block mb-2 text-sm font-heading text-space-text"
+      class="block mb-2 text-sm font-heading text-normal-text"
     >
       {{ label }}
     </label>
@@ -27,7 +27,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :class="[
-          'w-full rounded-lg border bg-space-bg-light text-space-text font-body',
+          'w-full rounded-lg border bg-background-bg-light text-normal-text font-body',
           'focus:ring-2 focus:outline-none transition-all duration-300',
           {
             'pl-10': $slots.icon,
@@ -35,8 +35,8 @@
             'opacity-60 cursor-not-allowed': disabled,
           },
           errorMessage
-            ? 'border-space-error focus:ring-space-error/50'
-            : 'border-space-primary/30 focus:border-space-primary focus:ring-space-primary/30',
+            ? 'border-color-error focus:ring-color-error/50'
+            : 'border-color-primary/30 focus:border-color-primary focus:ring-color-primary/30',
           className,
         ]"
         :aria-invalid="!!errorMessage"
@@ -51,7 +51,7 @@
         <button
           type="button"
           @click="$emit('update:modelValue', '')"
-          class="text-space-text-dark hover:text-space-text transition-colors"
+          class="text-normal-text-dark hover:text-normal-text transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@
     <p
       v-if="errorMessage"
       :id="`${id}-error`"
-      class="mt-1 text-xs text-space-error font-body"
+      class="mt-1 text-xs text-color-error font-body"
     >
       {{ errorMessage }}
     </p>

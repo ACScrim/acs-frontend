@@ -70,7 +70,7 @@ withDefaults(defineProps<Props>(), {
   border-radius: 0.5rem;
   overflow: hidden;
   font-family: "Space Mono", monospace;
-  border: 1px solid var(--space-bg-light);
+  border: 1px solid var(--background-bg-light);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   position: relative;
 }
@@ -80,7 +80,7 @@ withDefaults(defineProps<Props>(), {
   align-items: center;
   padding: 0.5rem 1rem;
   background-color: rgba(30, 41, 59, 0.5);
-  border-bottom: 1px solid var(--space-bg-light);
+  border-bottom: 1px solid var(--background-bg-light);
 }
 
 .space-terminal-controls {
@@ -93,14 +93,14 @@ withDefaults(defineProps<Props>(), {
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background-color: var(--space-bg-light);
+  background-color: var(--background-bg-light);
   border: 1px solid rgba(30, 41, 59, 0.7);
 }
 
 .space-terminal-title {
   flex-grow: 1;
   font-size: 0.75rem;
-  color: var(--space-text-muted);
+  color: var(--normal-text-muted);
   text-align: center;
 }
 
@@ -108,7 +108,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--space-secondary);
+  color: var(--color-secondary);
 }
 
 .space-terminal-body {
@@ -123,24 +123,24 @@ withDefaults(defineProps<Props>(), {
 }
 
 .space-terminal-prompt {
-  color: var(--space-primary);
+  color: var(--color-primary);
   margin-right: 0.5rem;
   font-weight: bold;
 }
 
 .space-terminal-command {
-  color: var(--space-secondary-light);
+  color: var(--color-secondary-light);
   font-weight: 500;
 }
 
 .space-terminal-content {
   margin: 1rem 0;
-  color: var(--space-text);
+  color: var(--normal-text);
   line-height: 1.5;
 }
 
 .space-terminal-cursor {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
   font-weight: bold;
 }
 

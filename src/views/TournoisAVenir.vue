@@ -21,7 +21,7 @@
           <div class="space-y-4">
             <label
               for="game"
-              class="mb-2 font-nasa text-space-primary-light flex items-center gap-2"
+              class="mb-2 font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-color-primary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -51,7 +51,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-space-primary"
+                  class="h-5 w-5 text-color-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -69,7 +69,7 @@
 
           <!-- Options de filtrage -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-secondary-light"
+            <label class="block mb-2 font-nasa text-color-secondary-light"
               >OPTIONS DE FILTRAGE</label
             >
             <div class="space-y-3">
@@ -77,9 +77,9 @@
               <div class="flex items-center gap-3">
                 <SpaceToggle
                   v-model="showFinished"
-                  className="bg-space-secondary/20"
+                  className="bg-color-secondary/20"
                 />
-                <span class="text-space-text text-sm">
+                <span class="text-normal-text text-sm">
                   Afficher uniquement les tournois terminés
                 </span>
               </div>
@@ -88,11 +88,11 @@
               <div class="flex items-center gap-3">
                 <SpaceToggle
                   v-model="sortAscending"
-                  className="bg-space-secondary/20"
+                  className="bg-color-secondary/20"
                 />
-                <span class="text-space-text text-sm">
+                <span class="text-normal-text text-sm">
                   Ordre chronologique
-                  <span class="text-xs text-space-text-muted ml-1">
+                  <span class="text-xs text-normal-text-muted ml-1">
                     ({{
                       sortAscending ? "ancien → nouveau" : "nouveau → ancien"
                     }})
@@ -122,7 +122,7 @@
         </template>
         <div class="flex flex-col">
           <span class="font-heading text-sm">Authentification requise</span>
-          <span class="text-xs text-space-text-muted mt-1"
+          <span class="text-xs text-normal-text-muted mt-1"
             >Connectez-vous pour vous inscrire aux tournois</span
           >
           <SpaceButton
@@ -196,10 +196,10 @@
         showCursor
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucun tournoi n'a été trouvé.
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-normal-text-muted mt-2">
           Essayez de modifier vos critères de recherche ou revenez plus tard
           lorsque de nouveaux tournois seront programmés.
         </div>
@@ -209,14 +209,14 @@
     <!-- Modal de niveau requis -->
     <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
       <div class="space-y-4">
-        <p class="text-space-text">
+        <p class="text-normal-text">
           Vous n'avez pas encore défini votre niveau pour
-          <span class="text-space-primary-light font-bold">{{
+          <span class="text-color-primary-light font-bold">{{
             levelPromptGameName
           }}</span
           >.
         </p>
-        <p class="text-space-text-muted">
+        <p class="text-normal-text-muted">
           Définir votre niveau aide à l'organisation des tournois et au
           matchmaking. Vous pouvez:
         </p>
@@ -256,9 +256,9 @@
       }`"
     >
       <div class="space-y-4">
-        <p class="text-space-text">
+        <p class="text-normal-text">
           Voulez-vous
-          <span class="text-space-primary-light font-bold">
+          <span class="text-color-primary-light font-bold">
             {{
               actionType === "register"
                 ? "vous inscrire"
@@ -270,16 +270,16 @@
             }}
           </span>
           au tournoi
-          <span class="text-space-secondary-light font-bold">
+          <span class="text-color-secondary-light font-bold">
             {{ selectedTournament?.name }} </span
           >?
         </p>
 
         <div
           v-if="actionType === 'register' || actionType === 'waitlist'"
-          class="bg-space-bg-light/20 p-3 rounded-lg border border-space-bg-light/30"
+          class="bg-background-bg-light/20 p-3 rounded-lg border border-background-bg-light/30"
         >
-          <p class="text-space-text-muted text-sm">
+          <p class="text-normal-text-muted text-sm">
             <span v-if="actionType === 'register'">
               N'oubliez pas de venir vous check-in 24h avant le début du tournoi
               pour confirmer votre participation.
@@ -294,9 +294,9 @@
           v-if="
             actionType === 'unregister' || actionType === 'unregister-waitlist'
           "
-          class="bg-space-error/10 p-3 rounded-lg border border-space-error/20"
+          class="bg-color-error/10 p-3 rounded-lg border border-color-error/20"
         >
-          <p class="text-space-text-muted text-sm">
+          <p class="text-normal-text-muted text-sm">
             <span v-if="actionType === 'unregister'">
               Attention: Si vous vous désinscrivez, votre place sera attribuée à
               une personne en liste d'attente.
@@ -876,7 +876,7 @@ onMounted(async () => {
 
 /* Effets de survol spécifiques à cette vue */
 .space-hover-glow:hover {
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4);
 }
 
 /* Gestion améliorée des transitions */
@@ -893,7 +893,7 @@ onMounted(async () => {
 /* Gestion des sélecteurs custom */
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--space-primary-rgb), 0.3);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3);
 }
 
 /* Style pour les toggles */

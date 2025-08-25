@@ -1,15 +1,15 @@
 <template>
   <button
     :class="[
-      'inline-flex items-center justify-center rounded-lg transition-all duration-300',
-      'font-heading text-space-text border',
+      'inline-flex items-center justify-center rounded-md transition-all duration-300',
+      'font-heading text-normal-text border tracking-wider uppercase',
       sizeClasses,
       variantClasses,
       {
         'opacity-50 cursor-not-allowed': disabled,
         'animate-pulse-slow': loading,
       },
-      'button-animate',
+      'button-animate western-emboss',
       className,
     ]"
     :disabled="disabled || loading"
@@ -46,32 +46,32 @@
 
     <!-- Contenu -->
     <slot></slot>
-    <!-- Effet d'orbite pour variant primary -->
+    <!-- Effets spécifiques Western: subtle brass sheen on primary -->
     <div
       v-if="variant === 'primary' && !disabled && !loading"
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
+      class="absolute inset-0 overflow-hidden rounded-md pointer-events-none"
     >
       <div
-        class="absolute -inset-0.5 opacity-0 group-hover:opacity-20 transition-opacity rounded-lg bg-space-primary-light blur-sm"
+        class="absolute -inset-0.5 opacity-0 group-hover:opacity-20 transition-opacity rounded-md bg-color-accent-light blur-sm"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-primary-light animate-orbit"
+        class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-color-accent to-transparent opacity-0 group-hover:opacity-70 transition-opacity"
       ></div>
     </div>
 
     <!-- Effet de particules pour les boutons secondaires -->
     <div
       v-if="variant === 'secondary' && !disabled && !loading"
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
+      class="absolute inset-0 overflow-hidden rounded-md pointer-events-none"
     >
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-1"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-1"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-2"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-2"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-3"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-3"
       ></div>
     </div>
 
@@ -80,10 +80,10 @@
       v-if="
         !['primary', 'secondary'].includes(variant) && !disabled && !loading
       "
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
+      class="absolute inset-0 overflow-hidden rounded-md pointer-events-none"
     >
       <div
-        class="absolute inset-0 opacity-0 hover:opacity-30 transition-opacity rounded-lg bg-current animate-pulse-glow"
+        class="absolute inset-0 opacity-0 hover:opacity-30 transition-opacity rounded-md bg-current animate-pulse-glow"
       ></div>
     </div>
   </button>
@@ -135,25 +135,25 @@ const sizeClasses = computed(() => {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-space-primary hover:bg-space-primary-light border-space-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative";
+      return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative western-grain";
     case "secondary":
-      return "bg-space-secondary hover:bg-space-secondary-light border-space-secondary-dark text-white shadow-glow-secondary hover:shadow-lg";
+      return "bg-color-secondary hover:bg-color-secondary-light border-color-secondary-dark text-white shadow-glow-secondary hover:shadow-lg western-grain";
     case "accent":
-      return "bg-space-accent hover:bg-space-accent-light border-space-accent-dark text-space-bg shadow-glow-accent hover:shadow-lg";
+      return "bg-color-accent hover:bg-color-accent-light border-color-accent-dark text-background-bg shadow-glow-accent hover:shadow-lg western-grain";
     case "outline":
-      return "bg-transparent hover:bg-space-bg-light border-space-primary text-space-primary hover:text-space-primary-light";
+      return "bg-transparent hover:bg-background-bg-light border-color-primary text-color-primary hover:text-color-primary-light western-ink";
     case "ghost":
-      return "bg-transparent hover:bg-space-bg-light border-transparent text-space-text hover:text-white";
+      return "bg-transparent hover:bg-background-bg-light border-transparent text-normal-text hover:text-white western-ink";
     case "outline-error":
-      return "bg-transparent hover:bg-space-error/10 border-space-error text-space-error hover:text-space-error-light";
+      return "bg-transparent hover:bg-color-error/10 border-color-error text-color-error hover:text-color-error-light";
     case "error":
-      return "bg-space-error hover:bg-space-error-light border-space-error-dark text-white shadow-glow-error hover:shadow-lg";
+      return "bg-color-error hover:bg-color-error-light border-color-error-dark text-white shadow-glow-error hover:shadow-lg western-grain";
     case "success":
-      return "bg-space-success hover:bg-space-success-light border-space-success-dark text-white shadow-glow-success hover:shadow-lg";
+      return "bg-color-success hover:bg-color-success-light border-color-success-dark text-white shadow-glow-success hover:shadow-lg western-grain";
     case "warning":
-      return "bg-space-warning hover:bg-space-warning-light border-space-warning-dark text-space-bg shadow-glow-warning hover:shadow-lg";
+      return "bg-color-warning hover:bg-color-warning-light border-color-warning-dark text-background-bg shadow-glow-warning hover:shadow-lg western-grain";
     default:
-      return "bg-space-primary hover:bg-space-primary-light border-space-primary-dark text-white";
+      return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white";
   }
 });
 </script>
@@ -161,27 +161,27 @@ const variantClasses = computed(() => {
 <style>
 button {
   font-family: var(--font-heading);
-  position: relative; /* Assurez-vous que les boutons sont en position relative pour les animations */
-  transform: translateZ(0); /* Optimisation pour les animations */
-  will-change: transform; /* Optimisation des performances */
-  overflow: hidden; /* Contenir les effets d'animation */
+  position: relative; /* Needed for effects */
+  transform: translateZ(0);
+  will-change: transform;
+  overflow: hidden;
 }
 
 /* Augmentation générale des boutons et ajout d'effet 3D subtil */
 .button-animate {
   transform: perspective(1px) translateZ(0);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.18);
 }
 
 .button-animate:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 7px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.22);
 }
 
 .button-animate:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px) scale(0.985);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
 }
 
 .shadow-glow-primary {
@@ -197,32 +197,40 @@ button {
 }
 
 .shadow-glow-error {
-  box-shadow: 0 0 15px rgba(var(--space-error-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.5);
 }
 
 .shadow-glow-success {
-  box-shadow: 0 0 15px rgba(var(--space-success-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-success-rgb), 0.5);
 }
 
 .shadow-glow-warning {
-  box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-warning-rgb), 0.5);
 }
 
-/* Animation d'orbite améliorée */
-.animate-orbit {
-  animation: orbit 20s linear infinite;
+/* Western texture helpers */
+.western-grain {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),
+    radial-gradient(
+      120% 120% at 50% 0%,
+      rgba(255, 255, 255, 0.06),
+      rgba(0, 0, 0, 0) 60%
+    );
+  background-blend-mode: multiply;
+}
+.western-emboss {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  border-radius: 0.375rem;
 }
 
-@keyframes orbit {
-  0% {
-    transform: rotate(0deg) translateX(50px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(50px) rotate(-360deg);
-  }
+.western-ink {
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.03),
+    rgba(255, 255, 255, 0.02)
+  );
 }
 
-/* Nouvelles animations de particules */
+/* Nouvelles animations de particules (keep subtle dust motes) */
 .animate-particle-1 {
   animation: particle1 10s ease-in-out infinite;
 }

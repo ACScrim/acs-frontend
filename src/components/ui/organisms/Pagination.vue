@@ -231,7 +231,7 @@ const progressPercentage = computed(() => {
   position: absolute;
   width: 2px;
   height: 2px;
-  background: var(--space-primary);
+  background: var(--color-primary);
   border-radius: 50%;
   opacity: 0.6;
   animation: float 6s ease-in-out infinite;
@@ -277,9 +277,9 @@ const progressPercentage = computed(() => {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--space-bg-light) 20%,
-    var(--space-primary) 50%,
-    var(--space-bg-light) 80%,
+    var(--background-bg-light) 20%,
+    var(--color-primary) 50%,
+    var(--background-bg-light) 80%,
     transparent 100%
   );
   transform: translateY(-50%);
@@ -303,7 +303,7 @@ const progressPercentage = computed(() => {
   font-family: "Orbitron", sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--space-text);
+  color: var(--normal-text);
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(109, 40, 217, 0.3);
   border-radius: 8px;
@@ -347,7 +347,7 @@ const progressPercentage = computed(() => {
 
 .space-pagination-nav:not(.disabled):hover {
   background: rgba(109, 40, 217, 0.15);
-  border-color: var(--space-primary);
+  border-color: var(--color-primary);
   box-shadow: 0 0 20px rgba(109, 40, 217, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-1px);
@@ -428,9 +428,9 @@ const progressPercentage = computed(() => {
   bottom: -1px;
   background: linear-gradient(
     45deg,
-    var(--space-primary),
-    var(--space-secondary),
-    var(--space-primary)
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-primary)
   );
   background-size: 200% 200%;
   border-radius: 16px;
@@ -460,7 +460,7 @@ const progressPercentage = computed(() => {
   font-family: "Space Mono", monospace;
   font-size: 1.125rem;
   font-weight: bold;
-  color: var(--space-primary);
+  color: var(--color-primary);
   text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
   position: relative;
   z-index: 1;
@@ -525,7 +525,7 @@ const progressPercentage = computed(() => {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--space-bg-light) 50%,
+    var(--background-bg-light) 50%,
     transparent 100%
   );
 }
@@ -539,7 +539,7 @@ const progressPercentage = computed(() => {
 .separator-dot {
   width: 3px;
   height: 3px;
-  background: var(--space-primary);
+  background: var(--color-primary);
   border-radius: 50%;
   animation: dot-pulse 1.5s ease-in-out infinite;
 }
@@ -571,7 +571,7 @@ const progressPercentage = computed(() => {
 .total-number {
   font-family: "Space Mono", monospace;
   font-size: 1rem;
-  color: var(--space-text-muted);
+  color: var(--normal-text-muted);
   font-weight: 500;
 }
 
@@ -614,9 +614,9 @@ const progressPercentage = computed(() => {
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--space-primary) 0%,
-    var(--space-secondary) 50%,
-    var(--space-primary) 100%
+    var(--color-primary) 0%,
+    var(--color-secondary) 50%,
+    var(--color-primary) 100%
   );
   border-radius: 2px;
   transition: width 0.5s ease;
@@ -653,7 +653,7 @@ const progressPercentage = computed(() => {
   top: 50%;
   width: 8px;
   height: 8px;
-  background: var(--space-primary);
+  background: var(--color-primary);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
@@ -681,7 +681,7 @@ const progressPercentage = computed(() => {
 .dot-core {
   width: 100%;
   height: 100%;
-  background: var(--space-bg-light);
+  background: var(--background-bg-light);
   border-radius: 50%;
   transition: all 0.3s ease;
   position: relative;
@@ -702,7 +702,7 @@ const progressPercentage = computed(() => {
 }
 
 .space-dot.active .dot-core {
-  background: var(--space-primary);
+  background: var(--color-primary);
   box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
   transform: scale(1.2);
 }
@@ -719,12 +719,12 @@ const progressPercentage = computed(() => {
 }
 
 .space-dot:hover .dot-core {
-  background: var(--space-primary);
+  background: var(--color-primary);
   transform: scale(1.3);
 }
 
 .space-dot:hover .dot-ring {
-  border-color: var(--space-primary);
+  border-color: var(--color-primary);
   opacity: 1;
 }
 

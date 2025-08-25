@@ -21,7 +21,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-primary-light"
+            class="h-6 w-6 text-color-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -39,8 +39,8 @@
       <div v-if="selectedTournamentDetails">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div class="flex items-center space-x-3">
-            <span class="text-space-text-muted text-sm">Nom:</span>
-            <span class="text-space-text font-mono">{{
+            <span class="text-normal-text-muted text-sm">Nom:</span>
+            <span class="text-normal-text font-mono">{{
               selectedTournamentDetails.name
             }}</span>
           </div>
@@ -48,8 +48,8 @@
             v-if="selectedTournamentDetails.date"
             class="flex items-center space-x-3"
           >
-            <span class="text-space-text-muted text-sm">Date:</span>
-            <span class="text-space-text font-mono">
+            <span class="text-normal-text-muted text-sm">Date:</span>
+            <span class="text-normal-text font-mono">
               {{
                 new Date(selectedTournamentDetails.date).toLocaleDateString(
                   "fr-FR"
@@ -86,20 +86,20 @@
           </SpaceTitle>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="flex flex-col">
-              <span class="text-space-text-muted text-sm">Date</span>
-              <span class="text-space-text font-mono text-lg">
+              <span class="text-normal-text-muted text-sm">Date</span>
+              <span class="text-normal-text font-mono text-lg">
                 {{ new Date(selectedTournamentDetails.date).toLocaleString() }}
               </span>
             </div>
             <div class="flex flex-col">
-              <span class="text-space-text-muted text-sm">Joueurs</span>
-              <span class="text-space-text font-mono text-lg">
+              <span class="text-normal-text-muted text-sm">Joueurs</span>
+              <span class="text-normal-text font-mono text-lg">
                 {{ selectedTournamentDetails.players.length }}
               </span>
             </div>
             <div class="flex flex-col">
-              <span class="text-space-text-muted text-sm">Check-ins</span>
-              <span class="text-space-text font-mono text-lg">
+              <span class="text-normal-text-muted text-sm">Check-ins</span>
+              <span class="text-normal-text font-mono text-lg">
                 {{ getCheckedInCount() }} /
                 {{ selectedTournamentDetails.players.length }}
               </span>
@@ -111,15 +111,15 @@
       <!-- Barre de progression -->
       <div class="mb-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-space-text-muted text-sm"
+          <span class="text-normal-text-muted text-sm"
             >Progression des check-ins</span
           >
-          <span class="text-space-primary-light font-mono text-sm">
+          <span class="text-color-primary-light font-mono text-sm">
             {{ getCheckedInPercentage() }}%
           </span>
         </div>
         <div
-          class="w-full bg-space-bg-light rounded-full h-3 relative overflow-hidden"
+          class="w-full bg-background-bg-light rounded-full h-3 relative overflow-hidden"
         >
           <div
             class="h-full bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 rounded-full transition-all duration-500 ease-out relative shadow-lg"
@@ -131,7 +131,7 @@
             ></div>
           </div>
         </div>
-        <div class="text-center text-space-accent-light text-sm mt-2 font-mono">
+        <div class="text-center text-color-accent-light text-sm mt-2 font-mono">
           {{ getCheckedInPercentage() }}% des joueurs ont confirmé leur présence
         </div>
       </div>
@@ -193,11 +193,11 @@
           <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
               <div
-                class="w-12 h-12 bg-space-bg rounded-full flex items-center justify-center border border-space-primary/30"
+                class="w-12 h-12 bg-background-bg rounded-full flex items-center justify-center border border-color-primary/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-space-primary-light"
+                  class="h-6 w-6 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -211,7 +211,9 @@
             </div>
 
             <div class="flex-1 min-w-0">
-              <h3 class="text-space-text font-mono font-semibold truncate mb-2">
+              <h3
+                class="text-normal-text font-mono font-semibold truncate mb-2"
+              >
                 {{ player.username }}
               </h3>
 
@@ -221,7 +223,7 @@
                   player._id &&
                   selectedTournamentDetails?.registrationDates?.[player._id]
                 "
-                class="flex items-center gap-2 mb-3 text-xs text-space-text-muted"
+                class="flex items-center gap-2 mb-3 text-xs text-normal-text-muted"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -307,7 +309,7 @@
       <div class="flex flex-col items-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-space-primary-light"
+          class="h-16 w-16 text-color-primary-light"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -318,7 +320,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <SpaceTitle size="lg" className="text-space-text-muted">
+        <SpaceTitle size="lg" className="text-normal-text-muted">
           Veuillez sélectionner un tournoi pour voir les statuts des check-ins
         </SpaceTitle>
       </div>
@@ -333,7 +335,7 @@
       <div class="flex flex-col items-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-space-accent-light"
+          class="h-16 w-16 text-color-accent-light"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -343,7 +345,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <SpaceTitle size="lg" className="text-space-text-muted">
+        <SpaceTitle size="lg" className="text-normal-text-muted">
           Aucun tournoi actif pour ce jeu
         </SpaceTitle>
       </div>

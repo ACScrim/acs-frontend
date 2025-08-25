@@ -11,9 +11,10 @@
         <div class="pulse-animation absolute inset-0 rounded"></div>
         <span class="relative z-10">{{ unit.value }}</span>
       </div>
-      <span class="time-label text-2xs xs:text-xs mt-1 text-space-text-muted">{{
-        unit.label
-      }}</span>
+      <span
+        class="time-label text-2xs xs:text-xs mt-1 text-normal-text-muted"
+        >{{ unit.label }}</span
+      >
     </div>
   </div>
 </template>
@@ -39,15 +40,15 @@ const props = withDefaults(defineProps<Props>(), {
 const getVariantClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "text-space-primary-light border-space-primary/30 bg-space-primary/10";
+      return "text-color-primary-light border-color-primary/30 bg-color-primary/10";
     case "secondary":
-      return "text-space-secondary-light border-space-secondary/30 bg-space-secondary/10";
+      return "text-color-secondary-light border-color-secondary/30 bg-color-secondary/10";
     case "accent":
-      return "text-space-accent-light border-space-accent/30 bg-space-accent/10";
+      return "text-color-accent-light border-color-accent/30 bg-color-accent/10";
     case "dark":
-      return "text-space-text border-space-text/20 bg-space-bg-dark/80";
+      return "text-normal-text border-normal-text/20 bg-background-bg-dark/80";
     default:
-      return "text-space-primary-light border-space-primary/30 bg-space-primary/10";
+      return "text-color-primary-light border-color-primary/30 bg-color-primary/10";
   }
 });
 </script>

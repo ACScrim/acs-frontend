@@ -16,12 +16,13 @@
     <div class="flex flex-col gap-6 mt-6">
       <!-- Description/Introduction -->
       <SpaceCard variant="dark" className="mb-6 text-center">
-        <p class="text-space-text font-body">
+        <p class="text-normal-text font-body">
           Seuls les jeux approuvés par les administrateurs seront votables.
         </p>
         <br />
         <p class="font-body text-red-400 font-bold">
-          En proposant des jeux sur serveurs privés, vous vous engagez à gérer les serveurs si votre jeu est choisi
+          En proposant des jeux sur serveurs privés, vous vous engagez à gérer
+          les serveurs si votre jeu est choisi
         </p>
       </SpaceCard>
 
@@ -30,7 +31,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-primary-light"
+            <label class="block mb-2 font-nasa text-color-primary-light"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
@@ -51,13 +52,13 @@
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-secondary-light"
+            <label class="block mb-2 font-nasa text-color-secondary-light"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
               <select
                 v-model="sortOption"
-                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-color-secondary/30 bg-background-bg-light text-normal-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="default">Tri par défaut</option>
                 <option value="votesDesc">Votes (+)</option>
@@ -72,9 +73,9 @@
                   type="checkbox"
                   id="positiveVotesOnly"
                   v-model="onlyPositiveVotes"
-                  class="rounded border-space-primary/30 bg-space-bg-light text-space-primary focus:ring-space-primary/30"
+                  class="rounded border-color-primary/30 bg-background-bg-light text-color-primary focus:ring-color-primary/30"
                 />
-                <label for="positiveVotesOnly" class="text-sm text-space-text">
+                <label for="positiveVotesOnly" class="text-sm text-normal-text">
                   Compter uniquement les votes positifs
                 </label>
               </div>
@@ -84,7 +85,7 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-nasa text-space-accent-light"
+              <label class="block mb-2 font-nasa text-color-accent-light"
                 >Rechercher un jeu</label
               >
               <SpaceInput
@@ -97,7 +98,7 @@
                 <template #icon>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-space-text-muted"
+                    class="h-4 w-4 text-normal-text-muted"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -150,10 +151,10 @@
         showCursor
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucune proposition trouvée.
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-normal-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
       </SpaceTerminal>
@@ -165,10 +166,10 @@
         showCursor
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucun résultat pour cette recherche.
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-normal-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
       </SpaceTerminal>
@@ -218,7 +219,7 @@
       <div class="space-y-6">
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Rechercher un jeu
           </label>
@@ -232,7 +233,7 @@
             >
               <template #rightIcon v-if="searching">
                 <div
-                  class="animate-spin h-4 w-4 border-2 border-t-space-primary rounded-full"
+                  class="animate-spin h-4 w-4 border-2 border-t-color-primary rounded-full"
                 ></div>
               </template>
             </SpaceInput>
@@ -241,27 +242,27 @@
           <!-- Résultats de recherche -->
           <div
             v-if="searchResults.length > 0"
-            class="mt-2 border border-space-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-space-bg/80 custom-scrollbar"
+            class="mt-2 border border-color-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-background-bg/80 custom-scrollbar"
           >
             <div
               v-for="game in searchResults"
               :key="game.id"
               @click="selectGame(game)"
-              class="game-search-result p-3 flex items-center hover:bg-space-primary/10 cursor-pointer border-b border-space-primary/20 transition-all"
+              class="game-search-result p-3 flex items-center hover:bg-color-primary/10 cursor-pointer border-b border-color-primary/20 transition-all"
             >
               <div class="relative overflow-hidden rounded">
                 <img
                   :src="game.background_image || '/img/game-placeholder.jpg'"
                   :alt="game.name"
-                  class="w-12 h-12 object-cover rounded border border-space-primary/50"
+                  class="w-12 h-12 object-cover rounded border border-color-primary/50"
                   @error="(e) => ((e.target as HTMLImageElement).src = '/img/game-placeholder.jpg')"
                 />
               </div>
               <div class="ml-3">
-                <p class="text-space-text font-medium font-heading">
+                <p class="text-normal-text font-medium font-heading">
                   {{ game.name }}
                 </p>
-                <p class="text-space-primary-light text-xs">
+                <p class="text-color-primary-light text-xs">
                   <span v-if="game.released">{{
                     formatGameReleaseDate(game.released)
                   }}</span>
@@ -273,7 +274,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Nom du jeu
           </label>
@@ -282,14 +283,14 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Description (optionnelle)
           </label>
           <textarea
             v-model="newProposal.description"
             rows="3"
-            class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300 custom-scrollbar"
+            class="w-full rounded-lg border border-color-primary/30 bg-background-bg-light text-normal-text px-4 py-2 focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300 custom-scrollbar"
           ></textarea>
         </div>
       </div>
@@ -327,7 +328,7 @@
       v-model="deleteDialogVisible"
       title="SUPPRIMER CETTE PROPOSITION"
     >
-      <p class="text-space-text">
+      <p class="text-normal-text">
         Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
         jeu ? Cette action est irréversible.
       </p>
@@ -348,22 +349,22 @@
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
-        <h4 class="text-space-text text-lg font-heading mb-2">
+        <h4 class="text-normal-text text-lg font-heading mb-2">
           {{ selectedProposal.name }}
         </h4>
         <div
-          class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
+          class="flex justify-center items-center text-sm text-normal-text-muted space-x-4"
         >
           <div>
-            <span class="text-space-secondary">Total:</span>
+            <span class="text-color-secondary">Total:</span>
             <span :class="getVoteCountClass(selectedProposal)">
               {{ getDisplayVoteCount(selectedProposal) }}
             </span>
           </div>
           <div>
-            <span class="text-space-gold">+{{ positiveVotes.length }}</span>
-            <span class="mx-1 text-space-text-muted">/</span>
-            <span class="text-space-error">-{{ negativeVotes.length }}</span>
+            <span class="text-color-gold">+{{ positiveVotes.length }}</span>
+            <span class="mx-1 text-normal-text-muted">/</span>
+            <span class="text-color-error">-{{ negativeVotes.length }}</span>
           </div>
         </div>
       </div>
@@ -422,7 +423,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12 text-space-text-muted mb-3"
+            class="h-12 w-12 text-normal-text-muted mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -434,16 +435,16 @@
               d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="text-sm text-space-text-muted font-mono">
+          <p class="text-sm text-normal-text-muted font-mono">
             Aucun vote {{ activeTab === "positive" ? "positif" : "négatif" }}
           </p>
         </div>
 
-        <div v-else class="divide-y divide-space-bg-light/10">
+        <div v-else class="divide-y divide-background-bg-light/10">
           <div
             v-for="(vote, index) in currentVotesList"
             :key="index"
-            class="p-3 hover:bg-space-bg-light/10 transition-all flex items-center"
+            class="p-3 hover:bg-background-bg-light/10 transition-all flex items-center"
             :class="{ 'space-voter-animate': true }"
           >
             <!-- Avatar (initiales) -->
@@ -451,8 +452,8 @@
               class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mr-3"
               :class="[
                 activeTab === 'positive'
-                  ? 'bg-space-gold/20 border border-space-gold/50 text-space-gold'
-                  : 'bg-space-error/10 border border-space-error/30 text-space-error',
+                  ? 'bg-color-gold/20 border border-color-gold/50 text-color-gold'
+                  : 'bg-color-error/10 border border-color-error/30 text-color-error',
               ]"
             >
               {{ getInitials(getVoterName(vote)) }}
@@ -463,7 +464,7 @@
               <p class="font-heading text-sm">
                 {{ getVoterName(vote) }}
               </p>
-              <p class="text-xs text-space-text-muted">
+              <p class="text-xs text-normal-text-muted">
                 {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
               </p>
             </div>
@@ -703,9 +704,9 @@ const getDisplayVoteCount = (proposal: GameProposal) => {
 // Détermine les classes CSS pour l'affichage du nombre de votes
 const getVoteCountClass = (proposal: GameProposal) => {
   const count = getDisplayVoteCount(proposal);
-  if (count > 0) return "text-space-gold";
-  if (count < 0) return "text-space-error";
-  return "text-space-text";
+  if (count > 0) return "text-color-gold";
+  if (count < 0) return "text-color-error";
+  return "text-normal-text";
 };
 
 // Récupère le nom d'un votant depuis un objet vote
@@ -1030,7 +1031,7 @@ onMounted(() => {
 
 .proposal-card-wrapper:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(var(--space-primary-rgb), 0.2);
+  box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.2);
   z-index: 2;
 }
 
@@ -1042,14 +1043,14 @@ onMounted(() => {
 /* Animations améliorées */
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
+    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5),
-      0 0 30px rgba(var(--space-primary-rgb), 0.2);
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5),
+      0 0 30px rgba(var(--color-primary-rgb), 0.2);
   }
   100% {
-    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
+    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
   }
 }
 
@@ -1068,7 +1069,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
   animation: scanline 1s ease-out;
@@ -1143,11 +1144,11 @@ onMounted(() => {
 
 /* Styles spécifiques pour les propositions de différents statuts */
 .proposal-approved {
-  border-left: 3px solid var(--space-gold);
+  border-left: 3px solid var(--color-gold);
 }
 
 .proposal-pending {
-  border-left: 3px solid var(--space-secondary);
+  border-left: 3px solid var(--color-secondary);
 }
 
 /* Amélioration des transitions */

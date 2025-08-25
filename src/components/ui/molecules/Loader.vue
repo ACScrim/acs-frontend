@@ -113,8 +113,8 @@ const sizeClass = computed(() => {
   height: 12px;
   background: linear-gradient(
     135deg,
-    var(--space-primary),
-    var(--space-primary-light)
+    var(--color-primary),
+    var(--color-primary-light)
   );
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
@@ -128,8 +128,8 @@ const sizeClass = computed(() => {
   height: 8px;
   background: linear-gradient(
     135deg,
-    var(--space-secondary),
-    var(--space-secondary-light)
+    var(--color-secondary),
+    var(--color-secondary-light)
   );
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(2, 132, 199, 0.7);
@@ -150,7 +150,7 @@ const sizeClass = computed(() => {
   bottom: -30px;
   font-family: "Space Mono", monospace;
   font-size: 0.875rem;
-  color: var(--space-text);
+  color: var(--normal-text);
   animation: pulse 2s infinite;
 }
 

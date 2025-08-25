@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Rye&family=Stardos+Stencil:wght@400;700&family=Roboto+Slab:wght@300;400;600;700&display=swap");
+@import "tailwindcss";
+
+/* Wild West theme: reuses existing token names to avoid refactoring components */
+:root {
+  /* Typography */
+  --font-heading: "Rye", serif; /* Western display */
+  --font-body: "Roboto Slab", serif; /* Warm serif body */
+  --font-mono: "Space Mono", monospace; /* Keep for code-like bits */
+  --font-nasa: "Stardos Stencil", cursive; /* Temporarily mapped */
+  --font-display: "Rye", serif;
+
+  /* Palette (renamed visually but keep the same token names) */
+  /* Primary = leather/saddle */
+  --color-primary: #8b4513; /* SaddleBrown */
+  --color-primary-light: #a45a2a; /* Lighter leather */
+  --color-primary-dark: #5a2e0f; /* Dark leather */
+
+  /* Secondary = denim/steel blue */
+  --color-secondary: #355c7d; /* Dusty denim */
+  --color-secondary-light: #4f7fa3;
+  --color-secondary-dark: #20384d;
+
+  /* Accent = brass/gold */
+  --color-accent: #c28f2c; /* Brass */
+  --color-accent-light: #e2b557;
+  --color-accent-dark: #8a671f;
+
+  /* Surface/background = dusk desert */
+  --background-bg: #1a130c; /* Night desert */
+  --background-bg-light: #2b2116; /* Dune shadow */
+  --background-bg-dark: #0e0a06; /* Deep night */
+
+  /* Text */
+  --normal-text: #f8f3e7; /* Warm parchment */
+  --normal-text-muted: #cbbfa6;
+  --normal-text-dark: #8d7e6a;
+
+  /* Feedback */
+  --color-success: #5ea463; /* sage green */
+  --color-warning: #d29f36; /* golden wheat */
+  --color-error: #b05345; /* clay red */
+  --color-info: #4f7fa3; /* denim */
+
+  /* Cards */
+  --color-card-bg: rgba(26, 19, 12, 0.88);
+  --color-card-border: rgba(194, 143, 44, 0.35);
+  --color-card-shadow: rgba(0, 0, 0, 0.5);
+
+  /* Rankings metals */
+  --color-gold: #d4af37;
+  --color-gold-rgb: 212, 175, 55;
+  --color-silver: #c0c0c0;
+  --color-silver-rgb: 192, 192, 192;
+  --color-bronze: #cd7f32;
+  --color-bronze-rgb: 205, 127, 50;
+
+  /* RGB mirrors for shadows */
+  --color-primary-rgb: 139, 69, 19;
+  --color-primary-light-rgb: 164, 90, 42;
+  --color-primary-dark-rgb: 90, 46, 15;
+
+  --color-secondary-rgb: 53, 92, 125;
+  --color-secondary-light-rgb: 79, 127, 163;
+  --color-secondary-dark-rgb: 32, 56, 77;
+
+  --color-accent-rgb: 194, 143, 44;
+  --color-accent-light-rgb: 226, 181, 87;
+  --color-accent-dark-rgb: 138, 103, 31;
+
+  --color-success-rgb: 94, 164, 99;
+  --color-warning-rgb: 210, 159, 54;
+  --color-error-rgb: 176, 83, 69;
+  --color-info-rgb: 79, 127, 163;
+
+  --color-card-bg-rgb: 26, 19, 12;
+  --color-card-border-rgb: 194, 143, 44;
+  --color-section-profile-rgb: 194, 143, 44;
+  --color-section-statistics-rgb: 79, 127, 163;
+  --color-section-medals-rgb: 176, 83, 69;
+
+  /* Glows swap to warm candlelight tones */
+  --shadow-glow-primary: 0 0 15px rgba(139, 69, 19, 0.4);
+  --shadow-glow-secondary: 0 0 15px rgba(53, 92, 125, 0.35);
+  --shadow-glow-accent: 0 0 15px rgba(194, 143, 44, 0.45);
+  --shadow-glow-profile: 0 0 25px rgba(194, 143, 44, 0.25);
+  --shadow-glow-statistics: 0 0 15px rgba(79, 127, 163, 0.2);
+  --shadow-glow-medals: 0 0 15px rgba(176, 83, 69, 0.25);
+  --shadow-glow-performance: 0 0 15px rgba(194, 143, 44, 0.2);
+  --shadow-card-base: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Utility classes mapped to tokens (keep names for compatibility) */
+body {
+  font-family: var(--font-body);
+  background-color: var(--background-bg);
+  color: var(--normal-text);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+.font-nasa {
+  font-family: var(--font-heading);
+}
+.font-display {
+  font-family: var(--font-display);
+}
+
+.bg-color-primary {
+  background-color: var(--color-primary);
+}
+.bg-color-primary-light {
+  background-color: var(--color-primary-light);
+}
+.bg-color-primary-dark {
+  background-color: var(--color-primary-dark);
+}
+.bg-color-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-color-secondary-light {
+  background-color: var(--color-secondary-light);
+}
+.bg-color-secondary-dark {
+  background-color: var(--color-secondary-dark);
+}
+.bg-color-accent {
+  background-color: var(--color-accent);
+}
+.bg-color-accent-light {
+  background-color: var(--color-accent-light);
+}
+.bg-color-accent-dark {
+  background-color: var(--color-accent-dark);
+}
+.bg-background-bg {
+  background-color: var(--background-bg);
+}
+.bg-background-bg-light {
+  background-color: var(--background-bg-light);
+}
+.bg-background-bg-dark {
+  background-color: var(--background-bg-dark);
+}
+
+.text-normal-text {
+  color: var(--normal-text);
+}
+.text-normal-text-muted {
+  color: var(--normal-text-muted);
+}
+.text-normal-text-dark {
+  color: var(--normal-text-dark);
+}
+.text-color-primary {
+  color: var(--color-primary);
+}
+.text-color-secondary {
+  color: var(--color-secondary);
+}
+.text-color-accent {
+  color: var(--color-accent);
+}
+
+.border-color-primary {
+  border-color: var(--color-primary);
+}
+.border-color-primary-light {
+  border-color: var(--color-primary-light);
+}
+.border-color-primary-dark {
+  border-color: var(--color-primary-dark);
+}
+.border-color-secondary {
+  border-color: var(--color-secondary);
+}
+.border-color-secondary-light {
+  border-color: var(--color-secondary-light);
+}
+.border-background-bg {
+  border-color: var(--background-bg);
+}
+.border-background-bg-light {
+  border-color: var(--background-bg-light);
+}
+
+/* Opacity helpers */
+.border-color-primary\/30 {
+  border-color: rgba(139, 69, 19, 0.3);
+}
+.bg-color-primary\/10 {
+  background-color: rgba(139, 69, 19, 0.1);
+}
+.bg-background-bg-light\/10 {
+  background-color: rgba(43, 33, 22, 0.1);
+}
+.bg-background-bg-light\/20 {
+  background-color: rgba(43, 33, 22, 0.2);
+}
+.bg-background-bg-light\/30 {
+  background-color: rgba(43, 33, 22, 0.3);
+}
+.divide-background-bg-light\/30 {
+  border-color: rgba(43, 33, 22, 0.3);
+}
+.divide-background-bg-light\/20 {
+  border-color: rgba(43, 33, 22, 0.2);
+}
+
+/* Glows */
+.shadow-glow-primary {
+  box-shadow: var(--shadow-glow-primary);
+}
+.shadow-glow-secondary {
+  box-shadow: var(--shadow-glow-secondary);
+}
+.shadow-glow-accent {
+  box-shadow: var(--shadow-glow-accent);
+}
+.shadow-glow-error {
+  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.5);
+}
+.shadow-glow-success {
+  box-shadow: 0 0 15px rgba(var(--color-success-rgb), 0.5);
+}
+.shadow-glow-warning {
+  box-shadow: 0 0 15px rgba(var(--color-warning-rgb), 0.5);
+}
+
+/* Links */
+a {
+  color: var(--color-accent-light);
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+a:hover {
+  color: #f0d089;
+  text-decoration: underline;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  background-color: #2b2116;
+  color: var(--normal-text);
+  border: 1px solid #4a3825;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.25);
+}
+
+/* Subtle parchment gradient helper for panels/cards */
+.parchment-surface {
+  background: radial-gradient(
+      120% 120% at 50% 10%,
+      rgba(255, 255, 255, 0.02),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.06));
+  backdrop-filter: blur(2px);
+}
+
+/* Optional: rope-like border for decorative elements */
+.rope-border {
+  position: relative;
+  border: 1px solid rgba(194, 143, 44, 0.6);
+}
+.rope-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 2px dashed rgba(194, 143, 44, 0.35);
+  pointer-events: none;
+}

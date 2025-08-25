@@ -27,10 +27,10 @@
       style="top: -15%; right: -15%; width: 50%; height: 50%"
     >
       <div
-        class="w-full h-full rounded-full bg-space-error-dark/30 blur-2xl relative"
+        class="w-full h-full rounded-full bg-color-error-dark/30 blur-2xl relative"
       >
         <div
-          class="absolute inset-0 rounded-full bg-gradient-to-br from-space-error/30 to-transparent"
+          class="absolute inset-0 rounded-full bg-gradient-to-br from-color-error/30 to-transparent"
         ></div>
       </div>
     </div>
@@ -46,14 +46,14 @@
         <!-- Icône d'erreur avec effet de pulsation -->
         <div class="relative inline-block mb-6">
           <div
-            class="absolute inset-0 bg-space-error/20 rounded-full blur-xl animate-pulse-slow"
+            class="absolute inset-0 bg-color-error/20 rounded-full blur-xl animate-pulse-slow"
           ></div>
           <div
-            class="relative z-10 p-4 rounded-full bg-space-bg border border-space-error/50 inline-block"
+            class="relative z-10 p-4 rounded-full bg-background-bg border border-color-error/50 inline-block"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-12 w-12 text-space-error"
+              class="h-12 w-12 text-color-error"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -69,12 +69,12 @@
         </div>
 
         <!-- Titre de l'erreur -->
-        <SpaceTitle size="2xl" :glitch="true" className="mb-4 text-space-error">
+        <SpaceTitle size="2xl" :glitch="true" className="mb-4 text-color-error">
           {{ title }}
         </SpaceTitle>
 
         <!-- Message d'erreur -->
-        <p class="text-space-text mb-8">{{ message }}</p>
+        <p class="text-normal-text mb-8">{{ message }}</p>
 
         <!-- Affichage spécifique pour l'erreur de serveur Discord -->
         <div v-if="errorType === 'guild_required'" class="space-y-6 mb-6">
@@ -83,10 +83,10 @@
             title="AUTHENTIFICATION · DISCORD"
             className="text-left mb-6"
           >
-            <div class="text-space-error">
+            <div class="text-color-error">
               Erreur: Vous n'êtes pas membre du serveur Discord ACS.
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-normal-text-muted mt-2">
               Pour accéder à la plateforme, vous devez d'abord rejoindre notre
               serveur Discord.
             </div>
@@ -116,7 +116,7 @@
             REJOINDRE LE SERVEUR DISCORD
           </SpaceButton>
 
-          <p class="text-space-text-muted">
+          <p class="text-normal-text-muted">
             Après avoir rejoint le serveur Discord,
             <SpaceButton
               @click="retryAuth"
@@ -135,10 +135,10 @@
             title="AUTHENTIFICATION · SYSTÈME"
             className="text-left mb-6"
           >
-            <div class="text-space-error">
+            <div class="text-color-error">
               Une erreur est survenue lors de l'authentification.
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-normal-text-muted mt-2">
               Veuillez réessayer ou contacter un administrateur si le problème
               persiste.
             </div>

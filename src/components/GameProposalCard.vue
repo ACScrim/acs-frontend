@@ -27,7 +27,7 @@
             @error="(e) => ((e.target as HTMLImageElement).src = '/img/game-placeholder.jpg')"
           />
           <div
-            class="absolute inset-0 bg-space-bg/50 group-hover:bg-space-bg/30 transition-all duration-300"
+            class="absolute inset-0 bg-background-bg/50 group-hover:bg-background-bg/30 transition-all duration-300"
           ></div>
 
           <!-- Élément décoratif -->
@@ -36,16 +36,16 @@
               class="absolute top-0 right-0 w-5 h-5 border-t border-r transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-space-gold'
-                  : 'border-space-silver',
+                  ? 'border-color-gold'
+                  : 'border-color-silver',
               ]"
             ></div>
             <div
               class="absolute bottom-0 left-0 w-5 h-5 border-b border-l transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-space-gold'
-                  : 'border-space-silver',
+                  ? 'border-color-gold'
+                  : 'border-color-silver',
               ]"
             ></div>
           </div>
@@ -56,7 +56,7 @@
       <div class="sm:w-3/4 flex flex-col">
         <!-- En-tête avec titre et badge de statut -->
         <div class="flex justify-between items-start mb-3">
-          <h3 class="text-xl font-heading text-space-text font-medium">
+          <h3 class="text-xl font-heading text-normal-text font-medium">
             {{ proposal.name }}
           </h3>
           <!-- Badge statut -->
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Description -->
-        <p class="text-space-text-muted text-sm mb-4 flex-grow">
+        <p class="text-normal-text-muted text-sm mb-4 flex-grow">
           {{ proposal.description || "Aucune description fournie." }}
         </p>
         <!-- Footer avec informations proposant et système de vote -->
@@ -84,9 +84,9 @@
           <div
             class="text-sm space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-4"
           >
-            <div class="flex items-center text-space-primary-light">
+            <div class="flex items-center text-color-primary-light">
               <div
-                class="w-2 h-2 rounded-full bg-space-primary animate-pulse mr-2"
+                class="w-2 h-2 rounded-full bg-color-primary animate-pulse mr-2"
               ></div>
               <span
                 >Proposé par
@@ -95,8 +95,8 @@
                 }}</span></span
               >
             </div>
-            <div class="flex items-center text-space-secondary-light sm:mt-0">
-              <div class="w-2 h-2 rounded-full bg-space-secondary mr-2"></div>
+            <div class="flex items-center text-color-secondary-light sm:mt-0">
+              <div class="w-2 h-2 rounded-full bg-color-secondary mr-2"></div>
               <span>{{ formatDate(proposal.createdAt) }}</span>
             </div>
           </div>
@@ -159,7 +159,7 @@
         <!-- Actions admin -->
         <div
           v-if="isAdmin"
-          class="mt-4 flex justify-end space-x-3 border-t border-space-bg-light/20 pt-3"
+          class="mt-4 flex justify-end space-x-3 border-t border-background-bg-light/20 pt-3"
           @click.stop
         >
           <!-- Actions sur les propositions en attente -->
@@ -343,9 +343,9 @@ const getVoteButtonVariant = (voteType: number) => {
  * @returns {string} Les classes CSS à appliquer
  */
 const getVoteCountClass = () => {
-  if (displayVoteCount.value > 0) return "text-space-gold";
-  if (displayVoteCount.value < 0) return "text-space-error";
-  return "text-space-text";
+  if (displayVoteCount.value > 0) return "text-color-gold";
+  if (displayVoteCount.value < 0) return "text-color-error";
+  return "text-normal-text";
 };
 
 // ================================================

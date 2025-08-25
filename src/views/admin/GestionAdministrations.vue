@@ -28,7 +28,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-space-primary"
+              class="h-5 w-5 text-color-primary"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -60,7 +60,7 @@
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-secondary-light"
+                class="h-6 w-6 mr-2 text-color-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -75,25 +75,25 @@
 
         <!-- En-tête du tableau -->
         <div
-          class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] bg-space-bg-light/40 p-4 border-b border-space-primary/20 rounded-t-lg"
+          class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] bg-background-bg-light/40 p-4 border-b border-color-primary/20 rounded-t-lg"
         >
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
           >
             Nom d'utilisateur
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
           >
             Email
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
           >
             Rôle
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
           >
             Actions
           </div>
@@ -104,15 +104,15 @@
           <div
             v-for="user in filteredUsers"
             :key="user._id"
-            class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/20 transition-colors duration-200 relative group"
+            class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] p-3 border-b border-background-bg-light/30 hover:bg-background-bg-light/20 transition-colors duration-200 relative group"
           >
             <!-- Indicateur de rôle (barre colorée) -->
             <div
               class="absolute left-0 top-0 bottom-0 w-1"
               :class="{
-                'bg-space-text-muted/50': user.role === 'user',
-                'bg-space-primary/70': user.role === 'admin',
-                'bg-space-accent/70': user.role === 'superadmin',
+                'bg-normal-text-muted/50': user.role === 'user',
+                'bg-color-primary/70': user.role === 'admin',
+                'bg-color-accent/70': user.role === 'superadmin',
               }"
             ></div>
 
@@ -121,11 +121,11 @@
               <div
                 class="w-10 h-10 rounded-full mr-3 overflow-hidden flex items-center justify-center border-2"
                 :class="{
-                  'border-space-text-muted/30 bg-space-bg-light/50':
+                  'border-normal-text-muted/30 bg-background-bg-light/50':
                     user.role === 'user',
-                  'border-space-primary/30 bg-space-bg-light/50':
+                  'border-color-primary/30 bg-background-bg-light/50':
                     user.role === 'admin',
-                  'border-space-accent/30 bg-space-bg-light/50':
+                  'border-color-accent/30 bg-background-bg-light/50':
                     user.role === 'superadmin',
                 }"
               >
@@ -136,18 +136,18 @@
                   class="w-full h-full object-cover"
                   @error="handleAvatarError(user)"
                 />
-                <span v-else class="text-space-text font-nasa text-sm">
+                <span v-else class="text-normal-text font-nasa text-sm">
                   {{ getUserInitials(user.username) }}
                 </span>
               </div>
-              <span class="text-space-text font-nasa text-sm">
+              <span class="text-normal-text font-nasa text-sm">
                 {{ user.username }}
               </span>
             </div>
 
             <!-- Email -->
             <div
-              class="flex items-center px-2 text-space-text-muted font-mono text-sm md:flex"
+              class="flex items-center px-2 text-normal-text-muted font-mono text-sm md:flex"
             >
               {{ user.email }}
             </div>
@@ -218,7 +218,7 @@
               title="Recherche d'utilisateurs"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-normal-text-muted">
                 Aucun utilisateur ne correspond à votre recherche
               </div>
             </SpaceTerminal>
@@ -230,10 +230,10 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
         <SpaceCard variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-normal-text font-nasa mb-2">
               {{ users.length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-normal-text-muted font-nasa">
               Utilisateurs total
             </div>
           </div>
@@ -241,10 +241,10 @@
 
         <SpaceCard variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-normal-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "admin").length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-normal-text-muted font-nasa">
               Administrateurs
             </div>
           </div>
@@ -252,10 +252,10 @@
 
         <SpaceCard variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-normal-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "superadmin").length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-normal-text-muted font-nasa">
               Superadmins
             </div>
           </div>
@@ -272,7 +272,7 @@
       title="Confirmation de suppression"
       className="max-w-md"
     >
-      <div class="text-space-text mb-6">
+      <div class="text-normal-text mb-6">
         {{ deleteConfirmMessage }}
       </div>
       <template #footer>
@@ -531,7 +531,7 @@ onMounted(() => {
 /* Scrollbar personnalisée */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--space-primary-light) var(--space-bg);
+  scrollbar-color: var(--color-primary-light) var(--background-bg);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -539,13 +539,13 @@ onMounted(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--space-bg-light);
+  background: var(--background-bg-light);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--space-primary-light);
+  background-color: var(--color-primary-light);
   border-radius: 4px;
-  border: 2px solid var(--space-bg);
+  border: 2px solid var(--background-bg);
 }
 </style>

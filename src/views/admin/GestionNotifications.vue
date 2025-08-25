@@ -17,7 +17,7 @@
     <SpaceCard v-if="tab === 'create'" variant="primary" :stars="true" :decorated="true">
       <template #header>
         <div class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-color-primary-light" fill="currentColor"
             viewBox="0 0 24 24">
             <path
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -46,7 +46,7 @@
         </div>
 
         <button type="submit"
-          class="px-4 py-2 bg-space-primary text-white rounded-md hover:bg-space-primary-dark transition-colors">
+          class="px-4 py-2 bg-color-primary text-white rounded-md hover:bg-color-primary-dark transition-colors">
           Envoyer la notification
         </button>
 
@@ -58,7 +58,7 @@
     <SpaceCard v-else-if="tab === 'stats'" variant="primary" :stars="true" :decorated="true">
       <template #header>
         <div class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-color-primary-light" fill="currentColor"
             viewBox="0 0 24 24">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v4z" />
@@ -72,10 +72,10 @@
         <!-- Total des notifications envoyées -->
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
-            <div class="text-3xl font-bold text-space-primary mb-2">{{ stats.total || 0 }}</div>
-            <div class="text-space-text-muted text-sm">Total envoyée{{ stats.total > 1 ? "s" : "" }}</div>
+            <div class="text-3xl font-bold text-color-primary mb-2">{{ stats.total || 0 }}</div>
+            <div class="text-normal-text-muted text-sm">Total envoyée{{ stats.total > 1 ? "s" : "" }}</div>
             <div class="flex items-center justify-center mt-2 text-xs">
-              <span class="text-space-success">+{{ stats.totalThisWeek || 0 }} cette semaine</span>
+              <span class="text-color-success">+{{ stats.totalThisWeek || 0 }} cette semaine</span>
             </div>
           </div>
         </SpaceCard>
@@ -83,10 +83,10 @@
         <!-- Utilisateurs abonnés -->
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
-            <div class="text-3xl font-bold text-space-secondary mb-2">{{ stats.subscribedUsers || 0 }}</div>
-            <div class="text-space-text-muted text-sm">Utilisateur{{ stats.subscribedUsers > 1 ? "s" : "" }} abonné{{ stats.subscribedUsers > 1 ? "s" : "" }}</div>
+            <div class="text-3xl font-bold text-color-secondary mb-2">{{ stats.subscribedUsers || 0 }}</div>
+            <div class="text-normal-text-muted text-sm">Utilisateur{{ stats.subscribedUsers > 1 ? "s" : "" }} abonné{{ stats.subscribedUsers > 1 ? "s" : "" }}</div>
             <div class="flex items-center justify-center mt-2 text-xs">
-              <span class="text-space-warning">+{{ stats.newSubscribersThisWeek || 0 }} cette semaine</span>
+              <span class="text-color-warning">+{{ stats.newSubscribersThisWeek || 0 }} cette semaine</span>
             </div>
           </div>
         </SpaceCard>
@@ -94,11 +94,11 @@
         <!-- Taux de délivrance -->
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
-            <div class="text-3xl font-bold text-space-accent mb-2">{{ stats.deliveryRate || 0 }}%</div>
-            <div class="text-space-text-muted text-sm">Taux de délivrance</div>
-            <div class="w-full bg-space-bg-light rounded-full h-2 mt-2">
+            <div class="text-3xl font-bold text-color-accent mb-2">{{ stats.deliveryRate || 0 }}%</div>
+            <div class="text-normal-text-muted text-sm">Taux de délivrance</div>
+            <div class="w-full bg-background-bg-light rounded-full h-2 mt-2">
               <div 
-                class="bg-space-accent h-2 rounded-full transition-all duration-500"
+                class="bg-color-accent h-2 rounded-full transition-all duration-500"
                 :style="{ width: `${stats.deliveryRate || 0}%` }"
               ></div>
             </div>
@@ -108,9 +108,9 @@
         <!-- Type le plus populaire -->
         <SpaceCard variant="dark" className="text-center">
           <div class="p-4">
-            <div class="text-2xl font-bold text-space-primary mb-2">{{ stats.topType || 'N/A' }}</div>
-            <div class="text-space-text-muted text-sm">Type le plus populaire</div>
-            <div class="text-xs text-space-text-muted mt-1">
+            <div class="text-2xl font-bold text-color-primary mb-2">{{ stats.topType || 'N/A' }}</div>
+            <div class="text-normal-text-muted text-sm">Type le plus populaire</div>
+            <div class="text-xs text-normal-text-muted mt-1">
               {{ stats.topTypeCount || 0 }} notification{{ (stats.topTypeCount || 0) > 1 ? 's' : '' }}
             </div>
           </div>
@@ -119,8 +119,8 @@
 
       <!-- Notifications par type -->
       <div class="mb-8">
-        <h3 class="text-xl font-nasa text-space-text mb-4 flex items-center">
-          <svg class="h-5 w-5 mr-2 text-space-primary" fill="currentColor" viewBox="0 0 20 20">
+        <h3 class="text-xl font-nasa text-normal-text mb-4 flex items-center">
+          <svg class="h-5 w-5 mr-2 text-color-primary" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           Répartition par type
@@ -135,22 +135,22 @@
                     <span class="text-xl">🏆</span>
                   </div>
                   <div>
-                    <h4 class="font-nasa text-space-text">Tournois</h4>
-                    <p class="text-xs text-space-text-muted">tournaments</p>
+                    <h4 class="font-nasa text-normal-text">Tournois</h4>
+                    <p class="text-xs text-normal-text-muted">tournaments</p>
                   </div>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold text-yellow-400">{{ stats.byType?.tournaments || 0 }}</div>
-                  <div class="text-xs text-space-text-muted">cette semaine</div>
+                  <div class="text-xs text-normal-text-muted">cette semaine</div>
                 </div>
               </div>
-              <div class="w-full bg-space-bg-light rounded-full h-2">
+              <div class="w-full bg-background-bg-light rounded-full h-2">
                 <div 
                   class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-700"
                   :style="{ width: `${getTypePercentage('tournaments')}%` }"
                 ></div>
               </div>
-              <div class="text-xs text-space-text-muted mt-1 text-center">
+              <div class="text-xs text-normal-text-muted mt-1 text-center">
                 {{ getTypePercentage('tournaments') }}% du total
               </div>
             </div>
@@ -165,22 +165,22 @@
                     <span class="text-xl">🏅</span>
                   </div>
                   <div>
-                    <h4 class="font-nasa text-space-text">Badges</h4>
-                    <p class="text-xs text-space-text-muted">badges</p>
+                    <h4 class="font-nasa text-normal-text">Badges</h4>
+                    <p class="text-xs text-normal-text-muted">badges</p>
                   </div>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold text-purple-400">{{ stats.byType?.badges || 0 }}</div>
-                  <div class="text-xs text-space-text-muted">cette semaine</div>
+                  <div class="text-xs text-normal-text-muted">cette semaine</div>
                 </div>
               </div>
-              <div class="w-full bg-space-bg-light rounded-full h-2">
+              <div class="w-full bg-background-bg-light rounded-full h-2">
                 <div 
                   class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-700"
                   :style="{ width: `${getTypePercentage('badges')}%` }"
                 ></div>
               </div>
-              <div class="text-xs text-space-text-muted mt-1 text-center">
+              <div class="text-xs text-normal-text-muted mt-1 text-center">
                 {{ getTypePercentage('badges') }}% du total
               </div>
             </div>
@@ -195,22 +195,22 @@
                     <span class="text-xl">⏰</span>
                   </div>
                   <div>
-                    <h4 class="font-nasa text-space-text">Rappels</h4>
-                    <p class="text-xs text-space-text-muted">reminders</p>
+                    <h4 class="font-nasa text-normal-text">Rappels</h4>
+                    <p class="text-xs text-normal-text-muted">reminders</p>
                   </div>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold text-blue-400">{{ stats.byType?.reminders || 0 }}</div>
-                  <div class="text-xs text-space-text-muted">cette semaine</div>
+                  <div class="text-xs text-normal-text-muted">cette semaine</div>
                 </div>
               </div>
-              <div class="w-full bg-space-bg-light rounded-full h-2">
+              <div class="w-full bg-background-bg-light rounded-full h-2">
                 <div 
                   class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all duration-700"
                   :style="{ width: `${getTypePercentage('reminders')}%` }"
                 ></div>
               </div>
-              <div class="text-xs text-space-text-muted mt-1 text-center">
+              <div class="text-xs text-normal-text-muted mt-1 text-center">
                 {{ getTypePercentage('reminders') }}% du total
               </div>
             </div>
@@ -225,22 +225,22 @@
                     <span class="text-xl">🔧</span>
                   </div>
                   <div>
-                    <h4 class="font-nasa text-space-text">Système</h4>
-                    <p class="text-xs text-space-text-muted">system</p>
+                    <h4 class="font-nasa text-normal-text">Système</h4>
+                    <p class="text-xs text-normal-text-muted">system</p>
                   </div>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold text-green-400">{{ stats.byType?.system || 0 }}</div>
-                  <div class="text-xs text-space-text-muted">cette semaine</div>
+                  <div class="text-xs text-normal-text-muted">cette semaine</div>
                 </div>
               </div>
-              <div class="w-full bg-space-bg-light rounded-full h-2">
+              <div class="w-full bg-background-bg-light rounded-full h-2">
                 <div 
                   class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-700"
                   :style="{ width: `${getTypePercentage('system')}%` }"
                 ></div>
               </div>
-              <div class="text-xs text-space-text-muted mt-1 text-center">
+              <div class="text-xs text-normal-text-muted mt-1 text-center">
                 {{ getTypePercentage('system') }}% du total
               </div>
             </div>
@@ -250,8 +250,8 @@
 
       <!-- Notifications récentes -->
       <div class="mb-8">
-        <h3 class="text-xl font-nasa text-space-text mb-4 flex items-center">
-          <svg class="h-5 w-5 mr-2 text-space-primary" fill="currentColor" viewBox="0 0 20 20">
+        <h3 class="text-xl font-nasa text-normal-text mb-4 flex items-center">
+          <svg class="h-5 w-5 mr-2 text-color-primary" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
             <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
           </svg>
@@ -261,7 +261,7 @@
           <div 
             v-for="notification in notifications" 
             :key="notification._id"
-            class="border border-space-border rounded-lg p-4 bg-space-bg-light/50 hover:bg-space-bg-light transition-colors"
+            class="border border-space-border rounded-lg p-4 bg-background-bg-light/50 hover:bg-background-bg-light transition-colors"
           >
             <div class="flex items-start justify-between">
               <div class="flex items-start space-x-3 flex-1">
@@ -285,13 +285,13 @@
 
                 <!-- Contenu -->
                 <div class="flex-1 min-w-0">
-                  <h4 class="text-space-text font-nasa text-sm font-semibold">
+                  <h4 class="text-normal-text font-nasa text-sm font-semibold">
                     {{ notification.title }}
                   </h4>
-                  <p class="text-space-text-muted text-xs mt-1 line-clamp-2">
+                  <p class="text-normal-text-muted text-xs mt-1 line-clamp-2">
                     {{ notification.body }}
                   </p>
-                  <div class="flex items-center space-x-4 mt-2 text-xs text-space-text-muted">
+                  <div class="flex items-center space-x-4 mt-2 text-xs text-normal-text-muted">
                     <span class="flex items-center">
                       <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
@@ -323,7 +323,7 @@
           </div>
 
           <!-- Message si aucune notification -->
-          <div v-if="!notifications.length" class="text-center py-8 text-space-text-muted">
+          <div v-if="!notifications.length" class="text-center py-8 text-normal-text-muted">
             <svg class="h-12 w-12 mx-auto mb-3 opacity-50" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
               <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
@@ -338,7 +338,7 @@
         <button
           @click="refreshStats"
           :disabled="loadingStats"
-          class="flex items-center px-4 py-2 bg-space-primary hover:bg-space-primary-dark text-white rounded-lg transition-colors disabled:opacity-50"
+          class="flex items-center px-4 py-2 bg-color-primary hover:bg-color-primary-dark text-white rounded-lg transition-colors disabled:opacity-50"
         >
           <svg 
             class="h-4 w-4 mr-2"
