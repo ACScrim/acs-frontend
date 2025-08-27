@@ -45,7 +45,7 @@
             class="absolute inset-0 rounded-full bg-color-primary/10 filter blur-xl group-hover:bg-color-primary/20 transition-all duration-500 opacity-70"
           ></div>
           <img
-            src="../assets/sanslueur.png"
+            src="../assets/logo_western.png"
             class="h-36 sm:h-40 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
             alt="Logo"
           />
