@@ -172,6 +172,7 @@
             @open-registration="openRegistrationPopup"
             @check-in="checkIn"
             @show-level-prompt="showLevelPromptModal"
+            @unregister-caster="unregisterCaster"
           />
         </div>
 
@@ -535,6 +536,23 @@ const openRegistrationPopup = (tournament: Tournament, type: string) => {
 
   showPopup.value = true;
 };
+
+/**
+ * Désinscrit un caster
+ * @param tournamentId 
+ * @param userId 
+ */
+const unregisterCaster = async (tournamentId: string, userId: string) => {
+  try {
+    await tournamentService.unregisterPlayerAsCaster(tournamentId, userId);
+
+    await fetchTournaments();
+  } catch (error) {
+    console.error("Erreur lors de l'action:", error);
+    showMessage("error", `Erreur lors de l'action.`);
+    closePopup();
+  }
+}
 
 /**
  * Déclenche le processus d'authentification Discord

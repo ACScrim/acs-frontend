@@ -154,7 +154,7 @@
       >
         <!-- Bouton inscription / liste d'attente -->
         <SpaceButton
-          v-if="!isUserRegistered && !isUserInWaitlist"
+          v-if="!isUserRegistered && !isUserInWaitlist && !isUserRegisteredAsCaster"
           @click="handleRegistration"
           :variant="isTournamentFull ? 'secondary' : 'primary'"
           className="w-full"
@@ -220,7 +220,7 @@
 
         <!-- Bouton désinscription -->
         <SpaceButton
-          v-else-if="isUserRegistered"
+          v-else-if="isUserRegistered && !isUserRegisteredAsCaster"
           @click="$emit('open-registration', tournament, 'unregister')"
           variant="outline"
           className="w-full"
@@ -238,6 +238,27 @@
             />
           </svg>
           Se désinscrire
+        </SpaceButton>
+
+        <SpaceButton
+          v-else-if="isUserRegisteredAsCaster && !isUserRegistered"
+          @click="user && $emit('unregister-caster', tournament._id, user._id)"
+          variant="outline"
+          className="w-full"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Quitter le cast
         </SpaceButton>
 
         <!-- Bouton définir niveau -->
@@ -334,11 +355,13 @@ const props = defineProps({
  * @event open-registration - Ouvre le modal d'inscription (register/unregister/waitlist)
  * @event check-in - Gère l'enregistrement du check-in
  * @event show-level-prompt - Affiche le modal pour définir le niveau du joueur
+ * @event unregister-caster - Désinscrit un caster
  */
 const emit = defineEmits([
   "open-registration",
   "check-in",
   "show-level-prompt",
+  "unregister-caster"
 ]);
 // #endregion
 
@@ -436,6 +459,13 @@ const isUserRegistered = computed(() => {
         (player) => player.userId === props.user?._id
       )
     : false;
+});
+
+const isUserRegisteredAsCaster = computed(() => {
+  return props.user ? props.tournament.casters.some(
+    (player) => player.userId === props.user?._id
+  )
+  : false;
 });
 
 /**
