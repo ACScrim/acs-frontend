@@ -609,7 +609,8 @@ const createTournament = async () => {
       checkIns,
       mvpVoteOpen: true,
       mvps: [],
-      casters: []
+      casters: [],
+      clips: []
     };
 
     await tournamentService.createTournament(tournament);

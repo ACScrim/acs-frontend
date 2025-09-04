@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, Teleport, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import tournamentService from '../../services/tournamentService';
 import type { Clip, Tournament } from '../../types';
 import SpaceInput from '../ui/atoms/Input.vue';
