@@ -6,16 +6,47 @@
       :showMissionInfo="true"
       mission="CREWMATES-2025"
     >
-      <template #badge v-if="memberStore.members.length > 0">
-        <SpaceBadge variant="secondary" size="lg">{{
-          memberStore.members.length
-        }}</SpaceBadge>
+      <template #badge>
+        <div class="flex items-center gap-3">
+          <SpaceBadge variant="secondary" size="lg">
+            {{ memberStore.members.length }} membre{{
+              memberStore.members.length > 1 ? "s" : ""
+            }}
+          </SpaceBadge>
+          <SpaceBadge
+            v-if="searchResults.length !== memberStore.members.length"
+            variant="accent"
+            size="md"
+          >
+            {{ searchResults.length }} trouvé{{
+              searchResults.length > 1 ? "s" : ""
+            }}
+          </SpaceBadge>
+        </div>
       </template>
     </SpaceHeader>
 
+    <!-- Statistiques rapides -->
+    <SpaceCard variant="primary" className="mb-6 mt-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-space-primary-light font-nasa">
+            {{ memberStore.members.length }}
+          </div>
+          <div class="text-space-text-muted">Total membres</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-space-secondary-light font-nasa">
+            {{ memberStats.admins }}
+          </div>
+          <div class="text-space-text-muted">Administrateurs</div>
+        </div>
+      </div>
+    </SpaceCard>
+
     <!-- Recherche et filtres -->
     <SpaceCard variant="dark" className="mb-6 mt-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Recherche -->
         <div>
           <label for="member-search" class="mb-3 flex items-center gap-2">
@@ -44,6 +75,57 @@
             variant="primary"
             :stars="true"
           />
+        </div>
+
+        <!-- Filtre par rôle -->
+        <div>
+          <label for="role-filter" class="mb-3 flex items-center gap-2">
+            <div class="font-nasa text-space-accent flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Filtrer par rôle
+            </div>
+          </label>
+          <div class="relative">
+            <select
+              id="role-filter"
+              v-model="roleFilter"
+              class="w-full rounded-lg border border-space-accent/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-accent/30 focus:outline-none transition-all duration-300"
+            >
+              <option value="">Tous les rôles</option>
+              <option value="user">Membres</option>
+              <option value="admin">Administrateurs</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-accent"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
 
         <!-- Options de tri -->
@@ -100,6 +182,34 @@
           </div>
         </div>
       </div>
+
+      <!-- Boutons d'action pour les filtres -->
+      <div
+        v-if="searchTerm || roleFilter"
+        class="mt-4 flex justify-between items-center"
+      >
+        <div class="text-sm text-space-text-muted">
+          {{ searchResults.length }} résultat{{
+            searchResults.length > 1 ? "s" : ""
+          }}
+          trouvé{{ searchResults.length > 1 ? "s" : "" }}
+        </div>
+        <SpaceButton @click="resetFilters" variant="secondary" size="sm">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Réinitialiser les filtres
+        </SpaceButton>
+      </div>
     </SpaceCard>
 
     <!-- État de chargement -->
@@ -138,7 +248,7 @@
       v-else-if="sortedUsers.length === 0"
       :command="`find_users ${
         searchTerm ? '--search=\'' + searchTerm + '\'' : '--all'
-      }`"
+      }${roleFilter ? ' --role=' + roleFilter : ''}`"
       title="Console de recherche"
       showCursor
       className="my-8"
@@ -146,8 +256,20 @@
       <div class="text-space-error font-mono">
         Erreur 404: Aucun membre ne correspond à cette recherche.
       </div>
-      <div class="text-space-text-muted mt-2">
+      <div class="text-space-text-muted mt-2 mb-4">
         {{ emptyStateMessage }}
+      </div>
+      <div v-if="searchTerm || roleFilter" class="flex gap-3">
+        <SpaceButton @click="resetFilters" variant="primary" size="sm">
+          Réinitialiser les filtres
+        </SpaceButton>
+        <SpaceButton
+          @click="memberStore.fetchMembers(true)"
+          variant="secondary"
+          size="sm"
+        >
+          Actualiser la liste
+        </SpaceButton>
       </div>
     </SpaceTerminal>
     <!-- Liste des membres -->
@@ -188,6 +310,7 @@ const memberStore = useMemberStore();
 
 // États pour la recherche et la pagination
 const searchTerm = ref("");
+const roleFilter = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 9; // Modifier pour 9 membres par page (3x3 grid)
 
@@ -195,21 +318,60 @@ const itemsPerPage = 9; // Modifier pour 9 membres par page (3x3 grid)
 const sortOptions = [
   { id: "username-asc", label: "Nom (A-Z)" },
   { id: "username-desc", label: "Nom (Z-A)" },
-  { id: "role-asc", label: "Rôle (croissant)" },
-  { id: "role-desc", label: "Rôle (décroissant)" },
 ];
 const currentSort = ref("username-asc");
 
 // Propriétés calculées
-const searchResults = computed(() => {
-  if (!searchTerm.value.trim()) return memberStore.members;
+const memberStats = computed(() => {
+  const stats = {
+    total: memberStore.members.length,
+    admins: 0,
+    users: 0,
+  };
 
-  const term = searchTerm.value.toLowerCase();
-  return memberStore.members.filter(
-    (user) =>
-      user.username.toLowerCase().includes(term) ||
-      user.role.toLowerCase().includes(term)
-  );
+  memberStore.members.forEach((member) => {
+    if (member.role === "admin" || member.role === "superadmin") {
+      stats.admins++;
+    } else {
+      stats.users++;
+    }
+  });
+
+  return stats;
+});
+
+const searchResults = computed(() => {
+  let results = memberStore.members;
+
+  // Filtre par rôle
+  if (roleFilter.value) {
+    results = results.filter((user) => user.role === roleFilter.value);
+  }
+
+  // Filtre par terme de recherche
+  if (searchTerm.value.trim()) {
+    const term = searchTerm.value.toLowerCase().trim();
+    results = results.filter((user) => {
+      const matchesUsername = user.username.toLowerCase().includes(term);
+      const matchesRole = user.role.toLowerCase().includes(term);
+
+      // Recherche avancée pour les rôles en français
+      const roleTranslations = {
+        admin: ["admin", "administrateur"],
+        superadmin: ["superadmin", "super admin", "super administrateur"],
+        user: ["user", "utilisateur", "membre"],
+      };
+
+      const matchesTranslatedRole =
+        roleTranslations[user.role]?.some((translation) =>
+          translation.includes(term)
+        ) || false;
+
+      return matchesUsername || matchesRole || matchesTranslatedRole;
+    });
+  }
+
+  return results;
 });
 
 const getPlayerIdForUser = (user: any): string | null => {
@@ -230,14 +392,6 @@ const sortedUsers = computed(() => {
       return usersToSort.sort((a, b) => a.username.localeCompare(b.username));
     case "username-desc":
       return usersToSort.sort((a, b) => b.username.localeCompare(a.username));
-    case "role-asc": {
-      const roleOrder = { user: 1, admin: 2, superadmin: 3 };
-      return usersToSort.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-    }
-    case "role-desc": {
-      const roleOrder = { user: 1, admin: 2, superadmin: 3 };
-      return usersToSort.sort((a, b) => roleOrder[b.role] - roleOrder[a.role]);
-    }
     default:
       return usersToSort;
   }
@@ -254,13 +408,31 @@ const paginatedUsers = computed(() => {
 });
 
 const emptyStateMessage = computed(() => {
-  if (searchTerm.value) {
-    return `Aucun membre ne correspond à votre recherche "${searchTerm.value}".`;
+  const hasFilters = searchTerm.value || roleFilter.value;
+
+  if (hasFilters) {
+    const filters = [];
+    if (searchTerm.value) filters.push(`recherche "${searchTerm.value}"`);
+    if (roleFilter.value) {
+      const roleNames: { [key: string]: string } = {
+        user: "Membres",
+        admin: "Administrateurs",
+        superadmin: "Super Admin",
+      };
+      filters.push(`rôle "${roleNames[roleFilter.value]}"`);
+    }
+    return `Aucun membre ne correspond aux critères : ${filters.join(", ")}.`;
   }
   return "Aucun membre trouvé dans la base de données.";
 });
 
 // Fonctions utilitaires
+const resetFilters = () => {
+  searchTerm.value = "";
+  roleFilter.value = "";
+  resetPagination();
+};
+
 const resetPagination = () => {
   currentPage.value = 1;
 };
@@ -287,6 +459,10 @@ watch(searchTerm, () => {
   resetPagination();
 });
 
+watch(roleFilter, () => {
+  resetPagination();
+});
+
 watch(currentSort, () => {
   resetPagination();
 });
@@ -298,24 +474,50 @@ watch(currentSort, () => {
   margin-bottom: 1.5rem;
 }
 
-/* Style pour le filtre de tri */
+/* Style pour les filtres - optimisé */
 select {
   background-color: rgba(30, 30, 45, 0.8);
   border: 1px solid rgba(109, 40, 217, 0.3);
   color: var(--space-text);
-  transition: all 0.3s ease;
+  transition: border-color 0.15s ease;
 }
 
 select:focus {
   border-color: var(--space-secondary);
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2);
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
 }
 
-/* Responsive design */
+/* Suppression des animations coûteuses */
+.grid > * {
+  transition: none;
+}
+
+/* Optimisation performance - désactivation des animations */
+.members-grid-container *,
+.members-grid-container *::before,
+.members-grid-container *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Responsive design simplifié */
 @media (max-width: 640px) {
   .members-grid-container {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+}
+
+/* Amélioration de l'accessibilité sans animations */
+select:focus-visible {
+  outline: 2px solid var(--space-primary);
+  outline-offset: 2px;
+}
+
+/* Performance optimisée */
+.grid {
+  contain: layout style;
 }
 </style>

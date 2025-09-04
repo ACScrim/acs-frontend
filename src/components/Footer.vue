@@ -88,7 +88,7 @@
               <div class="flex space-x-6">
                 <!-- Discord -->
                 <a
-                  href="https://discord.gg/bbXTK9mUPB"
+                  href="https://discord.gg/nH5cFvyVAG"
                   target="_blank"
                   class="space-social-link discord"
                 >
