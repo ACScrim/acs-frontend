@@ -14,6 +14,14 @@ export interface Team {
   ranking: number;
 }
 
+export interface Clip {
+  _id: string;
+  url: string;
+  title?: string;
+  addedBy: Player;
+  addedAt: string;
+}
+
 /**
  * Interface principale représentant un tournoi
  *
@@ -41,6 +49,7 @@ export interface Tournament {
   mvps?: { player: Player & { avatarUrl: string }; votes: string[]; isMvp: boolean }[];
   mvpVoteOpen?: boolean;
   casters: Player[];
+  clips: Clip[];
 }
 
 /**

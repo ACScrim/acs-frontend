@@ -437,7 +437,7 @@
           </div>
         </SpaceCard>
       </div>
-      <div class="flex flex-row gap-x-10">
+      <div class="hidden sm:flex flex-row gap-x-10">
         <SpaceCard
           v-for="mvp in tournament.mvps?.filter(mvp => !mvp.isMvp).sort((a,b) => b.votes.length - a.votes.length).slice(0, 3)"
           variant="primary" :stars="true" :decorated="true" className="overflow-hidden basis-1/3">
@@ -460,8 +460,8 @@
               mvp.player.username.length > 15
                 ? 'text-lg sm:text-2xl'
                 : mvp.player.username.length > 10
-                  ? 'text-xl sm:text-3xl'
-                  : 'text-2xl sm:text-3xl',
+                  ? 'text-lg sm:text-2xl'
+                  : 'text-lg sm:text-2xl',
             ]">
               {{ mvp.player.username }}
             </SpaceTitle>
@@ -473,6 +473,11 @@
         </SpaceCard>
       </div>
     </SpaceCard>
+    <TournamentClip
+      :tournament="tournament"
+      :player="tournament.players.find(p => p.userId === user?._id) || null"
+      @refetch="emit('refetch')"
+    />
   </div>
 </template>
 
@@ -481,6 +486,7 @@ import { computed } from "vue";
 import type { Player, Tournament } from "../../types";
 import tournamentService from "../../services/tournamentService";
 import { useUserStore } from "../../stores/userStore";
+import TournamentClip from "./TournamentClip.vue";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);

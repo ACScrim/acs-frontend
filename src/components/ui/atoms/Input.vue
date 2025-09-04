@@ -41,6 +41,7 @@
         ]"
         :aria-invalid="!!errorMessage"
         :aria-describedby="errorMessage ? `${id}-error` : undefined"
+        :maxlength="maxLength"
       />
 
       <!-- Bouton pour effacer -->
@@ -108,6 +109,7 @@ interface Props {
   clearable?: boolean;
   errorMessage?: string;
   className?: string;
+  maxLength?: string;
 }
 
 withDefaults(defineProps<Props>(), {
