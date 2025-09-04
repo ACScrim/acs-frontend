@@ -153,6 +153,20 @@ const registerPlayer = async (
   return response.data;
 };
 
+const registerPlayerAsCaster = async (
+  tournamentId: string,
+  userId: string
+): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/register-caster`,
+    { userId },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 /**
  * Désinscrit un joueur d'un tournoi
  * @param tournamentId - ID du tournoi
@@ -172,6 +186,20 @@ const unregisterPlayer = async (
   );
   return response.data;
 };
+
+const unregisterPlayerAsCaster = async (
+  tournamentId: string,
+  userId: string
+): Promise<Tournament> => {
+  const response = await axios.post(
+    `${API_URL}/${tournamentId}/unregister-caster`,
+    { userId },
+    {      
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
 
 /**
  * Met à jour uniquement les équipes d'un tournoi
@@ -348,5 +376,7 @@ export default {
   deleteAllTeams,
   toggleTeamsPublication,
   voteForMvp,
-  closeMvpVote
+  closeMvpVote,
+  registerPlayerAsCaster,
+  unregisterPlayerAsCaster
 };

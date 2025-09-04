@@ -402,8 +402,8 @@
           <div v-if="!tournament.finished && user" class="flex flex-col space-y-3 lg:col-span-1">
             <!-- Inscription normale -->
             <SpaceButton v-if="
-              !isUserRegistered && !isUserInWaitlist && !tournament.finished
-            " @click="
+              !isUserRegistered && !isUserInWaitlist && !tournament.finished && !isUserCaster
+              " @click="
               openRegistrationPopup(
                 tournament,
                 isTournamentFull ? 'waitlist' : 'register'
@@ -412,19 +412,49 @@
               <template v-if="isTournamentFull">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                    clip-rule="evenodd" />
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clip-rule="evenodd" />
                 </svg>
                 Rejoindre la liste d'attente
               </template>
               <template v-else>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                    clip-rule="evenodd" />
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clip-rule="evenodd" />
                 </svg>
                 S'inscrire
               </template>
+            </SpaceButton>
+
+            <SpaceButton 
+              v-if="!isUserRegistered && !isUserInWaitlist && !isUserCaster"
+              variant="secondary" 
+              @click="
+                openRegistrationPopup(
+                  tournament,
+                  'caster'
+                )
+              "
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="size-5 mr-2" viewBox="0 0 256 256" xml:space="preserve" fill="white">
+                <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: white; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+                  <path d="M 45 70.968 c -16.013 0 -29.042 -13.028 -29.042 -29.042 c 0 -1.712 1.388 -3.099 3.099 -3.099 c 1.712 0 3.099 1.388 3.099 3.099 C 22.157 54.522 32.404 64.77 45 64.77 c 12.595 0 22.843 -10.248 22.843 -22.843 c 0 -1.712 1.387 -3.099 3.099 -3.099 s 3.099 1.388 3.099 3.099 C 74.042 57.94 61.013 70.968 45 70.968 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                  <path d="M 45 60.738 L 45 60.738 c -10.285 0 -18.7 -8.415 -18.7 -18.7 V 18.7 C 26.3 8.415 34.715 0 45 0 h 0 c 10.285 0 18.7 8.415 18.7 18.7 v 23.337 C 63.7 52.322 55.285 60.738 45 60.738 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                  <path d="M 45 89.213 c -1.712 0 -3.099 -1.387 -3.099 -3.099 V 68.655 c 0 -1.712 1.388 -3.099 3.099 -3.099 c 1.712 0 3.099 1.387 3.099 3.099 v 17.459 C 48.099 87.826 46.712 89.213 45 89.213 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                  <path d="M 55.451 90 H 34.549 c -1.712 0 -3.099 -1.387 -3.099 -3.099 s 1.388 -3.099 3.099 -3.099 h 20.901 c 1.712 0 3.099 1.387 3.099 3.099 S 57.163 90 55.451 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                </g>
+              </svg>
+              Rejoindre le cast
+            </SpaceButton>
+
+            <SpaceButton v-if="isUserCaster && !tournament.finished"
+              @click="tournament._id && unregisterCaster(tournament._id, user._id)" variant="warning" className="w-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
+                  clip-rule="evenodd" />
+              </svg>
+              Quitter le cast
             </SpaceButton>
 
             <!-- Quitter la liste d'attente -->
@@ -786,6 +816,60 @@
             </div>
           </div>
 
+
+
+          <!-- Affichage des casters -->
+          <div v-if="
+              tournament.casters &&
+              tournament.casters.length > 0
+            " class="pt-10">
+              <h3 class="text-base sm:text-lg text-space-text font-heading mb-3 sm:mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-space-primary"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                </svg>
+                Liste des casters
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+                <div v-for="caster in tournament.casters" :key="caster._id"
+                  class="flex items-center justify-between p-2 sm:p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0">
+                  <router-link v-if="caster._id" :to="{ name: 'Profil', params: { id: caster._id } }"
+                    class="text-space-text hover:text-space-primary-light transition-colors truncate min-w-0 flex-1">
+                    {{ caster.username }}
+                  </router-link>
+                  <span v-else class="text-space-text truncate min-w-0 flex-1">
+                    {{ caster.username || "Joueur inconnu" }}
+                  </span>
+
+                  <div class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
+                    <!-- Badge pour les streams live -->
+                    <a v-if="getPlayerLiveStatus(caster)" :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                      caster
+                    )}`" target="_blank" rel="noopener noreferrer">
+                      <SpaceBadge variant="accent" size="xs" className="animate-pulse">
+                        LIVE
+                      </SpaceBadge>
+                    </a>
+
+                    <!-- Badge check-in -->
+                    <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
+                      <SpaceBadge variant="success" size="xs">
+                        <span class="hidden sm:inline">Check-in</span>
+                        <span class="sm:hidden">✓</span>
+                      </SpaceBadge>
+                    </span>
+                    <span v-else-if="isCheckInAvailable">
+                      <SpaceBadge variant="error" size="xs">
+                        <span class="hidden sm:inline">En attente</span>
+                        <span class="sm:hidden">⏳</span>
+                      </SpaceBadge>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           <!-- Onglet Résultats -->
           <div v-if="tournament.finished && activeTab === 'results'" class="min-h-[150px] space-fade-in">
             <tournament-podium :tournament="tournament" :is-other-rankings-expanded="showOtherRankings"
@@ -896,7 +980,7 @@
     <Toast v-if="success" type="success" :message="success" />
 
     <!-- Modales -->
-    <SpaceModal v-model="showPopup" :title="`CONFIRMATION D'${actionType === 'register' || actionType === 'waitlist'
+    <SpaceModal v-model="showPopup" :title="`CONFIRMATION D'${actionType === 'register' || actionType === 'waitlist' || actionType === 'caster'
       ? 'INSCRIPTION'
       : 'ANNULATION'
       }`">
@@ -911,7 +995,9 @@
                   ? "rejoindre la liste d'attente"
                   : actionType === "unregister-waitlist"
                     ? "quitter la liste d'attente"
-                    : "vous désinscrire"
+                    : actionType === 'caster'
+                    ? "vous inscrire en tant que caster"
+                      : "vous désinscrire"
             }}
           </span>
           au tournoi
@@ -1088,6 +1174,13 @@ const isUserRegistered = computed(() => {
     (player) => player.userId === user.value?._id
   );
 });
+
+const isUserCaster = computed(() => {
+  if (!user.value || !tournament.value) return false;
+  return tournament.value.casters.some(
+    (player) => player.userId === user.value?._id 
+  );
+})
 
 const isCheckInAvailable = computed(() => {
   if (!tournament.value) return false;
@@ -1566,6 +1659,12 @@ const confirmAction = async () => {
           ? "Désinscription effectuée avec succès."
           : "Vous avez été retiré de la liste d'attente."
       );
+    } else if (actionType.value === "caster" && selectedTournament.value._id) {
+      await tournamentService.registerPlayerAsCaster(
+        selectedTournament.value._id,
+        user.value._id
+      );
+      success = true;
     }
 
     if (success && selectedTournament.value._id) {
@@ -1579,6 +1678,23 @@ const confirmAction = async () => {
     closePopup();
   }
 };
+
+/**
+ * Désinscrit un caster
+ * @param tournamentId 
+ * @param userId 
+ */
+const unregisterCaster = async (tournamentId: string, userId: string) => {
+  try {
+    await tournamentService.unregisterPlayerAsCaster(tournamentId, userId);
+
+    await fetchTournament();
+  } catch (error) {
+    console.error("Erreur lors de l'action:", error);
+    showMessage("error", `Erreur lors de l'action.`);
+    closePopup();
+  }
+}
 
 /**
  * Gère le check-in d'un joueur

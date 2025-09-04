@@ -40,6 +40,7 @@ export interface Tournament {
   privateReminderDate: Date;
   mvps?: { player: Player & { avatarUrl: string }; votes: string[]; isMvp: boolean }[];
   mvpVoteOpen?: boolean;
+  casters: Player[];
 }
 
 /**
