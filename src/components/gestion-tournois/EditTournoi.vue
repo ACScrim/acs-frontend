@@ -835,7 +835,8 @@ const editTournament = async () => {
       finished: false,
       discordReminderDate: new Date(discordReminder || date.value),
       privateReminderDate: new Date(privateReminder || date.value),
-      casters: tournaments.value.find(t => t._id === selectedTournament.value)?.casters || []
+      casters: tournaments.value.find(t => t._id === selectedTournament.value)?.casters || [],
+      clips: tournaments.value.find(t => t._id === selectedTournament.value)?.clips || []
     };
 
     await tournamentService.updateTournament(

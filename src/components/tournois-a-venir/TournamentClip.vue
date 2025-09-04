@@ -22,7 +22,6 @@ const showAddClipModal = ref(false)
 const showDeleteClipModal = ref(false)
 const clipToDelete = ref<Clip | null>(null)
 const clipUrl = ref<string>("")
-const clipTitle = ref<string>("")
 const isLoading = ref(false)
 const errMessage = ref("")
 
@@ -61,11 +60,10 @@ const addClip = async () => {
     isLoading.value = true;
     if (!props.tournament._id) throw new Error("Un problème est survenu lors de la récupération du tournoi");
     if (!clipUrl.value.length) throw new Error("L'url du clip est manquante !")
-    await tournamentService.addClipToTournament(props.tournament._id, { clipUrl: clipUrl.value, clipTitle: clipTitle.value });
+    await tournamentService.addClipToTournament(props.tournament._id, { clipUrl: clipUrl.value });
     
     showAddClipModal.value = false
     clipUrl.value = ""
-    clipTitle.value = ""
     showMessage("success", "Votre clip a été ajouté !");
     emit('refetch');
   } catch (err) {
@@ -136,7 +134,7 @@ const formatDate = (dateString: string): string => {
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 gap-y-8 pt-8">
       <SpaceCard v-for="(clip, idx) in tournament.clips" class="flex-1/2">
-        <iframe class="w-full h-80" :src="clip.url" :title="clip.title || `Clip ${idx+1} ajouté par ${clip.addedBy.username}`"
+        <iframe class="w-full h-80" :src="clip.url" :title="`Clip ${idx+1} ajouté par ${clip.addedBy.username} pour le tournoi ${tournament.name}`"
           frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture"
           allowfullscreen></iframe>
         <div class="flex flex-row justify-between items-center text-space-text-muted">
@@ -152,7 +150,7 @@ const formatDate = (dateString: string): string => {
     to="body"
     :disabled="!showAddClipModal"
   >
-    <SpaceModal v-model="showAddClipModal" title="AJOUTER UN CLIP" className="max-w-2xl!">
+    <SpaceModal v-model="showAddClipModal" title="AJOUTER UN CLIP" className="max-w-3xl!">
       <div class="space-y-3 sm:space-y-4">
         <p class="text-space-text text-sm sm:text-base">
           Ici vous pouvez ajouter un clip pour
@@ -161,12 +159,13 @@ const formatDate = (dateString: string): string => {
           }}</span>
         </p>
         <p class="text-space-text-muted text-sm sm:text-base">
-          Vous devez insérer un lien <b class="text-space-primary-light">youtube</b> valide dans <b class="text-space-primary-light">l'un des formats suivants</b> :
+          Vous devez insérer un lien <b class="text-space-primary-light">youtube ou twitch</b> valide dans <b class="text-space-primary-light">l'un des formats suivants</b> :
         </p>
         <ul class="list-disc list-inside text-space-text-muted">
           <li>https://youtube.com/embed/dQw4w9WgXcQ</li>
           <li>https://youtube.com/watch?v=dQw4w9WgXcQ</li>
           <li>https://youtu.be/dQw4w9WgXcQ</li>
+          <li>https://www.twitch.tv/streamer/clip/idduclip</li>
         </ul>
 
         <div class="border-l-4 border-red-400 p-4 rounded-md flex items-start gap-3">
@@ -198,13 +197,6 @@ const formatDate = (dateString: string): string => {
             :clearable="true"
             v-model="clipUrl"
             :errorMessage="errMessage"
-          />
-          <SpaceInput
-            placeholder="Votre super titre du clip"
-            :clearable="true"
-            v-model="clipTitle"
-            :errorMessage="errMessage"
-            maxLength="50"
           />
           <SpaceButton
             type="submit"
