@@ -356,6 +356,36 @@ const closeMvpVote = async (tournamentId: string): Promise<Tournament> => {
   return response.data.tournament;
 };
 
+const addClipToTournament = async (tournamentId: string, clipData: { clipUrl: string, clipTitle?: string }) => {
+  try {
+    const response = await axios.post(`${API_URL}/${tournamentId}/clips`, { ...clipData }, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    const message = axios.isAxiosError(error) && error.response?.data?.message
+      ? error.response.data.message
+      : "An error occurred while adding the clip.";
+    console.error("Error adding clip to tournament:", message);
+    throw new Error(message);
+  }
+}
+
+const deleteClipFromTournament = async (tournamentId: string, clipId: string) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${tournamentId}/clips/${clipId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    const message = axios.isAxiosError(error) && error.response?.data?.message
+      ? error.response.data.message
+      : "An error occurred while deleting the clip.";
+    console.error("Error deleting clip from tournament:", message);
+    throw new Error(message);
+  }
+}
+
 export default {
   createTournament,
   getTournamentsByGame,
@@ -378,5 +408,7 @@ export default {
   voteForMvp,
   closeMvpVote,
   registerPlayerAsCaster,
-  unregisterPlayerAsCaster
+  unregisterPlayerAsCaster,
+  addClipToTournament,
+  deleteClipFromTournament
 };
