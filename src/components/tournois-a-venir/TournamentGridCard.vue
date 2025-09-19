@@ -22,17 +22,17 @@
         />
         <!-- Overlay pour améliorer la visibilité du texte -->
         <div
-          class="absolute inset-0 bg-gradient-to-t from-space-bg via-transparent to-transparent opacity-80"
+          class="absolute inset-0 bg-gradient-to-t from-color-bg via-transparent to-transparent opacity-80"
         ></div>
       </div>
       <div
         v-else
-        class="w-full h-full bg-space-bg-light/30 flex items-center justify-center"
+        class="w-full h-full bg-color-bg-light/30 flex items-center justify-center"
       >
         <!-- Icône de jeu comme placeholder -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-20 w-20 text-space-primary/70"
+          class="h-20 w-20 text-color-primary/70"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -48,7 +48,7 @@
           size="sm"
           className="flex items-center gap-1 font-bold shadow-md"
           style="
-            background-color: rgba(var(--space-success-rgb), 1) !important;
+            background-color: rgba(var(--color-success-rgb), 1) !important;
             color: white !important;
             padding: 0.35rem 0.7rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -75,17 +75,17 @@
     <!-- Informations du tournoi -->
     <div class="tournament-info space-y-4">
       <!-- Nom du tournoi -->
-      <h3 class="text-xl font-heading text-space-text line-clamp-1">
+      <h3 class="text-xl font-heading text-color-text line-clamp-1">
         {{ tournament.name }}
       </h3>
 
       <!-- Détails du tournoi -->
       <div class="space-y-2 text-sm">
         <!-- Date et heure -->
-        <div class="flex items-center text-space-text">
+        <div class="flex items-center text-color-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-space-primary"
+            class="h-4 w-4 mr-2 text-color-primary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -104,10 +104,10 @@
         </div>
 
         <!-- Jeu -->
-        <div class="flex items-center text-space-text">
+        <div class="flex items-center text-color-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 text-space-secondary"
+            class="h-4 w-4 mr-2 text-color-secondary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -154,7 +154,9 @@
       >
         <!-- Bouton inscription / liste d'attente -->
         <SpaceButton
-          v-if="!isUserRegistered && !isUserInWaitlist && !isUserRegisteredAsCaster"
+          v-if="
+            !isUserRegistered && !isUserInWaitlist && !isUserRegisteredAsCaster
+          "
           @click="handleRegistration"
           :variant="isTournamentFull ? 'secondary' : 'primary'"
           className="w-full"
@@ -295,7 +297,7 @@
       <svg
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
-        class="text-space-success"
+        class="text-color-success"
       >
         <polygon
           points="50,0 61,35 97,35 68,57 79,91 50,70 21,91 32,57 3,35 39,35"
@@ -361,7 +363,7 @@ const emit = defineEmits([
   "open-registration",
   "check-in",
   "show-level-prompt",
-  "unregister-caster"
+  "unregister-caster",
 ]);
 // #endregion
 
@@ -462,10 +464,11 @@ const isUserRegistered = computed(() => {
 });
 
 const isUserRegisteredAsCaster = computed(() => {
-  return props.user ? props.tournament.casters.some(
-    (player) => player.userId === props.user?._id
-  )
-  : false;
+  return props.user
+    ? props.tournament.casters.some(
+        (player) => player.userId === props.user?._id
+      )
+    : false;
 });
 
 /**
@@ -597,21 +600,21 @@ const formatParticipants = () => {
  */
 const getParticipantsDisplayStyle = computed(() => {
   if (!props.tournament.playerCap || props.tournament.playerCap <= 0) {
-    return "color: var(--space-text); font-weight: 500;";
+    return "color: var(--color-text); font-weight: 500;";
   }
 
   const percentage = fillPercentage.value;
 
   if (percentage >= 100) {
-    return "color: var(--space-error) !important; font-weight: 700 !important;"; // Complet - rouge vif
+    return "color: var(--color-error) !important; font-weight: 700 !important;"; // Complet - rouge vif
   } else if (percentage >= 85) {
-    return "color: var(--space-warning) !important; font-weight: 700 !important;"; // Presque plein (85%+) - orange
+    return "color: var(--color-warning) !important; font-weight: 700 !important;"; // Presque plein (85%+) - orange
   } else if (percentage >= 60) {
-    return "color: var(--space-accent) !important; font-weight: 600 !important;"; // Se remplit bien - jaune/doré
+    return "color: var(--color-accent) !important; font-weight: 600 !important;"; // Se remplit bien - jaune/doré
   } else if (percentage >= 30) {
-    return "color: var(--space-secondary) !important; font-weight: 500 !important;"; // Quelques places prises - violet
+    return "color: var(--color-secondary) !important; font-weight: 500 !important;"; // Quelques places prises - violet
   } else {
-    return "color: var(--space-primary) !important; font-weight: 500 !important;"; // Beaucoup de places libres - bleu
+    return "color: var(--color-primary) !important; font-weight: 500 !important;"; // Beaucoup de places libres - bleu
   }
 });
 
@@ -747,7 +750,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   animation: scan-line 2s ease-out;
@@ -792,83 +795,83 @@ onMounted(() => {
 }
 
 .finished-tournament {
-  border: 2px solid var(--space-success) !important;
-  box-shadow: 0 0 10px rgba(var(--space-success-rgb), 0.3) !important;
+  border: 2px solid var(--color-success) !important;
+  box-shadow: 0 0 10px rgba(var(--color-success-rgb), 0.3) !important;
 }
 
 /* Styles pour les différents niveaux de remplissage */
 .tournament-full {
-  border: 2px solid var(--space-error) !important;
-  box-shadow: 0 0 15px rgba(var(--space-error-rgb), 0.4) !important;
+  border: 2px solid var(--color-error) !important;
+  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.4) !important;
   background: linear-gradient(
     135deg,
-    rgba(var(--space-error-rgb), 0.1) 0%,
-    rgba(var(--space-bg-rgb), 0.8) 100%
+    rgba(var(--color-error-rgb), 0.1) 0%,
+    rgba(var(--color-bg-rgb), 0.8) 100%
   ) !important;
 }
 
 .tournament-full:hover {
-  box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.6) !important;
+  box-shadow: 0 0 20px rgba(var(--color-error-rgb), 0.6) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-almost-full {
-  border: 2px solid var(--space-warning) !important;
-  box-shadow: 0 0 12px rgba(var(--space-warning-rgb), 0.35) !important;
+  border: 2px solid var(--color-warning) !important;
+  box-shadow: 0 0 12px rgba(var(--color-warning-rgb), 0.35) !important;
   background: linear-gradient(
     135deg,
-    rgba(var(--space-warning-rgb), 0.08) 0%,
-    rgba(var(--space-bg-rgb), 0.8) 100%
+    rgba(var(--color-warning-rgb), 0.08) 0%,
+    rgba(var(--color-bg-rgb), 0.8) 100%
   ) !important;
 }
 
 .tournament-almost-full:hover {
-  box-shadow: 0 0 18px rgba(var(--space-warning-rgb), 0.5) !important;
+  box-shadow: 0 0 18px rgba(var(--color-warning-rgb), 0.5) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-filling {
-  border: 2px solid var(--space-accent) !important;
-  box-shadow: 0 0 10px rgba(var(--space-accent-rgb), 0.3) !important;
+  border: 2px solid var(--color-accent) !important;
+  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.3) !important;
   background: linear-gradient(
     135deg,
-    rgba(var(--space-accent-rgb), 0.06) 0%,
-    rgba(var(--space-bg-rgb), 0.8) 100%
+    rgba(var(--color-accent-rgb), 0.06) 0%,
+    rgba(var(--color-bg-rgb), 0.8) 100%
   ) !important;
 }
 
 .tournament-filling:hover {
-  box-shadow: 0 0 15px rgba(var(--space-accent-rgb), 0.45) !important;
+  box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.45) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-some-places {
-  border: 2px solid var(--space-secondary) !important;
-  box-shadow: 0 0 8px rgba(var(--space-secondary-rgb), 0.25) !important;
+  border: 2px solid var(--color-secondary) !important;
+  box-shadow: 0 0 8px rgba(var(--color-secondary-rgb), 0.25) !important;
   background: linear-gradient(
     135deg,
-    rgba(var(--space-secondary-rgb), 0.04) 0%,
-    rgba(var(--space-bg-rgb), 0.8) 100%
+    rgba(var(--color-secondary-rgb), 0.04) 0%,
+    rgba(var(--color-bg-rgb), 0.8) 100%
   ) !important;
 }
 
 .tournament-some-places:hover {
-  box-shadow: 0 0 12px rgba(var(--space-secondary-rgb), 0.4) !important;
+  box-shadow: 0 0 12px rgba(var(--color-secondary-rgb), 0.4) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-open {
-  border: 2px solid var(--space-primary) !important;
-  box-shadow: 0 0 6px rgba(var(--space-primary-rgb), 0.2) !important;
+  border: 2px solid var(--color-primary) !important;
+  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.2) !important;
   background: linear-gradient(
     135deg,
-    rgba(var(--space-primary-rgb), 0.02) 0%,
-    rgba(var(--space-bg-rgb), 0.8) 100%
+    rgba(var(--color-primary-rgb), 0.02) 0%,
+    rgba(var(--color-bg-rgb), 0.8) 100%
   ) !important;
 }
 
 .tournament-open:hover {
-  box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.35) !important;
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.35) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -881,10 +884,10 @@ onMounted(() => {
 @keyframes urgent-pulse {
   0%,
   100% {
-    box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.3);
+    box-shadow: 0 0 15px rgba(var(--color-warning-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.5);
+    box-shadow: 0 0 20px rgba(var(--color-error-rgb), 0.5);
   }
 }
 
@@ -893,7 +896,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-error),
+    var(--color-error),
     transparent
   );
 }
@@ -902,7 +905,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-warning),
+    var(--color-warning),
     transparent
   );
 }
@@ -911,7 +914,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-accent),
+    var(--color-accent),
     transparent
   );
 }
@@ -920,7 +923,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-secondary),
+    var(--color-secondary),
     transparent
   );
 }
@@ -929,7 +932,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
 }

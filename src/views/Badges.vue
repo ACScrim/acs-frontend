@@ -44,7 +44,7 @@
         <div>
           <label for="gameFilter" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-primary-light flex items-center gap-2"
+              class="font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@
             <select
               id="gameFilter"
               v-model="selectedGameFilter"
-              class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-3 appearance-none focus:ring-2 focus:ring-space-primary/50 focus:outline-none transition-all duration-300 hover:border-space-primary/50"
+              class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-3 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:outline-none transition-all duration-300 hover:border-color-primary/50"
               @change="handleFilterChange"
             >
               <option value="all">Tous les jeux</option>
@@ -77,7 +77,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-primary"
+                class="h-5 w-5 text-color-primary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -107,8 +107,8 @@
               class="mb-6"
             >
               <SpaceCard variant="secondary" className="overflow-hidden">
-                <div class="p-4 border-b border-space-bg-light/30">
-                  <h2 class="text-xl font-heading text-space-text">
+                <div class="p-4 border-b border-color-bg-light/30">
+                  <h2 class="text-xl font-heading text-color-text">
                     Badges ACS
                   </h2>
                 </div>
@@ -137,7 +137,7 @@
                           <img
                             :src="badge.imageUrl"
                             :alt="badge.title"
-                            class="h-16 w-16 rounded-full border-2 border-space-secondary-light object-cover badge-image"
+                            class="h-16 w-16 rounded-full border-2 border-color-secondary-light object-cover badge-image"
                             loading="lazy"
                             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                           />
@@ -146,7 +146,7 @@
                           ></div>
                         </div>
                         <div class="flex-1">
-                          <h3 class="text-space-text text-lg font-heading">
+                          <h3 class="text-color-text text-lg font-heading">
                             {{ badge.title }}
                           </h3>
                           <SpaceBadge
@@ -195,8 +195,8 @@
                 class="mb-6"
               >
                 <SpaceCard variant="primary" className="overflow-hidden">
-                  <div class="p-4 border-b border-space-bg-light/30">
-                    <h2 class="text-xl font-heading text-space-text">
+                  <div class="p-4 border-b border-color-bg-light/30">
+                    <h2 class="text-xl font-heading text-color-text">
                       {{ game.name }}
                     </h2>
                   </div>
@@ -225,7 +225,7 @@
                             <img
                               :src="badge.imageUrl"
                               :alt="badge.title"
-                              class="h-16 w-16 rounded-full border-2 border-space-primary-light object-cover badge-image"
+                              class="h-16 w-16 rounded-full border-2 border-color-primary-light object-cover badge-image"
                               loading="lazy"
                               @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                             />
@@ -234,7 +234,7 @@
                             ></div>
                           </div>
                           <div class="flex-1">
-                            <h3 class="text-space-text text-lg font-heading">
+                            <h3 class="text-color-text text-lg font-heading">
                               {{ badge.title }}
                             </h3>
                             <SpaceBadge
@@ -287,10 +287,10 @@
               showCursor
               className="my-8"
             >
-              <div class="text-space-error font-mono">
+              <div class="text-color-error font-mono">
                 Erreur 404: Aucun badge ne correspond au filtre sélectionné
               </div>
-              <div class="text-space-text-muted mt-2">
+              <div class="text-color-text-muted mt-2">
                 Il n'y a pas de badges attribués pour le jeu sélectionné.
               </div>
             </SpaceTerminal>
@@ -304,10 +304,10 @@
             showCursor
             className="my-8"
           >
-            <div class="text-space-error font-mono">
+            <div class="text-color-error font-mono">
               Erreur 404: Aucun badge attribué
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-color-text-muted mt-2">
               Aucun joueur n'a encore reçu de badge. Les badges seront attribués
               lors d'évènements spéciaux ou pour récompenser des
               accomplissements.
@@ -333,8 +333,8 @@
                 variant="secondary"
                 className="overflow-hidden opacity-70"
               >
-                <div class="p-4 border-b border-space-bg-light/30">
-                  <h2 class="text-xl font-heading text-space-text-muted">
+                <div class="p-4 border-b border-color-bg-light/30">
+                  <h2 class="text-xl font-heading text-color-text-muted">
                     Badges ACS
                   </h2>
                 </div>
@@ -358,14 +358,14 @@
                           <img
                             :src="badge.imageUrl"
                             :alt="badge.title"
-                            class="h-16 w-16 rounded-full border-2 border-space-bg-light object-cover opacity-70"
+                            class="h-16 w-16 rounded-full border-2 border-color-bg-light object-cover opacity-70"
                             loading="lazy"
                             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                           />
                         </div>
                         <div class="flex-1">
                           <h3
-                            class="text-space-text-muted text-lg font-heading"
+                            class="text-color-text-muted text-lg font-heading"
                           >
                             {{ badge.title }}
                           </h3>
@@ -406,8 +406,8 @@
                   variant="primary"
                   className="overflow-hidden opacity-70"
                 >
-                  <div class="p-4 border-b border-space-bg-light/30">
-                    <h2 class="text-xl font-heading text-space-text-muted">
+                  <div class="p-4 border-b border-color-bg-light/30">
+                    <h2 class="text-xl font-heading text-color-text-muted">
                       {{ game.name }}
                     </h2>
                   </div>
@@ -431,14 +431,14 @@
                             <img
                               :src="badge.imageUrl"
                               :alt="badge.title"
-                              class="h-16 w-16 rounded-full border-2 border-space-bg-light object-cover opacity-70"
+                              class="h-16 w-16 rounded-full border-2 border-color-bg-light object-cover opacity-70"
                               loading="lazy"
                               @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
                             />
                           </div>
                           <div class="flex-1">
                             <h3
-                              class="text-space-text-muted text-lg font-heading"
+                              class="text-color-text-muted text-lg font-heading"
                             >
                               {{ badge.title }}
                             </h3>
@@ -480,10 +480,10 @@
               showCursor
               className="my-8"
             >
-              <div class="text-space-error font-mono">
+              <div class="text-color-error font-mono">
                 Erreur 404: Aucun badge disponible pour ce filtre
               </div>
-              <div class="text-space-text-muted mt-2">
+              <div class="text-color-text-muted mt-2">
                 Pour le jeu sélectionné, tous les badges ont déjà été attribués
                 à au moins un joueur.
               </div>
@@ -498,8 +498,8 @@
             showCursor
             className="my-8"
           >
-            <div class="text-space-success font-mono">Félicitations!</div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-color-success font-mono">Félicitations!</div>
+            <div class="text-color-text-muted mt-2">
               Tous les badges disponibles ont déjà été attribués à au moins un
               joueur.
             </div>
@@ -516,10 +516,10 @@
           showCursor
           className="my-8"
         >
-          <div class="text-space-warning font-mono">
+          <div class="text-color-warning font-mono">
             Système d'insignes en cours d'initialisation
           </div>
-          <div class="text-space-text-muted mt-2">
+          <div class="text-color-text-muted mt-2">
             Le système de badges est en cours de développement. De nouveaux
             badges seront ajoutés prochainement pour récompenser les joueurs.
           </div>
@@ -541,7 +541,7 @@
           <img
             :src="selectedBadge.imageUrl"
             :alt="selectedBadge.title"
-            class="h-32 w-32 rounded-full border-4 border-space-primary object-cover badge-detail-image"
+            class="h-32 w-32 rounded-full border-4 border-color-primary object-cover badge-detail-image"
             @error="(e) => ((e.target as HTMLImageElement).src = '/img/badge-placeholder.jpg')"
           />
           <div
@@ -561,9 +561,12 @@
                 ? "ACS"
                 : getGameName(selectedBadge.categoryId)
             }}
-          </SpaceBadge>          <!-- Badge de rareté si applicable -->
+          </SpaceBadge>
+          <!-- Badge de rareté si applicable -->
           <SpaceBadge
-            v-if="getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'"
+            v-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'
+            "
             variant="gold"
             size="lg"
             className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 text-white border-0"
@@ -571,7 +574,9 @@
             LÉGENDAIRE
           </SpaceBadge>
           <SpaceBadge
-            v-else-if="getBadgeRarityClass(selectedBadge) === 'special-badge-gold'"
+            v-else-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-gold'
+            "
             variant="gold"
             size="lg"
           >
@@ -598,7 +603,7 @@
         </div>
 
         <p
-          class="text-space-text-muted text-center bg-space-bg-light/20 p-4 rounded border border-space-bg-light/30 text-sm mt-4"
+          class="text-color-text-muted text-center bg-color-bg-light/20 p-4 rounded border border-color-bg-light/30 text-sm mt-4"
         >
           {{
             selectedBadge.description ||
@@ -609,10 +614,10 @@
 
       <!-- Liste des joueurs -->
       <div>
-        <h4 class="text-space-text font-heading mb-3 flex items-center gap-2">
+        <h4 class="text-color-text font-heading mb-3 flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-space-primary-light"
+            class="h-5 w-5 text-color-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -626,7 +631,7 @@
         </h4>
 
         <div
-          class="bg-space-bg-light/20 rounded-lg border border-space-bg-light/30 max-h-80 overflow-y-auto"
+          class="bg-color-bg-light/20 rounded-lg border border-color-bg-light/30 max-h-80 overflow-y-auto"
         >
           <div
             v-if="
@@ -636,10 +641,10 @@
             <div
               v-for="player in getBadgePlayers(selectedBadge._id)"
               :key="player._id"
-              class="flex items-center p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/30 transition-all duration-300 transform-gpu hover:translate-x-1"
+              class="flex items-center p-3 border-b border-color-bg-light/30 hover:bg-color-bg-light/30 transition-all duration-300 transform-gpu hover:translate-x-1"
             >
               <div
-                class="h-10 w-10 rounded-full bg-space-bg-light flex items-center justify-center border border-space-primary-light text-white mr-3 overflow-hidden transform-gpu transition-all duration-300 hover:scale-110"
+                class="h-10 w-10 rounded-full bg-color-bg-light flex items-center justify-center border border-color-primary-light text-white mr-3 overflow-hidden transform-gpu transition-all duration-300 hover:scale-110"
               >
                 <img
                   v-if="getUserAvatar(player)"
@@ -653,13 +658,13 @@
               </div>
               <router-link
                 :to="`/profil/${player._id}`"
-                class="text-space-primary-light hover:text-space-primary transition-all duration-300 font-heading hover:underline"
+                class="text-color-primary-light hover:text-color-primary transition-all duration-300 font-heading hover:underline"
               >
                 {{ player.username }}
               </router-link>
             </div>
           </div>
-          <div v-else class="p-4 text-space-text-muted italic text-center">
+          <div v-else class="p-4 text-color-text-muted italic text-center">
             Aucun joueur n'a encore obtenu ce badge
           </div>
         </div>
@@ -967,11 +972,11 @@ onMounted(() => {
 }
 
 .shadow-glow-primary {
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5);
 }
 
 .shadow-glow-secondary {
-  box-shadow: 0 0 15px rgba(var(--space-secondary-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-secondary-rgb), 0.5);
 }
 
 /* Animation de scan pour les badges */
@@ -1003,16 +1008,16 @@ onMounted(() => {
 
 @keyframes rotate-glow {
   0% {
-    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.3);
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.3);
   }
   33% {
-    box-shadow: 0 0 18px rgba(var(--space-gold-rgb), 0.5);
+    box-shadow: 0 0 18px rgba(var(--color-gold-rgb), 0.5);
   }
   66% {
-    box-shadow: 0 0 18px rgba(var(--space-secondary-rgb), 0.5);
+    box-shadow: 0 0 18px rgba(var(--color-secondary-rgb), 0.5);
   }
   100% {
-    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.3);
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.3);
   }
 }
 
@@ -1041,7 +1046,7 @@ onMounted(() => {
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: var(--space-primary);
+  background-color: var(--color-primary);
   transition: all 0.3s ease-in-out;
   transform: translateX(-50%);
 }
@@ -1053,19 +1058,19 @@ onMounted(() => {
 /* Amélioration pour le loader */
 @keyframes rotate-colors {
   0% {
-    border-color: var(--space-primary);
+    border-color: var(--color-primary);
     border-top-color: transparent;
   }
   33% {
-    border-color: var(--space-gold);
+    border-color: var(--color-gold);
     border-top-color: transparent;
   }
   66% {
-    border-color: var(--space-secondary);
+    border-color: var(--color-secondary);
     border-top-color: transparent;
   }
   100% {
-    border-color: var(--space-primary);
+    border-color: var(--color-primary);
     border-top-color: transparent;
   }
 }
@@ -1096,28 +1101,30 @@ onMounted(() => {
 
 .special-badge-legendary:hover::before {
   opacity: 0.2;
-  background: radial-gradient(circle, 
-    var(--space-primary) 0%, 
-    var(--space-gold) 25%, 
-    var(--space-secondary) 50%, 
-    var(--space-bronze) 75%, 
-    transparent 100%);
+  background: radial-gradient(
+    circle,
+    var(--color-primary) 0%,
+    var(--color-gold) 25%,
+    var(--color-secondary) 50%,
+    var(--color-bronze) 75%,
+    transparent 100%
+  );
   animation: legendary-glow 2s ease-in-out infinite alternate;
 }
 
 .special-badge-gold:hover::before {
   opacity: 0.15;
-  background: radial-gradient(circle, var(--space-gold) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);
 }
 
 .special-badge-silver:hover::before {
   opacity: 0.15;
-  background: radial-gradient(circle, var(--space-silver) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--color-silver) 0%, transparent 70%);
 }
 
 .special-badge-bronze:hover::before {
   opacity: 0.15;
-  background: radial-gradient(circle, var(--space-bronze) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--color-bronze) 0%, transparent 70%);
 }
 
 /* Animation spéciale pour les badges légendaires */

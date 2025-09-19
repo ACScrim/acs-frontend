@@ -43,7 +43,7 @@
         <div class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 mr-2 text-space-primary-light"
+            class="h-6 w-6 mr-2 text-color-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -61,7 +61,7 @@
       <div class="mb-6">
         <label
           for="searchInput"
-          class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+          class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,10 +101,10 @@
         </SpaceInput>
 
         <!-- Raccourcis clavier -->
-        <div class="flex flex-wrap gap-2 mt-2 text-xs text-space-text-muted">
+        <div class="flex flex-wrap gap-2 mt-2 text-xs text-color-text-muted">
           <span class="flex items-center">
             <kbd
-              class="px-2 py-1 bg-space-bg-light/20 rounded border border-space-bg-light/30 font-mono"
+              class="px-2 py-1 bg-color-bg-light/20 rounded border border-color-bg-light/30 font-mono"
               >Esc</kbd
             >
             <span class="ml-1">Effacer la recherche</span>
@@ -118,7 +118,7 @@
         <div>
           <label
             for="gameSelect"
-            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-sm text-color-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@
         <div>
           <label
             for="levelFilter"
-            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-sm text-color-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +184,7 @@
         <div>
           <label
             for="rankFilter"
-            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-sm text-color-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -214,7 +214,7 @@
         <div v-if="selectedGameId">
           <label
             for="tournamentSelect"
-            class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-sm text-color-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -287,8 +287,8 @@
               :class="[
                 'p-2 rounded transition-colors',
                 viewMode === 'table'
-                  ? 'bg-space-primary text-white'
-                  : 'text-space-text-muted hover:text-space-text',
+                  ? 'bg-color-primary text-white'
+                  : 'text-color-text-muted hover:text-color-text',
               ]"
               title="Vue tableau"
             >
@@ -310,8 +310,8 @@
               :class="[
                 'p-2 rounded transition-colors',
                 viewMode === 'cards'
-                  ? 'bg-space-primary text-white'
-                  : 'text-space-text-muted hover:text-space-text',
+                  ? 'bg-color-primary text-white'
+                  : 'text-color-text-muted hover:text-color-text',
               ]"
               title="Vue cartes"
             >
@@ -328,7 +328,7 @@
             </button>
           </div>
 
-          <div class="text-sm text-space-text-muted">
+          <div class="text-sm text-color-text-muted">
             {{ filteredPlayerLevels.length }} joueur{{
               filteredPlayerLevels.length > 1 ? "s" : ""
             }}
@@ -340,7 +340,7 @@
                 selectedRankFilter ||
                 selectedGameId
               "
-              class="text-space-accent"
+              class="text-color-accent"
             >
               (filtré{{
                 filteredPlayerLevels.length !== playerLevels.length ? "s" : ""
@@ -364,7 +364,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-secondary-light"
+              class="h-6 w-6 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -375,11 +375,11 @@
             <SpaceTitle size="lg">
               <span v-if="selectedTournamentId">
                 Joueurs du tournoi inscrits à
-                <span class="text-space-accent">{{ selectedGameName }}</span>
+                <span class="text-color-accent">{{ selectedGameName }}</span>
               </span>
               <span v-else-if="selectedGameId">
                 Joueurs ayant défini leur niveau sur
-                <span class="text-space-accent">{{ selectedGameName }}</span>
+                <span class="text-color-accent">{{ selectedGameName }}</span>
               </span>
               <span v-else>
                 Tous les niveaux de jeux ({{ filteredPlayerLevels.length }})
@@ -429,10 +429,10 @@
         :showCursor="true"
         className="my-8"
       >
-        <div class="text-space-text-muted">
+        <div class="text-color-text-muted">
           Aucun niveau de jeu défini pour le moment
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-color-text-muted mt-2">
           → Sélectionnez un jeu pour voir les niveaux des joueurs
         </div>
       </SpaceTerminal>
@@ -445,13 +445,13 @@
         :showCursor="true"
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucun joueur trouvé pour "{{ searchTerm }}".
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-color-text-muted mt-2">
           → Vérifiez l'orthographe ou essayez un autre terme de recherche
         </div>
-        <div class="text-space-text-muted">
+        <div class="text-color-text-muted">
           → Recherche possible: nom d'utilisateur, pseudo Discord, pseudo de jeu
         </div>
       </SpaceTerminal>
@@ -470,13 +470,13 @@
         :showCursor="true"
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucun joueur trouvé avec ces critères.
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-color-text-muted mt-2">
           → Essayez de modifier vos filtres
         </div>
-        <div class="text-space-text-muted">
+        <div class="text-color-text-muted">
           → Ou cliquez sur "Effacer les filtres" pour tout voir
         </div>
       </SpaceTerminal>
@@ -484,7 +484,7 @@
       <div v-if="viewMode === 'table'" class="hidden md:block relative">
         <div
           ref="topScrollBarContainer"
-          class="h-3 mb-1 rounded-lg bg-space-bg-dark/50 overflow-x-auto scrollbar-thin"
+          class="h-3 mb-1 rounded-lg bg-color-bg-dark/50 overflow-x-auto scrollbar-thin"
           @scroll="syncScroll('top')"
         >
           <div :style="{ width: tableWidth + 'px', height: '1px' }"></div>
@@ -496,57 +496,57 @@
         >
           <table
             ref="dataTable"
-            class="min-w-full border border-space-secondary/30 rounded-lg overflow-hidden"
+            class="min-w-full border border-color-secondary/30 rounded-lg overflow-hidden"
           >
             <thead>
               <tr
-                class="bg-space-bg-light/10 border-b border-space-secondary/30"
+                class="bg-color-bg-light/10 border-b border-color-secondary/30"
               >
                 <th
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Joueur
                 </th>
                 <!-- Ajout de la colonne Jeu quand aucun filtre n'est appliqué -->
                 <th
                   v-if="!selectedGameId"
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider w-40"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider w-40"
                 >
                   Jeu
                 </th>
                 <th
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Pseudo dans le jeu
                 </th>
                 <th
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Niveau
                 </th>
                 <th
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Rang
                 </th>
                 <th
                   v-if="!selectedGameId || selectedGameHasRoles"
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Rôles
                 </th>
                 <th
-                  class="py-3 px-4 text-left text-xs font-nasa text-space-secondary-light uppercase tracking-wider"
+                  class="py-3 px-4 text-left text-xs font-nasa text-color-secondary-light uppercase tracking-wider"
                 >
                   Commentaire
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-space-bg-light/10">
+            <tbody class="divide-y divide-color-bg-light/10">
               <tr
                 v-for="playerLevel in paginatedPlayerLevels"
                 :key="playerLevel._id"
-                class="hover:bg-space-bg-light/5 transition-colors duration-150"
+                class="hover:bg-color-bg-light/5 transition-colors duration-150"
               >
                 <td class="py-4 px-4 whitespace-nowrap">
                   <div class="flex items-center">
@@ -554,16 +554,16 @@
                       <img
                         v-if="playerLevel.player.userInfo?.avatarUrl"
                         :src="playerLevel.player.userInfo.avatarUrl"
-                        class="w-8 h-8 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                        class="w-8 h-8 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
                         alt="Avatar"
                         loading="lazy"
                         @error="handleImageError($event)"
                       />
                       <div
                         v-else
-                        class="w-8 h-8 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+                        class="w-8 h-8 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-accent"
                       >
-                        <span class="text-space-accent text-xs font-bold">{{
+                        <span class="text-color-accent text-xs font-bold">{{
                           getUserInitials(
                             playerLevel.player.username || "inconnu"
                           )
@@ -571,12 +571,12 @@
                       </div>
                     </div>
                     <div class="ml-3">
-                      <div class="text-sm font-nasa text-space-text">
+                      <div class="text-sm font-nasa text-color-text">
                         {{ playerLevel.player.username }}
                       </div>
                       <div
                         v-if="playerLevel.player.userInfo?.username"
-                        class="text-xs text-space-text-muted"
+                        class="text-xs text-color-text-muted"
                       >
                         {{ playerLevel.player.userInfo.username }}
                       </div>
@@ -597,7 +597,7 @@
                       @error="handleImageError($event)"
                     />
                     <span
-                      class="text-xs font-medium text-space-text truncate"
+                      class="text-xs font-medium text-color-text truncate"
                       :title="getGameName(playerLevel)"
                     >
                       {{ getGameName(playerLevel) }}
@@ -605,7 +605,7 @@
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
-                  <div class="text-sm text-space-text">
+                  <div class="text-sm text-color-text">
                     {{ playerLevel.gameUsername || "Non renseigné" }}
                   </div>
                 </td>
@@ -641,7 +641,7 @@
                       {{ playerLevel.rank }}
                     </span>
                   </div>
-                  <div v-else class="text-sm text-space-text-muted">
+                  <div v-else class="text-sm text-color-text-muted">
                     Non classé
                   </div>
                 </td>
@@ -701,21 +701,21 @@
                       <!-- Indicateur "+N" si plus de 3 rôles -->
                       <span
                         v-if="playerLevel.selectedRoles.length > 3"
-                        class="px-2 py-0.5 text-xs bg-space-bg-light/30 text-space-text-muted rounded-full cursor-help border border-space-bg-light/50"
+                        class="px-2 py-0.5 text-xs bg-color-bg-light/30 text-color-text-muted rounded-full cursor-help border border-color-bg-light/50"
                         :title="playerLevel.selectedRoles.slice(3).join(', ')"
                       >
                         +{{ playerLevel.selectedRoles.length - 3 }}
                       </span>
                     </div>
                   </div>
-                  <div v-else class="text-sm text-space-text-muted">
+                  <div v-else class="text-sm text-color-text-muted">
                     Non spécifié
                   </div>
                 </td>
                 <td class="py-4 px-4 max-w-xs">
                   <div
                     v-if="playerLevel.comment"
-                    class="text-sm text-space-text"
+                    class="text-sm text-color-text"
                   >
                     <div class="relative group">
                       <!-- Commentaire tronqué -->
@@ -725,15 +725,15 @@
 
                       <!-- Tooltip pour afficher le commentaire complet au survol -->
                       <div
-                        class="absolute left-0 -bottom-1 translate-y-full w-72 z-30 hidden group-hover:block bg-space-bg-dark border border-space-secondary/40 p-3 rounded-lg shadow-glow-secondary whitespace-pre-wrap break-words"
+                        class="absolute left-0 -bottom-1 translate-y-full w-72 z-30 hidden group-hover:block bg-color-bg-dark border border-color-secondary/40 p-3 rounded-lg shadow-glow-secondary whitespace-pre-wrap break-words"
                       >
-                        <div class="text-sm text-space-text">
+                        <div class="text-sm text-color-text">
                           {{ playerLevel.comment }}
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div v-else class="text-sm text-space-text-muted">
+                  <div v-else class="text-sm text-color-text-muted">
                     Aucun commentaire
                   </div>
                 </td>
@@ -748,26 +748,26 @@
           <div
             v-for="playerLevel in paginatedPlayerLevels"
             :key="playerLevel._id"
-            class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
+            class="bg-color-bg-light/5 border border-color-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-color-secondary/50 transition-all duration-300"
           >
             <!-- En-tête de la carte avec avatar et nom -->
             <div
-              class="flex items-center mb-3 pb-2 border-b border-space-secondary/20"
+              class="flex items-center mb-3 pb-2 border-b border-color-secondary/20"
             >
               <div class="avatar-container">
                 <img
                   v-if="playerLevel.player.userInfo?.avatarUrl"
                   :src="playerLevel.player.userInfo.avatarUrl"
-                  class="w-10 h-10 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
                   alt="Avatar"
                   loading="lazy"
                   @error="handleImageError($event)"
                 />
                 <div
                   v-else
-                  class="w-10 h-10 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+                  class="w-10 h-10 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-accent"
                 >
-                  <span class="text-space-accent text-sm font-bold">
+                  <span class="text-color-accent text-sm font-bold">
                     {{
                       getUserInitials(playerLevel.player.username || "inconnu")
                     }}
@@ -775,12 +775,12 @@
                 </div>
               </div>
               <div class="ml-3 flex-1">
-                <div class="text-base font-nasa text-space-text">
+                <div class="text-base font-nasa text-color-text">
                   {{ playerLevel.player.username }}
                 </div>
                 <div
                   v-if="playerLevel.player.userInfo?.username"
-                  class="text-xs text-space-text-muted"
+                  class="text-xs text-color-text-muted"
                 >
                   {{ playerLevel.player.userInfo.username }}
                 </div>
@@ -802,7 +802,7 @@
                 <!-- Jeu (si pas de filtre) -->
                 <div v-if="!selectedGameId" class="flex flex-col">
                   <span
-                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    class="text-xs text-color-secondary-light font-nasa uppercase mb-1"
                     >Jeu</span
                   >
                   <div class="flex items-center">
@@ -815,7 +815,7 @@
                       @error="handleImageError($event)"
                     />
                     <span
-                      class="text-space-text text-xs truncate"
+                      class="text-color-text text-xs truncate"
                       :title="getGameName(playerLevel)"
                     >
                       {{ getGameName(playerLevel) }}
@@ -826,10 +826,10 @@
                 <!-- Pseudo de jeu -->
                 <div class="flex flex-col">
                   <span
-                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    class="text-xs text-color-secondary-light font-nasa uppercase mb-1"
                     >Pseudo jeu</span
                   >
-                  <span class="text-space-text">
+                  <span class="text-color-text">
                     {{ playerLevel.gameUsername || "Non renseigné" }}
                   </span>
                 </div>
@@ -837,7 +837,7 @@
                 <!-- Rang -->
                 <div class="flex flex-col">
                   <span
-                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    class="text-xs text-color-secondary-light font-nasa uppercase mb-1"
                     >Rang</span
                   >
                   <div
@@ -863,7 +863,7 @@
                       {{ playerLevel.rank }}
                     </span>
                   </div>
-                  <span v-else class="text-space-text-muted">Non classé</span>
+                  <span v-else class="text-color-text-muted">Non classé</span>
                 </div>
               </div>
 
@@ -875,7 +875,7 @@
                   class="flex flex-col"
                 >
                   <span
-                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    class="text-xs text-color-secondary-light font-nasa uppercase mb-1"
                     >Rôles</span
                   >
                   <div
@@ -913,24 +913,24 @@
                       </span>
                       <span
                         v-if="playerLevel.selectedRoles.length > 2"
-                        class="px-1.5 py-0.5 text-xs bg-space-bg-light/30 text-space-text-muted rounded border border-space-bg-light/50 cursor-help"
+                        class="px-1.5 py-0.5 text-xs bg-color-bg-light/30 text-color-text-muted rounded border border-color-bg-light/50 cursor-help"
                         :title="playerLevel.selectedRoles.slice(2).join(', ')"
                       >
                         +{{ playerLevel.selectedRoles.length - 2 }}
                       </span>
                     </div>
                   </div>
-                  <span v-else class="text-space-text-muted">Non spécifié</span>
+                  <span v-else class="text-color-text-muted">Non spécifié</span>
                 </div>
 
                 <!-- Commentaire -->
                 <div v-if="playerLevel.comment" class="flex flex-col">
                   <span
-                    class="text-xs text-space-secondary-light font-nasa uppercase mb-1"
+                    class="text-xs text-color-secondary-light font-nasa uppercase mb-1"
                     >Commentaire</span
                   >
                   <div
-                    class="text-space-text text-xs leading-relaxed"
+                    class="text-color-text text-xs leading-relaxed"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 3;
@@ -953,26 +953,26 @@
         <div
           v-for="playerLevel in paginatedPlayerLevels"
           :key="playerLevel._id"
-          class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
+          class="bg-color-bg-light/5 border border-color-secondary/30 rounded-lg p-4 hover:shadow-glow-secondary hover:border-color-secondary/50 transition-all duration-300"
         >
           <!-- En-tête de la carte avec avatar et nom -->
           <div
-            class="flex items-center mb-3 pb-2 border-b border-space-secondary/20"
+            class="flex items-center mb-3 pb-2 border-b border-color-secondary/20"
           >
             <div class="avatar-container">
               <img
                 v-if="playerLevel.player.userInfo?.avatarUrl"
                 :src="playerLevel.player.userInfo.avatarUrl"
-                class="w-10 h-10 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                class="w-10 h-10 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
                 alt="Avatar"
                 loading="lazy"
                 @error="handleImageError($event)"
               />
               <div
                 v-else
-                class="w-10 h-10 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-accent"
+                class="w-10 h-10 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-accent"
               >
-                <span class="text-space-accent text-sm font-bold">
+                <span class="text-color-accent text-sm font-bold">
                   {{
                     getUserInitials(playerLevel.player.username || "inconnu")
                   }}
@@ -980,12 +980,12 @@
               </div>
             </div>
             <div class="ml-3">
-              <div class="text-base font-nasa text-space-text">
+              <div class="text-base font-nasa text-color-text">
                 {{ playerLevel.player.username }}
               </div>
               <div
                 v-if="playerLevel.player.userInfo?.username"
-                class="text-xs text-space-text-muted"
+                class="text-xs text-color-text-muted"
               >
                 {{ playerLevel.player.userInfo.username }}
               </div>
@@ -995,7 +995,7 @@
           <!-- Informations du jeu quand aucun filtre n'est appliqué -->
           <div v-if="!selectedGameId" class="flex items-center mb-3">
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Jeu
             </div>
@@ -1009,7 +1009,7 @@
                 @error="handleImageError($event)"
               />
               <span
-                class="text-xs font-medium text-space-text truncate"
+                class="text-xs font-medium text-color-text truncate"
                 :title="getGameName(playerLevel)"
               >
                 {{ getGameName(playerLevel) }}
@@ -1020,11 +1020,11 @@
           <!-- Pseudo dans le jeu -->
           <div class="flex items-start mb-3">
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Pseudo jeu
             </div>
-            <div class="text-sm text-space-text">
+            <div class="text-sm text-color-text">
               {{ playerLevel.gameUsername || "Non renseigné" }}
             </div>
           </div>
@@ -1032,7 +1032,7 @@
           <!-- Niveau -->
           <div class="flex items-start mb-3">
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Niveau
             </div>
@@ -1047,7 +1047,7 @@
           <!-- Rang -->
           <div class="flex items-start mb-3">
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Rang
             </div>
@@ -1071,7 +1071,7 @@
                 {{ playerLevel.rank }}
               </span>
             </div>
-            <div v-else class="text-sm text-space-text-muted">Non classé</div>
+            <div v-else class="text-sm text-color-text-muted">Non classé</div>
           </div>
 
           <!-- Rôles -->
@@ -1080,7 +1080,7 @@
             class="flex items-start mb-3"
           >
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Rôles
             </div>
@@ -1126,24 +1126,24 @@
                 </span>
               </div>
             </div>
-            <div v-else class="text-sm text-space-text-muted">Non spécifié</div>
+            <div v-else class="text-sm text-color-text-muted">Non spécifié</div>
           </div>
 
           <!-- Commentaire amélioré -->
           <div class="flex items-start">
             <div
-              class="text-xs text-space-secondary-light font-nasa uppercase w-24"
+              class="text-xs text-color-secondary-light font-nasa uppercase w-24"
             >
               Commentaire
             </div>
             <div v-if="playerLevel.comment">
               <div
-                class="text-sm text-space-text whitespace-pre-wrap break-words max-w-xs"
+                class="text-sm text-color-text whitespace-pre-wrap break-words max-w-xs"
               >
                 {{ playerLevel.comment }}
               </div>
             </div>
-            <div v-else class="text-sm text-space-text-muted">
+            <div v-else class="text-sm text-color-text-muted">
               Aucun commentaire
             </div>
           </div>
@@ -1157,7 +1157,7 @@
           class="flex flex-col sm:flex-row justify-between items-center gap-4"
         >
           <div class="flex items-center gap-4">
-            <label class="text-sm text-space-text-muted font-nasa">
+            <label class="text-sm text-color-text-muted font-nasa">
               Afficher par page :
             </label>
             <SpaceDropdown
@@ -1173,7 +1173,7 @@
             </SpaceDropdown>
           </div>
 
-          <div class="text-sm text-space-text-muted">
+          <div class="text-sm text-color-text-muted">
             Affichage de {{ (currentPage - 1) * itemsPerPage + 1 }} à
             {{
               Math.min(currentPage * itemsPerPage, filteredPlayerLevels.length)

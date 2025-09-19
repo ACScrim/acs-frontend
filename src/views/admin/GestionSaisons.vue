@@ -33,7 +33,7 @@
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-primary-light"
+                class="h-6 w-6 mr-2 text-color-primary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -55,7 +55,7 @@
             <div>
               <label
                 for="numero"
-                class="text-sm text-space-primary-light mb-2 font-nasa flex items-center"
+                class="text-sm text-color-primary-light mb-2 font-nasa flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                Numéro de saison <span class="text-space-accent ml-1">*</span>
+                Numéro de saison <span class="text-color-accent ml-1">*</span>
               </label>
               <SpaceInput
                 id="numero"
@@ -122,7 +122,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-secondary-light"
+                  class="h-5 w-5 mr-2 text-color-secondary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -146,7 +146,7 @@
             :showCursor="true"
             className="my-4"
           >
-            <div class="text-space-text-muted text-sm">
+            <div class="text-color-text-muted text-sm">
               Aucune saison créée.
             </div>
           </SpaceTerminal>
@@ -156,23 +156,23 @@
               v-for="season in seasons"
               :key="season._id"
               :class="[
-                'group bg-space-bg-light/5 border rounded-lg p-4 transition-all duration-300',
+                'group bg-color-bg-light/5 border rounded-lg p-4 transition-all duration-300',
                 selectedSeason && selectedSeason._id === season._id
-                  ? 'border-space-accent bg-space-accent/10 shadow-glow-accent'
-                  : 'border-space-secondary/30 hover:border-space-secondary/50 hover:shadow-glow-secondary',
+                  ? 'border-color-accent bg-color-accent/10 shadow-glow-accent'
+                  : 'border-color-secondary/30 hover:border-color-secondary/50 hover:shadow-glow-secondary',
               ]"
             >
               <div class="flex justify-between items-center">
                 <div class="font-nasa text-lg">
-                  <span v-if="season.numero === 0" class="text-space-accent"
+                  <span v-if="season.numero === 0" class="text-color-accent"
                     >Alors ça chill</span
                   >
                   <span
                     v-else
                     :class="
                       selectedSeason && selectedSeason._id === season._id
-                        ? 'text-space-accent'
-                        : 'text-space-secondary-light'
+                        ? 'text-color-accent'
+                        : 'text-color-secondary-light'
                     "
                   >
                     Saison {{ season.numero }}
@@ -248,7 +248,7 @@
             :showCursor="true"
             className="w-full max-w-md"
           >
-            <div class="text-space-text-muted text-center">
+            <div class="text-color-text-muted text-center">
               Cliquez sur "Modifier" à côté d'une saison pour gérer ses
               tournois.
             </div>
@@ -263,7 +263,7 @@
                 <div class="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 mr-2 text-space-accent-light"
+                    class="h-5 w-5 mr-2 text-color-accent-light"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -299,15 +299,15 @@
             </template>
 
             <!-- Onglets pour les filtres -->
-            <div class="border-b border-space-bg-light/30 -mx-6 px-6">
+            <div class="border-b border-color-bg-light/30 -mx-6 px-6">
               <div class="flex flex-wrap -mb-px">
                 <button
                   @click="selectedGameFilter = ''"
                   :class="[
                     'inline-block p-3 border-b-2 rounded-t-lg font-nasa text-sm',
                     !selectedGameFilter
-                      ? 'text-space-accent border-space-accent'
-                      : 'border-transparent hover:text-space-accent-light hover:border-space-accent/50',
+                      ? 'text-color-accent border-color-accent'
+                      : 'border-transparent hover:text-color-accent-light hover:border-color-accent/50',
                   ]"
                 >
                   Tous les jeux
@@ -323,8 +323,8 @@
                   :class="[
                     'inline-block p-3 border-b-2 rounded-t-lg font-nasa text-sm',
                     selectedGameFilter === game._id
-                      ? 'text-space-accent border-space-accent'
-                      : 'border-transparent hover:text-space-accent-light hover:border-space-accent/50',
+                      ? 'text-color-accent border-color-accent'
+                      : 'border-transparent hover:text-color-accent-light hover:border-color-accent/50',
                   ]"
                 >
                   {{ game.name }}
@@ -339,7 +339,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -367,16 +367,16 @@
               <div
                 v-for="tournament in seasonTournaments"
                 :key="tournament._id"
-                class="bg-space-bg-light/5 border border-space-primary/30 rounded-lg p-3 hover:shadow-glow-primary hover:border-space-primary/50 transition-all duration-300"
+                class="bg-color-bg-light/5 border border-color-primary/30 rounded-lg p-3 hover:shadow-glow-primary hover:border-color-primary/50 transition-all duration-300"
               >
                 <div class="flex justify-between items-start">
                   <div>
-                    <h4 class="font-nasa text-space-text text-sm">
+                    <h4 class="font-nasa text-color-text text-sm">
                       {{ tournament.name }}
                     </h4>
                     <p
                       v-if="tournament.game"
-                      class="text-xs text-space-primary mt-1"
+                      class="text-xs text-color-primary mt-1"
                     >
                       {{ tournament.game.name }}
                     </p>
@@ -411,7 +411,7 @@
               :showCursor="true"
               className="my-4"
             >
-              <div class="text-space-text-muted text-sm">
+              <div class="text-color-text-muted text-sm">
                 Aucun tournoi dans cette saison.
               </div>
             </SpaceTerminal>
@@ -423,7 +423,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-secondary-light"
+                  class="h-5 w-5 mr-2 text-color-secondary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -453,16 +453,16 @@
               <div
                 v-for="tournament in availableTournaments"
                 :key="tournament._id"
-                class="bg-space-bg-light/5 border border-space-secondary/30 rounded-lg p-3 hover:shadow-glow-secondary hover:border-space-secondary/50 transition-all duration-300"
+                class="bg-color-bg-light/5 border border-color-secondary/30 rounded-lg p-3 hover:shadow-glow-secondary hover:border-color-secondary/50 transition-all duration-300"
               >
                 <div class="flex justify-between items-start">
                   <div>
-                    <h4 class="font-nasa text-space-text text-sm">
+                    <h4 class="font-nasa text-color-text text-sm">
                       {{ tournament.name }}
                     </h4>
                     <p
                       v-if="tournament.game"
-                      class="text-xs text-space-secondary mt-1"
+                      class="text-xs text-color-secondary mt-1"
                     >
                       {{ tournament.game.name }}
                     </p>
@@ -497,7 +497,7 @@
               :showCursor="true"
               className="my-4"
             >
-              <div class="text-space-text-muted text-sm">
+              <div class="text-color-text-muted text-sm">
                 Aucun tournoi disponible.
               </div>
             </SpaceTerminal>
@@ -520,7 +520,7 @@
       <div class="text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-space-error mx-auto mb-4"
+          class="h-16 w-16 text-color-error mx-auto mb-4"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -530,22 +530,22 @@
             clip-rule="evenodd"
           />
         </svg>
-        <h3 class="text-xl font-nasa text-space-error mb-2">
+        <h3 class="text-xl font-nasa text-color-error mb-2">
           Confirmer la suppression
         </h3>
-        <p class="text-space-text mb-2">
+        <p class="text-color-text mb-2">
           Êtes-vous sûr de vouloir supprimer la saison
           <span
             v-if="seasonToDelete && seasonToDelete.numero === 0"
-            class="text-space-error font-nasa"
+            class="text-color-error font-nasa"
             >"Alors ça chill"</span
           >
-          <span v-else-if="seasonToDelete" class="text-space-error font-nasa">{{
+          <span v-else-if="seasonToDelete" class="text-color-error font-nasa">{{
             seasonToDelete.numero
           }}</span>
-          <span v-else class="text-space-error font-nasa">sélectionnée</span> ?
+          <span v-else class="text-color-error font-nasa">sélectionnée</span> ?
         </p>
-        <p class="text-space-text-muted text-sm mb-4">
+        <p class="text-color-text-muted text-sm mb-4">
           Cette action est irréversible et supprimera également toutes les
           données associées à cette saison.
         </p>

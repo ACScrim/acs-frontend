@@ -25,7 +25,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-primary-light"
+            class="h-6 w-6 text-color-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -43,14 +43,14 @@
       <div v-if="selectedTournamentDetails">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div class="flex flex-col">
-            <span class="text-space-text-muted text-sm">Nom</span>
-            <span class="text-space-text font-mono text-lg">
+            <span class="text-color-text-muted text-sm">Nom</span>
+            <span class="text-color-text font-mono text-lg">
               {{ selectedTournamentDetails.name }}
             </span>
           </div>
           <div v-if="selectedTournamentDetails.date" class="flex flex-col">
-            <span class="text-space-text-muted text-sm">Date</span>
-            <span class="text-space-text font-mono text-lg">
+            <span class="text-color-text-muted text-sm">Date</span>
+            <span class="text-color-text font-mono text-lg">
               {{ formatLocalDate(selectedTournamentDetails.date) }}
             </span>
           </div>
@@ -58,8 +58,8 @@
             v-if="selectedTournamentDetails.discordChannelName"
             class="flex flex-col"
           >
-            <span class="text-space-text-muted text-sm">Discord</span>
-            <span class="text-space-text font-mono text-lg">
+            <span class="text-color-text-muted text-sm">Discord</span>
+            <span class="text-color-text font-mono text-lg">
               {{ selectedTournamentDetails.discordChannelName }}
             </span>
           </div>
@@ -148,7 +148,7 @@
           <div class="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-space-accent-light"
+              class="h-6 w-6 text-color-accent-light"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -167,7 +167,7 @@
         <div
           class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
-          <p class="text-space-text-muted">
+          <p class="text-color-text-muted">
             Une fois le tournoi terminé, les rankings seront verrouillés et les
             résultats comptabilisés dans le classement des joueurs.
           </p>
@@ -242,7 +242,7 @@
 
           <!-- Liste des joueurs -->
           <div class="mb-6">
-            <SpaceTitle size="sm" className="text-space-text-muted mb-3">
+            <SpaceTitle size="sm" className="text-color-text-muted mb-3">
               Membres de l'équipe:
             </SpaceTitle>
             <div class="space-y-2 max-h-40 overflow-y-auto">
@@ -267,7 +267,7 @@
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                <span class="text-space-text text-sm">{{
+                <span class="text-color-text text-sm">{{
                   player.username
                 }}</span>
               </div>
@@ -276,7 +276,7 @@
 
           <!-- Rang de l'équipe -->
           <div class="mb-6">
-            <SpaceTitle size="sm" className="text-space-text-muted mb-3">
+            <SpaceTitle size="sm" className="text-color-text-muted mb-3">
               Position dans le classement:
             </SpaceTitle>
             <div class="flex flex-wrap gap-2">
@@ -307,10 +307,10 @@
           <!-- Score de l'équipe -->
           <div class="border-t border-space-border pt-4">
             <div class="flex items-center justify-between mb-3">
-              <SpaceTitle size="sm" className="text-space-text-muted">
+              <SpaceTitle size="sm" className="text-color-text-muted">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-space-accent-light inline mr-2"
+                  class="h-4 w-4 text-color-accent-light inline mr-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -383,7 +383,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-error"
+            class="h-6 w-6 text-color-error"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -393,7 +393,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-space-error">
+          <SpaceTitle size="lg" className="text-color-error">
             CONFIRMATION REQUISE
           </SpaceTitle>
         </div>
@@ -401,23 +401,23 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="warning">
-          <div class="text-space-text">
+          <div class="text-color-text">
             <strong>Attention :</strong> Cette action est irréversible !
           </div>
         </SpaceAlert>
 
-        <div class="text-space-text-muted leading-relaxed">
+        <div class="text-color-text-muted leading-relaxed">
           Êtes-vous sûr de vouloir terminer ce tournoi ? Les conséquences seront
           :
         </div>
 
         <div
-          class="space-y-2 bg-space-bg-light/20 p-4 rounded-lg border border-space-primary/20"
+          class="space-y-2 bg-color-bg-light/20 p-4 rounded-lg border border-color-primary/20"
         >
-          <div class="flex items-center gap-2 text-space-text">
+          <div class="flex items-center gap-2 text-color-text">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 text-space-success"
+              class="h-4 w-4 text-color-success"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -432,10 +432,10 @@
               joueurs</span
             >
           </div>
-          <div class="flex items-center gap-2 text-space-text">
+          <div class="flex items-center gap-2 text-color-text">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 text-space-error"
+              class="h-4 w-4 text-color-error"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -490,7 +490,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-warning"
+            class="h-6 w-6 text-color-warning"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -500,7 +500,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-space-warning">
+          <SpaceTitle size="lg" className="text-color-warning">
             ANNULATION FINALISATION
           </SpaceTitle>
         </div>
@@ -508,23 +508,23 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="info">
-          <div class="text-space-text">
+          <div class="text-color-text">
             Cette action permettra de modifier à nouveau les résultats du
             tournoi.
           </div>
         </SpaceAlert>
 
-        <div class="text-space-text-muted leading-relaxed">
+        <div class="text-color-text-muted leading-relaxed">
           Êtes-vous sûr de vouloir annuler la finalisation de ce tournoi ?
         </div>
 
         <div
-          class="bg-space-bg-light/20 p-4 rounded-lg border border-space-secondary/20"
+          class="bg-color-bg-light/20 p-4 rounded-lg border border-color-secondary/20"
         >
-          <div class="flex items-center gap-2 text-space-text">
+          <div class="flex items-center gap-2 text-color-text">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 text-space-info"
+              class="h-4 w-4 text-color-info"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -831,17 +831,17 @@ const getRankingCardClass = (rank: number): string => {
   // Ajouter des styles supplémentaires pour renforcer l'effet visuel
   switch (rank) {
     case 1:
-      return "shadow-space-gold/50 shadow-2xl"; // Ombre dorée plus prononcée
+      return "shadow-color-gold/50 shadow-2xl"; // Ombre dorée plus prononcée
     case 2:
-      return "shadow-space-silver/50 shadow-2xl"; // Ombre argentée plus prononcée
+      return "shadow-color-silver/50 shadow-2xl"; // Ombre argentée plus prononcée
     case 3:
-      return "shadow-space-bronze/50 shadow-2xl"; // Ombre bronze plus prononcée
+      return "shadow-color-bronze/50 shadow-2xl"; // Ombre bronze plus prononcée
     case 4:
       return "shadow-blue-400/30 shadow-lg";
     case 0:
       return "";
     default:
-      return "shadow-space-accent/20 shadow-md";
+      return "shadow-color-accent/20 shadow-md";
   }
 };
 
@@ -877,11 +877,11 @@ const getRankingBorderClass = (
 ): string => {
   switch (rank) {
     case 1:
-      return `border-space-gold shadow-space-gold/20 ${opacityClass}`;
+      return `border-color-gold shadow-color-gold/20 ${opacityClass}`;
     case 2:
-      return `border-space-silver shadow-space-silver/20 ${opacityClass}`;
+      return `border-color-silver shadow-color-silver/20 ${opacityClass}`;
     case 3:
-      return `border-space-bronze shadow-space-bronze/20 ${opacityClass}`;
+      return `border-color-bronze shadow-color-bronze/20 ${opacityClass}`;
     case 4:
       return `border-blue-500 shadow-blue-500/20 ${opacityClass}`;
     case 0:
@@ -893,11 +893,11 @@ const getRankingBorderClass = (
 const getRankingTextClass = (rank: number): string => {
   switch (rank) {
     case 1:
-      return "text-space-gold"; // Utilise la couleur or du thème space
+      return "text-color-gold"; // Utilise la couleur or du thème space
     case 2:
-      return "text-space-silver"; // Utilise la couleur argent du thème space
+      return "text-color-silver"; // Utilise la couleur argent du thème space
     case 3:
-      return "text-space-bronze"; // Utilise la couleur bronze du thème space
+      return "text-color-bronze"; // Utilise la couleur bronze du thème space
     case 4:
       return "text-blue-400";
     case 0:

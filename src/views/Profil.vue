@@ -6,7 +6,7 @@
       class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block"
     >
       <SpaceCard variant="dark" className="p-3 space-y-1">
-        <div class="text-xs text-space-primary font-nasa mb-2 px-2 text-center">
+        <div class="text-xs text-color-primary font-nasa mb-2 px-2 text-center">
           NAVIGATION
         </div>
 
@@ -17,8 +17,8 @@
           :class="[
             'w-full text-left px-3 py-2 text-xs font-nasa rounded transition-all duration-200 flex items-center space-x-2',
             activeSection === section.id
-              ? 'bg-space-primary/20 text-space-primary-light border-l-2 border-space-primary'
-              : 'text-space-text-muted hover:text-space-primary hover:bg-space-primary/10',
+              ? 'bg-color-primary/20 text-color-primary-light border-l-2 border-color-primary'
+              : 'text-color-text-muted hover:text-color-primary hover:bg-color-primary/10',
           ]"
           :title="section.label"
         >
@@ -62,15 +62,15 @@
               v-if="user && user.avatarUrl"
               :src="user.avatarUrl"
               alt="Avatar"
-              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
               loading="lazy"
               @error="handleImageError"
             />
             <div
               v-else
-              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
             >
-              <span class="text-space-primary text-2xl sm:text-3xl font-bold">
+              <span class="text-color-primary text-2xl sm:text-3xl font-bold">
                 {{ getInitials(player.username) }}
               </span>
             </div>
@@ -95,7 +95,7 @@
 
           <!-- Barre parfaitement centrée sous le nom -->
           <div
-            class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"
+            class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
           ></div>
 
           <!-- Titres de Champion de Saisons -->
@@ -124,7 +124,7 @@
             </div>
             <div class="text-center mt-2">
               <span
-                class="text-xs text-space-gold font-nasa uppercase tracking-wide"
+                class="text-xs text-color-gold font-nasa uppercase tracking-wide"
               >
                 {{
                   seasonChampionships.length === 1
@@ -148,7 +148,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-secondary"
+            class="h-8 w-8 mr-3 text-color-secondary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -161,21 +161,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <SpaceCard
             variant="dark"
-            className="text-center transform transition-all hover:scale-105 hover:bg-space-bg-light/90 duration-300"
+            className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
           >
-            <div class="text-3xl font-bold text-space-accent mb-1">
+            <div class="text-3xl font-bold text-color-accent mb-1">
               {{ playerRanking?.totalVictories || 0 }}
             </div>
-            <div class="text-space-text-muted text-sm">Victoires</div>
+            <div class="text-color-text-muted text-sm">Victoires</div>
           </SpaceCard>
           <SpaceCard
             variant="dark"
-            className="text-center transform transition-all hover:scale-105 hover:bg-space-bg-light/90 duration-300"
+            className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
           >
-            <div class="text-3xl font-bold text-space-secondary mb-1">
+            <div class="text-3xl font-bold text-color-secondary mb-1">
               {{ playerRanking?.totalTournaments || 0 }}
             </div>
-            <div class="text-space-text-muted text-sm">Tournois</div>
+            <div class="text-color-text-muted text-sm">Tournois</div>
           </SpaceCard>
         </div>
       </SpaceCard>
@@ -191,7 +191,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-accent"
+            class="h-8 w-8 mr-3 text-color-accent"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -217,7 +217,7 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-12 h-12 rounded-full object-cover border-2 border-space-silver shadow-glow"
+                  class="w-12 h-12 rounded-full object-cover border-2 border-color-silver shadow-glow"
                 />
                 <SpaceBadge
                   variant="silver"
@@ -229,13 +229,13 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-silver to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-silver shadow-inner relative overflow-hidden podium-column podium-silver"
+                class="w-16 sm:w-24 bg-gradient-to-t from-color-silver to-color-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-color-silver shadow-inner relative overflow-hidden podium-column podium-silver"
               >
                 <div
-                  class="absolute inset-0 bg-space-secondary/50 scanline"
+                  class="absolute inset-0 bg-color-secondary/50 scanline"
                 ></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
                   >{{ medalCount.silver }}</span
                 >
               </div>
@@ -250,7 +250,7 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-14 h-14 rounded-full object-cover border-2 border-space-gold shadow-glow"
+                  class="w-14 h-14 rounded-full object-cover border-2 border-color-gold shadow-glow"
                 />
                 <SpaceBadge
                   variant="gold"
@@ -262,11 +262,11 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-gold to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-gold shadow-inner shadow-space-gold/20 relative overflow-hidden podium-column podium-gold"
+                class="w-16 sm:w-24 bg-gradient-to-t from-color-gold to-color-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-color-gold shadow-inner shadow-color-gold/20 relative overflow-hidden podium-column podium-gold"
               >
-                <div class="absolute inset-0 bg-space-accent/50 scanline"></div>
+                <div class="absolute inset-0 bg-color-accent/50 scanline"></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
                   >{{ medalCount.gold }}</span
                 >
               </div>
@@ -281,7 +281,7 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-10 h-10 rounded-full object-cover border-2 border-space-bronze shadow-glow"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-color-bronze shadow-glow"
                 />
                 <SpaceBadge
                   variant="bronze"
@@ -293,13 +293,13 @@
                 </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-space-bronze to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
+                class="w-16 sm:w-24 bg-gradient-to-t from-color-bronze to-color-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-color-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
               >
                 <div
-                  class="absolute inset-0 bg-space-primary/50 scanline"
+                  class="absolute inset-0 bg-color-primary/50 scanline"
                 ></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
                   >{{ medalCount.bronze }}</span
                 >
               </div>
@@ -307,7 +307,7 @@
           </div>
           <!-- Base du podium -->
           <div
-            class="absolute bottom-0 bg-gradient-to-r from-space-primary/30 via-space-accent/40 to-space-secondary/30 h-4 w-full max-w-md rounded-md border-t border-space-primary/50 podium-base"
+            class="absolute bottom-0 bg-gradient-to-r from-color-primary/30 via-color-accent/40 to-color-secondary/30 h-4 w-full max-w-md rounded-md border-t border-color-primary/50 podium-base"
           ></div>
         </div>
 
@@ -319,13 +319,13 @@
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-silver text-lg font-nasa mb-1">
+            <div class="text-color-silver text-lg font-nasa mb-1">
               🥈 Argent
             </div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.silver }}
             </div>
-            <div class="text-xs text-space-text-muted">2e places</div>
+            <div class="text-xs text-color-text-muted">2e places</div>
           </SpaceCard>
           <!-- Or -->
           <SpaceCard
@@ -333,11 +333,11 @@
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-gold text-lg font-nasa mb-1">🥇 Or</div>
+            <div class="text-color-gold text-lg font-nasa mb-1">🥇 Or</div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.gold }}
             </div>
-            <div class="text-xs text-space-text-muted">victoires</div>
+            <div class="text-xs text-color-text-muted">victoires</div>
           </SpaceCard>
 
           <!-- Bronze -->
@@ -346,13 +346,13 @@
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-space-bronze text-lg font-nasa mb-1">
+            <div class="text-color-bronze text-lg font-nasa mb-1">
               🥉 Bronze
             </div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.bronze }}
             </div>
-            <div class="text-xs text-space-text-muted">3e places</div>
+            <div class="text-xs text-color-text-muted">3e places</div>
           </SpaceCard>
         </div>
       </SpaceCard>
@@ -368,7 +368,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-secondary"
+            class="h-8 w-8 mr-3 text-color-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -389,13 +389,13 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-primary-light text-lg font-nasa mb-1">
+            <div class="text-color-primary-light text-lg font-nasa mb-1">
               📅 Membre
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ memberSince }}
             </div>
-            <div class="text-xs text-space-text-muted">depuis</div>
+            <div class="text-xs text-color-text-muted">depuis</div>
           </SpaceCard>
 
           <!-- Dernière activité -->
@@ -403,13 +403,13 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-secondary-light text-lg font-nasa mb-1">
+            <div class="text-color-secondary-light text-lg font-nasa mb-1">
               ⚡ Activité
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ lastSeen }}
             </div>
-            <div class="text-xs text-space-text-muted">dernière fois</div>
+            <div class="text-xs text-color-text-muted">dernière fois</div>
           </SpaceCard>
 
           <!-- Participation totale -->
@@ -417,13 +417,13 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-accent-light text-lg font-nasa mb-1">
+            <div class="text-color-accent-light text-lg font-nasa mb-1">
               🎯 Participation
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ participationStreak }}
             </div>
-            <div class="text-xs text-space-text-muted">tournois joués</div>
+            <div class="text-xs text-color-text-muted">tournois joués</div>
           </SpaceCard>
         </div>
       </SpaceCard>
@@ -443,7 +443,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-space-primary flex-shrink-0"
+              class="h-8 w-8 mr-3 text-color-primary flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -475,7 +475,7 @@
             v-for="gameStat in displayedGameStats"
             :key="gameStat.gameId"
             variant="dark"
-            className="transform transition-all hover:scale-[1.02] duration-300 border-l-4 border-l-space-primary"
+            className="transform transition-all hover:scale-[1.02] duration-300 border-l-4 border-l-color-primary"
           >
             <!-- Structure responsive avec flex-col sur mobile -->
             <div
@@ -488,16 +488,16 @@
                     v-if="gameStat.gameImage"
                     :src="gameStat.gameImage"
                     :alt="gameStat.gameName"
-                    class="w-12 h-12 rounded-lg object-cover border-2 border-space-primary/50"
+                    class="w-12 h-12 rounded-lg object-cover border-2 border-color-primary/50"
                     @error="handleImageError"
                   />
                   <div
                     v-else
-                    class="w-12 h-12 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-primary/50"
+                    class="w-12 h-12 rounded-lg bg-color-bg-light flex items-center justify-center border-2 border-color-primary/50"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6 text-space-primary"
+                      class="h-6 w-6 text-color-primary"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -517,13 +517,13 @@
                     {{ gameStat.gameName }}
                   </h5>
                   <div class="flex items-center space-x-3 mt-1 flex-wrap">
-                    <span class="text-space-primary-light font-mono text-sm"
+                    <span class="text-color-primary-light font-mono text-sm"
                       >{{ gameStat.wins }}V</span
                     >
-                    <span class="text-space-error font-mono text-sm"
+                    <span class="text-color-error font-mono text-sm"
                       >{{ gameStat.losses }}D</span
                     >
-                    <span class="text-space-text-muted text-sm"
+                    <span class="text-color-text-muted text-sm"
                       >{{ gameStat.totalPlayed }} parties</span
                     >
                   </div>
@@ -536,12 +536,12 @@
                 <!-- Taux de victoire -->
                 <div class="flex items-center sm:text-right sm:mb-2">
                   <div
-                    class="text-2xl font-bold text-space-primary-light font-mono mr-2 sm:mr-0"
+                    class="text-2xl font-bold text-color-primary-light font-mono mr-2 sm:mr-0"
                   >
                     {{ gameStat.winRate }}
                   </div>
                   <div
-                    class="text-xs text-space-text-muted sm:text-center ml-2"
+                    class="text-xs text-color-text-muted sm:text-center ml-2"
                   >
                     % taux de victoire
                   </div>
@@ -549,10 +549,10 @@
 
                 <!-- Barre de progression -->
                 <div
-                  class="w-16 sm:w-32 h-2 bg-[var(--space-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 mt-2"
+                  class="w-16 sm:w-32 h-2 bg-[var(--color-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 mt-2"
                 >
                   <div
-                    class="h-full bg-[var(--space-primary)] rounded-full"
+                    class="h-full bg-[var(--color-primary)] rounded-full"
                     :style="`width: ${gameStat.winRate}%`"
                   ></div>
                 </div>
@@ -567,7 +567,7 @@
           title="Recherche de statistiques"
           :showCursor="true"
         >
-          <div class="text-space-text-muted">
+          <div class="text-color-text-muted">
             Aucune donnée de performance disponible
           </div>
         </SpaceTerminal>
@@ -588,7 +588,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-space-secondary flex-shrink-0"
+              class="h-8 w-8 mr-3 text-color-secondary flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -621,7 +621,7 @@
           <!-- Coéquipiers fréquents -->
           <div>
             <h3
-              class="text-xl font-nasa text-space-secondary-light mb-4 flex items-center justify-between"
+              class="text-xl font-nasa text-color-secondary-light mb-4 flex items-center justify-between"
             >
               <div class="flex items-center">
                 <svg
@@ -655,14 +655,14 @@
                 v-for="teammate in displayedFrequentTeammates"
                 :key="teammate.playerId"
                 variant="dark"
-                className="transform transition-all hover:scale-[1.02] duration-300 p-3 border-l-4 border-l-space-secondary"
+                className="transform transition-all hover:scale-[1.02] duration-300 p-3 border-l-4 border-l-color-secondary"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-secondary/50 flex items-center justify-center mr-3 flex-shrink-0"
+                      class="w-10 h-10 rounded-full bg-color-bg-light border-2 border-color-secondary/50 flex items-center justify-center mr-3 flex-shrink-0"
                     >
-                      <span class="text-space-secondary-light font-bold">
+                      <span class="text-color-secondary-light font-bold">
                         {{ teammate.username.charAt(0).toUpperCase() }}
                       </span>
                     </div>
@@ -672,19 +672,19 @@
                         name: 'Profil',
                         params: { id: teammate.playerId },
                       }"
-                      class="text-space-text hover:text-space-secondary-light transition-colors truncate"
+                      class="text-color-text hover:text-color-secondary-light transition-colors truncate"
                     >
                       {{ teammate.username }}
                     </router-link>
                   </div>
                   <div class="text-right flex items-center ml-3">
                     <div
-                      class="text-lg font-bold text-space-secondary-light font-mono"
+                      class="text-lg font-bold text-color-secondary-light font-mono"
                     >
                       {{ teammate.count }}
                     </div>
                     <div
-                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap"
+                      class="text-xs text-color-text-muted ml-2 whitespace-nowrap"
                     >
                       équipes
                     </div>
@@ -700,7 +700,7 @@
                 "
                 class="text-center py-2"
               >
-                <span class="text-xs text-space-text-muted font-mono">
+                <span class="text-xs text-color-text-muted font-mono">
                   ... et {{ socialStats.frequentTeammates.length - 5 }} autres
                   coéquipiers
                 </span>
@@ -713,7 +713,7 @@
               title="Recherche de coéquipiers"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-color-text-muted">
                 Aucune collaboration répétée
               </div>
             </SpaceTerminal>
@@ -722,7 +722,7 @@
           <!-- Partenaires de victoire -->
           <div>
             <h3
-              class="text-xl font-nasa text-space-accent-light mb-4 flex items-center justify-between"
+              class="text-xl font-nasa text-color-accent-light mb-4 flex items-center justify-between"
             >
               <div class="flex items-center">
                 <svg
@@ -756,33 +756,33 @@
                 v-for="partner in displayedWinningPartners"
                 :key="partner.playerId"
                 variant="dark"
-                className="transform transition-all hover:scale-105 duration-300 p-3 border-l-4 border-l-space-accent"
+                className="transform transition-all hover:scale-105 duration-300 p-3 border-l-4 border-l-color-accent"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-accent/50 flex items-center justify-center mr-3 flex-shrink-0"
+                      class="w-10 h-10 rounded-full bg-color-bg-light border-2 border-color-accent/50 flex items-center justify-center mr-3 flex-shrink-0"
                     >
-                      <span class="text-space-accent-light font-bold">
+                      <span class="text-color-accent-light font-bold">
                         {{ partner.username.charAt(0).toUpperCase() }}
                       </span>
                     </div>
 
                     <router-link
                       :to="{ name: 'Profil', params: { id: partner.playerId } }"
-                      class="text-space-text hover:text-space-accent-light transition-colors truncate"
+                      class="text-color-text hover:text-color-accent-light transition-colors truncate"
                     >
                       {{ partner.username }}
                     </router-link>
                   </div>
                   <div class="text-right flex items-center ml-3">
                     <div
-                      class="text-lg font-bold text-space-accent-light font-mono flex items-center"
+                      class="text-lg font-bold text-color-accent-light font-mono flex items-center"
                     >
                       {{ partner.wins }}
                     </div>
                     <div
-                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap flex items-center"
+                      class="text-xs text-color-text-muted ml-2 whitespace-nowrap flex items-center"
                     >
                       <span class="mr-1">victoires</span> 🏆
                     </div>
@@ -798,7 +798,7 @@
                 "
                 class="text-center py-2"
               >
-                <span class="text-xs text-space-text-muted font-mono">
+                <span class="text-xs text-color-text-muted font-mono">
                   ... et {{ socialStats.winningPartners.length - 5 }} autres
                   partenaires
                 </span>
@@ -811,7 +811,7 @@
               title="Recherche de partenaires"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">Aucune victoire en équipe</div>
+              <div class="text-color-text-muted">Aucune victoire en équipe</div>
             </SpaceTerminal>
           </div>
         </div>
@@ -828,7 +828,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-primary"
+            class="h-8 w-8 mr-3 text-color-primary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -861,12 +861,12 @@
               <img
                 :src="badge.imageUrl"
                 :alt="badge.title"
-                class="h-16 w-16 mb-3 rounded-full border-2 border-space-primary object-cover"
+                class="h-16 w-16 mb-3 rounded-full border-2 border-color-primary object-cover"
                 loading="lazy"
                 @error="handleImageError"
               />
               <span
-                class="text-space-text text-center font-nasa text-sm line-clamp-2"
+                class="text-color-text text-center font-nasa text-sm line-clamp-2"
               >
                 {{ badge.title }}
               </span>
@@ -880,7 +880,7 @@
           title="Recherche de badges"
           :showCursor="true"
         >
-          <div class="text-space-text-muted">
+          <div class="text-color-text-muted">
             Aucun badge obtenu pour le moment
           </div>
         </SpaceTerminal>
@@ -897,7 +897,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-accent"
+            class="h-8 w-8 mr-3 text-color-accent"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -918,13 +918,13 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-primary-light text-lg font-nasa mb-1">
+            <div class="text-color-primary-light text-lg font-nasa mb-1">
               🔥 Série
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ records.longestWinStreak }}
             </div>
-            <div class="text-xs text-space-text-muted">
+            <div class="text-xs text-color-text-muted">
               victoires consécutives
             </div>
           </SpaceCard>
@@ -934,13 +934,13 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-secondary-light text-lg font-nasa mb-1">
+            <div class="text-color-secondary-light text-lg font-nasa mb-1">
               🎯 Top 25%
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ top25PercentRate }}%
             </div>
-            <div class="text-xs text-space-text-muted">des tournois</div>
+            <div class="text-xs text-color-text-muted">des tournois</div>
           </SpaceCard>
 
           <!-- Taux de victoire -->
@@ -948,7 +948,7 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-primary-light text-lg font-nasa mb-1">
+            <div class="text-color-primary-light text-lg font-nasa mb-1">
               📊 Taux
             </div>
             <div class="text-2xl font-bold text-white font-mono">
@@ -962,7 +962,7 @@
                   : 0
               }}%
             </div>
-            <div class="text-xs text-space-text-muted">de victoire</div>
+            <div class="text-xs text-color-text-muted">de victoire</div>
           </SpaceCard>
 
           <!-- Taux de podium -->
@@ -970,7 +970,7 @@
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-space-accent-light text-lg font-nasa mb-1">
+            <div class="text-color-accent-light text-lg font-nasa mb-1">
               🏆 Podium
             </div>
             <div class="text-2xl font-bold text-white font-mono">
@@ -986,14 +986,14 @@
                   : 0
               }}%
             </div>
-            <div class="text-xs text-space-text-muted">de podiums</div>
+            <div class="text-xs text-color-text-muted">de podiums</div>
           </SpaceCard>
         </div>
 
         <!-- Graphique de progression intégré -->
-        <SpaceCard variant="dark" className="border border-space-accent/20">
+        <SpaceCard variant="dark" className="border border-color-accent/20">
           <h3
-            class="text-lg font-nasa text-space-accent-light mb-4 flex items-center"
+            class="text-lg font-nasa text-color-accent-light mb-4 flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1014,7 +1014,7 @@
 
           <!-- Graphique simple en CSS basé sur les données réelles -->
           <div
-            class="h-48 bg-space-bg rounded-lg p-4 border border-space-bg-light/20"
+            class="h-48 bg-color-bg rounded-lg p-4 border border-color-bg-light/20"
           >
             <div v-if="tournamentProgression.length > 0" class="h-full">
               <div class="flex justify-between items-end h-full relative">
@@ -1030,7 +1030,7 @@
                     <!-- Barre victoires (primary) -->
                     <div
                       v-if="month.victories > 0"
-                      class="bg-gradient-to-t from-[var(--space-primary-dark)] to-[var(--space-primary-light)] rounded-t w-2/5"
+                      class="bg-gradient-to-t from-[var(--color-primary-dark)] to-[var(--color-primary-light)] rounded-t w-2/5"
                       :style="`height: ${Math.max(
                         (month.victories / maxOverallValue) * 100,
                         8
@@ -1061,7 +1061,7 @@
 
                   <!-- Label du mois -->
                   <div
-                    class="text-xs text-space-text-muted mt-2 font-mono text-center"
+                    class="text-xs text-color-text-muted mt-2 font-mono text-center"
                   >
                     {{ month.name }}
                   </div>
@@ -1072,19 +1072,19 @@
                   >
                     <span
                       v-if="month.victories > 0"
-                      class="text-space-primary-light"
+                      class="text-color-primary-light"
                     >
                       {{ month.victories }}V
                     </span>
                     <span
                       v-if="month.podiums > month.victories"
-                      class="text-space-accent-light"
+                      class="text-color-accent-light"
                     >
                       {{ month.podiums - month.victories }}P
                     </span>
                     <span
                       v-if="month.podiums === 0 && month.victories === 0"
-                      class="text-space-text-muted"
+                      class="text-color-text-muted"
                     >
                       -
                     </span>
@@ -1095,14 +1095,14 @@
               <!-- Légende -->
               <div class="flex justify-center mt-4 space-x-6">
                 <div class="flex items-center space-x-2">
-                  <div class="w-3 h-3 bg-space-primary-light rounded"></div>
-                  <span class="text-xs text-space-text-muted font-mono"
+                  <div class="w-3 h-3 bg-color-primary-light rounded"></div>
+                  <span class="text-xs text-color-text-muted font-mono"
                     >Victoires</span
                   >
                 </div>
                 <div class="flex items-center space-x-2">
-                  <div class="w-3 h-3 bg-space-accent-light rounded"></div>
-                  <span class="text-xs text-space-text-muted font-mono"
+                  <div class="w-3 h-3 bg-color-accent-light rounded"></div>
+                  <span class="text-xs text-color-text-muted font-mono"
                     >Autres podiums</span
                   >
                 </div>
@@ -1116,7 +1116,7 @@
               title="Analyse des performances"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-color-text-muted">
                 Pas assez de données
                 <p class="text-xs mt-1">Participez à plus de tournois</p>
               </div>
@@ -1136,7 +1136,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-space-primary"
+            class="h-8 w-8 mr-3 text-color-primary"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -1165,7 +1165,7 @@
           <div class="relative">
             <select
               v-model="tournamentSort"
-              class="appearance-none bg-space-bg border border-space-primary/50 text-space-primary-light text-sm font-mono px-3 py-1 pr-8 rounded-lg focus:outline-none focus:border-space-primary-light"
+              class="appearance-none bg-color-bg border border-color-primary/50 text-color-primary-light text-sm font-mono px-3 py-1 pr-8 rounded-lg focus:outline-none focus:border-color-primary-light"
               aria-label="Trier les tournois"
             >
               <option value="date-desc">Plus récents d'abord</option>
@@ -1173,7 +1173,7 @@
               <option value="rank-asc">Meilleurs classements</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-space-primary-light"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-color-primary-light"
             >
               <svg
                 class="fill-current h-4 w-4"
@@ -1203,11 +1203,11 @@
                   <!-- Partie gauche : icône + nom du tournoi -->
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="h-8 w-8 rounded-full bg-space-primary/20 flex items-center justify-center mr-3 border border-space-primary/50 flex-shrink-0"
+                      class="h-8 w-8 rounded-full bg-color-primary/20 flex items-center justify-center mr-3 border border-color-primary/50 flex-shrink-0"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-space-primary-light"
+                        class="h-5 w-5 text-color-primary-light"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -1218,7 +1218,7 @@
                         />
                       </svg>
                     </div>
-                    <span class="text-space-text font-nasa truncate">{{
+                    <span class="text-color-text font-nasa truncate">{{
                       tournament.name
                     }}</span>
                   </div>
@@ -1229,7 +1229,7 @@
                   >
                     <!-- Date -->
                     <span
-                      class="text-space-text-muted text-sm font-mono order-1 sm:order-none"
+                      class="text-color-text-muted text-sm font-mono order-1 sm:order-none"
                       >{{ formatDate(tournament.date) }}</span
                     >
 
@@ -1297,7 +1297,7 @@
           title="Recherche de tournois"
           :showCursor="true"
         >
-          <div class="text-space-text-muted">Aucun tournoi pour le moment</div>
+          <div class="text-color-text-muted">Aucun tournoi pour le moment</div>
         </SpaceTerminal>
       </SpaceCard>
     </div>
@@ -1316,7 +1316,7 @@
           <img
             :src="selectedBadge.imageUrl"
             :alt="selectedBadge.title"
-            class="h-48 w-48 rounded-full border-4 border-space-primary object-cover group-hover:scale-105 transition-transform duration-500"
+            class="h-48 w-48 rounded-full border-4 border-color-primary object-cover group-hover:scale-105 transition-transform duration-500"
             @error="handleImageError"
           />
           <div class="absolute inset-0 rounded-full shadow-glow-primary"></div>
@@ -1329,7 +1329,7 @@
 
         <!-- Badge description with background -->
         <SpaceCard variant="dark" className="w-full mt-2">
-          <p class="text-space-text text-sm text-center">
+          <p class="text-color-text text-sm text-center">
             {{
               selectedBadge.description ||
               "Ce badge est une récompense mystérieuse. Aucune description disponible."
@@ -1952,37 +1952,37 @@ onMounted(() => {
 }
 
 .podium-gold {
-  box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.4);
+  box-shadow: 0 0 20px rgba(var(--color-gold-rgb), 0.4);
 }
 
 .podium-gold::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--space-gold-rgb), 0.7) 0%,
+    rgba(var(--color-gold-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-silver {
-  box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-silver-rgb), 0.4);
 }
 
 .podium-silver::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--space-silver-rgb), 0.7) 0%,
+    rgba(var(--color-silver-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-bronze {
-  box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-bronze-rgb), 0.4);
 }
 
 .podium-bronze::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--space-bronze-rgb), 0.7) 0%,
+    rgba(var(--color-bronze-rgb), 0.7) 0%,
     transparent 70%
   );
 }

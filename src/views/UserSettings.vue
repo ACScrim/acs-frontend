@@ -2,25 +2,40 @@
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
       <!-- En-tête de la page -->
-      <SpaceHeader title="PARAMÈTRES UTILISATEUR" mission="SETTINGS-CONFIG-25" :decorated="true" className="mb-8" />
+      <SpaceHeader
+        title="PARAMÈTRES UTILISATEUR"
+        mission="SETTINGS-CONFIG-25"
+        :decorated="true"
+        className="mb-8"
+      />
 
       <!-- États d'affichage -->
       <div v-if="loading" class="flex justify-center py-12">
         <SpaceLoader text="Chargement des paramètres utilisateur..." />
       </div>
 
-      <SpaceTerminal v-else-if="error" title="SYSTÈME · PARAMÈTRES" command="load_user_settings" :message="error"
-        className="my-8" />
+      <SpaceTerminal
+        v-else-if="error"
+        title="SYSTÈME · PARAMÈTRES"
+        command="load_user_settings"
+        :message="error"
+        className="my-8"
+      />
 
       <div v-else-if="user" class="space-y-8">
         <!-- Section: Profil Twitch -->
         <SpaceCard variant="primary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
-                viewBox="0 0 24 24">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-3 text-color-primary-light"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
-                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+                />
               </svg>
               <SpaceTitle size="xl">Profil Twitch</SpaceTitle>
             </div>
@@ -29,17 +44,28 @@
           <div class="space-y-4">
             <!-- Input nom d'utilisateur Twitch -->
             <div>
-              <label class="block text-sm font-nasa text-space-primary-light mb-2">
+              <label
+                class="block text-sm font-nasa text-color-primary-light mb-2"
+              >
                 Nom d'utilisateur Twitch
               </label>
               <div class="flex gap-3">
                 <div class="flex-1 relative">
-                  <SpaceInput v-model="formData.twitchUsername" placeholder="votre_nom_twitch" :disabled="isSaving">
+                  <SpaceInput
+                    v-model="formData.twitchUsername"
+                    placeholder="votre_nom_twitch"
+                    :disabled="isSaving"
+                  >
                     <template #prepend>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-space-primary-light"
-                        fill="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 text-color-primary-light"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path
-                          d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+                          d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+                        />
                       </svg>
                     </template>
                   </SpaceInput>
@@ -48,17 +74,34 @@
             </div>
 
             <!-- Aperçu du profil Twitch -->
-            <SpaceCard v-if="formData.twitchUsername" variant="dark" className="p-3">
+            <SpaceCard
+              v-if="formData.twitchUsername"
+              variant="dark"
+              className="p-3"
+            >
               <div class="flex items-center justify-between">
-                <div class="text-space-text font-mono text-sm">
+                <div class="text-color-text font-mono text-sm">
                   twitch.tv/{{ formData.twitchUsername }}
                 </div>
-                <a :href="`https://twitch.tv/${formData.twitchUsername}`" target="_blank"
-                  class="text-space-primary-light hover:text-space-primary transition-colors" title="Ouvrir sur Twitch">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                <a
+                  :href="`https://twitch.tv/${formData.twitchUsername}`"
+                  target="_blank"
+                  class="text-color-primary-light hover:text-color-primary transition-colors"
+                  title="Ouvrir sur Twitch"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
                   </svg>
                 </a>
               </div>
@@ -70,10 +113,19 @@
         <SpaceCard variant="secondary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-secondary-light" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 17h5l-5 5v-5zM11 17H6l5 5v-5zM7 7h10l-5-5L7 7z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-3 text-color-secondary-light"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-5 5v-5zM11 17H6l5 5v-5zM7 7h10l-5-5L7 7z"
+                />
               </svg>
               <SpaceTitle size="xl">Préférences de notifications</SpaceTitle>
             </div>
@@ -82,20 +134,38 @@
           <!-- Message d'information -->
           <SpaceCard variant="dark" className="mb-6">
             <div class="flex items-start space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-space-secondary-light mt-0.5 flex-shrink-0"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-color-secondary-light mt-0.5 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <div>
-                <div class="font-nasa text-space-secondary-light mb-2">
+                <div class="font-nasa text-color-secondary-light mb-2">
                   À propos des notifications push :
                 </div>
-                <ul class="space-y-1 text-space-text-muted">
-                  <li>• Activez les types de notifications que vous souhaitez recevoir</li>
-                  <li>• Les notifications s'affichent même quand l'application est fermée</li>
+                <ul class="space-y-1 text-color-text-muted">
+                  <li>
+                    • Activez les types de notifications que vous souhaitez
+                    recevoir
+                  </li>
+                  <li>
+                    • Les notifications s'affichent même quand l'application est
+                    fermée
+                  </li>
                   <li>• Vos préférences sont sauvegardées automatiquement</li>
-                  <li>• Assurez-vous d'avoir autorisé les notifications dans votre navigateur</li>
+                  <li>
+                    • Assurez-vous d'avoir autorisé les notifications dans votre
+                    navigateur
+                  </li>
                 </ul>
               </div>
             </div>
@@ -104,25 +174,38 @@
           <!-- Liste des préférences de notifications -->
           <div class="space-y-4" v-if="notificationActivated">
             <!-- Notifications de tournois -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <SpaceCard
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
                   <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border-2 border-yellow-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border-2 border-yellow-500/30"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-yellow-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                      />
                     </svg>
                   </div>
 
                   <!-- Détails -->
                   <div>
-                    <h3 class="text-space-text font-nasa text-sm mb-1">
+                    <h3 class="text-color-text font-nasa text-sm mb-1">
                       🏆 Tournois
                     </h3>
-                    <p class="text-space-text-muted text-xs">
+                    <p class="text-color-text-muted text-xs">
                       Nouveaux tournois, ouvertures d'inscriptions, résultats
                     </p>
                   </div>
@@ -131,74 +214,131 @@
                 <!-- Toggle avec indicateur de statut -->
                 <div class="flex items-center space-x-2">
                   <!-- Indicateur de statut -->
-                  <div v-if="notificationStatus.tournaments" class="flex items-center text-xs">
-                    <div v-if="notificationStatus.tournaments === 'pending'"
-                      class="flex items-center text-space-warning">
-                      <svg class="animate-pulse h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                  <div
+                    v-if="notificationStatus.tournaments"
+                    class="flex items-center text-xs"
+                  >
+                    <div
+                      v-if="notificationStatus.tournaments === 'pending'"
+                      class="flex items-center text-color-warning"
+                    >
+                      <svg
+                        class="animate-pulse h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 8 8"
+                      >
                         <circle cx="4" cy="4" r="3" />
                       </svg>
                       <span class="font-mono">Pending...</span>
                     </div>
-                    <div v-else-if="notificationStatus.tournaments === 'saving'"
-                      class="flex items-center text-space-warning">
-                      <svg class="animate-spin h-3 w-3 mr-1" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                          fill="none">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
+                    <div
+                      v-else-if="notificationStatus.tournaments === 'saving'"
+                      class="flex items-center text-color-warning"
+                    >
+                      <svg
+                        class="animate-spin h-3 w-3 mr-1"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                          fill="none"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       <span class="font-mono">Saving...</span>
                     </div>
-                    <div v-else-if="notificationStatus.tournaments === 'saved'"
-                      class="flex items-center text-space-success">
-                      <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
+                    <div
+                      v-else-if="notificationStatus.tournaments === 'saved'"
+                      class="flex items-center text-color-success"
+                    >
+                      <svg
+                        class="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
+                          clip-rule="evenodd"
+                        ></path>
                       </svg>
                       <span class="font-mono">Saved</span>
                     </div>
-                    <div v-else-if="notificationStatus.tournaments === 'error'"
-                      class="flex items-center text-space-error">
-                      <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
+                    <div
+                      v-else-if="notificationStatus.tournaments === 'error'"
+                      class="flex items-center text-color-error"
+                    >
+                      <svg
+                        class="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
+                          clip-rule="evenodd"
+                        ></path>
                       </svg>
                       <span class="font-mono">Error</span>
                     </div>
                   </div>
 
                   <!-- Toggle -->
-                  <SpaceToggle :model-value="notificationPreferences.tournaments"
-                    @update:model-value="updateNotificationPreference('tournaments', $event)" size="sm"
-                    className="bg-yellow-500/20" :disabled="notificationStatus.tournaments === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.tournaments"
+                    @update:model-value="
+                      updateNotificationPreference('tournaments', $event)
+                    "
+                    size="sm"
+                    className="bg-yellow-500/20"
+                    :disabled="notificationStatus.tournaments === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
 
             <!-- Notifications de badges -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <SpaceCard
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
                   <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center border-2 border-purple-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center border-2 border-purple-500/30"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-purple-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                      />
                     </svg>
                   </div>
 
                   <!-- Détails -->
                   <div>
-                    <h3 class="text-space-text font-nasa text-sm mb-1">
+                    <h3 class="text-color-text font-nasa text-sm mb-1">
                       🏅 Badges
                     </h3>
-                    <p class="text-space-text-muted text-xs">
+                    <p class="text-color-text-muted text-xs">
                       Nouveaux badges obtenus, succès débloqués
                     </p>
                   </div>
@@ -206,76 +346,136 @@
 
                 <!-- Toggle avec indicateur -->
                 <div class="flex items-center space-x-2">
-                  <div v-if="notificationStatus.badges" class="flex items-center text-xs">
+                  <div
+                    v-if="notificationStatus.badges"
+                    class="flex items-center text-xs"
+                  >
                     <!-- Indicateur de statut -->
-                    <div v-if="notificationStatus.tournaments" class="flex items-center text-xs">
-                      <div v-if="notificationStatus.tournaments === 'pending'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-pulse h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                    <div
+                      v-if="notificationStatus.tournaments"
+                      class="flex items-center text-xs"
+                    >
+                      <div
+                        v-if="notificationStatus.tournaments === 'pending'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-pulse h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
                           <circle cx="4" cy="4" r="3" />
                         </svg>
                         <span class="font-mono">Pending...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saving'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-spin h-3 w-3 mr-1" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                            fill="none">
-                          </circle>
-                          <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                          </path>
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saving'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-spin h-3 w-3 mr-1"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                            fill="none"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saving...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saved'"
-                        class="flex items-center text-space-success">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saved'"
+                        class="flex items-center text-color-success"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saved</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'error'"
-                        class="flex items-center text-space-error">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'error'"
+                        class="flex items-center text-color-error"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Error</span>
                       </div>
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.badges"
-                    @update:model-value="updateNotificationPreference('badges', $event)" size="sm"
-                    className="bg-purple-500/20" :disabled="notificationStatus.badges === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.badges"
+                    @update:model-value="
+                      updateNotificationPreference('badges', $event)
+                    "
+                    size="sm"
+                    className="bg-purple-500/20"
+                    :disabled="notificationStatus.badges === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
 
             <!-- Notifications de rappels -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <SpaceCard
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
                   <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border-2 border-blue-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border-2 border-blue-500/30"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-blue-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
 
                   <!-- Détails -->
                   <div>
-                    <h3 class="text-space-text font-nasa text-sm mb-1">
+                    <h3 class="text-color-text font-nasa text-sm mb-1">
                       ⏰ Rappels
                     </h3>
-                    <p class="text-space-text-muted text-xs">
+                    <p class="text-color-text-muted text-xs">
                       Rappels de check-in, début de tournois, échéances
                     </p>
                   </div>
@@ -283,76 +483,136 @@
 
                 <!-- Toggle avec indicateur -->
                 <div class="flex items-center space-x-2">
-                  <div v-if="notificationStatus.reminders" class="flex items-center text-xs">
+                  <div
+                    v-if="notificationStatus.reminders"
+                    class="flex items-center text-xs"
+                  >
                     <!-- Indicateur de statut -->
-                    <div v-if="notificationStatus.tournaments" class="flex items-center text-xs">
-                      <div v-if="notificationStatus.tournaments === 'pending'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-pulse h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                    <div
+                      v-if="notificationStatus.tournaments"
+                      class="flex items-center text-xs"
+                    >
+                      <div
+                        v-if="notificationStatus.tournaments === 'pending'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-pulse h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
                           <circle cx="4" cy="4" r="3" />
                         </svg>
                         <span class="font-mono">Pending...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saving'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-spin h-3 w-3 mr-1" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                            fill="none">
-                          </circle>
-                          <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                          </path>
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saving'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-spin h-3 w-3 mr-1"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                            fill="none"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saving...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saved'"
-                        class="flex items-center text-space-success">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saved'"
+                        class="flex items-center text-color-success"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saved</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'error'"
-                        class="flex items-center text-space-error">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'error'"
+                        class="flex items-center text-color-error"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Error</span>
                       </div>
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.reminders"
-                    @update:model-value="updateNotificationPreference('reminders', $event)" size="sm"
-                    className="bg-blue-500/20" :disabled="notificationStatus.reminders === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.reminders"
+                    @update:model-value="
+                      updateNotificationPreference('reminders', $event)
+                    "
+                    size="sm"
+                    className="bg-blue-500/20"
+                    :disabled="notificationStatus.reminders === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
 
             <!-- Notifications système -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <SpaceCard
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
                   <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border-2 border-green-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border-2 border-green-500/30"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
 
                   <!-- Détails -->
                   <div>
-                    <h3 class="text-space-text font-nasa text-sm mb-1">
+                    <h3 class="text-color-text font-nasa text-sm mb-1">
                       🔧 Système
                     </h3>
-                    <p class="text-space-text-muted text-xs">
+                    <p class="text-color-text-muted text-xs">
                       Mises à jour, maintenance, annonces importantes
                     </p>
                   </div>
@@ -360,63 +620,112 @@
 
                 <!-- Toggle avec indicateur -->
                 <div class="flex items-center space-x-2">
-                  <div v-if="notificationStatus.system" class="flex items-center text-xs">
+                  <div
+                    v-if="notificationStatus.system"
+                    class="flex items-center text-xs"
+                  >
                     <!-- Indicateur de statut -->
-                    <div v-if="notificationStatus.tournaments" class="flex items-center text-xs">
-                      <div v-if="notificationStatus.tournaments === 'pending'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-pulse h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                    <div
+                      v-if="notificationStatus.tournaments"
+                      class="flex items-center text-xs"
+                    >
+                      <div
+                        v-if="notificationStatus.tournaments === 'pending'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-pulse h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
                           <circle cx="4" cy="4" r="3" />
                         </svg>
                         <span class="font-mono">Pending...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saving'"
-                        class="flex items-center text-space-warning">
-                        <svg class="animate-spin h-3 w-3 mr-1" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                            fill="none">
-                          </circle>
-                          <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                          </path>
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saving'"
+                        class="flex items-center text-color-warning"
+                      >
+                        <svg
+                          class="animate-spin h-3 w-3 mr-1"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                            fill="none"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saving...</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'saved'"
-                        class="flex items-center text-space-success">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'saved'"
+                        class="flex items-center text-color-success"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Saved</span>
                       </div>
-                      <div v-else-if="notificationStatus.tournaments === 'error'"
-                        class="flex items-center text-space-error">
-                        <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd"
+                      <div
+                        v-else-if="notificationStatus.tournaments === 'error'"
+                        class="flex items-center text-color-error"
+                      >
+                        <svg
+                          class="h-3 w-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                            clip-rule="evenodd"
+                          ></path>
                         </svg>
                         <span class="font-mono">Error</span>
                       </div>
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.system"
-                    @update:model-value="updateNotificationPreference('system', $event)" size="sm"
-                    className="bg-green-500/20" :disabled="notificationStatus.system === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.system"
+                    @update:model-value="
+                      updateNotificationPreference('system', $event)
+                    "
+                    size="sm"
+                    className="bg-green-500/20"
+                    :disabled="notificationStatus.system === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
           </div>
           <div v-else>
-            <div class="text-space-text-muted text-sm">
-              Les notifications push sont désactivées. Veuillez activer les notifications dans les paramètres de votre
-              navigateur.
+            <div class="text-color-text-muted text-sm">
+              Les notifications push sont désactivées. Veuillez activer les
+              notifications dans les paramètres de votre navigateur.
             </div>
-            <button @click="enableNotifications"
-              class="mt-4 px-4 py-2 bg-space-primary hover:bg-space-primary-dark text-white rounded-md">
+            <button
+              @click="enableNotifications"
+              class="mt-4 px-4 py-2 bg-color-primary hover:bg-color-primary-dark text-white rounded-md"
+            >
               Activer les notifications
             </button>
           </div>
@@ -424,37 +733,66 @@
           <!-- Indicateur de statut global -->
           <div class="mt-6 pt-4 border-t border-space-border">
             <div class="flex items-center justify-between text-sm">
-              <span class="text-space-text-muted">
+              <span class="text-color-text-muted">
                 Statut des notifications:
               </span>
               <div class="flex items-center space-x-2">
-                <div v-if="hasPendingChanges" class="flex items-center text-space-warning">
-                  <svg class="animate-pulse h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                <div
+                  v-if="hasPendingChanges"
+                  class="flex items-center text-color-warning"
+                >
+                  <svg
+                    class="animate-pulse h-4 w-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 8 8"
+                  >
                     <circle cx="4" cy="4" r="3" />
                   </svg>
                   <span class="font-mono">Modifications en attente...</span>
                 </div>
-                <div v-else-if="isAnySaving" class="flex items-center text-space-warning">
+                <div
+                  v-else-if="isAnySaving"
+                  class="flex items-center text-color-warning"
+                >
                   <svg class="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                      fill="none">
-                    </circle>
-                    <path class="opacity-75" fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      fill="none"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   <span class="font-mono">Sauvegarde...</span>
                 </div>
-                <div v-else-if="allSaved" class="flex items-center text-space-success">
-                  <svg class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
+                <div
+                  v-else-if="allSaved"
+                  class="flex items-center text-color-success"
+                >
+                  <svg
+                    class="h-4 w-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
+                      clip-rule="evenodd"
+                    ></path>
                   </svg>
                   <span class="font-mono">Tout sauvegardé</span>
                 </div>
-                <div v-else class="text-space-text-muted font-mono">
-                  {{ notificationActivated ? "Prêt" : "Notifications désactivées" }}
+                <div v-else class="text-color-text-muted font-mono">
+                  {{
+                    notificationActivated ? "Prêt" : "Notifications désactivées"
+                  }}
                 </div>
               </div>
             </div>
@@ -466,10 +804,19 @@
           <template #header>
             <div class="flex items-center justify-between">
               <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-secondary-light" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 mr-3 text-color-secondary-light"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z"
+                  />
                 </svg>
                 <SpaceTitle size="xl">Rôles Discord par jeu</SpaceTitle>
               </div>
@@ -487,16 +834,25 @@
           <!-- Message d'aide pour les rôles Discord -->
           <SpaceCard variant="dark" className="mb-6">
             <div class="flex items-start space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-space-secondary-light mt-0.5 flex-shrink-0"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-color-secondary-light mt-0.5 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <div>
-                <div class="font-nasa text-space-secondary-light mb-2">
+                <div class="font-nasa text-color-secondary-light mb-2">
                   À propos des rôles Discord :
                 </div>
-                <ul class="space-y-1 text-space-text-muted">
+                <ul class="space-y-1 text-color-text-muted">
                   <li>
                     • En activant un rôle pour un jeu, vous pourrez être
                     mentionné (@ping) par d'autres membres
@@ -519,33 +875,54 @@
 
           <!-- Liste des jeux filtrés -->
           <div v-if="filteredGames.length > 0" class="space-y-3">
-            <SpaceCard v-for="game in filteredGames" :key="game._id" variant="dark"
-              className="transform transition-all hover:scale-[1.01] duration-200">
+            <SpaceCard
+              v-for="game in filteredGames"
+              :key="game._id"
+              variant="dark"
+              className="transform transition-all hover:scale-[1.01] duration-200"
+            >
               <div class="flex items-center justify-between">
                 <!-- Informations du jeu -->
                 <div class="flex items-center space-x-4">
                   <!-- Image du jeu -->
-                  <img v-if="game.imageUrl" :src="game.imageUrl" :alt="game.name"
-                    class="w-12 h-12 rounded-lg object-cover border-2 border-space-secondary/50"
-                    @error="handleImageError" />
-                  <div v-else
-                    class="w-12 h-12 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-secondary/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-space-secondary-light" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z" />
+                  <img
+                    v-if="game.imageUrl"
+                    :src="game.imageUrl"
+                    :alt="game.name"
+                    class="w-12 h-12 rounded-lg object-cover border-2 border-color-secondary/50"
+                    @error="handleImageError"
+                  />
+                  <div
+                    v-else
+                    class="w-12 h-12 rounded-lg bg-color-bg-light flex items-center justify-center border-2 border-color-secondary/50"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6 text-color-secondary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z"
+                      />
                     </svg>
                   </div>
 
                   <!-- Détails du jeu -->
                   <div>
-                    <h3 class="text-space-text font-nasa text-sm mb-1">
+                    <h3 class="text-color-text font-nasa text-sm mb-1">
                       {{ game.name }}
                     </h3>
-                    <p class="text-space-text-muted text-xs">
+                    <p class="text-color-text-muted text-xs">
                       Recevoir des mentions (@ping) pour {{ game.name }}
                     </p>
-                    <p class="text-space-secondary-light text-xs mt-1 font-mono">
+                    <p
+                      class="text-color-secondary-light text-xs mt-1 font-mono"
+                    >
                       Rôle Discord: @{{
                         game.name.replace(/\s+/g, "-").toLowerCase()
                       }}
@@ -553,34 +930,66 @@
                   </div>
 
                   <!-- Indicateur de statut -->
-                  <div v-if="gameRoleStatus[game._id || '']" class="flex items-center text-xs">
-                    <div v-if="gameRoleStatus[game._id || ''] === 'syncing'"
-                      class="flex items-center text-space-warning">
-                      <svg class="animate-spin h-3 w-3 mr-1" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-                          fill="none">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
+                  <div
+                    v-if="gameRoleStatus[game._id || '']"
+                    class="flex items-center text-xs"
+                  >
+                    <div
+                      v-if="gameRoleStatus[game._id || ''] === 'syncing'"
+                      class="flex items-center text-color-warning"
+                    >
+                      <svg
+                        class="animate-spin h-3 w-3 mr-1"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                          fill="none"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       <span class="font-mono">Syncing...</span>
                     </div>
-                    <div v-else-if="gameRoleStatus[game._id || ''] === 'success'"
-                      class="flex items-center text-space-success">
-                      <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
+                    <div
+                      v-else-if="gameRoleStatus[game._id || ''] === 'success'"
+                      class="flex items-center text-color-success"
+                    >
+                      <svg
+                        class="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
+                          clip-rule="evenodd"
+                        ></path>
                       </svg>
                       <span class="font-mono">Synced</span>
                     </div>
-                    <div v-else-if="gameRoleStatus[game._id || ''] === 'error'"
-                      class="flex items-center text-space-error">
-                      <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
+                    <div
+                      v-else-if="gameRoleStatus[game._id || ''] === 'error'"
+                      class="flex items-center text-color-error"
+                    >
+                      <svg
+                        class="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
+                          clip-rule="evenodd"
+                        ></path>
                       </svg>
                       <span class="font-mono">Error</span>
                     </div>
@@ -588,20 +997,29 @@
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <SpaceToggle :model-value="isGameRoleEnabled(game._id || '')"
-                  @update:model-value="toggleGameRole(game._id || '', $event)" size="sm"
-                  className="bg-space-secondary/20" :disabled="gameRoleStatus[game._id || ''] === 'syncing'" />
+                <SpaceToggle
+                  :model-value="isGameRoleEnabled(game._id || '')"
+                  @update:model-value="toggleGameRole(game._id || '', $event)"
+                  size="sm"
+                  className="bg-color-secondary/20"
+                  :disabled="gameRoleStatus[game._id || ''] === 'syncing'"
+                />
               </div>
             </SpaceCard>
           </div>
 
           <!-- État vide pour jeux filtrés -->
-          <SpaceTerminal v-else title="BASE DE DONNÉES · JEUX PRINCIPAUX" command="query_main_games" :showCursor="true">
-            <div class="text-space-error">
+          <SpaceTerminal
+            v-else
+            title="BASE DE DONNÉES · JEUX PRINCIPAUX"
+            command="query_main_games"
+            :showCursor="true"
+          >
+            <div class="text-color-error">
               Aucun des jeux principaux n'est disponible dans la base de
               données.
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-color-text-muted mt-2">
               Les jeux supportés sont : League of Legends, Rocket League,
               Valorant, The Finals, Counter Strike et Overwatch.
             </div>
@@ -610,14 +1028,32 @@
 
         <!-- Actions de sauvegarde -->
         <div class="text-center pt-4">
-          <SpaceButton @click="saveSettings" :disabled="isSaving || !hasChanges" variant="primary" size="lg">
+          <SpaceButton
+            @click="saveSettings"
+            :disabled="isSaving || !hasChanges"
+            variant="primary"
+            size="lg"
+          >
             <template v-if="isSaving">
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
+              <svg
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Enregistrement en cours...
             </template>
@@ -631,16 +1067,28 @@
     <Toast v-if="message" :type="messageType" :message="message" />
 
     <!-- Modal de confirmation pour modifications non sauvegardées -->
-    <SpaceModal v-if="showUnsavedChangesDialog" v-model="showUnsavedChangesDialog"
-      title="MODIFICATIONS NON SAUVEGARDÉES">
+    <SpaceModal
+      v-if="showUnsavedChangesDialog"
+      v-model="showUnsavedChangesDialog"
+      title="MODIFICATIONS NON SAUVEGARDÉES"
+    >
       <div class="text-center mb-6 space-y-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-warning mx-auto" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-color-warning mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
 
-        <p class="text-space-text">
+        <p class="text-color-text">
           Vous avez des modifications non sauvegardées. Voulez-vous vraiment
           quitter cette page ? Vos changements seront perdus.
         </p>
@@ -659,15 +1107,28 @@
     </SpaceModal>
 
     <!-- Modal de confirmation pour réinitialisation -->
-    <SpaceModal v-if="showResetDialog" v-model="showResetDialog" title="RÉINITIALISER LES MODIFICATIONS">
+    <SpaceModal
+      v-if="showResetDialog"
+      v-model="showResetDialog"
+      title="RÉINITIALISER LES MODIFICATIONS"
+    >
       <div class="text-center mb-6 space-y-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-secondary mx-auto" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16 text-color-secondary mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
 
-        <p class="text-space-text">
+        <p class="text-color-text">
           Voulez-vous vraiment annuler toutes vos modifications ? Cette action
           ne peut pas être annulée.
         </p>
@@ -1115,7 +1576,6 @@ onMounted(async () => {
   }
 });
 
-
 // ========================================
 // SECTION: GESTION DES NOTIFICATIONS
 // ========================================
@@ -1130,7 +1590,9 @@ const notificationPreferences = ref({
   system: true,
 });
 
-const notificationStatus = ref<Record<string, "pending" | "saving" | "saved" | "error" | null>>({
+const notificationStatus = ref<
+  Record<string, "pending" | "saving" | "saved" | "error" | null>
+>({
   tournaments: null,
   badges: null,
   reminders: null,
@@ -1147,15 +1609,15 @@ const notificationTimers = ref<Record<string, number | null>>({
 
 // Computed pour les statuts globaux
 const hasPendingChanges = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'pending')
+  Object.values(notificationStatus.value).some((status) => status === "pending")
 );
 
 const isAnySaving = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'saving')
+  Object.values(notificationStatus.value).some((status) => status === "saving")
 );
 
 const allSaved = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'saved')
+  Object.values(notificationStatus.value).some((status) => status === "saved")
 );
 
 // Fonction pour charger les préférences de notifications
@@ -1189,14 +1651,14 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
   }
 
   // Marquer comme en attente
-  notificationStatus.value[type] = 'pending';
+  notificationStatus.value[type] = "pending";
 
   // Programmer la sauvegarde après 1.5 secondes
   notificationTimers.value[type] = setTimeout(async () => {
     if (!user.value) return;
 
     // Marquer comme en cours de sauvegarde
-    notificationStatus.value[type] = 'saving';
+    notificationStatus.value[type] = "saving";
 
     try {
       // Appel API pour sauvegarder la préférence
@@ -1207,13 +1669,12 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       });
 
       // Marquer comme sauvegardé
-      notificationStatus.value[type] = 'saved';
+      notificationStatus.value[type] = "saved";
 
       // Auto-clear après 2 secondes
       setTimeout(() => {
         notificationStatus.value[type] = null;
       }, 2000);
-
     } catch (error) {
       console.error(`Erreur lors de la sauvegarde de ${type}:`, error);
 
@@ -1221,8 +1682,11 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       (notificationPreferences.value as any)[type] = !enabled;
 
       // Marquer comme erreur
-      notificationStatus.value[type] = 'error';
-      showMessage(`Erreur lors de la sauvegarde des préférences ${type}`, "error");
+      notificationStatus.value[type] = "error";
+      showMessage(
+        `Erreur lors de la sauvegarde des préférences ${type}`,
+        "error"
+      );
 
       // Auto-clear après 3 secondes
       setTimeout(() => {
@@ -1250,13 +1714,16 @@ const subscribeToPush = async () => {
 
 const enableNotifications = () => {
   if (window.Notification && Notification.permission !== "granted") {
-    Notification.requestPermission().then(permission => {
+    Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         subscribeToPush();
         showMessage("Notifications activées avec succès !", "success");
       } else {
         notificationActivated.value = false;
-        showMessage("Notifications refusées. Vous pouvez les activer plus tard.", "error");
+        showMessage(
+          "Notifications refusées. Vous pouvez les activer plus tard.",
+          "error"
+        );
       }
     });
   } else {
@@ -1283,14 +1750,12 @@ onMounted(async () => {
       return;
     }
 
-    notificationActivated.value = window.Notification && Notification.permission === "granted";
+    notificationActivated.value =
+      window.Notification && Notification.permission === "granted";
 
     // Initialiser les données du formulaire et charger les jeux et préférences
     initializeUserProfile();
-    await Promise.all([
-      loadGames(),
-      loadNotificationPreferences()
-    ]);
+    await Promise.all([loadGames(), loadNotificationPreferences()]);
   } catch (err) {
     console.error("Erreur lors de l'initialisation:", err);
     error.value =
@@ -1302,7 +1767,7 @@ onMounted(async () => {
 
 // Nettoyer les timers à la destruction du composant
 onUnmounted(() => {
-  Object.values(notificationTimers.value).forEach(timer => {
+  Object.values(notificationTimers.value).forEach((timer) => {
     if (timer) clearTimeout(timer);
   });
 });
@@ -1311,7 +1776,6 @@ onUnmounted(() => {
 <style scoped>
 /* Animation pour synchronisation */
 @keyframes pulse-sync {
-
   0%,
   100% {
     opacity: 1;

@@ -54,20 +54,20 @@
 
         <!-- Indicateur d'onglet actif -->
         <div
-          class="relative h-1 mt-4 bg-space-bg-light/30 rounded-full overflow-hidden"
+          class="relative h-1 mt-4 bg-color-bg-light/30 rounded-full overflow-hidden"
         >
           <div
             class="absolute top-0 left-0 h-full transition-all duration-300 ease-in-out rounded-full"
             :class="[
               activeTab === 'create'
-                ? 'bg-space-primary w-1/2 transform translate-x-0'
-                : 'bg-space-secondary w-1/2 transform translate-x-full',
+                ? 'bg-color-primary w-1/2 transform translate-x-0'
+                : 'bg-color-secondary w-1/2 transform translate-x-full',
             ]"
             :style="{
               boxShadow:
                 activeTab === 'create'
-                  ? '0 0 10px rgba(var(--space-primary-rgb), 0.7)'
-                  : '0 0 10px rgba(var(--space-secondary-rgb), 0.7)',
+                  ? '0 0 10px rgba(var(--color-primary-rgb), 0.7)'
+                  : '0 0 10px rgba(var(--color-secondary-rgb), 0.7)',
             }"
           ></div>
         </div>

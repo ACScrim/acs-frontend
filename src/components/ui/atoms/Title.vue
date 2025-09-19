@@ -104,8 +104,8 @@ component {
 }
 
 .space-title--animated:hover {
-  text-shadow: 0 0 10px var(--space-primary),
-    0 0 20px var(--space-primary-light);
+  text-shadow: 0 0 10px var(--color-primary),
+    0 0 20px var(--color-primary-light);
   letter-spacing: 1px;
 }
 
@@ -116,7 +116,7 @@ component {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
 }
@@ -175,13 +175,13 @@ component {
 
 .space-title--glitch.space-title--hovered::before {
   left: 2px;
-  text-shadow: -1px 0 var(--space-secondary);
+  text-shadow: -1px 0 var(--color-secondary);
   animation: glitch-animation-1 0.3s linear infinite;
 }
 
 .space-title--glitch.space-title--hovered::after {
   left: -2px;
-  text-shadow: 1px 0 var(--space-accent);
+  text-shadow: 1px 0 var(--color-accent);
   animation: glitch-animation-2 0.3s linear infinite;
 }
 

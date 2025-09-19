@@ -38,7 +38,7 @@
           <div>
             <label for="game" class="mb-3 flex items-center gap-2">
               <div
-                class="font-heading text-space-primary-light flex items-center gap-2"
+                class="font-heading text-color-primary-light flex items-center gap-2"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -71,7 +71,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-space-primary"
+                  class="h-5 w-5 text-color-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -91,7 +91,7 @@
           <div>
             <label for="season" class="mb-3 flex items-center gap-2">
               <div
-                class="font-heading text-space-secondary-light flex items-center gap-2"
+                class="font-heading text-color-secondary-light flex items-center gap-2"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +112,7 @@
               <select
                 id="season"
                 v-model="selectedSeason"
-                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Classement général</option>
                 <option
@@ -132,7 +132,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-space-secondary"
+                  class="h-5 w-5 text-color-secondary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -165,10 +165,10 @@
         showCursor
         className="my-8"
       >
-        <div class="text-space-error font-mono">
+        <div class="text-color-error font-mono">
           Erreur 404: Aucun joueur n'a été trouvé pour cette recherche.
         </div>
-        <div class="text-space-text-muted mt-2">
+        <div class="text-color-text-muted mt-2">
           Essayez de modifier vos critères de recherche.
         </div>
       </SpaceTerminal>
@@ -183,25 +183,25 @@
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
-            <thead class="bg-space-bg-light/30">
+            <thead class="bg-color-bg-light/30">
               <tr>
                 <th
                   scope="col"
-                  class="px-6 py-4 text-center text-sm font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-4 text-center text-sm font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   Rang
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Joueur</span>
                     <button
                       @click="sortBy('username')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-color-bg-light/50 focus:outline-none"
                       :class="{
-                        'bg-space-primary/50 text-white shadow-md':
+                        'bg-color-primary/50 text-white shadow-md':
                           sortKey === 'username',
                       }"
                     >
@@ -220,15 +220,15 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Tournois</span>
                     <button
                       @click="sortBy('totalTournaments')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-color-bg-light/50 focus:outline-none"
                       :class="{
-                        'bg-space-primary/50 text-white shadow-md':
+                        'bg-color-primary/50 text-white shadow-md':
                           sortKey === 'totalTournaments',
                       }"
                     >
@@ -250,15 +250,15 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Victoires</span>
                     <button
                       @click="sortBy('totalVictories')"
-                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-space-bg-light/50 focus:outline-none"
+                      class="ml-1 p-1 rounded-full h-6 w-6 flex items-center justify-center hover:bg-color-bg-light/50 focus:outline-none"
                       :class="{
-                        'bg-space-primary/50 text-white shadow-md':
+                        'bg-color-primary/50 text-white shadow-md':
                           sortKey === 'totalVictories',
                       }"
                     >
@@ -298,7 +298,7 @@
                     >
                       {{ calculateGlobalRank(index) }}
                     </SpaceBadge>
-                    <span v-else class="text-space-text-muted">{{
+                    <span v-else class="text-color-text-muted">{{
                       calculateGlobalRank(index)
                     }}</span>
                   </div>
@@ -306,21 +306,21 @@
                 <td class="px-6 py-3 whitespace-nowrap">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-text hover:text-space-primary-light font-heading transition-all duration-300 text-center text-lg"
+                    class="text-color-text hover:text-color-primary-light font-heading transition-all duration-300 text-center text-lg"
                   >
                     {{ ranking.username }}
                   </router-link>
                 </td>
                 <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div
-                    class="text-sm font-mono font-semibold text-space-secondary-light"
+                    class="text-sm font-mono font-semibold text-color-secondary-light"
                   >
                     {{ ranking.totalTournaments }}
                   </div>
                 </td>
                 <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div
-                    class="text-sm font-mono font-semibold text-space-accent-light"
+                    class="text-sm font-mono font-semibold text-color-accent-light"
                   >
                     {{ ranking.totalVictories }}
                   </div>
@@ -334,13 +334,13 @@
         <div class="block md:hidden">
           <!-- Barre de tri pour mobile -->
           <div
-            class="flex justify-between items-center p-3 bg-space-bg-light/20 border-b border-space-bg-light/30"
+            class="flex justify-between items-center p-3 bg-color-bg-light/20 border-b border-color-bg-light/30"
           >
             <div
               class="flex gap-2 items-center overflow-x-auto pb-2 hide-scrollbar"
             >
               <span
-                class="font-heading text-space-text-muted text-sm whitespace-nowrap"
+                class="font-heading text-color-text-muted text-sm whitespace-nowrap"
                 >Trier par:</span
               >
               <!-- Boutons de tri -->
@@ -349,7 +349,7 @@
                 variant="ghost"
                 size="xs"
                 :className="
-                  sortKey === 'username' ? 'bg-space-primary/50 text-white' : ''
+                  sortKey === 'username' ? 'bg-color-primary/50 text-white' : ''
                 "
               >
                 Nom
@@ -367,7 +367,7 @@
                 size="xs"
                 :className="
                   sortKey === 'totalVictories'
-                    ? 'bg-space-primary/50 text-white'
+                    ? 'bg-color-primary/50 text-white'
                     : ''
                 "
               >
@@ -402,7 +402,7 @@
                   >
                     {{ calculateGlobalRank(index) }}
                   </SpaceBadge>
-                  <span v-else class="text-space-text-muted">{{
+                  <span v-else class="text-color-text-muted">{{
                     calculateGlobalRank(index)
                   }}</span>
                 </div>
@@ -411,7 +411,7 @@
                 <div class="flex-grow min-w-0">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-space-primary hover:text-space-primary-light font-heading transition-all duration-300 block truncate"
+                    class="text-color-primary hover:text-color-primary-light font-heading transition-all duration-300 block truncate"
                     :title="ranking.username"
                   >
                     {{ ranking.username }}
@@ -422,12 +422,12 @@
                 <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex items-center">
                     <span
-                      class="font-mono text-space-accent font-semibold mr-1 whitespace-nowrap"
+                      class="font-mono text-color-accent font-semibold mr-1 whitespace-nowrap"
                     >
                       {{ ranking.totalVictories }}
                     </span>
                     <span
-                      class="text-xs text-space-text-muted whitespace-nowrap"
+                      class="text-xs text-color-text-muted whitespace-nowrap"
                       >victoires</span
                     >
                   </div>
@@ -776,7 +776,7 @@ onMounted(async () => {
   }
 
   /* Assure que les cartes ne débordent pas sur mobile */
-  .space-card {
+  .color-card {
     overflow: hidden;
   }
 }

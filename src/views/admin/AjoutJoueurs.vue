@@ -25,7 +25,7 @@
           <div class="mb-6">
             <label
               for="username"
-              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Nom du joueur <span class="text-space-accent ml-1">*</span>
+              Nom du joueur <span class="text-color-accent ml-1">*</span>
             </label>
             <SpaceInput
               id="username"
@@ -53,7 +53,7 @@
             </SpaceInput>
             <div
               v-if="formErrors.username"
-              class="text-space-error text-sm mt-1 font-mono"
+              class="text-color-error text-sm mt-1 font-mono"
             >
               {{ formErrors.username }}
             </div>
@@ -135,7 +135,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2 text-space-secondary-light"
+                  class="h-6 w-6 mr-2 text-color-secondary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -159,12 +159,12 @@
             <div
               v-for="player in players"
               :key="player._id"
-              class="group bg-space-bg-light/30 backdrop-blur-sm rounded-lg p-3 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300 flex justify-between items-center relative overflow-hidden hover:shadow-glow-secondary"
+              class="group bg-color-bg-light/30 backdrop-blur-sm rounded-lg p-3 border border-color-secondary/20 hover:border-color-secondary/50 transition-all duration-300 flex justify-between items-center relative overflow-hidden hover:shadow-glow-secondary"
             >
               <div
-                class="absolute inset-0 bg-gradient-to-r from-transparent via-space-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
+                class="absolute inset-0 bg-gradient-to-r from-transparent via-color-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
               ></div>
-              <span class="text-space-text font-nasa z-10">{{
+              <span class="text-color-text font-nasa z-10">{{
                 player.username
               }}</span>
               <SpaceButton
@@ -198,7 +198,7 @@
             title="Recherche de joueurs"
             :showCursor="true"
           >
-            <div class="text-space-text-muted">Aucun joueur n'a été trouvé</div>
+            <div class="text-color-text-muted">Aucun joueur n'a été trouvé</div>
           </SpaceTerminal>
         </SpaceCard>
       </div>
@@ -210,7 +210,7 @@
       title="Confirmation de suppression"
       className="max-w-md"
     >
-      <div class="text-space-text mb-6">
+      <div class="text-color-text mb-6">
         Êtes-vous sûr de vouloir supprimer ce joueur ?
       </div>
       <template #footer>

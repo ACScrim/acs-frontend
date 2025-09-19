@@ -2,7 +2,7 @@
   <button
     :class="[
       'inline-flex items-center justify-center rounded-lg transition-all duration-300',
-      'font-heading text-space-text border',
+      'font-heading text-color-text border',
       sizeClasses,
       variantClasses,
       {
@@ -52,10 +52,10 @@
       class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
     >
       <div
-        class="absolute -inset-0.5 opacity-0 group-hover:opacity-20 transition-opacity rounded-lg bg-space-primary-light blur-sm"
+        class="absolute -inset-0.5 opacity-0 group-hover:opacity-20 transition-opacity rounded-lg bg-color-primary-light blur-sm"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-primary-light animate-orbit"
+        class="absolute h-1 w-1 rounded-full bg-color-primary-light animate-orbit"
       ></div>
     </div>
 
@@ -65,13 +65,13 @@
       class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
     >
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-1"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-1"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-2"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-2"
       ></div>
       <div
-        class="absolute h-1 w-1 rounded-full bg-space-secondary-light animate-particle-3"
+        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-3"
       ></div>
     </div>
 
@@ -135,25 +135,25 @@ const sizeClasses = computed(() => {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-space-primary hover:bg-space-primary-light border-space-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative";
+      return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white shadow-glow-primary hover:shadow-lg group relative";
     case "secondary":
-      return "bg-space-secondary hover:bg-space-secondary-light border-space-secondary-dark text-white shadow-glow-secondary hover:shadow-lg";
+      return "bg-color-secondary hover:bg-color-secondary-light border-color-secondary-dark text-white shadow-glow-secondary hover:shadow-lg";
     case "accent":
-      return "bg-space-accent hover:bg-space-accent-light border-space-accent-dark text-space-bg shadow-glow-accent hover:shadow-lg";
+      return "bg-color-accent hover:bg-color-accent-light border-color-accent-dark text-color-bg shadow-glow-accent hover:shadow-lg";
     case "outline":
-      return "bg-transparent hover:bg-space-bg-light border-space-primary text-space-primary hover:text-space-primary-light";
+      return "bg-transparent hover:bg-color-bg-light border-color-primary text-color-primary hover:text-color-primary-light";
     case "ghost":
-      return "bg-transparent hover:bg-space-bg-light border-transparent text-space-text hover:text-white";
+      return "bg-transparent hover:bg-color-bg-light border-transparent text-color-text hover:text-white";
     case "outline-error":
-      return "bg-transparent hover:bg-space-error/10 border-space-error text-space-error hover:text-space-error-light";
+      return "bg-transparent hover:bg-color-error/10 border-color-error text-color-error hover:text-color-error-light";
     case "error":
-      return "bg-space-error hover:bg-space-error-light border-space-error-dark text-white shadow-glow-error hover:shadow-lg";
+      return "bg-color-error hover:bg-color-error-light border-color-error-dark text-white shadow-glow-error hover:shadow-lg";
     case "success":
-      return "bg-space-success hover:bg-space-success-light border-space-success-dark text-white shadow-glow-success hover:shadow-lg";
+      return "bg-color-success hover:bg-color-success-light border-color-success-dark text-white shadow-glow-success hover:shadow-lg";
     case "warning":
-      return "bg-space-warning hover:bg-space-warning-light border-space-warning-dark text-space-bg shadow-glow-warning hover:shadow-lg";
+      return "bg-color-warning hover:bg-color-warning-light border-color-warning-dark text-color-bg shadow-glow-warning hover:shadow-lg";
     default:
-      return "bg-space-primary hover:bg-space-primary-light border-space-primary-dark text-white";
+      return "bg-color-primary hover:bg-color-primary-light border-color-primary-dark text-white";
   }
 });
 </script>
@@ -197,15 +197,15 @@ button {
 }
 
 .shadow-glow-error {
-  box-shadow: 0 0 15px rgba(var(--space-error-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.5);
 }
 
 .shadow-glow-success {
-  box-shadow: 0 0 15px rgba(var(--space-success-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-success-rgb), 0.5);
 }
 
 .shadow-glow-warning {
-  box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--color-warning-rgb), 0.5);
 }
 
 /* Animation d'orbite améliorée */

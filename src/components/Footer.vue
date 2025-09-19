@@ -21,12 +21,12 @@
 
     <!-- Planète décorative -->
     <div
-      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-space-accent/5 to-space-accent-dark/10 opacity-30 blur-xl"
+      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-color-accent/5 to-color-accent-dark/10 opacity-30 blur-xl"
     ></div>
 
     <!-- Nébuleuse décorative -->
     <div
-      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-space-primary/10 to-space-primary-dark/5 opacity-20 blur-xl"
+      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-color-primary/10 to-color-primary-dark/5 opacity-20 blur-xl"
     ></div>
 
     <!-- Vaisseau spatial qui traverse -->
@@ -43,7 +43,7 @@
 
     <!-- Contenu principal du footer avec effet glassmorphism -->
     <div
-      class="relative z-10 bg-space-bg/60 backdrop-blur-md border-t border-space-primary/30"
+      class="relative z-10 bg-color-bg/60 backdrop-blur-md border-t border-color-primary/30"
     >
       <div class="container mx-auto px-6 py-8">
         <!-- Contenu supérieur -->
@@ -54,21 +54,21 @@
             <div class="space-logo-container">
               <div class="space-logo-glow"></div>
               <div
-                class="text-space-primary-light font-nasa text-2xl tracking-wider"
+                class="text-color-primary-light font-nasa text-2xl tracking-wider"
               >
                 ACS GAMING
               </div>
             </div>
 
             <div
-              class="mt-2 text-space-accent-light font-mono text-xs tracking-widest animate-pulse-slow"
+              class="mt-2 text-color-accent-light font-mono text-xs tracking-widest animate-pulse-slow"
             >
               ALORS ÇA SCRIM
             </div>
 
             <!-- Année -->
             <div
-              class="space-year font-mono text-xs text-space-text-muted mt-1"
+              class="space-year font-mono text-xs text-color-text-muted mt-1"
             >
               <span class="year-label">STAR DATE:</span>
               <span class="year-value">{{ new Date().getFullYear() }}</span>
@@ -79,7 +79,7 @@
           <div class="flex flex-col items-center justify-center">
             <div class="space-links-container mb-2">
               <div
-                class="space-links-title font-nasa text-xs text-space-text-muted mb-4"
+                class="space-links-title font-nasa text-xs text-color-text-muted mb-4"
               >
                 COMMUNICATIONS
               </div>
@@ -165,7 +165,7 @@
           <div class="flex flex-col items-center md:items-end justify-center">
             <div class="space-version">
               <div
-                class="space-version-label font-mono text-xs text-space-text-muted mb-2"
+                class="space-version-label font-mono text-xs text-color-text-muted mb-2"
               >
                 SYSTEM VERSION
               </div>
@@ -176,7 +176,7 @@
                   <div class="space-version-blip"></div>
                   <span> v{{ appVersion }}</span>
                 </div>
-                <div class="space-version-status text-xs text-space-success">
+                <div class="space-version-status text-xs text-color-success">
                   ONLINE
                 </div>
               </div>
@@ -192,9 +192,9 @@
 
         <!-- Ligne de crédits -->
         <div class="mt-6 text-center">
-          <div class="text-space-text-muted text-xs font-mono">
+          <div class="text-color-text-muted text-xs font-mono">
             MADE WITH
-            <span class="text-space-error animate-pulse">♥</span> IN THE DEEP
+            <span class="text-color-error animate-pulse">♥</span> IN THE DEEP
             SPACE
           </div>
         </div>
@@ -250,7 +250,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   z-index: 20;
@@ -273,7 +273,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
   animation: pulse-move 5s linear infinite;
@@ -313,7 +313,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--space-primary);
+  background: var(--color-primary);
   filter: blur(15px);
   opacity: 0.3;
   z-index: -1;
@@ -340,7 +340,7 @@ const appVersion = ref(pkg.version || "1.0.0");
 }
 
 .year-label {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 .year-value {
@@ -358,7 +358,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
 }
@@ -398,7 +398,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  border: 1px solid rgba(var(--space-primary-rgb), 0.4);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.4);
   transition: all 0.3s ease;
 }
 
@@ -406,7 +406,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--space-text-muted);
+  color: var(--color-text-muted);
   transition: all 0.3s ease;
 }
 
@@ -450,21 +450,21 @@ const appVersion = ref(pkg.version || "1.0.0");
 
 /* Email styling */
 .space-social-link.email {
-  color: var(--space-accent);
+  color: var(--color-accent);
 }
 
 .space-social-link.email:hover {
-  color: var(--space-accent-light);
+  color: var(--color-accent-light);
 }
 
 .space-social-link.email .space-social-ring {
-  border-color: rgba(var(--space-accent-rgb), 0.4);
+  border-color: rgba(var(--color-accent-rgb), 0.4);
 }
 
 .space-social-link.email:hover .space-social-ring {
-  border-color: rgba(var(--space-accent-rgb), 0.8);
+  border-color: rgba(var(--color-accent-rgb), 0.8);
   transform: scale(1.2);
-  box-shadow: 0 0 15px rgba(var(--space-accent-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.4);
 }
 
 /* Hover effects for all social links */
@@ -473,20 +473,20 @@ const appVersion = ref(pkg.version || "1.0.0");
 }
 
 .space-social-link:hover .space-social-label {
-  color: var(--space-text);
+  color: var(--color-text);
 }
 
 /* Version styling */
 .space-version-chip {
-  background: rgba(var(--space-bg-light-rgb), 0.5);
-  border: 1px solid var(--space-primary-light);
+  background: rgba(var(--color-bg-light-rgb), 0.5);
+  border: 1px solid var(--color-primary-light);
   border-radius: 12px;
   padding: 2px 8px;
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: var(--space-text);
-  box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.3);
+  color: var(--color-text);
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .space-version-blip {
@@ -496,7 +496,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: var(--space-success);
+  background-color: var(--color-success);
   transform: translate(-50%, -50%);
   animation: blip 2s infinite;
 }
@@ -525,7 +525,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   width: 80%;
@@ -535,9 +535,9 @@ const appVersion = ref(pkg.version || "1.0.0");
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-primary);
+  box-shadow: 0 0 10px var(--color-primary);
 }
 
 /* Animation pour pulse lent */
@@ -573,8 +573,8 @@ const appVersion = ref(pkg.version || "1.0.0");
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--space-bg-light),
-    var(--space-primary-dark)
+    var(--color-bg-light),
+    var(--color-primary-dark)
   );
   clip-path: polygon(0% 50%, 20% 0%, 100% 40%, 100% 60%, 20% 100%);
 }
@@ -585,9 +585,9 @@ const appVersion = ref(pkg.version || "1.0.0");
   top: 3px;
   width: 6px;
   height: 4px;
-  background-color: var(--space-accent);
+  background-color: var(--color-accent);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-accent-light);
+  box-shadow: 0 0 10px var(--color-accent-light);
   animation: engine-glow 0.5s ease-in-out infinite alternate;
 }
 
@@ -597,7 +597,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   right: -20px;
   width: 20px;
   height: 4px;
-  background: linear-gradient(90deg, var(--space-accent), transparent);
+  background: linear-gradient(90deg, var(--color-accent), transparent);
   opacity: 0.7;
 }
 
@@ -627,11 +627,11 @@ const appVersion = ref(pkg.version || "1.0.0");
 @keyframes engine-glow {
   0% {
     opacity: 0.7;
-    box-shadow: 0 0 5px var(--space-accent-light);
+    box-shadow: 0 0 5px var(--color-accent-light);
   }
   100% {
     opacity: 1;
-    box-shadow: 0 0 15px var(--space-accent-light);
+    box-shadow: 0 0 15px var(--color-accent-light);
   }
 }
 </style>

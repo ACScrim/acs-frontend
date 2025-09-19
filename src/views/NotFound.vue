@@ -40,7 +40,7 @@
 
           <!-- Effet d'écho pour le 404 -->
           <div
-            class="absolute -inset-0.5 opacity-30 blur-sm text-4xl font-mono text-space-primary-light tracking-widest text-center z-[-1]"
+            class="absolute -inset-0.5 opacity-30 blur-sm text-4xl font-mono text-color-primary-light tracking-widest text-center z-[-1]"
           >
             404
           </div>
@@ -48,10 +48,10 @@
 
         <!-- Ligne de séparation avec effet spatial -->
         <div
-          class="w-32 h-0.5 bg-gradient-to-r from-transparent via-space-primary to-transparent relative"
+          class="w-32 h-0.5 bg-gradient-to-r from-transparent via-color-primary to-transparent relative"
         >
           <div
-            class="absolute inset-0 animate-pulse-slow opacity-70 bg-gradient-to-r from-transparent via-space-primary-light to-transparent"
+            class="absolute inset-0 animate-pulse-slow opacity-70 bg-gradient-to-r from-transparent via-color-primary-light to-transparent"
           ></div>
         </div>
 
@@ -61,7 +61,7 @@
         </SpaceTitle>
 
         <div class="max-w-md text-center">
-          <p class="text-space-text mb-6">
+          <p class="text-color-text mb-6">
             Les coordonnées spatio-temporelles de cette page n'existent pas dans
             notre base de données. Votre vaisseau semble avoir dérivé dans un
             secteur inconnu.
@@ -74,10 +74,10 @@
             className="mb-6 text-left"
             :showCursor="true"
           >
-            <div class="text-space-error">
+            <div class="text-color-error">
               Erreur: La page demandée n'a pas été trouvée.
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-color-text-muted mt-2">
               Vérifiez les coordonnées ou retournez à la station de base.
             </div>
           </SpaceTerminal>
@@ -106,15 +106,15 @@
 
     <!-- Éléments décoratifs en arrière-plan -->
     <div
-      class="absolute bottom-10 left-10 w-32 h-32 rounded-full border border-space-primary-light/30 opacity-20 z-0 animate-ping-slow"
+      class="absolute bottom-10 left-10 w-32 h-32 rounded-full border border-color-primary-light/30 opacity-20 z-0 animate-ping-slow"
     ></div>
     <div
-      class="absolute top-20 right-10 w-48 h-48 rounded-full border border-space-secondary-light/20 opacity-10 z-0 animate-pulse-slow"
+      class="absolute top-20 right-10 w-48 h-48 rounded-full border border-color-secondary-light/20 opacity-10 z-0 animate-pulse-slow"
     ></div>
 
     <!-- "Planète" en arrière-plan -->
     <div
-      class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-space-primary-dark/20 to-space-primary/5 opacity-30 z-0 blur-xl"
+      class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-color-primary-dark/20 to-color-primary/5 opacity-30 z-0 blur-xl"
     ></div>
   </div>
 </template>
@@ -135,8 +135,8 @@
 }
 
 .glitch-text {
-  text-shadow: 0 0 10px var(--space-primary-light),
-    0 0 20px var(--space-primary-light);
+  text-shadow: 0 0 10px var(--color-primary-light),
+    0 0 20px var(--color-primary-light);
 }
 
 @keyframes ping-slow {

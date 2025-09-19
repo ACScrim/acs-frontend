@@ -23,10 +23,10 @@
 
     <!-- "Planète" décorative en arrière-plan -->
     <div
-      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-space-primary-dark/10 to-space-primary/5 opacity-30 blur-xl pointer-events-none"
+      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-color-primary-dark/10 to-color-primary/5 opacity-30 blur-xl pointer-events-none"
     ></div>
     <div
-      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-space-accent-dark/10 to-space-accent/5 opacity-20 blur-xl pointer-events-none"
+      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-color-accent-dark/10 to-color-accent/5 opacity-20 blur-xl pointer-events-none"
     ></div>
     <div
       class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3 animate-fade-in-up"
@@ -55,7 +55,7 @@
           class="relative my-4 sm:my-6 flex items-center justify-center group"
         >
           <div
-            class="absolute inset-0 rounded-full bg-space-primary/10 filter blur-xl group-hover:bg-space-primary/20 transition-all duration-500 opacity-70"
+            class="absolute inset-0 rounded-full bg-color-primary/10 filter blur-xl group-hover:bg-color-primary/20 transition-all duration-500 opacity-70"
           ></div>
           <img
             src="../assets/sanslueur.png"
@@ -89,7 +89,7 @@
         <!-- Badge de bienvenue stylisé différemment -->
         <div
           v-else
-          class="mt-4 sm:mt-6 max-w-sm p-3 rounded-lg border-2 border-space-secondary/70 bg-gradient-to-br from-space-bg-light/80 to-space-bg/90 backdrop-blur-md shadow-lg shadow-space-secondary/20 animate-float-subtle relative overflow-hidden"
+          class="mt-4 sm:mt-6 max-w-sm p-3 rounded-lg border-2 border-color-secondary/70 bg-gradient-to-br from-color-bg-light/80 to-color-bg/90 backdrop-blur-md shadow-lg shadow-color-secondary/20 animate-float-subtle relative overflow-hidden"
         >
           <!-- Effet de brillance -->
           <div
@@ -98,17 +98,17 @@
 
           <!-- Cercle décoratif -->
           <div
-            class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-space-secondary/10 blur-xl"
+            class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-color-secondary/10 blur-xl"
           ></div>
 
           <!-- Contenu -->
           <div class="flex items-center justify-center p-1 relative z-10">
             <div
-              class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-space-secondary/20 border border-space-secondary/50"
+              class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-color-secondary/20 border border-color-secondary/50"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-space-secondary-light"
+                class="h-6 w-6 text-color-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -121,11 +121,11 @@
             </div>
             <div>
               <p
-                class="capitalize font-nasa text-lg text-space-secondary-light"
+                class="capitalize font-nasa text-lg text-color-secondary-light"
               >
                 Bienvenue, {{ user.username }}!
               </p>
-              <p class="text-xs text-space-text-muted mt-1">
+              <p class="text-xs text-color-text-muted mt-1">
                 Prêt à participer au prochain tournoi?
               </p>
             </div>
@@ -133,7 +133,7 @@
 
           <!-- Ligne décorative -->
           <div
-            class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-space-secondary/50 to-transparent"
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-color-secondary/50 to-transparent"
           ></div>
         </div>
       </div>
@@ -154,7 +154,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-3 text-space-primary-light"
+                  class="h-6 w-6 mr-3 text-color-primary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -186,11 +186,11 @@
               <template #content>
                 <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
                   <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
+                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -206,11 +206,11 @@
                   </div>
 
                   <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
+                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -230,11 +230,11 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <div class="text-space-text font-mono">
+                <div class="text-color-text font-mono">
                   <div class="flex items-center mb-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-space-primary-light"
+                      class="h-4 w-4 mr-2 text-color-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -258,7 +258,7 @@
                   <div class="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-space-primary-light"
+                      class="h-4 w-4 mr-2 text-color-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -315,7 +315,7 @@
               className="mt-3 py-1 px-2 max-w-xs mx-auto"
             >
               <div
-                class="text-2xs text-space-text-muted mb-1 font-nasa text-center"
+                class="text-2xs text-color-text-muted mb-1 font-nasa text-center"
               >
                 Commence dans:
               </div>
@@ -330,10 +330,10 @@
               :showCursor="true"
               className="mb-4"
             >
-              <div class="text-space-primary-light">
+              <div class="text-color-primary-light">
                 Aucun tournoi à venir n'a été trouvé dans la base de données.
               </div>
-              <div class="text-space-text-muted mt-2">
+              <div class="text-color-text-muted mt-2">
                 Consultez la page des tournois pour plus d'informations.
               </div>
             </SpaceTerminal>
@@ -359,7 +359,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-3 text-space-secondary-light"
+                  class="h-6 w-6 mr-3 text-color-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -387,20 +387,20 @@
             >
               <template #content>
                 <div
-                  class="text-sm text-space-text-muted flex items-center mt-1"
+                  class="text-sm text-color-text-muted flex items-center mt-1"
                 ></div>
               </template>
             </TournamentCard>
 
             <!-- Podium -->
             <div class="space-y-3">
-              <div class="text-sm text-space-text font-nasa mb-2">Podium:</div>
+              <div class="text-sm text-color-text font-nasa mb-2">Podium:</div>
               <div class="space-y-2">
                 <SpaceCard
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
                   variant="dark"
-                  :className="`border-space-accent/40 hover:border-space-accent/60 transition-all duration-300 ${
+                  :className="`border-color-accent/40 hover:border-color-accent/60 transition-all duration-300 ${
                     index === 0
                       ? 'border-2 border-amber-500/70 bg-gradient-to-r from-amber-900/10 to-amber-700/5'
                       : ''
@@ -411,7 +411,7 @@
                       :class="`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${
                         index === 0
                           ? 'bg-amber-500/30 border border-amber-500/70'
-                          : 'bg-space-accent/20 border border-space-accent/50'
+                          : 'bg-color-accent/20 border border-color-accent/50'
                       }`"
                     >
                       <!-- Afficher une coupe pour la première place -->
@@ -456,7 +456,7 @@
                       :class="
                         index === 0
                           ? 'text-amber-400'
-                          : 'text-space-accent-light'
+                          : 'text-color-accent-light'
                       "
                     >
                       <!-- Ajouter "Équipe gagnante" pour la première place -->
@@ -475,7 +475,7 @@
                     v-if="team.players && team.players.length > 0"
                     class="mt-2 pl-12"
                   >
-                    <div class="text-xs text-space-text-muted mb-1">
+                    <div class="text-xs text-color-text-muted mb-1">
                       Membres:
                     </div>
                     <div class="flex flex-wrap gap-1">
@@ -507,11 +507,11 @@
             </div>
             <div class="flex justify-between items-center">
               <div
-                class="text-space-text-muted text-3xs xs:text-2xs sm:text-xs flex items-center"
+                class="text-color-text-muted text-3xs xs:text-2xs sm:text-xs flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-secondary-light"
+                  class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -566,10 +566,10 @@
               :showCursor="true"
               className="mb-4"
             >
-              <div class="text-space-secondary-light">
+              <div class="text-color-secondary-light">
                 Aucun tournoi terminé n'a été trouvé dans la base de données.
               </div>
-              <div class="text-space-text-muted mt-2">
+              <div class="text-color-text-muted mt-2">
                 Les résultats des tournois seront affichés ici lorsqu'ils seront
                 disponibles.
               </div>
@@ -1267,19 +1267,19 @@ onUnmounted(() => {
 /* Style spécifique pour les badges de rang */
 .getRankBadgeVariant-0 {
   background-color: rgba(251, 146, 60, 0.2);
-  color: var(--space-accent-light);
+  color: var(--color-accent-light);
   border-color: rgba(251, 146, 60, 0.5);
 }
 
 .getRankBadgeVariant-1 {
   background-color: rgba(2, 132, 199, 0.2);
-  color: var(--space-secondary-light);
+  color: var(--color-secondary-light);
   border-color: rgba(2, 132, 199, 0.5);
 }
 
 .getRankBadgeVariant-2 {
   background-color: rgba(109, 40, 217, 0.2);
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
   border-color: rgba(109, 40, 217, 0.5);
 }
 

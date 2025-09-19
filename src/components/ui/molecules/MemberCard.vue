@@ -3,19 +3,19 @@
   <div
     :class="[
       'space-member-card relative overflow-hidden rounded-xl',
-      'bg-space-bg-dark/80 backdrop-blur-sm border',
+      'bg-color-bg-dark/80 backdrop-blur-sm border',
       memberTypeClass,
       className,
     ]"
   >
     <!-- En-tête de la carte avec badge de rôle -->
     <div
-      class="space-member-header relative z-10 p-3 flex justify-between items-center border-b border-space-primary/10"
+      class="space-member-header relative z-10 p-3 flex justify-between items-center border-b border-color-primary/10"
     >
       <SpaceBadge :variant="badgeVariant" size="sm" :className="badgeClasses">
         {{ roleLabel }}
       </SpaceBadge>
-      <div class="text-space-text-muted text-xs font-mono">
+      <div class="text-color-text-muted text-xs font-mono">
         ID: {{ userId ? userId.substring(0, 8) : "N/A" }}
       </div>
     </div>
@@ -42,11 +42,11 @@
           v-else
           :class="[
             'relative z-10 w-24 h-24 rounded-full flex items-center justify-center border-2',
-            'bg-space-bg-light',
+            'bg-color-bg-light',
             avatarBorderClass,
           ]"
         >
-          <span class="text-space-primary-light text-xl font-bold font-mono">
+          <span class="text-color-primary-light text-xl font-bold font-mono">
             {{ initials }}
           </span>
         </div>
@@ -64,13 +64,13 @@
           :class="[
             'block text-xl font-bold font-nasa transition-colors',
             hasProfile
-              ? 'text-space-primary-light hover:text-space-primary cursor-pointer'
-              : 'text-space-text',
+              ? 'text-color-primary-light hover:text-color-primary cursor-pointer'
+              : 'text-color-text',
           ]"
         >
           {{ username }}
         </component>
-        <div class="text-space-text-muted text-sm mt-1 font-mono">
+        <div class="text-color-text-muted text-sm mt-1 font-mono">
           {{ roleLabel }}
         </div>
       </div>
@@ -105,7 +105,7 @@
         <!-- Message si pas de profil joueur -->
         <div
           v-else
-          class="space-restricted-access text-center p-2 rounded text-xs text-space-text-muted border border-space-primary/20"
+          class="space-restricted-access text-center p-2 rounded text-xs text-color-text-muted border border-color-primary/20"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -204,26 +204,26 @@ const memberTypeClass = computed(() => {
 const avatarBorderClass = computed(() => {
   switch (props.role) {
     case "admin":
-      return "border-space-secondary-light";
+      return "border-color-secondary-light";
     case "superadmin":
-      return "border-space-accent-light";
+      return "border-color-accent-light";
     default:
       return hasProfile.value
-        ? "border-space-primary-light"
-        : "border-space-primary";
+        ? "border-color-primary-light"
+        : "border-color-primary";
   }
 });
 
 const badgeClasses = computed(() => {
   switch (props.role) {
     case "admin":
-      return "bg-space-secondary/90 text-white border-space-secondary-light font-medium";
+      return "bg-color-secondary/90 text-white border-color-secondary-light font-medium";
     case "superadmin":
-      return "bg-space-accent/90 text-white border-space-accent-light font-medium";
+      return "bg-color-accent/90 text-white border-color-accent-light font-medium";
     default:
       return hasProfile.value
-        ? "bg-space-primary/90 text-white border-space-primary-light font-medium"
-        : "bg-space-primary/70 text-space-primary-light border-space-primary font-medium";
+        ? "bg-color-primary/90 text-white border-color-primary-light font-medium"
+        : "bg-color-primary/70 text-color-primary-light border-color-primary font-medium";
   }
 });
 
@@ -302,7 +302,7 @@ const handleImageError = (e: Event) => {
 }
 
 .space-restricted-access {
-  background: rgba(var(--space-bg-light-rgb), 0.1);
+  background: rgba(var(--color-bg-light-rgb), 0.1);
   backdrop-filter: blur(2px);
 }
 

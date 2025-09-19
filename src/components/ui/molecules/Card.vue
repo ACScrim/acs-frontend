@@ -1,15 +1,15 @@
 <template>
   <div
     :class="[
-      'space-card relative overflow-hidden rounded-lg transition-all duration-300',
+      'color-card relative overflow-hidden rounded-lg transition-all duration-300',
       {
-        'space-card--interactive': interactive,
-        'space-card--hover': hover,
-        'space-card--floating': floating,
+        'color-card--interactive': interactive,
+        'color-card--hover': hover,
+        'color-card--floating': floating,
       },
       variantClasses,
       elevationClasses,
-      section ? `space-card--section-${section}` : '',
+      section ? `color-card--section-${section}` : '',
       className,
     ]"
     :data-variant="variant"
@@ -27,48 +27,48 @@
       :style="{ backgroundImage: `url(${bgImage})` }"
     >
       <div
-        class="absolute inset-0 bg-gradient-to-t from-space-bg to-transparent opacity-90"
+        class="absolute inset-0 bg-gradient-to-t from-color-bg to-transparent opacity-90"
       ></div>
     </div>
 
     <!-- Contenu principal -->
     <div :class="['relative z-10', contentPadding ? 'p-6' : '']">
       <!-- En-tête -->
-      <div v-if="$slots.header" class="space-card-header">
+      <div v-if="$slots.header" class="color-card-header">
         <slot name="header"></slot>
       </div>
 
       <!-- Corps -->
-      <div class="space-card-body">
+      <div class="color-card-body">
         <slot></slot>
       </div>
 
       <!-- Pied de page -->
       <div
         v-if="$slots.footer"
-        class="space-card-footer mt-4 pt-4 border-t border-space-bg-light"
+        class="color-card-footer mt-4 pt-4 border-t border-color-bg-light"
       >
         <slot name="footer"></slot>
       </div>
     </div>
 
     <!-- Éléments décoratifs spatiaux -->
-    <div v-if="decorated" class="space-card-decorations pointer-events-none">
+    <div v-if="decorated" class="color-card-decorations pointer-events-none">
       <!-- Ligne supérieure -->
-      <div class="space-card-line top"></div>
+      <div class="color-card-line top"></div>
 
       <!-- Ligne inférieure -->
-      <div class="space-card-line bottom"></div>
+      <div class="color-card-line bottom"></div>
 
       <!-- Coin supérieur droit -->
-      <div class="space-card-corner top-right"></div>
+      <div class="color-card-corner top-right"></div>
 
       <!-- Coin inférieur gauche -->
-      <div class="space-card-corner bottom-left"></div>
+      <div class="color-card-corner bottom-left"></div>
     </div>
 
     <!-- Effet de particules d'étoiles -->
-    <div v-if="stars" class="space-card-stars pointer-events-none">
+    <div v-if="stars" class="color-card-stars pointer-events-none">
       <div
         v-for="n in 5"
         :key="n"
@@ -146,21 +146,21 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-space-bg-light border border-space-primary/30";
+      return "bg-color-bg-light border border-color-primary/30";
     case "secondary":
-      return "bg-space-bg-light border border-space-secondary/30";
+      return "bg-color-bg-light border border-color-secondary/30";
     case "accent":
-      return "bg-space-bg-light border border-space-accent/30";
+      return "bg-color-bg-light border border-color-accent/30";
     case "dark":
-      return "bg-space-bg border border-space-bg-light/30";
+      return "bg-color-bg border border-color-bg-light/30";
     case "gold":
-      return "bg-space-bg-light border border-space-gold/30";
+      return "bg-color-bg-light border border-color-gold/30";
     case "silver":
-      return "bg-space-bg-light border border-space-silver/30";
+      return "bg-color-bg-light border border-color-silver/30";
     case "bronze":
-      return "bg-space-bg-light border border-space-bronze/30";
+      return "bg-color-bg-light border border-color-bronze/30";
     default:
-      return "bg-space-bg-light border border-space-primary/30";
+      return "bg-color-bg-light border border-color-primary/30";
   }
 });
 
@@ -180,23 +180,23 @@ const elevationClasses = computed(() => {
 </script>
 
 <style scoped>
-.space-card {
-  background: var(--space-card-bg) !important;
+.color-card {
+  background: var(--color-card-bg) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid var(--space-card-border) !important;
-  box-shadow: var(--shadow-card-base), 0 0 15px var(--space-card-shadow) !important;
+  border: 1px solid var(--color-card-border) !important;
+  box-shadow: var(--shadow-card-base), 0 0 15px var(--color-card-shadow) !important;
 }
 
-.space-card--interactive {
+.color-card--interactive {
   cursor: pointer;
 }
 
-.space-card--hover:hover {
+.color-card--hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px -10px var(--space-bg-dark);
+  box-shadow: 0 15px 30px -10px var(--color-bg-dark);
 }
 
-.space-card--floating {
+.color-card--floating {
   animation: float 6s ease-in-out infinite;
 }
 
@@ -210,7 +210,7 @@ const elevationClasses = computed(() => {
   }
 }
 
-.space-card-line {
+.color-card-line {
   position: absolute;
   height: 1px;
   background: linear-gradient(90deg, transparent, currentColor, transparent);
@@ -218,17 +218,17 @@ const elevationClasses = computed(() => {
   opacity: 0.5;
 }
 
-.space-card-line.top {
+.color-card-line.top {
   top: 10px;
   left: 25%;
 }
 
-.space-card-line.bottom {
+.color-card-line.bottom {
   bottom: 10px;
   right: 25%;
 }
 
-.space-card-corner {
+.color-card-corner {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -236,14 +236,14 @@ const elevationClasses = computed(() => {
   opacity: 0.7;
 }
 
-.space-card-corner.top-right {
+.color-card-corner.top-right {
   top: 5px;
   right: 5px;
   border-top: 1px solid;
   border-right: 1px solid;
 }
 
-.space-card-corner.bottom-left {
+.color-card-corner.bottom-left {
   bottom: 5px;
   left: 5px;
   border-bottom: 1px solid;
@@ -272,46 +272,46 @@ const elevationClasses = computed(() => {
   }
 }
 
-.space-card--interactive.space-card:hover
-  .space-card-decorations
-  .space-card-line,
-.space-card--interactive.space-card:hover
-  .space-card-decorations
-  .space-card-corner {
+.color-card--interactive.color-card:hover
+  .color-card-decorations
+  .color-card-line,
+.color-card--interactive.color-card:hover
+  .color-card-decorations
+  .color-card-corner {
   opacity: 1;
 }
 
-.space-card[data-variant="primary"] .space-card-decorations {
-  color: var(--space-primary);
+.color-card[data-variant="primary"] .color-card-decorations {
+  color: var(--color-primary);
 }
 
-.space-card[data-variant="secondary"] .space-card-decorations {
-  color: var(--space-secondary);
+.color-card[data-variant="secondary"] .color-card-decorations {
+  color: var(--color-secondary);
 }
 
-.space-card[data-variant="accent"] .space-card-decorations {
-  color: var(--space-accent);
+.color-card[data-variant="accent"] .color-card-decorations {
+  color: var(--color-accent);
 }
 
-.space-card[data-variant="gold"] .space-card-decorations {
-  color: var(--space-gold);
+.color-card[data-variant="gold"] .color-card-decorations {
+  color: var(--color-gold);
 }
 
-.space-card[data-variant="silver"] .space-card-decorations {
-  color: var(--space-silver);
+.color-card[data-variant="silver"] .color-card-decorations {
+  color: var(--color-silver);
 }
 
-.space-card[data-variant="bronze"] .space-card-decorations {
-  color: var(--space-bronze);
+.color-card[data-variant="bronze"] .color-card-decorations {
+  color: var(--color-bronze);
 }
 
-.space-card-header {
-  border-bottom: 1px solid var(--space-card-border);
+.color-card-header {
+  border-bottom: 1px solid var(--color-card-border);
   padding-bottom: 0.75rem;
   position: relative;
 }
 
-.space-card-header::before {
+.color-card-header::before {
   content: "";
   position: absolute;
   left: 0;
@@ -320,12 +320,12 @@ const elevationClasses = computed(() => {
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(var(--space-card-border-rgb), 0.8),
+    rgba(var(--color-card-border-rgb), 0.8),
     transparent
   );
 }
 
-.space-card-orbit-system {
+.color-card-orbit-system {
   position: relative;
 }
 
@@ -419,140 +419,140 @@ const elevationClasses = computed(() => {
 }
 
 /* Section-specific card styles */
-.space-card--section-profile {
+.color-card--section-profile {
   box-shadow: var(--shadow-glow-profile) !important;
   border-width: 2px !important;
   border-image: linear-gradient(
       to right,
-      var(--space-section-profile-color),
-      var(--space-section-profile-fade),
-      var(--space-section-profile-color)
+      var(--color-section-profile-color),
+      var(--color-section-profile-fade),
+      var(--color-section-profile-color)
     )
     1 !important;
 }
 
-.space-card--section-statistics {
+.color-card--section-statistics {
   border-image: linear-gradient(
       to bottom,
-      var(--space-section-statistics-color),
-      var(--space-section-statistics-fade)
+      var(--color-section-statistics-color),
+      var(--color-section-statistics-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.space-card--section-statistics:hover {
+.color-card--section-statistics:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(var(--space-section-statistics-rgb), 0.3) !important;
+    0 0 20px rgba(var(--color-section-statistics-rgb), 0.3) !important;
 }
 
-.space-card--section-medals {
+.color-card--section-medals {
   border-image: linear-gradient(
       to bottom,
-      var(--space-section-medals-color),
-      var(--space-section-medals-fade)
+      var(--color-section-medals-color),
+      var(--color-section-medals-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-medals) !important;
 }
 
-.space-card--section-medals:hover {
+.color-card--section-medals:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(var(--space-section-medals-rgb), 0.3) !important;
+    0 0 20px rgba(var(--color-section-medals-rgb), 0.3) !important;
 }
 
-.space-card--section-activity {
+.color-card--section-activity {
   border-image: linear-gradient(
       to right,
-      var(--space-section-statistics-fade),
-      var(--space-section-statistics-color),
-      var(--space-section-statistics-fade)
+      var(--color-section-statistics-fade),
+      var(--color-section-statistics-color),
+      var(--color-section-statistics-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.space-card--section-performance {
+.color-card--section-performance {
   border-image: linear-gradient(
       45deg,
-      var(--space-section-profile-color),
-      var(--space-section-profile-fade)
+      var(--color-section-profile-color),
+      var(--color-section-profile-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-performance) !important;
 }
 
-.space-card--section-performance:hover {
+.color-card--section-performance:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(var(--space-section-profile-rgb), 0.3) !important;
+    0 0 20px rgba(var(--color-section-profile-rgb), 0.3) !important;
 }
 
-.space-card--section-collaborations {
+.color-card--section-collaborations {
   border-image: linear-gradient(
       135deg,
-      var(--space-section-statistics-color),
-      var(--space-section-statistics-fade)
+      var(--color-section-statistics-color),
+      var(--color-section-statistics-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.space-card--section-badges {
+.color-card--section-badges {
   border-image: linear-gradient(
       to right,
-      var(--space-section-profile-fade),
-      var(--space-section-profile-color),
-      var(--space-section-profile-fade)
+      var(--color-section-profile-fade),
+      var(--color-section-profile-color),
+      var(--color-section-profile-fade)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-profile) !important;
 }
 
-.space-card--section-records {
+.color-card--section-records {
   border-image: linear-gradient(
       to right,
-      var(--space-section-medals-color),
-      var(--space-section-medals-fade),
-      var(--space-section-medals-color)
+      var(--color-section-medals-color),
+      var(--color-section-medals-fade),
+      var(--color-section-medals-color)
     )
     1 !important;
   box-shadow: var(--shadow-card-base), var(--shadow-glow-medals) !important;
 }
 
 /* Animation effects for section cards */
-.space-card--section-profile:hover,
-.space-card--section-badges:hover,
-.space-card--section-records:hover {
+.color-card--section-profile:hover,
+.color-card--section-badges:hover,
+.color-card--section-records:hover {
   transform: translateY(-8px) !important;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.space-card--section-statistics:hover,
-.space-card--section-activity:hover,
-.space-card--section-collaborations:hover {
+.color-card--section-statistics:hover,
+.color-card--section-activity:hover,
+.color-card--section-collaborations:hover {
   transform: translateY(-5px) scale(1.01) !important;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.space-card--section-medals:hover,
-.space-card--section-performance:hover {
+.color-card--section-medals:hover,
+.color-card--section-performance:hover {
   transform: translateY(-6px) scale(1.02) !important;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Special effects for child cards based on parent section */
-.space-card--section-performance .space-card {
-  border-color: rgba(var(--space-section-profile-rgb), 0.4) !important;
+.color-card--section-performance .color-card {
+  border-color: rgba(var(--color-section-profile-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
 
-.space-card--section-collaborations .space-card {
-  border-color: rgba(var(--space-section-statistics-rgb), 0.4) !important;
+.color-card--section-collaborations .color-card {
+  border-color: rgba(var(--color-section-statistics-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
 
-.space-card--section-records .space-card {
-  border-color: rgba(var(--space-section-medals-rgb), 0.4) !important;
+.color-card--section-records .color-card {
+  border-color: rgba(var(--color-section-medals-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
 </style>

@@ -108,7 +108,7 @@ const formatStarDate = () => {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--space-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* Sur tablet et plus, affichage horizontal */
@@ -136,7 +136,7 @@ const formatStarDate = () => {
 
 .space-header-coordinates-label {
   font-family: var(--font-nasa);
-  color: var(--space-secondary);
+  color: var(--color-secondary);
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -151,11 +151,11 @@ const formatStarDate = () => {
 
 .space-header-coordinates-value {
   font-weight: 500;
-  color: var(--space-text);
+  color: var(--color-text);
 }
 
 .space-header-coordinates-separator {
-  color: var(--space-primary);
+  color: var(--color-primary);
   font-weight: bold;
   display: none;
 }
@@ -173,10 +173,10 @@ const formatStarDate = () => {
 }
 
 .space-header-coordinates-item:hover .space-header-coordinates-label {
-  color: var(--space-primary);
+  color: var(--color-primary);
 }
 
 .space-header-coordinates-item:hover .space-header-coordinates-value {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 </style>

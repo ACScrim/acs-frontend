@@ -36,7 +36,7 @@
           <div class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-7 w-7 text-space-primary-light group-hover:text-space-secondary-light transition-colors"
+              class="h-7 w-7 text-color-primary-light group-hover:text-color-secondary-light transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -49,7 +49,7 @@
               />
             </svg>
             <div
-              class="absolute inset-0 bg-space-primary/20 rounded-full blur-sm animate-pulse-slow"
+              class="absolute inset-0 bg-color-primary/20 rounded-full blur-sm animate-pulse-slow"
             ></div>
           </div>
           <div class="tooltip-text font-nasa">Menu Admin</div>
@@ -134,7 +134,7 @@
                 'https://cdn.discordapp.com/embed/avatars/0.png'
               "
               alt="Avatar"
-              class="w-8 h-8 rounded-full border border-space-primary/50 object-cover"
+              class="w-8 h-8 rounded-full border border-color-primary/50 object-cover"
             />
             <div class="avatar-glow"></div>
           </div>
@@ -143,7 +143,7 @@
           </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 ml-1 text-space-primary-light transition-transform duration-300"
+            class="h-4 w-4 ml-1 text-color-primary-light transition-transform duration-300"
             :class="{ 'rotate-180': menuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -196,7 +196,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -216,7 +216,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -234,7 +234,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -252,7 +252,7 @@
               <button @click="logout" class="dropdown-item logout-item">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-error"
+                  class="h-5 w-5 mr-2 text-color-error"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -285,7 +285,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-primary-light"
+            class="h-8 w-8 text-color-primary-light"
             :class="{ hidden: mobileMenuOpen, block: !mobileMenuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -300,7 +300,7 @@
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-error-light"
+            class="h-8 w-8 text-color-error-light"
             :class="{ block: mobileMenuOpen, hidden: !mobileMenuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -329,7 +329,7 @@
             <!-- Section utilisateur mobile -->
             <div
               v-if="user"
-              class="dropdown-items border-b border-space-primary/20 pb-2 mb-2"
+              class="dropdown-items border-b border-color-primary/20 pb-2 mb-2"
             >
               <div class="dropdown-item">
                 <div class="flex items-center w-full">
@@ -340,17 +340,17 @@
                         'https://cdn.discordapp.com/embed/avatars/0.png'
                       "
                       alt="Avatar"
-                      class="w-8 h-8 rounded-full border border-space-primary/50 object-cover"
+                      class="w-8 h-8 rounded-full border border-color-primary/50 object-cover"
                     />
                     <div class="avatar-glow"></div>
                   </div>
                   <div class="flex-1">
                     <div
-                      class="text-space-primary-light font-nasa capitalize text-sm"
+                      class="text-color-primary-light font-nasa capitalize text-sm"
                     >
                       {{ user.username }}
                     </div>
-                    <div class="text-space-text-muted text-xs">Connecté</div>
+                    <div class="text-color-text-muted text-xs">Connecté</div>
                   </div>
                 </div>
               </div>
@@ -362,7 +362,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -382,7 +382,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -400,7 +400,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -526,7 +526,7 @@
                 <div class="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 mr-2 text-space-accent-light"
+                    class="h-5 w-5 mr-2 text-color-accent-light"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -546,7 +546,7 @@
 
             <!-- Section connexion/déconnexion -->
             <div
-              class="dropdown-items border-t border-space-primary/20 pt-2 mt-2"
+              class="dropdown-items border-t border-color-primary/20 pt-2 mt-2"
             >
               <button
                 v-if="user"
@@ -555,7 +555,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-error"
+                  class="h-5 w-5 mr-2 text-color-error"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -619,7 +619,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -638,7 +638,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -657,7 +657,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -678,7 +678,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -697,7 +697,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -716,7 +716,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -739,7 +739,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -763,7 +763,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -786,7 +786,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -795,7 +795,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                fill="var(--space-secondary-light)"
+                fill="var(--color-secondary-light)"
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
               />
             </svg>
@@ -811,7 +811,7 @@
             }"
           >
             <svg
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 71 55"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -949,7 +949,7 @@ onBeforeUnmount(() => {
 .navbar-bg {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.1);
 }
 
 /* Lignes de circuit */
@@ -961,7 +961,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   z-index: 20;
@@ -984,7 +984,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
   animation: pulse-move 8s linear infinite;
@@ -1038,7 +1038,7 @@ onBeforeUnmount(() => {
 .logo-glow {
   position: absolute;
   inset: -5px;
-  background: var(--space-primary);
+  background: var(--color-primary);
   border-radius: 50%;
   filter: blur(10px);
   opacity: 0.15;
@@ -1053,19 +1053,19 @@ onBeforeUnmount(() => {
 
 .navbar-logo {
   height: 40px;
-  filter: drop-shadow(0 0 5px var(--space-primary-light));
+  filter: drop-shadow(0 0 5px var(--color-primary-light));
   transition: all 0.3s ease;
 }
 
 .logo-container:hover .navbar-logo {
-  filter: drop-shadow(0 0 8px var(--space-primary-light));
+  filter: drop-shadow(0 0 8px var(--color-primary-light));
   transform: scale(1.05);
 }
 
 /* Navigation links */
 .nav-link {
   position: relative;
-  color: var(--space-text);
+  color: var(--color-text);
   font-weight: 500;
   letter-spacing: 1px;
   padding: 0.25rem 0.5rem;
@@ -1085,7 +1085,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   transform: translateX(-100%);
@@ -1093,8 +1093,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link:hover {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary-light);
+  text-shadow: 0 0 5px var(--color-primary-light);
 }
 
 .nav-link:hover::before {
@@ -1102,8 +1102,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link-active {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary-light);
+  text-shadow: 0 0 5px var(--color-primary-light);
 }
 
 .nav-link-active::before {
@@ -1116,7 +1116,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   transform: translateX(0);
@@ -1133,7 +1133,7 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: -2px;
   border-radius: 50%;
-  background: var(--space-primary);
+  background: var(--color-primary);
   filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -1144,41 +1144,41 @@ onBeforeUnmount(() => {
 }
 
 .user-name {
-  color: var(--space-text);
+  color: var(--color-text);
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
 .user-profile-button:hover .user-name {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 /* Dropdowns */
 .user-dropdown,
 .admin-dropdown,
 .mobile-dropdown {
-  background: rgba(var(--space-bg-rgb), 0.95);
+  background: rgba(var(--color-bg-rgb), 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(var(--space-primary-rgb), 0.2);
+  box-shadow: 0 10px 25px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .dropdown-header {
   padding: 10px 15px;
-  background: rgba(var(--space-primary-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.2);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.2);
 }
 
 .dropdown-title {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
   font-size: 0.8rem;
   letter-spacing: 1px;
 }
 
 .dropdown-subtitle {
-  color: var(--space-text-muted);
+  color: var(--color-text-muted);
   font-size: 0.65rem;
   letter-spacing: 1px;
 }
@@ -1191,7 +1191,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  color: var(--space-text);
+  color: var(--color-text);
   font-size: 0.9rem;
   transition: all 0.2s ease;
   position: relative;
@@ -1201,45 +1201,45 @@ onBeforeUnmount(() => {
 }
 
 .dropdown-item:hover {
-  background: rgba(var(--space-primary-rgb), 0.1);
-  color: var(--space-primary-light);
-  border-left: 2px solid var(--space-primary-light);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary-light);
+  border-left: 2px solid var(--color-primary-light);
 }
 
 .dropdown-item:hover svg {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 .dropdown-item-active {
-  background: rgba(var(--space-primary-rgb), 0.15);
-  color: var(--space-primary-light);
-  border-left: 2px solid var(--space-primary-light);
+  background: rgba(var(--color-primary-rgb), 0.15);
+  color: var(--color-primary-light);
+  border-left: 2px solid var(--color-primary-light);
 }
 
 .admin-item:hover {
-  background: rgba(var(--space-secondary-rgb), 0.1);
-  color: var(--space-secondary-light);
-  border-left: 2px solid var(--space-secondary-light);
+  background: rgba(var(--color-secondary-rgb), 0.1);
+  color: var(--color-secondary-light);
+  border-left: 2px solid var(--color-secondary-light);
 }
 
 .admin-item:hover svg {
-  color: var(--space-secondary-light);
+  color: var(--color-secondary-light);
 }
 
 .dropdown-item-active.admin-item {
-  background: rgba(var(--space-secondary-rgb), 0.15);
-  color: var(--space-secondary-light);
-  border-left: 2px solid var(--space-secondary-light);
+  background: rgba(var(--color-secondary-rgb), 0.15);
+  color: var(--color-secondary-light);
+  border-left: 2px solid var(--color-secondary-light);
 }
 
 .logout-item:hover {
-  background: rgba(var(--space-error-rgb), 0.1);
-  color: var(--space-error-light);
-  border-left: 2px solid var(--space-error-light);
+  background: rgba(var(--color-error-rgb), 0.1);
+  color: var(--color-error-light);
+  border-left: 2px solid var(--color-error-light);
 }
 
 .logout-item:hover svg {
-  color: var(--space-error-light);
+  color: var(--color-error-light);
 }
 
 .dropdown-divider {
@@ -1248,7 +1248,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(var(--space-primary-rgb), 0.2),
+    rgba(var(--color-primary-rgb), 0.2),
     transparent
   );
 }
@@ -1257,7 +1257,7 @@ onBeforeUnmount(() => {
   padding: 8px 0;
   display: flex;
   justify-content: center;
-  border-top: 1px solid rgba(var(--space-primary-rgb), 0.1);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.1);
 }
 
 .circuit-dots {
@@ -1269,7 +1269,7 @@ onBeforeUnmount(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--space-primary-light);
+  background-color: var(--color-primary-light);
   opacity: 0.5;
   animation: dot-pulse 2s infinite;
 }
@@ -1353,8 +1353,8 @@ onBeforeUnmount(() => {
 .toggle-track {
   width: 42px;
   height: 22px;
-  background: rgba(var(--space-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: rgba(var(--color-bg-light-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -1367,9 +1367,9 @@ onBeforeUnmount(() => {
 .toggle-thumb {
   width: 16px;
   height: 16px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--space-primary);
+  box-shadow: 0 0 5px var(--color-primary);
   transition: transform 0.3s ease, background 0.3s;
   position: relative;
   z-index: 2;
@@ -1399,32 +1399,32 @@ onBeforeUnmount(() => {
 }
 
 input:checked + .toggle-track {
-  background: rgba(var(--space-accent-rgb), 0.3);
-  border-color: rgba(var(--space-accent-rgb), 0.5);
+  background: rgba(var(--color-accent-rgb), 0.3);
+  border-color: rgba(var(--color-accent-rgb), 0.5);
 }
 
 input:checked + .toggle-track .toggle-thumb {
   transform: translateX(20px);
-  background: var(--space-accent-light);
-  box-shadow: 0 0 5px var(--space-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 0 5px var(--color-accent);
 }
 
 .toggle-track:hover {
-  border-color: rgba(var(--space-primary-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-primary-rgb), 0.2);
+  border-color: rgba(var(--color-primary-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
 }
 
 input:checked + .toggle-track:hover {
-  border-color: rgba(var(--space-accent-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-accent-rgb), 0.2);
+  border-color: rgba(var(--color-accent-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.2);
 }
 
 /* Toggle pour mobile */
 .toggle-track-mobile {
   width: 36px;
   height: 20px;
-  background: rgba(var(--space-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: rgba(var(--color-bg-light-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -1435,21 +1435,21 @@ input:checked + .toggle-track:hover {
 .toggle-thumb-mobile {
   width: 14px;
   height: 14px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--space-primary);
+  box-shadow: 0 0 5px var(--color-primary);
   transition: transform 0.3s ease, background 0.3s;
 }
 
 input:checked + .toggle-track-mobile {
-  background: rgba(var(--space-accent-rgb), 0.3);
-  border-color: rgba(var(--space-accent-rgb), 0.5);
+  background: rgba(var(--color-accent-rgb), 0.3);
+  border-color: rgba(var(--color-accent-rgb), 0.5);
 }
 
 input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   transform: translateX(16px);
-  background: var(--space-accent-light);
-  box-shadow: 0 0 5px var(--space-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 0 5px var(--color-accent);
 }
 
 /* Tooltips */
@@ -1458,12 +1458,12 @@ input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(var(--space-bg-rgb), 0.8);
-  color: var(--space-primary-light);
+  background: rgba(var(--color-bg-rgb), 0.8);
+  color: var(--color-primary-light);
   font-size: 0.7rem;
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;

@@ -30,16 +30,16 @@
     <SpaceCard variant="primary" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-3xl font-bold text-space-primary-light font-nasa">
+          <div class="text-3xl font-bold text-color-primary-light font-nasa">
             {{ memberStore.members.length }}
           </div>
-          <div class="text-space-text-muted">Total membres</div>
+          <div class="text-color-text-muted">Total membres</div>
         </div>
         <div class="text-center">
-          <div class="text-3xl font-bold text-space-secondary-light font-nasa">
+          <div class="text-3xl font-bold text-color-secondary-light font-nasa">
             {{ memberStats.admins }}
           </div>
-          <div class="text-space-text-muted">Administrateurs</div>
+          <div class="text-color-text-muted">Administrateurs</div>
         </div>
       </div>
     </SpaceCard>
@@ -51,7 +51,7 @@
         <div>
           <label for="member-search" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-primary-light flex items-center gap-2"
+              class="font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +80,7 @@
         <!-- Filtre par rôle -->
         <div>
           <label for="role-filter" class="mb-3 flex items-center gap-2">
-            <div class="font-nasa text-space-accent flex items-center gap-2">
+            <div class="font-nasa text-color-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -100,7 +100,7 @@
             <select
               id="role-filter"
               v-model="roleFilter"
-              class="w-full rounded-lg border border-space-accent/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-accent/30 focus:outline-none transition-all duration-300"
+              class="w-full rounded-lg border border-color-accent/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-accent/30 focus:outline-none transition-all duration-300"
             >
               <option value="">Tous les rôles</option>
               <option value="user">Membres</option>
@@ -112,7 +112,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-accent"
+                class="h-5 w-5 text-color-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -132,7 +132,7 @@
         <div>
           <label for="sort-select" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-secondary-light flex items-center gap-2"
+              class="font-nasa text-color-secondary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +151,7 @@
             <select
               id="sort-select"
               v-model="currentSort"
-              class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
+              class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
             >
               <option
                 v-for="option in sortOptions"
@@ -166,7 +166,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-secondary"
+                class="h-5 w-5 text-color-secondary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -188,7 +188,7 @@
         v-if="searchTerm || roleFilter"
         class="mt-4 flex justify-between items-center"
       >
-        <div class="text-sm text-space-text-muted">
+        <div class="text-sm text-color-text-muted">
           {{ searchResults.length }} résultat{{
             searchResults.length > 1 ? "s" : ""
           }}
@@ -222,7 +222,7 @@
       <div class="flex flex-col items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 text-space-error mb-4"
+          class="h-10 w-10 text-color-error mb-4"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -232,7 +232,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <p class="text-space-text mb-4">{{ memberStore.error }}</p>
+        <p class="text-color-text mb-4">{{ memberStore.error }}</p>
         <SpaceButton
           @click="memberStore.fetchMembers(true)"
           variant="error"
@@ -253,10 +253,10 @@
       showCursor
       className="my-8"
     >
-      <div class="text-space-error font-mono">
+      <div class="text-color-error font-mono">
         Erreur 404: Aucun membre ne correspond à cette recherche.
       </div>
-      <div class="text-space-text-muted mt-2 mb-4">
+      <div class="text-color-text-muted mt-2 mb-4">
         {{ emptyStateMessage }}
       </div>
       <div v-if="searchTerm || roleFilter" class="flex gap-3">
@@ -478,12 +478,12 @@ watch(currentSort, () => {
 select {
   background-color: rgba(30, 30, 45, 0.8);
   border: 1px solid rgba(109, 40, 217, 0.3);
-  color: var(--space-text);
+  color: var(--color-text);
   transition: border-color 0.15s ease;
 }
 
 select:focus {
-  border-color: var(--space-secondary);
+  border-color: var(--color-secondary);
   box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
 }
 
@@ -512,7 +512,7 @@ select:focus {
 
 /* Amélioration de l'accessibilité sans animations */
 select:focus-visible {
-  outline: 2px solid var(--space-primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

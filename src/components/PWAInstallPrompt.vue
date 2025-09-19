@@ -9,7 +9,7 @@
         <div class="flex-shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-primary"
+            class="h-8 w-8 text-color-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -24,10 +24,10 @@
         </div>
 
         <div class="flex-1">
-          <h3 class="text-space-text font-nasa text-sm font-bold mb-1">
+          <h3 class="text-color-text font-nasa text-sm font-bold mb-1">
             Installer l'app ACS Gaming
           </h3>
-          <p class="text-space-text-muted text-xs mb-3">
+          <p class="text-color-text-muted text-xs mb-3">
             Accédez rapidement aux tournois depuis votre écran d'accueil
           </p>
 
@@ -48,7 +48,7 @@
 
         <button
           @click="dismissPrompt"
-          class="flex-shrink-0 text-space-text-muted hover:text-space-text transition-colors"
+          class="flex-shrink-0 text-color-text-muted hover:text-color-text transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
