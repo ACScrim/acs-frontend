@@ -1,25 +1,21 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24">
-    <!-- En-tête avec SpaceHeader -->
-    <SpaceHeader
+    <!-- En-tête avec Header -->
+    <Header
       title="NIVEAUX DE JEU"
       :decorated="true"
       mission="PLAYER-SKILLS-25"
     />
 
-    <SpaceCard variant="primary" :stars="true" className="mb-8 mt-6">
+    <Card variant="primary" :stars="true" className="mb-8 mt-6">
       <div v-if="loading" class="flex justify-center py-12">
-        <SpaceLoader text="Analyse des compétences en cours..." />
+        <Loader text="Analyse des compétences en cours..." />
       </div>
 
       <template v-else>
         <!-- Section des jeux avec niveau défini -->
         <div v-if="playerLevels.length > 0" class="mb-10">
-          <SpaceTitle
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 mr-2 text-color-primary-light"
@@ -33,10 +29,10 @@
               />
             </svg>
             Niveaux de compétence actuels
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <SpaceCard
+            <Card
               v-for="level in playerLevels"
               :key="level._id"
               variant="secondary"
@@ -234,7 +230,7 @@
 
                 <!-- Boutons d'action -->
                 <div class="flex justify-end space-x-3 mt-4">
-                  <SpaceButton
+                  <Button
                     @click="openEditModal(level)"
                     variant="secondary"
                     size="sm"
@@ -253,9 +249,9 @@
                       </svg>
                     </template>
                     Modifier
-                  </SpaceButton>
+                  </Button>
 
-                  <SpaceButton
+                  <Button
                     @click="confirmDelete(level)"
                     variant="error"
                     size="sm"
@@ -276,20 +272,16 @@
                       </svg>
                     </template>
                     Supprimer
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
         </div>
 
         <!-- Section pour ajouter un nouveau niveau -->
         <div>
-          <SpaceTitle
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 mr-2 text-color-accent-light"
@@ -303,11 +295,11 @@
               />
             </svg>
             Ajouter un niveau
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Carte pour ajouter un nouveau niveau -->
-            <SpaceCard
+            <Card
               @click="showGameSelector = true"
               variant="accent"
               :stars="true"
@@ -333,11 +325,11 @@
               >
                 Ajouter vos compétences sur un jeu pour participer aux tournois
               </p>
-            </SpaceCard>
+            </Card>
           </div>
         </div>
       </template>
-    </SpaceCard>
+    </Card>
 
     <!-- Modal pour sélectionner un jeu -->
     <SpaceModal v-model="showGameSelector" title="SÉLECTION DU JEU">
@@ -367,7 +359,7 @@
       </div>
 
       <!-- État vide -->
-      <SpaceTerminal
+      <Terminal
         v-if="filteredGames.length === 0"
         command="search_games"
         title="Recherche de jeux"
@@ -381,11 +373,11 @@
         <div class="text-color-text-muted mt-2">
           Contactez un administrateur pour ajouter de nouveaux jeux
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Liste de jeux -->
       <div v-else class="max-h-96 overflow-y-auto mb-4 pr-2 space-y-3">
-        <SpaceCard
+        <Card
           v-for="game in filteredGames"
           :key="game._id"
           @click="selectGame(game)"
@@ -448,14 +440,14 @@
               </SpaceBadge>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
 
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton @click="showGameSelector = false" variant="ghost">
+          <Button @click="showGameSelector = false" variant="ghost">
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -606,7 +598,7 @@
               <span class="text-color-error ml-1">*</span>
             </span>
             <div class="flex items-center gap-3">
-              <SpaceButton
+              <Button
                 @click="selectAllRoles"
                 type="button"
                 variant="ghost"
@@ -629,7 +621,7 @@
                   </svg>
                 </template>
                 Tout sélectionner
-              </SpaceButton>
+              </Button>
               <SpaceBadge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
                 {{ selectedGame?.roles?.length || 0 }}
@@ -718,10 +710,10 @@
         <div
           class="flex justify-end space-x-3 pt-3 border-t border-color-bg-light"
         >
-          <SpaceButton type="button" @click="cancelLevelEdit" variant="ghost">
+          <Button type="button" @click="cancelLevelEdit" variant="ghost">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             :disabled="!selectedLevel || isSaving"
@@ -750,7 +742,7 @@
               Enregistrement...
             </template>
             <template v-else>Enregistrer</template>
-          </SpaceButton>
+          </Button>
         </div>
       </form>
     </SpaceModal>
@@ -793,16 +785,10 @@
 
       <template #footer>
         <div class="flex justify-center space-x-4">
-          <SpaceButton @click="cancelDelete" variant="ghost">
-            Annuler
-          </SpaceButton>
-          <SpaceButton
-            @click="deleteLevel"
-            variant="error"
-            :loading="isDeleting"
-          >
+          <Button @click="cancelDelete" variant="ghost"> Annuler </Button>
+          <Button @click="deleteLevel" variant="error" :loading="isDeleting">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

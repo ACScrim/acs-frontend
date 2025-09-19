@@ -24,27 +24,27 @@ import Container from "@/components/ui/layout/Container.vue";
 // Liste des composants à enregistrer avec les bons noms pour Vue
 const components = {
   // Atoms
-  SpaceButton: Button,
+  Button: Button,
   SpaceInput: Input,
   SpaceBadge: Badge,
-  SpaceTitle: Title,
-  SpaceLoader: Loader,
+  Title: Title,
+  Loader: Loader,
   SpaceToggle: Toggle,
   SpaceDropdown: Dropdown, // Ajout du composant Toggle
 
   // Molecules
-  SpaceCard: Card,
+  Card: Card,
   SpaceAlert: Alert,
   SpaceModal: Modal,
-  SpaceHeader: Header,
+  Header: Header,
   SpaceMemberCard: MemberCard,
 
   // Organisms
   SpacePagination: Pagination,
-  SpaceTerminal: Terminal,
+  Terminal: Terminal,
 
   // Layout
-  SpaceContainer: Container,
+  Container: Container,
 };
 
 export default {

@@ -1,22 +1,41 @@
-<template>
-  <div class="space-pagination-container relative">
-    <!-- Fond spatial avec particules -->
-    <div class="space-pagination-background">
-      <div class="space-particle particle-1"></div>
-      <div class="space-particle particle-2"></div>
-      <div class="space-particle particle-3"></div>
-    </div>
+<!--
+PAGINATION COMPONENT - Composant de pagination Halloween
 
-    <!-- Ligne de connexion principale -->
-    <div class="space-pagination-line"></div>
-    <div
-      class="space-pagination flex items-center justify-center gap-2 sm:gap-4"
-    >
+UTILISATION:
+<Pagination
+  :currentPage="currentPage"
+  :totalPages="totalPages"
+  :showDots="true"
+  :prevLabel="'Précédent'"
+  :nextLabel="'Suivant'"
+  :maxVisiblePages="5"
+  @prev-page="handlePrevPage"
+  @next-page="handleNextPage"
+  @page-select="handlePageSelect"
+/>
+
+PROPS:
+- currentPage (number, requis): Page actuellement active
+- totalPages (number, requis): Nombre total de pages
+- showDots (boolean, optionnel): Affiche les points de navigation
+- prevLabel (string, optionnel): Texte du bouton précédent
+- nextLabel (string, optionnel): Texte du bouton suivant
+- maxVisiblePages (number, optionnel): Nombre max de pages visibles dans les points
+
+EVENTS:
+- prev-page: Émis lors du clic sur précédent
+- next-page: Émis lors du clic sur suivant
+- page-select: Émis lors de la sélection d'une page spécifique
+-->
+
+<template>
+  <div class="pagination-container">
+    <div class="pagination-wrapper">
       <!-- Bouton précédent -->
       <button
         @click="handlePrevPage"
         :disabled="currentPage === 1"
-        :class="['space-pagination-nav prev', { disabled: currentPage === 1 }]"
+        :class="['pagination-nav prev', { disabled: currentPage === 1 }]"
         :aria-label="prevLabel"
       >
         <div class="nav-icon">
@@ -36,22 +55,19 @@
         <span class="nav-text">{{ prevLabel }}</span>
       </button>
 
-      <!-- Compteur central avec style spatial -->
-      <div class="space-pagination-center flex-1">
-        <div class="pagination-display">
-          <!-- Indicateur de page actuelle -->
-          <div class="current-page-indicator">
+      <!-- Compteur central -->
+      <div class="pagination-center">
+        <div class="page-display">
+          <!-- Page actuelle -->
+          <div class="current-page">
             <span class="page-number">{{
               String(currentPage).padStart(2, "0")
             }}</span>
-            <div class="page-glow"></div>
           </div>
 
-          <!-- Séparateur spatial -->
+          <!-- Séparateur -->
           <div class="page-separator">
-            <div class="separator-line"></div>
-            <div class="separator-dot"></div>
-            <div class="separator-line"></div>
+            <span class="separator-symbol">🦇</span>
           </div>
 
           <!-- Total des pages -->
@@ -69,21 +85,17 @@
               class="progress-fill"
               :style="{ width: progressPercentage + '%' }"
             ></div>
-            <div
-              class="progress-indicator"
-              :style="{ left: progressPercentage + '%' }"
-            ></div>
           </div>
         </div>
 
-        <!-- Navigation par points (si beaucoup de pages) -->
-        <div v-if="showDots && totalPages > 3" class="space-pagination-dots">
+        <!-- Navigation par points -->
+        <div v-if="showDots && totalPages > 3" class="pagination-dots">
           <button
             v-for="pageNum in displayedPages"
             :key="pageNum"
             @click="handlePageSelect(pageNum)"
             :class="[
-              'space-dot',
+              'pagination-dot',
               { active: currentPage === pageNum },
               { nearby: Math.abs(currentPage - pageNum) === 1 },
             ]"
@@ -91,7 +103,6 @@
             :aria-current="currentPage === pageNum ? 'page' : undefined"
           >
             <div class="dot-core"></div>
-            <div class="dot-ring"></div>
           </button>
         </div>
       </div>
@@ -101,7 +112,7 @@
         @click="handleNextPage"
         :disabled="currentPage === totalPages"
         :class="[
-          'space-pagination-nav next',
+          'pagination-nav next',
           { disabled: currentPage === totalPages },
         ]"
         :aria-label="nextLabel"
@@ -203,109 +214,49 @@ const progressPercentage = computed(() => {
 </script>
 
 <style scoped>
-.space-pagination-container {
+/**
+ * PAGINATION HALLOWEEN THEME
+ * Composant de pagination avec thème Halloween/horreur
+ * Utilise les variables CSS du thème pour une cohérence visuelle
+ */
+
+.pagination-container {
   position: relative;
   padding: 2rem 0;
   width: 100%;
   display: flex;
   justify-content: center;
-  overflow: hidden;
+  font-family: var(--font-body);
 }
 
-/* Fond spatial avec particules */
-.space-pagination-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(109, 40, 217, 0.05) 0%,
-    transparent 70%
-  );
-  overflow: hidden;
-}
-
-.space-particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: float 6s ease-in-out infinite;
-}
-
-.particle-1 {
-  top: 20%;
-  left: 15%;
-  animation-delay: 0s;
-}
-
-.particle-2 {
-  top: 70%;
-  right: 20%;
-  animation-delay: 2s;
-}
-
-.particle-3 {
-  top: 40%;
-  right: 40%;
-  animation-delay: 4s;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-10px) scale(1.2);
-    opacity: 1;
-  }
-}
-
-/* Ligne de connexion principale */
-.space-pagination-line {
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-bg-light) 20%,
-    var(--color-primary) 50%,
-    var(--color-bg-light) 80%,
-    transparent 100%
-  );
-  transform: translateY(-50%);
-  opacity: 0.4;
-}
-
-.space-pagination {
-  position: relative;
-  z-index: 1;
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   width: 100%;
   max-width: 600px;
   padding: 0 1rem;
 }
 
-/* Boutons de navigation */
-.space-pagination-nav {
+@media (min-width: 640px) {
+  .pagination-wrapper {
+    gap: 2rem;
+  }
+}
+
+/* BOUTONS DE NAVIGATION */
+.pagination-nav {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text);
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(109, 40, 217, 0.3);
+  background: var(--color-card-bg);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 8px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -314,49 +265,21 @@ const progressPercentage = computed(() => {
   white-space: nowrap;
   min-width: fit-content;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
-/* Responsive pour les boutons */
-@media (min-width: 640px) {
-  .space-pagination-nav {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-    border-radius: 12px;
-  }
-}
-
-.space-pagination-nav::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(109, 40, 217, 0.1) 50%,
-    transparent 100%
-  );
-  transition: left 0.5s ease;
-}
-
-.space-pagination-nav:not(.disabled):hover::before {
-  left: 100%;
-}
-
-.space-pagination-nav:not(.disabled):hover {
-  background: rgba(109, 40, 217, 0.15);
+.pagination-nav:not(.disabled):hover {
+  background: rgba(var(--color-primary-rgb), 0.15);
   border-color: var(--color-primary);
-  box-shadow: 0 0 20px rgba(109, 40, 217, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-glow-primary);
   transform: translateY(-1px);
+  color: var(--color-primary-light);
 }
 
-.space-pagination-nav.disabled {
+.pagination-nav.disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--color-bg-rgb), 0.5);
 }
 
 .nav-icon {
@@ -365,11 +288,11 @@ const progressPercentage = computed(() => {
   transition: transform 0.3s ease;
 }
 
-.space-pagination-nav.prev:hover .nav-icon {
+.pagination-nav.prev:hover .nav-icon {
   transform: translateX(-2px);
 }
 
-.space-pagination-nav.next:hover .nav-icon {
+.pagination-nav.next:hover .nav-icon {
   transform: translateX(2px);
 }
 
@@ -378,48 +301,41 @@ const progressPercentage = computed(() => {
   transition: color 0.3s ease;
 }
 
-/* Centre spatial */
-.space-pagination-center {
+/* CENTRE DE PAGINATION */
+.pagination-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   min-width: 120px;
   width: 100%;
-  max-width: 220px;
+  max-width: 250px;
 }
 
 @media (min-width: 640px) {
-  .space-pagination-center {
-    gap: 1rem;
+  .pagination-center {
     min-width: 200px;
-    max-width: 320px;
+    max-width: 350px;
   }
 }
 
-.pagination-display {
+/* AFFICHAGE DES PAGES */
+.page-display {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.5rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(109, 40, 217, 0.3);
-  border-radius: 8px;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--color-card-bg);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border-radius: 12px;
   backdrop-filter: blur(15px);
   position: relative;
   width: 100%;
   justify-content: center;
+  box-shadow: var(--shadow-card-base);
 }
 
-@media (min-width: 640px) {
-  .pagination-display {
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    border-radius: 16px;
-  }
-}
-
-.pagination-display::before {
+.page-display::before {
   content: "";
   position: absolute;
   top: -1px;
@@ -430,16 +346,16 @@ const progressPercentage = computed(() => {
     45deg,
     var(--color-primary),
     var(--color-secondary),
-    var(--color-primary)
+    var(--color-accent)
   );
   background-size: 200% 200%;
-  border-radius: 16px;
-  opacity: 0.3;
+  border-radius: 12px;
+  opacity: 0.2;
   z-index: -1;
-  animation: gradient-shift 3s ease infinite;
+  animation: horror-glow 3s ease infinite;
 }
 
-@keyframes gradient-shift {
+@keyframes horror-glow {
   0%,
   100% {
     background-position: 0% 50%;
@@ -449,117 +365,41 @@ const progressPercentage = computed(() => {
   }
 }
 
-.current-page-indicator {
-  position: relative;
+.current-page {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .page-number {
-  font-family: "Space Mono", monospace;
-  font-size: 1.125rem;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--color-primary);
-  text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
+  text-shadow: var(--shadow-glow-primary);
   position: relative;
   z-index: 1;
-}
-
-@media (min-width: 640px) {
-  .page-number {
-    font-size: 1.5rem;
-  }
-}
-
-.page-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2rem;
-  height: 2rem;
-  background: radial-gradient(
-    circle,
-    rgba(109, 40, 217, 0.2) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@media (min-width: 640px) {
-  .page-glow {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.8;
-  }
 }
 
 .page-separator {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
 }
 
-@media (min-width: 640px) {
-  .page-separator {
-    gap: 0.5rem;
-  }
+.separator-symbol {
+  font-size: 1.2rem;
+  color: var(--color-secondary);
+  animation: bat-flutter 2s ease-in-out infinite;
 }
 
-.separator-line {
-  width: 12px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-bg-light) 50%,
-    transparent 100%
-  );
-}
-
-@media (min-width: 640px) {
-  .separator-line {
-    width: 20px;
-  }
-}
-
-.separator-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  animation: dot-pulse 1.5s ease-in-out infinite;
-}
-
-@media (min-width: 640px) {
-  .separator-dot {
-    width: 4px;
-    height: 4px;
-  }
-}
-
-@keyframes dot-pulse {
+@keyframes bat-flutter {
   0%,
   100% {
-    opacity: 0.5;
-    transform: scale(1);
+    transform: rotate(-5deg) scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.5);
+    transform: rotate(5deg) scale(1.1);
   }
 }
 
@@ -569,45 +409,33 @@ const progressPercentage = computed(() => {
 }
 
 .total-number {
-  font-family: "Space Mono", monospace;
-  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
   color: var(--color-text-muted);
   font-weight: 500;
 }
 
-@media (min-width: 640px) {
-  .total-number {
-    font-size: 1.25rem;
-  }
-}
-
-/* Barre de progression */
+/* BARRE DE PROGRESSION */
 .progress-container {
   width: 100%;
-  max-width: 150px;
-  padding: 0 0.25rem;
+  max-width: 200px;
+  padding: 0 1rem;
 }
 
 @media (min-width: 640px) {
   .progress-container {
     max-width: 300px;
-    padding: 0 1rem;
   }
 }
 
 .progress-track {
   position: relative;
   width: 100%;
-  height: 3px;
-  background: rgba(109, 40, 217, 0.1);
+  height: 4px;
+  background: rgba(var(--color-primary-rgb), 0.2);
   border-radius: 2px;
   overflow: hidden;
-}
-
-@media (min-width: 640px) {
-  .progress-track {
-    height: 4px;
-  }
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .progress-fill {
@@ -621,6 +449,7 @@ const progressPercentage = computed(() => {
   border-radius: 2px;
   transition: width 0.5s ease;
   position: relative;
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .progress-fill::after {
@@ -636,10 +465,10 @@ const progressPercentage = computed(() => {
     rgba(255, 255, 255, 0.3) 50%,
     transparent 100%
   );
-  animation: shimmer 2s linear infinite;
+  animation: blood-flow 2s linear infinite;
 }
 
-@keyframes shimmer {
+@keyframes blood-flow {
   0% {
     transform: translateX(-100%);
   }
@@ -648,27 +477,15 @@ const progressPercentage = computed(() => {
   }
 }
 
-.progress-indicator {
-  position: absolute;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
-  transition: left 0.5s ease;
-}
-
-/* Points de navigation */
-.space-pagination-dots {
+/* POINTS DE NAVIGATION */
+.pagination-dots {
   display: flex;
   justify-content: center;
   gap: 0.75rem;
   padding: 0.5rem;
 }
 
-.space-dot {
+.pagination-dot {
   position: relative;
   width: 12px;
   height: 12px;
@@ -686,84 +503,57 @@ const progressPercentage = computed(() => {
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
 }
 
-.dot-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  opacity: 0;
-}
-
-.space-dot.active .dot-core {
+.pagination-dot.active .dot-core {
   background: var(--color-primary);
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.8);
+  box-shadow: var(--shadow-glow-primary);
   transform: scale(1.2);
 }
 
-.space-dot.active .dot-ring {
-  border-color: rgba(109, 40, 217, 0.5);
-  opacity: 1;
-  animation: ring-pulse 2s ease-in-out infinite;
-}
-
-.space-dot.nearby .dot-core {
-  background: rgba(109, 40, 217, 0.6);
+.pagination-dot.nearby .dot-core {
+  background: rgba(var(--color-primary-rgb), 0.6);
   transform: scale(1.1);
 }
 
-.space-dot:hover .dot-core {
+.pagination-dot:hover .dot-core {
   background: var(--color-primary);
   transform: scale(1.3);
+  box-shadow: var(--shadow-glow-primary);
 }
 
-.space-dot:hover .dot-ring {
-  border-color: var(--color-primary);
-  opacity: 1;
-}
-
-@keyframes ring-pulse {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.3);
-    opacity: 1;
-  }
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 767px) {
-  .space-pagination-container {
+  .pagination-container {
     padding: 1rem 0;
   }
 
-  .space-pagination {
+  .pagination-wrapper {
     padding: 0 0.5rem;
     gap: 0.5rem;
   }
 
-  /* Sur mobile, garder les points mais les réduire */
-  .space-pagination-dots {
-    gap: 0.375rem;
+  .pagination-dots {
+    gap: 0.5rem;
   }
 
-  .space-dot {
-    width: 8px;
-    height: 8px;
+  .pagination-dot {
+    width: 10px;
+    height: 10px;
   }
 
-  .dot-ring {
-    width: 12px;
-    height: 12px;
+  .page-display {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .page-number {
+    font-size: 1.25rem;
+  }
+
+  .total-number {
+    font-size: 1rem;
   }
 }
 
@@ -772,47 +562,43 @@ const progressPercentage = computed(() => {
     display: none;
   }
 
-  .space-pagination-nav {
-    padding: 0.375rem;
+  .pagination-nav {
+    padding: 0.5rem;
     min-width: auto;
     gap: 0;
   }
 
-  .space-pagination {
-    gap: 0.375rem;
+  .pagination-wrapper {
+    gap: 0.5rem;
   }
 
-  .pagination-display {
-    padding: 0.25rem 0.375rem;
-    gap: 0.25rem;
+  .page-display {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
   }
 
   .progress-container {
-    max-width: 120px;
-    padding: 0 0.125rem;
+    max-width: 150px;
+    padding: 0 0.5rem;
   }
 
-  .page-separator {
-    gap: 0.125rem;
-  }
-
-  .separator-line {
-    width: 6px;
-  }
-
-  /* Masquer les points sur très petit écran pour économiser l'espace */
-  .space-pagination-dots {
+  /* Masquer les points sur très petit écran */
+  .pagination-dots {
     display: none;
+  }
+
+  .separator-symbol {
+    font-size: 1rem;
   }
 }
 
 /* Améliorer l'affichage sur tablets */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .space-pagination {
+  .pagination-wrapper {
     max-width: 500px;
   }
 
-  .space-pagination-center {
+  .pagination-center {
     max-width: 300px;
   }
 }

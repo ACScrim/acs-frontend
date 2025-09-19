@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="SYNCHRONISATION DES JOUEURS"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -12,10 +12,10 @@
           {{ players.length }}
         </SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Instructions -->
-    <SpaceCard
+    <Card
       variant="accent"
       :stars="true"
       :decorated="true"
@@ -55,15 +55,10 @@
           </p>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Barre de recherche -->
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      :decorated="true"
-      className="mb-8"
-    >
+    <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
       <div class="space-y-4">
         <div>
           <label
@@ -135,27 +130,27 @@
         >
           <!-- Filtre par statut -->
           <div class="flex gap-2 flex-wrap">
-            <SpaceButton
+            <Button
               @click="filterStatus = 'all'"
               :variant="filterStatus === 'all' ? 'primary' : 'outline'"
               size="sm"
             >
               Tous ({{ players.length }})
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="filterStatus = 'synced'"
               :variant="filterStatus === 'synced' ? 'success' : 'outline'"
               size="sm"
             >
               Synchronisés ({{ syncedCount }})
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="filterStatus = 'unsynced'"
               :variant="filterStatus === 'unsynced' ? 'warning' : 'outline'"
               size="sm"
             >
               Non synchronisés ({{ unsyncedCount }})
-            </SpaceButton>
+            </Button>
           </div>
 
           <!-- Tri -->
@@ -172,11 +167,11 @@
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Statistiques rapides -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="false"
         :decorated="true"
@@ -191,9 +186,9 @@
           {{ players.length }}
         </div>
         <div class="text-xs text-color-text-muted font-nasa">Joueurs</div>
-      </SpaceCard>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="false"
         :decorated="true"
@@ -205,9 +200,9 @@
           {{ users.length }}
         </div>
         <div class="text-xs text-color-text-muted font-nasa">Utilisateurs</div>
-      </SpaceCard>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="success"
         :stars="false"
         :decorated="true"
@@ -222,9 +217,9 @@
           {{ syncedCount }}
         </div>
         <div class="text-xs text-color-text-muted font-nasa">Synchronisés</div>
-      </SpaceCard>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="warning"
         :stars="false"
         :decorated="true"
@@ -239,18 +234,18 @@
           {{ unsyncedCount }}
         </div>
         <div class="text-xs text-color-text-muted font-nasa">En attente</div>
-      </SpaceCard>
+      </Card>
     </div>
 
     <!-- État de chargement -->
     <div v-if="isLoading" class="flex justify-center items-center py-12">
-      <SpaceLoader size="lg" text="Chargement des données en cours..." />
+      <Loader size="lg" text="Chargement des données en cours..." />
     </div>
 
     <!-- Tables -->
     <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
       <!-- Table des joueurs -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -269,7 +264,7 @@
                   d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
                 />
               </svg>
-              <SpaceTitle size="lg">Players</SpaceTitle>
+              <Title size="lg">Players</Title>
             </div>
             <SpaceBadge variant="primary" size="lg">
               {{ filteredPlayers.length }}
@@ -349,19 +344,19 @@
                     Attente
                   </SpaceBadge>
 
-                  <SpaceButton
+                  <Button
                     @click.stop="editPlayerUsername(player)"
                     variant="primary"
                     size="sm"
                     className="opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     Modifier
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-if="filteredPlayers.length === 0"
               command="find --players"
               title="Recherche de joueurs"
@@ -370,13 +365,13 @@
               <div class="text-color-text-muted">
                 Aucun joueur trouvé avec ces critères.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Table des utilisateurs -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -395,7 +390,7 @@
                   d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                 />
               </svg>
-              <SpaceTitle size="lg">Users</SpaceTitle>
+              <Title size="lg">Users</Title>
             </div>
             <SpaceBadge variant="secondary" size="lg">
               {{ filteredUsers.length }}
@@ -437,7 +432,7 @@
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-if="filteredUsers.length === 0"
               command="find --users"
               title="Recherche d'utilisateurs"
@@ -446,17 +441,17 @@
               <div class="text-color-text-muted">
                 Aucun utilisateur trouvé avec ces critères.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
     </div>
 
     <!-- Actions -->
     <div
       class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
     >
-      <SpaceButton
+      <Button
         @click="synchronizePlayers"
         :disabled="isLoading"
         variant="accent"
@@ -478,9 +473,9 @@
           </svg>
         </template>
         Synchroniser les joueurs
-      </SpaceButton>
+      </Button>
 
-      <SpaceButton @click="fetchData" variant="outline" size="md" icon>
+      <Button @click="fetchData" variant="outline" size="md" icon>
         <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -496,7 +491,7 @@
           </svg>
         </template>
         Actualiser
-      </SpaceButton>
+      </Button>
     </div>
 
     <!-- Notifications -->

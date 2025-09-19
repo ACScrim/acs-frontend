@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <SpaceCard
+    <Card
       variant="primary"
       :stars="true"
       :decorated="true"
@@ -18,7 +18,7 @@
             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
           />
         </svg>
-        <SpaceTitle size="xl" decorated>Classement final</SpaceTitle>
+        <Title size="xl" decorated>Classement final</Title>
       </div>
 
       <!-- Podium -->
@@ -87,7 +87,7 @@
               {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(2)"
                 :key="team._id"
                 variant="secondary"
@@ -120,7 +120,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -136,7 +136,7 @@
               {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(1)"
                 :key="team._id"
                 variant="accent"
@@ -169,7 +169,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -185,7 +185,7 @@
               {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(3)"
                 :key="team._id"
                 variant="primary"
@@ -218,7 +218,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
         </div>
@@ -243,7 +243,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(1)"
                 :key="team._id"
                 variant="accent"
@@ -276,7 +276,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -293,7 +293,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(2)"
                 :key="team._id"
                 variant="secondary"
@@ -326,7 +326,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -343,7 +343,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard
+              <Card
                 v-for="team in getTeamsByRank(3)"
                 :key="team._id"
                 variant="primary"
@@ -376,19 +376,15 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Autres classements -->
-    <SpaceCard
-      variant="dark"
-      :stars="true"
-      className="relative overflow-hidden"
-    >
+    <Card variant="dark" :stars="true" className="relative overflow-hidden">
       <!-- En-tête dépliable -->
       <button
         @click="handleToggleOtherRankings"
@@ -408,7 +404,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" :decorated="false">
+          <Title size="lg" :decorated="false">
             Autres classements
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{
@@ -418,7 +414,7 @@
               }}
               équipes
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -570,7 +566,7 @@
         </div>
 
         <!-- Message s'il n'y a pas d'équipes classées au-delà du podium -->
-        <SpaceTerminal
+        <Terminal
           v-if="
             !(tournament.teams ?? []).some((t) => t.ranking > 3) &&
             !(tournament.teams ?? []).some((t) => !t.ranking || t.ranking === 0)
@@ -582,28 +578,28 @@
           <div class="text-color-text-muted">
             Pas d'autres équipes classées au-delà du podium.
           </div>
-        </SpaceTerminal>
+        </Terminal>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Votes MVPS -->
-    <SpaceCard v-if="tournament.mvpVoteOpen">
+    <Card v-if="tournament.mvpVoteOpen">
       <template #header>
         <div class="flex flex-row justify-between items-center">
-          <SpaceTitle size="xl" class="uppercase">Vote pour le mvp</SpaceTitle>
-          <SpaceButton
+          <Title size="xl" class="uppercase">Vote pour le mvp</Title>
+          <Button
             v-if="user?.role === 'admin' || user?.role === 'superadmin'"
             class="bg-red-500!"
             @click="handleCloseVote()"
           >
             Fermer le vote
-          </SpaceButton>
+          </Button>
         </div>
       </template>
 
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6"
       >
-        <SpaceCard v-for="player in tournament.players">
+        <Card v-for="player in tournament.players">
           <div class="flex flex-row justify-between items-center">
             <p class="w-auto">
               {{ player.username }}
@@ -616,7 +612,7 @@
                 >🏆</span
               >
             </p>
-            <SpaceButton
+            <Button
               :disabled="
                 user?._id &&
                 tournament.mvps
@@ -627,21 +623,21 @@
               @click="handleVoteForMvp(player._id)"
             >
               Votez
-            </SpaceButton>
+            </Button>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
-    </SpaceCard>
-    <SpaceCard v-else-if="tournament.mvps && tournament.mvps.length > 0">
+    </Card>
+    <Card v-else-if="tournament.mvps && tournament.mvps.length > 0">
       <template #header>
-        <SpaceTitle size="xl" class="uppercase">MVP du tournoi</SpaceTitle>
+        <Title size="xl" class="uppercase">MVP du tournoi</Title>
       </template>
 
       <div
         v-for="mvp in tournament.mvps?.filter((mvp) => mvp.isMvp)"
         class="py-4"
       >
-        <SpaceCard
+        <Card
           variant="primary"
           :stars="true"
           :decorated="true"
@@ -670,7 +666,7 @@
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle
+            <Title
               size="4xl"
               :glitch="true"
               :decorated="true"
@@ -684,7 +680,7 @@
               ]"
             >
               {{ mvp.player.username }}
-            </SpaceTitle>
+            </Title>
 
             <!-- Barre parfaitement centrée sous le nom -->
             <div
@@ -699,10 +695,10 @@
               >
             </p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
       <div class="hidden sm:flex flex-row gap-x-10">
-        <SpaceCard
+        <Card
           v-for="mvp in tournament.mvps
             ?.filter((mvp) => !mvp.isMvp)
             .sort((a, b) => b.votes.length - a.votes.length)
@@ -734,7 +730,7 @@
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle
+            <Title
               size="4xl"
               :glitch="true"
               :decorated="true"
@@ -748,7 +744,7 @@
               ]"
             >
               {{ mvp.player.username }}
-            </SpaceTitle>
+            </Title>
 
             <!-- Barre parfaitement centrée sous le nom -->
             <div
@@ -762,9 +758,9 @@
               >
             </p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
-    </SpaceCard>
+    </Card>
     <TournamentClip
       :tournament="tournament"
       :player="tournament.players.find((p) => p.userId === user?._id) || null"

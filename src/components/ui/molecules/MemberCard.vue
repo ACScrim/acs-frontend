@@ -78,7 +78,7 @@
       <!-- Boutons d'action -->
       <div class="space-member-actions w-full flex flex-col gap-2">
         <!-- Bouton Voir le profil (si joueur) -->
-        <SpaceButton
+        <Button
           v-if="hasProfile"
           :to="{ name: 'Profil', params: { id: playerId } }"
           variant="primary"
@@ -100,7 +100,7 @@
             </svg>
           </template>
           Voir le profil
-        </SpaceButton>
+        </Button>
 
         <!-- Message si pas de profil joueur -->
         <div

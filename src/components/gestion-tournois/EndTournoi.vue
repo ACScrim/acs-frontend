@@ -2,7 +2,7 @@
   <div
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
-    <SpaceHeader
+    <Header
       title="FINALISATION DU TOURNOI"
       :decorated="true"
       mission="END-TOURNAMENT-2025"
@@ -17,10 +17,10 @@
           {{ selectedTournamentDetails.finished ? "Terminé" : "En cours" }}
         </SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Information du tournoi sélectionné -->
-    <SpaceCard variant="primary" :stars="true" className="mb-6">
+    <Card variant="primary" :stars="true" className="mb-6">
       <template #header>
         <div class="flex items-center gap-3">
           <svg
@@ -35,7 +35,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+          <Title size="lg">Tournoi sélectionné</Title>
         </div>
       </template>
 
@@ -77,10 +77,10 @@
           Veuillez sélectionner un tournoi dans le menu en haut de la page
         </SpaceAlert>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Statut du tournoi -->
-    <SpaceCard
+    <Card
       v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
       variant="accent"
       :stars="true"
@@ -103,11 +103,11 @@
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <SpaceTitle size="lg" className="text-green-400">
+            <Title size="lg" className="text-green-400">
               Ce tournoi est déjà terminé
-            </SpaceTitle>
+            </Title>
           </div>
-          <SpaceButton
+          <Button
             @click="confirmUnfinishTournament()"
             variant="warning"
             size="md"
@@ -127,14 +127,14 @@
               </svg>
             </template>
             Annuler la finalisation
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceCard>
+    </Card>
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
     <div v-if="teams.length > 0">
       <!-- Bouton pour terminer le tournoi -->
-      <SpaceCard
+      <Card
         v-if="
           selectedTournamentDetails &&
           !selectedTournamentDetails.finished &&
@@ -160,7 +160,7 @@
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <SpaceTitle size="lg">Finaliser le tournoi</SpaceTitle>
+            <Title size="lg">Finaliser le tournoi</Title>
           </div>
         </template>
 
@@ -171,7 +171,7 @@
             Une fois le tournoi terminé, les rankings seront verrouillés et les
             résultats comptabilisés dans le classement des joueurs.
           </p>
-          <SpaceButton
+          <Button
             @click="confirmFinishTournament()"
             variant="success"
             size="lg"
@@ -192,12 +192,12 @@
               </svg>
             </template>
             Terminer le tournoi
-          </SpaceButton>
+          </Button>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Cards des équipes - Grid layout -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <SpaceCard
+        <Card
           v-for="(team, index) in teams"
           :key="index"
           :variant="getRankingCardVariant(team.ranking)"
@@ -221,12 +221,9 @@
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857M19 12a3 3 0 11-6 0 3 3 0 016 0zm-4 8a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <SpaceTitle
-                size="lg"
-                :className="getRankingTextClass(team.ranking)"
-              >
+              <Title size="lg" :className="getRankingTextClass(team.ranking)">
                 {{ team.name || `Équipe ${index + 1}` }}
-              </SpaceTitle>
+              </Title>
             </div>
           </template>
 
@@ -242,9 +239,9 @@
 
           <!-- Liste des joueurs -->
           <div class="mb-6">
-            <SpaceTitle size="sm" className="text-color-text-muted mb-3">
+            <Title size="sm" className="text-color-text-muted mb-3">
               Membres de l'équipe:
-            </SpaceTitle>
+            </Title>
             <div class="space-y-2 max-h-40 overflow-y-auto">
               <div
                 v-for="player in team.players"
@@ -276,11 +273,11 @@
 
           <!-- Rang de l'équipe -->
           <div class="mb-6">
-            <SpaceTitle size="sm" className="text-color-text-muted mb-3">
+            <Title size="sm" className="text-color-text-muted mb-3">
               Position dans le classement:
-            </SpaceTitle>
+            </Title>
             <div class="flex flex-wrap gap-2">
-              <SpaceButton
+              <Button
                 v-for="rank in maxRanking"
                 :key="rank"
                 @click="setRanking(team._id, rank)"
@@ -293,21 +290,21 @@
                 :disabled="selectedTournamentDetails?.finished"
               >
                 {{ getRankingLabel(rank) }}
-              </SpaceButton>
-              <SpaceButton
+              </Button>
+              <Button
                 @click="setRanking(team._id, 0)"
                 :variant="team.ranking === 0 ? 'secondary' : 'ghost'"
                 size="sm"
                 :disabled="selectedTournamentDetails?.finished"
               >
                 Non classé
-              </SpaceButton>
+              </Button>
             </div>
           </div>
           <!-- Score de l'équipe -->
           <div class="border-t border-space-border pt-4">
             <div class="flex items-center justify-between mb-3">
-              <SpaceTitle size="sm" className="text-color-text-muted">
+              <Title size="sm" className="text-color-text-muted">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4 text-color-accent-light inline mr-2"
@@ -323,7 +320,7 @@
                   />
                 </svg>
                 Score de l'équipe:
-              </SpaceTitle>
+              </Title>
               <!-- Badge avec score actuel -->
               <div v-if="team.score > 0">
                 <SpaceBadge variant="accent" size="sm">
@@ -340,7 +337,7 @@
                 className="w-20 text-center"
                 :disabled="selectedTournamentDetails?.finished"
               />
-              <SpaceButton
+              <Button
                 @click="
                   updateScore(team._id, parseInt(teamScores[team._id]) || 0)
                 "
@@ -363,9 +360,9 @@
                   </svg>
                 </template>
                 OK
-              </SpaceButton>
+              </Button>
             </div>
-          </div></SpaceCard
+          </div></Card
         >
       </div>
     </div>
@@ -393,9 +390,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-color-error">
+          <Title size="lg" className="text-color-error">
             CONFIRMATION REQUISE
-          </SpaceTitle>
+          </Title>
         </div>
       </template>
 
@@ -452,14 +449,14 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <SpaceButton
+          <Button
             @click="showConfirmationDialog = false"
             variant="ghost"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="finishTournament" variant="error" size="md">
+          </Button>
+          <Button @click="finishTournament" variant="error" size="md">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -475,7 +472,7 @@
               </svg>
             </template>
             Terminer le tournoi
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </Modal>
@@ -500,9 +497,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-color-warning">
+          <Title size="lg" className="text-color-warning">
             ANNULATION FINALISATION
-          </SpaceTitle>
+          </Title>
         </div>
       </template>
 
@@ -544,14 +541,14 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <SpaceButton
+          <Button
             @click="showUnfinishConfirmationDialog = false"
             variant="ghost"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="unfinishTournament" variant="warning" size="md">
+          </Button>
+          <Button @click="unfinishTournament" variant="warning" size="md">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -567,7 +564,7 @@
               </svg>
             </template>
             Annuler la finalisation
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </Modal>
@@ -817,11 +814,11 @@ const getRankingLabel = (rank: number): string => {
 const getRankingCardVariant = (rank: number): string => {
   switch (rank) {
     case 1:
-      return "gold"; // Utilise le variant gold de SpaceCard
+      return "gold"; // Utilise le variant gold de Card
     case 2:
-      return "silver"; // Utilise le variant silver de SpaceCard
+      return "silver"; // Utilise le variant silver de Card
     case 3:
-      return "bronze"; // Utilise le variant bronze de SpaceCard
+      return "bronze"; // Utilise le variant bronze de Card
     default:
       return "secondary";
   }

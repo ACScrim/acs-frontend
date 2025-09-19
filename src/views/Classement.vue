@@ -1,12 +1,12 @@
 <template>
-  <SpaceContainer>
+  <Container>
     <!-- En-tête de la page avec style NASA -->
-    <SpaceHeader title="CLASSEMENT" />
+    <Header title="CLASSEMENT" mission="RANKING" />
     <div class="flex flex-col gap-6">
       <!-- En-tête de la page -->
       <div class="relative flex justify-between items-center">
         <!-- Bouton d'export -->
-        <SpaceButton
+        <Button
           @click="exportCSV"
           variant="secondary"
           size="sm"
@@ -28,28 +28,27 @@
             </svg>
           </template>
           CSV
-        </SpaceButton>
+        </Button>
       </div>
 
       <!-- Filtres -->
-      <SpaceCard variant="primary" :stars="true" className="overflow-hidden">
+      <Card variant="primary" :stars="true" className="overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Sélecteur de jeux -->
           <div>
             <label for="game" class="mb-3 flex items-center gap-2">
               <div
-                class="font-heading text-color-primary-light flex items-center gap-2"
+                class="font-body text-color-primary-light flex items-center gap-2"
               >
+                <!-- Icône de citrouille pour les jeux -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
-                  viewBox="0 0 20 20"
+                  viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path
-                    fill-rule="evenodd"
-                    d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                    clip-rule="evenodd"
+                    d="M12 2c-1.1 0-2 .9-2 2 0 .5.2 1 .6 1.3-.4.2-.6.6-.6 1.1v.6c-2.2.4-4 2.2-4 4.5v3c0 2.8 2.2 5 5 5h2c2.8 0 5-2.2 5-5v-3c0-2.3-1.8-4.1-4-4.5v-.6c0-.5-.2-.9-.6-1.1.4-.3.6-.8.6-1.3 0-1.1-.9-2-2-2zm-3 9.5c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm6 0c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm-3 3c-.8 0-1.5.7-1.5 1.5 0 .4.2.8.5 1l-1 1c-.3-.2-.5-.5-.5-1 0-.8.7-1.5 1.5-1.5z"
                   />
                 </svg>
                 Filtrer par jeu
@@ -59,7 +58,8 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border-2 border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary"
+                style="box-shadow: 0 0 10px rgba(217, 119, 6, 0.2)"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -69,12 +69,14 @@
               <div
                 class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
               >
+                <!-- Icône de flèche vers le bas avec style Halloween -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5 text-color-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  style="filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.6))"
                 >
                   <path
                     stroke-linecap="round"
@@ -91,18 +93,21 @@
           <div>
             <label for="season" class="mb-3 flex items-center gap-2">
               <div
-                class="font-heading text-color-secondary-light flex items-center gap-2"
+                class="font-body text-color-secondary-light flex items-center gap-2"
               >
+                <!-- Icône de lune sanglante pour les saisons -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
-                  viewBox="0 0 20 20"
+                  viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path
-                    fill-rule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clip-rule="evenodd"
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                    opacity="0.3"
+                  />
+                  <path
+                    d="M12 22c5.52 0 10-4.48 10-10 0-1.19-.22-2.33-.62-3.38-.4-.72-1.43-.65-1.71.13-.37 1.04-.99 1.96-1.82 2.68C16.93 12.45 16 13.68 16 15.12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.44-.93-2.67-1.85-3.69-.83-.72-1.45-1.64-1.82-2.68-.28-.78-1.31-.85-1.71-.13C2.22 9.67 2 10.81 2 12c0 5.52 4.48 10 10 10z"
                   />
                 </svg>
                 Filtrer par saison
@@ -112,7 +117,8 @@
               <select
                 id="season"
                 v-model="selectedSeason"
-                class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border-2 border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/50 focus:border-color-secondary focus:outline-none transition-all duration-300 hover:border-color-secondary/50 hover:shadow-glow-secondary"
+                style="box-shadow: 0 0 10px rgba(220, 38, 38, 0.2)"
               >
                 <option value="">Classement général</option>
                 <option
@@ -130,12 +136,14 @@
               <div
                 class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
               >
+                <!-- Icône de flèche vers le bas avec style Halloween sang -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5 text-color-secondary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  style="filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.6))"
                 >
                   <path
                     stroke-linecap="round"
@@ -148,15 +156,15 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- État de chargement -->
       <div v-if="isLoading" class="flex justify-center py-12">
-        <SpaceLoader text="Chargement du classement..." />
+        <Loader text="Chargement du classement..." />
       </div>
 
       <!-- Message si aucun résultat -->
-      <SpaceTerminal
+      <Terminal
         v-else-if="sortedRankings.length === 0"
         :command="`search_players ${
           selectedGame ? '-g game_id:' + selectedGame : ''
@@ -171,15 +179,10 @@
         <div class="text-color-text-muted mt-2">
           Essayez de modifier vos critères de recherche.
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Tableau de classement -->
-      <SpaceCard
-        v-else
-        variant="dark"
-        :stars="true"
-        className="overflow-hidden transform hover:scale-[1.01] transition-transform duration-300"
-      >
+      <Card v-else variant="dark" :stars="true" className="overflow-hidden ">
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
@@ -306,7 +309,7 @@
                 <td class="px-6 py-3 whitespace-nowrap">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-color-text hover:text-color-primary-light font-heading transition-all duration-300 text-center text-lg"
+                    class="text-color-text hover:text-color-primary-light font-body transition-all duration-300 text-center text-lg hover:underline hover:shadow-glow-primary"
                   >
                     {{ ranking.username }}
                   </router-link>
@@ -320,7 +323,7 @@
                 </td>
                 <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div
-                    class="text-sm font-mono font-semibold text-color-accent-light"
+                    class="text-sm font-mono font-semibold text-color-secondary-light"
                   >
                     {{ ranking.totalVictories }}
                   </div>
@@ -337,49 +340,55 @@
             class="flex justify-between items-center p-3 bg-color-bg-light/20 border-b border-color-bg-light/30"
           >
             <div
-              class="flex gap-2 items-center overflow-x-auto pb-2 hide-scrollbar"
+              class="flex gap-2 items-center overflow-x-auto pb-2 hide-scrollbar w-full"
             >
               <span
-                class="font-heading text-color-text-muted text-sm whitespace-nowrap"
+                class="font-heading text-color-text-muted text-sm whitespace-nowrap flex-shrink-0"
                 >Trier par:</span
               >
               <!-- Boutons de tri -->
-              <SpaceButton
+              <Button
                 @click="sortBy('username')"
                 variant="ghost"
                 size="xs"
                 :className="
-                  sortKey === 'username' ? 'bg-color-primary/50 text-white' : ''
+                  sortKey === 'username'
+                    ? 'bg-color-primary/50 text-white flex-1 min-w-0 text-xs px-2 py-1'
+                    : 'flex-1 min-w-0 text-xs px-2 py-1'
                 "
               >
-                Nom
-                {{
-                  sortKey === "username"
-                    ? sortOrder === "asc"
-                      ? "▲"
-                      : "▼"
-                    : ""
-                }}
-              </SpaceButton>
-              <SpaceButton
+                <span class="truncate">
+                  Nom
+                  {{
+                    sortKey === "username"
+                      ? sortOrder === "asc"
+                        ? "▲"
+                        : "▼"
+                      : ""
+                  }}
+                </span>
+              </Button>
+              <Button
                 @click="sortBy('totalVictories')"
                 variant="ghost"
                 size="xs"
                 :className="
                   sortKey === 'totalVictories'
-                    ? 'bg-color-primary/50 text-white'
-                    : ''
+                    ? 'bg-color-primary/50 text-white flex-1 min-w-0 text-xs px-2 py-1'
+                    : 'flex-1 min-w-0 text-xs px-2 py-1'
                 "
               >
-                Victoires
-                {{
-                  sortKey === "totalVictories"
-                    ? sortOrder === "asc"
-                      ? "▲"
-                      : "▼"
-                    : ""
-                }}
-              </SpaceButton>
+                <span class="truncate">
+                  Victoires
+                  {{
+                    sortKey === "totalVictories"
+                      ? sortOrder === "asc"
+                        ? "▲"
+                        : "▼"
+                      : ""
+                  }}
+                </span>
+              </Button>
             </div>
           </div>
 
@@ -411,7 +420,7 @@
                 <div class="flex-grow min-w-0">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
-                    class="text-color-primary hover:text-color-primary-light font-heading transition-all duration-300 block truncate"
+                    class="text-color-primary hover:text-color-primary-light font-body transition-all duration-300 block truncate hover:underline hover:shadow-glow-primary"
                     :title="ranking.username"
                   >
                     {{ ranking.username }}
@@ -422,7 +431,7 @@
                 <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex items-center">
                     <span
-                      class="font-mono text-color-accent font-semibold mr-1 whitespace-nowrap"
+                      class="font-mono text-color-secondary font-semibold mr-1 whitespace-nowrap"
                     >
                       {{ ranking.totalVictories }}
                     </span>
@@ -447,9 +456,9 @@
             @page-select="currentPage = $event"
           />
         </div>
-      </SpaceCard>
+      </Card>
     </div>
-  </SpaceContainer>
+  </Container>
 </template>
 
 <script setup lang="ts">
@@ -807,24 +816,30 @@ td:not(:last-child)::after {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(109, 40, 217, 1),
+    rgba(var(--color-primary-rgb), 0.6),
     transparent
   );
 }
 
-/* Garder les styles existants pour les lignes alternées, mais en éclaircissant */
+/* Lignes alternées avec thème Halloween */
 .row-even {
   background-color: transparent;
 }
 
 .row-odd {
-  background-color: rgba(109, 40, 217, 0.08); /* Plus claire que l'original */
+  background-color: rgba(
+    var(--color-primary-rgb),
+    0.08
+  ); /* Orange Halloween au lieu de violet */
 }
 
 .row-hover:hover {
-  background-color: rgba(109, 40, 217, 0.15); /* Plus visible au survol */
+  background-color: rgba(
+    var(--color-primary-rgb),
+    0.15
+  ); /* Orange plus intense au survol */
   z-index: 1;
-  box-shadow: inset 0 0 8px rgba(109, 40, 217, 0.2);
+  box-shadow: inset 0 0 8px rgba(var(--color-primary-rgb), 0.2);
   transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 

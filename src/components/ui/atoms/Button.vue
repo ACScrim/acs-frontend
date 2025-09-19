@@ -1,15 +1,101 @@
+<!--
+  🎃 HORROR BUTTON COMPONENT - Documentation d'utilisation
+
+  📋 PROPS DISPONIBLES :
+  
+  • variant (optionnel) : string = "primary"
+    - Style du bouton adapté au thème Halloween
+    - Valeurs : "primary", "secondary", "accent", "outline", "ghost", 
+               "outline-error", "error", "success", "warning"
+    - primary : Orange citrouille (couleur principale Halloween)
+    - secondary : Rouge sang sombre
+    - accent : Violet mystique
+    - error : Rouge danger
+    - success : Vert poison
+    - warning : Orange attention
+    - Exemple : variant="secondary"
+
+  • size (optionnel) : string = "md"
+    - Taille du bouton
+    - Valeurs : "sm", "md", "lg"
+    - sm : Petit bouton (px-4 py-2)
+    - md : Bouton moyen (px-6 py-3)
+    - lg : Grand bouton (px-8 py-4)
+    - Exemple : size="lg"
+
+  • disabled (optionnel) : boolean = false
+    - Désactive le bouton (grisé, non cliquable)
+    - Exemple : :disabled="true"
+
+  • loading (optionnel) : boolean = false
+    - Affiche un spinner de chargement
+    - Désactive automatiquement le bouton pendant le chargement
+    - Exemple : :loading="isSubmitting"
+
+  • icon (optionnel) : boolean = false
+    - Indique si le bouton contient une icône
+    - Ajoute un espacement pour l'icône via le slot "icon"
+    - Exemple : :icon="true"
+
+  • className (optionnel) : string = ""
+    - Classes CSS additionnelles à appliquer
+    - Exemple : className="ml-4 w-full"
+
+  🎨 SLOTS DISPONIBLES :
+  
+  • default : Contenu principal du bouton (texte)
+  • icon : Icône du bouton (affiché avant le texte si :icon="true")
+
+  🎨 EFFETS VISUELS HALLOWEEN :
+  
+  • Police : Police classique lisible (var(--font-body))
+  • Couleurs : Palette Halloween (orange, rouge sang, violet mystique)
+  • Hover : Léger tremblement terrifiant + changement de couleur
+  • Active : Effet d'enfoncement subtil
+  • Loading : Animation de pulsation + spinner
+  • Disabled : Opacité réduite + curseur interdit
+
+  💡 EXEMPLES D'UTILISATION :
+
+  1. Bouton principal Halloween :
+     <Button variant="primary" size="lg">
+       Rejoindre la Terreur
+     </Button>
+
+  2. Bouton avec icône :
+     <Button variant="secondary" :icon="true">
+       <template #icon>👻</template>
+       Fantômes
+     </Button>
+
+  3. Bouton de chargement :
+     <Button :loading="isSubmitting" variant="accent">
+       Lancer Sortilège
+     </Button>
+
+  4. Bouton d'erreur :
+     <Button variant="error" :disabled="hasError">
+       Danger Mortel
+     </Button>
+
+  5. Bouton fantôme simple :
+     <Button variant="ghost" className="w-full">
+       Menu Mystique
+     </Button>
+
+-->
 <template>
   <button
     :class="[
       'inline-flex items-center justify-center rounded-lg transition-all duration-300',
-      'font-heading text-color-text border',
+      'font-body text-color-text border',
       sizeClasses,
       variantClasses,
       {
         'opacity-50 cursor-not-allowed': disabled,
         'animate-pulse-slow': loading,
       },
-      'button-animate',
+      'horror-button',
       className,
     ]"
     :disabled="disabled || loading"
@@ -46,46 +132,6 @@
 
     <!-- Contenu -->
     <slot></slot>
-    <!-- Effet d'orbite pour variant primary -->
-    <div
-      v-if="variant === 'primary' && !disabled && !loading"
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
-    >
-      <div
-        class="absolute -inset-0.5 opacity-0 group-hover:opacity-20 transition-opacity rounded-lg bg-color-primary-light blur-sm"
-      ></div>
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-primary-light animate-orbit"
-      ></div>
-    </div>
-
-    <!-- Effet de particules pour les boutons secondaires -->
-    <div
-      v-if="variant === 'secondary' && !disabled && !loading"
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
-    >
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-1"
-      ></div>
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-2"
-      ></div>
-      <div
-        class="absolute h-1 w-1 rounded-full bg-color-secondary-light animate-particle-3"
-      ></div>
-    </div>
-
-    <!-- Effet de pulsation pour tous les autres boutons -->
-    <div
-      v-if="
-        !['primary', 'secondary'].includes(variant) && !disabled && !loading
-      "
-      class="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
-    >
-      <div
-        class="absolute inset-0 opacity-0 hover:opacity-30 transition-opacity rounded-lg bg-current animate-pulse-glow"
-      ></div>
-    </div>
   </button>
 </template>
 
@@ -160,30 +206,70 @@ const variantClasses = computed(() => {
 
 <style>
 button {
-  font-family: var(--font-heading);
-  position: relative; /* Assurez-vous que les boutons sont en position relative pour les animations */
-  transform: translateZ(0); /* Optimisation pour les animations */
-  will-change: transform; /* Optimisation des performances */
-  overflow: hidden; /* Contenir les effets d'animation */
+  font-family: var(--font-body);
+  position: relative;
+  transform: translateZ(0);
+  will-change: transform;
+  cursor: pointer;
 }
 
-/* Augmentation générale des boutons et ajout d'effet 3D subtil */
-.button-animate {
-  transform: perspective(1px) translateZ(0);
+/* Style de base du bouton Halloween */
+.horror-button {
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5);
+  border-width: 2px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.button-animate:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 7px 10px rgba(0, 0, 0, 0.15);
+/* Effet de tremblement terrifiant au hover */
+.horror-button:hover {
+  animation: horror-shake 0.5s ease-in-out;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.6);
 }
 
-.button-animate:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+.horror-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Animation de tremblement Halloween */
+@keyframes horror-shake {
+  0%,
+  100% {
+    transform: translateX(0) translateY(-1px);
+  }
+  10% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+  20% {
+    transform: translateX(1px) translateY(-1px);
+  }
+  30% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+  40% {
+    transform: translateX(1px) translateY(-1px);
+  }
+  50% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+  60% {
+    transform: translateX(1px) translateY(-1px);
+  }
+  70% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+  80% {
+    transform: translateX(1px) translateY(-1px);
+  }
+  90% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+}
+
+/* Ombres pour les variantes */
 .shadow-glow-primary {
   box-shadow: var(--shadow-glow-primary);
 }
@@ -197,121 +283,18 @@ button {
 }
 
 .shadow-glow-error {
-  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
 }
 
 .shadow-glow-success {
-  box-shadow: 0 0 15px rgba(var(--color-success-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(22, 163, 74, 0.5);
 }
 
 .shadow-glow-warning {
-  box-shadow: 0 0 15px rgba(var(--color-warning-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(217, 119, 6, 0.5);
 }
 
-/* Animation d'orbite améliorée */
-.animate-orbit {
-  animation: orbit 20s linear infinite;
-}
-
-@keyframes orbit {
-  0% {
-    transform: rotate(0deg) translateX(50px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(50px) rotate(-360deg);
-  }
-}
-
-/* Nouvelles animations de particules */
-.animate-particle-1 {
-  animation: particle1 10s ease-in-out infinite;
-}
-
-.animate-particle-2 {
-  animation: particle2 15s ease-in-out infinite;
-  animation-delay: 1s;
-}
-
-.animate-particle-3 {
-  animation: particle3 12s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-@keyframes particle1 {
-  0%,
-  100% {
-    top: 10%;
-    left: 10%;
-    opacity: 0.7;
-  }
-  25% {
-    top: 70%;
-    left: 30%;
-    opacity: 0.4;
-  }
-  50% {
-    top: 30%;
-    left: 80%;
-    opacity: 0.6;
-  }
-  75% {
-    top: 60%;
-    left: 50%;
-    opacity: 0.8;
-  }
-}
-
-@keyframes particle2 {
-  0%,
-  100% {
-    top: 50%;
-    left: 10%;
-    opacity: 0.5;
-  }
-  33% {
-    top: 20%;
-    left: 80%;
-    opacity: 0.7;
-  }
-  66% {
-    top: 70%;
-    left: 30%;
-    opacity: 0.3;
-  }
-}
-
-@keyframes particle3 {
-  0%,
-  100% {
-    top: 30%;
-    left: 60%;
-    opacity: 0.6;
-  }
-  50% {
-    top: 60%;
-    left: 20%;
-    opacity: 0.8;
-  }
-}
-
-/* Animation de pulsation luisante */
-.animate-pulse-glow {
-  animation: pulseGlow 2s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-  0%,
-  100% {
-    opacity: 0.1;
-    transform: scale(0.95);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-}
-
-/* Animation de pulsation lente déjà utilisée */
+/* Animation de pulsation lente pour le loading */
 .animate-pulse-slow {
   animation: pulseSlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

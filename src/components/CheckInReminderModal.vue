@@ -25,7 +25,7 @@
       </div>
 
       <!-- Contenu de la modale -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -47,7 +47,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <SpaceTitle size="xl">CHECK-IN REQUIS</SpaceTitle>
+              <Title size="xl">CHECK-IN REQUIS</Title>
             </div>
 
             <SpaceBadge
@@ -146,7 +146,7 @@
           </div>
 
           <!-- Message d'alerte -->
-          <SpaceTerminal
+          <Terminal
             command="check_tournament_status"
             title="SYSTÈME DE TOURNOI"
             className="mb-6"
@@ -158,10 +158,10 @@
               Sans check-in, votre place pourrait être attribuée à un joueur en
               liste d'attente.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
           <!-- Confirmation de check-in -->
-          <SpaceCard v-if="isCheckedIn" variant="success" className="p-3">
+          <Card v-if="isCheckedIn" variant="success" className="p-3">
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +179,7 @@
                 Votre check-in a été confirmé !
               </p>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
 
         <!-- Actions -->
@@ -192,7 +192,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Bouton de check-in -->
-              <SpaceButton
+              <Button
                 v-if="!isCheckedIn"
                 @click="confirmCheckIn"
                 variant="success"
@@ -214,10 +214,10 @@
                   </svg>
                 </template>
                 Confirmer ma présence
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour annuler le check-in -->
-              <SpaceButton
+              <Button
                 v-else
                 @click="cancelCheckIn"
                 variant="outline-error"
@@ -239,10 +239,10 @@
                   </svg>
                 </template>
                 Annuler mon check-in
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour voir le tournoi -->
-              <SpaceButton
+              <Button
                 @click="goToTournament"
                 variant="primary"
                 size="md"
@@ -263,10 +263,10 @@
                   </svg>
                 </template>
                 Voir le tournoi
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour ignorer -->
-              <SpaceButton
+              <Button
                 @click="close"
                 variant="ghost"
                 size="md"
@@ -287,11 +287,11 @@
                   </svg>
                 </template>
                 Plus tard
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </template>
-      </SpaceCard>
+      </Card>
     </div>
   </transition>
 

@@ -6,7 +6,7 @@
       class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
     >
       <!-- Bouton retour -->
-      <SpaceButton
+      <Button
         @click="goBackToTournaments"
         variant="secondary"
         size="sm"
@@ -26,17 +26,17 @@
         </svg>
         <span class="hidden xs:inline">Retour aux tournois</span>
         <span class="xs:hidden">Retour</span>
-      </SpaceButton>
+      </Button>
 
       <!-- Navigation mobile entre tournois -->
       <div v-if="hasNavigation" class="w-full sm:hidden">
-        <SpaceCard
+        <Card
           variant="dark"
           className="px-3 py-2 border border-color-primary/30"
         >
           <div class="flex items-center justify-between">
             <!-- Bouton précédent -->
-            <SpaceButton
+            <Button
               v-if="previousTournament"
               @click="navigateToTournament(previousTournament._id!)"
               variant="outline"
@@ -56,7 +56,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
 
             <!-- Espace vide si pas de tournoi précédent -->
             <div v-else class="w-8 flex-shrink-0"></div>
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Bouton suivant -->
-            <SpaceButton
+            <Button
               v-if="nextTournament"
               @click="navigateToTournament(nextTournament._id!)"
               variant="outline"
@@ -123,12 +123,12 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
 
             <!-- Espace vide si pas de tournoi suivant -->
             <div v-else class="w-8 flex-shrink-0"></div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </div>
     <div v-if="hasNavigation" class="hidden sm:block">
@@ -137,7 +137,7 @@
         v-if="previousTournament"
         class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40"
       >
-        <SpaceButton
+        <Button
           @click="navigateToTournament(previousTournament._id!)"
           variant="primary"
           size="md"
@@ -157,7 +157,7 @@
             />
           </svg>
           <span class="hidden lg:block">Précédent</span>
-        </SpaceButton>
+        </Button>
       </div>
 
       <!-- Flèche suivant (côté droit) -->
@@ -165,7 +165,7 @@
         v-if="nextTournament"
         class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40"
       >
-        <SpaceButton
+        <Button
           @click="navigateToTournament(nextTournament._id!)"
           variant="primary"
           size="md"
@@ -185,12 +185,12 @@
               clip-rule="evenodd"
             />
           </svg>
-        </SpaceButton>
+        </Button>
       </div>
 
       <!-- Indicateur de position des tournois -->
       <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
-        <SpaceCard variant="dark" className="px-4 py-2">
+        <Card variant="dark" className="px-4 py-2">
           <div class="text-center">
             <div class="text-xs text-color-primary-light font-nasa">
               TOURNOI
@@ -199,17 +199,17 @@
               {{ currentTournamentIndex + 1 }} / {{ allTournaments.length }}
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </div>
 
     <!-- Loader durant le chargement -->
     <div v-if="isLoading" class="flex justify-center py-12">
-      <SpaceLoader text="Chargement des données du tournoi..." />
+      <Loader text="Chargement des données du tournoi..." />
     </div>
 
     <!-- Message d'erreur si le tournoi n'existe pas -->
-    <SpaceTerminal
+    <Terminal
       v-else-if="!tournament"
       command="get_tournament --id"
       title="CONSOLE SYSTÈME"
@@ -222,12 +222,12 @@
       <div class="text-color-text-muted mt-2">
         Vérifiez l'URL ou retournez à la liste des tournois disponibles.
       </div>
-    </SpaceTerminal>
+    </Terminal>
 
     <!-- Affichage du tournoi -->
     <div v-else class="tournament-details flex flex-col gap-4 sm:gap-6">
       <!-- En-tête avec les informations principales -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -699,7 +699,7 @@
             class="flex flex-col space-y-3 lg:col-span-1"
           >
             <!-- Inscription normale -->
-            <SpaceButton
+            <Button
               v-if="
                 !isUserRegistered &&
                 !isUserInWaitlist &&
@@ -745,9 +745,9 @@
                 </svg>
                 S'inscrire
               </template>
-            </SpaceButton>
+            </Button>
 
-            <SpaceButton
+            <Button
               v-if="!isUserRegistered && !isUserInWaitlist && !isUserCaster"
               variant="secondary"
               @click="openRegistrationPopup(tournament, 'caster')"
@@ -838,9 +838,9 @@
                 </g>
               </svg>
               Rejoindre le cast
-            </SpaceButton>
+            </Button>
 
-            <SpaceButton
+            <Button
               v-if="isUserCaster && !tournament.finished"
               @click="
                 tournament._id && unregisterCaster(tournament._id, user._id)
@@ -861,10 +861,10 @@
                 />
               </svg>
               Quitter le cast
-            </SpaceButton>
+            </Button>
 
             <!-- Quitter la liste d'attente -->
-            <SpaceButton
+            <Button
               v-if="isUserInWaitlist && !tournament.finished"
               @click="openRegistrationPopup(tournament, 'unregister-waitlist')"
               variant="error"
@@ -883,10 +883,10 @@
                 />
               </svg>
               Quitter la liste d'attente
-            </SpaceButton>
+            </Button>
 
             <!-- Check-in -->
-            <SpaceButton
+            <Button
               v-if="isUserRegistered && isCheckInAvailable"
               @click="checkIn(tournament._id ?? '', !isCheckedIn)"
               :variant="isCheckedIn ? 'success' : 'accent'"
@@ -905,10 +905,10 @@
                 />
               </svg>
               {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
-            </SpaceButton>
+            </Button>
 
             <!-- Désinscription -->
-            <SpaceButton
+            <Button
               v-if="isUserRegistered"
               @click="openRegistrationPopup(tournament, 'unregister')"
               variant="outline-error"
@@ -927,10 +927,10 @@
                 />
               </svg>
               Se désinscrire
-            </SpaceButton>
+            </Button>
 
             <!-- Définir niveau de jeu -->
-            <SpaceButton
+            <Button
               v-if="
                 isUserRegistered &&
                 !hasPlayerLevelForGame &&
@@ -953,13 +953,13 @@
                 />
               </svg>
               Définir votre niveau
-            </SpaceButton>
+            </Button>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Contenu principal du tournoi en onglets -->
-      <SpaceCard variant="dark" :stars="true" className="overflow-hidden">
+      <Card variant="dark" :stars="true" className="overflow-hidden">
         <!-- Navigation des onglets -->
         <div
           class="space-tabs flex flex-wrap border-b border-color-bg-light/30 overflow-x-auto scrollbar-thin"
@@ -1111,7 +1111,7 @@
               </svg>
               Détails du tournoi
             </h3>
-            <SpaceCard variant="dark" className="p-3 sm:p-4">
+            <Card variant="dark" className="p-3 sm:p-4">
               <p
                 v-if="tournament.description"
                 class="text-color-text leading-relaxed text-sm sm:text-base break-words"
@@ -1123,7 +1123,7 @@
               >
                 Pas de description disponible pour ce tournoi.
               </p>
-            </SpaceCard>
+            </Card>
           </div>
 
           <!-- Onglet Twitch Streams -->
@@ -1194,7 +1194,7 @@
               "
               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
             >
-              <SpaceCard
+              <Card
                 v-for="team in tournament.teams"
                 :key="team._id"
                 variant="secondary"
@@ -1267,7 +1267,7 @@
                     </div>
                   </li>
                 </ul>
-              </SpaceCard>
+              </Card>
             </div>
 
             <!-- Liste des joueurs individuels -->
@@ -1377,7 +1377,7 @@
                 </SpaceBadge>
               </h3>
 
-              <SpaceCard variant="warning" className="p-3">
+              <Card variant="warning" className="p-3">
                 <!-- En-tête du tableau - caché sur mobile -->
                 <div
                   class="hidden sm:grid grid-cols-3 gap-4 mb-3 text-base sm:text-lg font-heading text-color-text-muted border-b border-color-bg-light/20 pb-2"
@@ -1440,7 +1440,7 @@
                 >
                   Liste d'attente vide
                 </p>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -1535,10 +1535,10 @@
             />
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Section des derniers gagnants -->
-      <SpaceCard
+      <Card
         v-if="
           lastFinishedTournament &&
           lastFinishedTournament.teams &&
@@ -1595,7 +1595,7 @@
               getWinningTeams(lastFinishedTournament).length === 1,
           }"
         >
-          <SpaceCard
+          <Card
             v-for="team in getWinningTeams(lastFinishedTournament)"
             :key="team._id"
             variant="success"
@@ -1657,13 +1657,13 @@
                 </div>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
 
         <!-- Bouton pour voir le détail -->
         <div class="mt-4 text-center">
           <router-link :to="`/tournois/${lastFinishedTournament._id}`">
-            <SpaceButton variant="secondary" size="sm" className="text-sm">
+            <Button variant="secondary" size="sm" className="text-sm">
               <span class="hidden sm:inline">Voir le détail du tournoi</span>
               <span class="sm:hidden">Voir détail</span>
               <svg
@@ -1678,14 +1678,14 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
           </router-link>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Bouton de retour en haut de page -->
       <div class="fixed bottom-4 right-4 z-50">
-        <SpaceButton
+        <Button
           @click="scrollToTop"
           variant="primary"
           size="sm"
@@ -1706,7 +1706,7 @@
               d="M5 10l7-7m0 0l7 7m-7-7v18"
             />
           </svg>
-        </SpaceButton>
+        </Button>
       </div>
     </div>
 
@@ -1785,15 +1785,15 @@
 
       <template #footer>
         <div class="flex flex-col sm:flex-row justify-end gap-2">
-          <SpaceButton
+          <Button
             @click="closePopup"
             variant="outline"
             size="sm"
             className="w-full sm:w-auto"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="confirmAction"
             :variant="
               actionType === 'unregister' ||
@@ -1804,7 +1804,7 @@
             className="w-full sm:w-auto"
           >
             Confirmer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -1823,15 +1823,15 @@
           matchmaking. Vous pouvez:
         </p>
         <div class="space-y-3 mt-4">
-          <SpaceButton
+          <Button
             @click="goToLevelDefinition"
             variant="primary"
             className="w-full text-sm sm:text-base"
           >
             <span class="hidden sm:inline">Définir mon niveau maintenant</span>
             <span class="sm:hidden">Définir niveau</span>
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="registerWithoutLevel"
             variant="outline"
             className="w-full text-sm sm:text-base"
@@ -1840,19 +1840,19 @@
               >S'inscrire sans définir de niveau</span
             >
             <span class="sm:hidden">S'inscrire sans niveau</span>
-          </SpaceButton>
+          </Button>
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton
+          <Button
             @click="closeLevelPrompt"
             variant="ghost"
             size="sm"
             className="text-sm"
           >
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

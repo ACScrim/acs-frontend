@@ -1,8 +1,8 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\GestionBadges.vue -->
 <template>
-  <SpaceContainer>
+  <Container>
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="GESTION DE BADGES"
       mission="BADGES-EXPLORER"
       :showMissionInfo="true"
@@ -12,17 +12,12 @@
           badges.length
         }}</SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Section Création de badge -->
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="primary" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="primary">
+        <Title size="xl" variant="primary">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +35,7 @@
             </svg>
           </template>
           Créer un nouveau badge
-        </SpaceTitle>
+        </Title>
       </template>
       <form @submit.prevent="createBadge" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -156,22 +151,17 @@
           />
         </div>
         <div class="flex justify-end mt-6">
-          <SpaceButton variant="primary" size="lg" type="submit">
+          <Button variant="primary" size="lg" type="submit">
             Créer le badge
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Section Association de badge -->
-    <SpaceCard
-      variant="secondary"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="secondary" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="secondary">
+        <Title size="xl" variant="secondary">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +179,7 @@
             </svg>
           </template>
           Associer un badge à des joueurs
-        </SpaceTitle>
+        </Title>
       </template>
       <form @submit.prevent="assignBadge" class="space-y-6">
         <!-- Sélection des joueurs -->
@@ -338,27 +328,22 @@
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <SpaceButton
+          <Button
             type="submit"
             variant="secondary"
             size="lg"
             :disabled="selectedPlayers.length === 0 || !badgeId"
           >
             Associer le badge
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Section badges du joueur avec autocomplete -->
-    <SpaceCard
-      variant="accent"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="accent" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="accent">
+        <Title size="xl" variant="accent">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -372,7 +357,7 @@
             </svg>
           </template>
           Modifier les badges d'un joueur
-        </SpaceTitle>
+        </Title>
       </template>
 
       <div class="space-y-6">
@@ -441,7 +426,7 @@
               selectedPlayerBadge.username
             }}</span>
           </div>
-          <SpaceButton
+          <Button
             @click="clearSelectedPlayerBadge"
             variant="ghost"
             size="sm"
@@ -460,16 +445,16 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </SpaceButton>
+          </Button>
         </div>
         <!-- Badges du joueur sélectionné -->
         <div
           v-if="selectedPlayerId && selectedPlayerBadges.length > 0"
           class="space-y-4"
         >
-          <SpaceTitle size="lg" variant="accent" className="text-center">
+          <Title size="lg" variant="accent" className="text-center">
             Badges associés
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
@@ -490,7 +475,7 @@
                 </div>
                 <span class="text-color-text font-body">{{ badge.title }}</span>
               </div>
-              <SpaceButton
+              <Button
                 @click="badge._id && removeBadge(badge._id)"
                 variant="danger"
                 size="sm"
@@ -509,7 +494,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -543,11 +528,11 @@
           </p>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Section liste des badges -->
-    <SpaceCard variant="info" :stars="true" :decorated="true" className="mb-6">
+    <Card variant="info" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="info">
+        <Title size="xl" variant="info">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -565,7 +550,7 @@
             </svg>
           </template>
           Collection de badges
-        </SpaceTitle>
+        </Title>
       </template>
 
       <div
@@ -579,7 +564,7 @@
         >
           <div class="flex justify-end w-full mb-2">
             <!-- Boutons d'action -->
-            <SpaceButton
+            <Button
               @click="openEditBadgeModal(badge)"
               variant="info"
               size="sm"
@@ -597,8 +582,8 @@
                   d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
                 />
               </svg>
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="confirmDeleteBadge(badge)"
               variant="danger"
               size="sm"
@@ -617,7 +602,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
           </div>
           <div
             class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 mb-3 border-2 border-color-primary/30 overflow-hidden shadow-lg group-hover:shadow-color-primary/30 group-hover:border-color-primary/50 transition-all duration-300"
@@ -679,7 +664,7 @@
           Commencez par créer un nouveau badge ci-dessus
         </p>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Modal de modification de badge -->
     <SpaceModal v-model="showEditModal" title="Modifier le badge">
       <form @submit.prevent="updateBadge" class="space-y-6">
@@ -792,12 +777,10 @@
         </div>
 
         <div class="flex justify-end space-x-3 mt-6">
-          <SpaceButton @click="showEditModal = false" variant="ghost" size="lg">
+          <Button @click="showEditModal = false" variant="ghost" size="lg">
             Annuler
-          </SpaceButton>
-          <SpaceButton type="submit" variant="info" size="lg">
-            Enregistrer
-          </SpaceButton>
+          </Button>
+          <Button type="submit" variant="info" size="lg"> Enregistrer </Button>
         </div>
       </form>
     </SpaceModal>
@@ -834,16 +817,12 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <SpaceButton
-            @click="showDeleteModal = false"
-            variant="ghost"
-            size="lg"
-          >
+          <Button @click="showDeleteModal = false" variant="ghost" size="lg">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deleteBadge" variant="danger" size="lg">
+          </Button>
+          <Button @click="deleteBadge" variant="danger" size="lg">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </div>
     </SpaceModal>
@@ -851,7 +830,7 @@
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
-  </SpaceContainer>
+  </Container>
 </template>
 
 <script setup lang="ts">

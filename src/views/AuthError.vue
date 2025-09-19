@@ -36,7 +36,7 @@
     </div>
 
     <!-- Contenu principal -->
-    <SpaceCard
+    <Card
       variant="error"
       :stars="true"
       :decorated="true"
@@ -69,16 +69,16 @@
         </div>
 
         <!-- Titre de l'erreur -->
-        <SpaceTitle size="2xl" :glitch="true" className="mb-4 text-color-error">
+        <Title size="2xl" :glitch="true" className="mb-4 text-color-error">
           {{ title }}
-        </SpaceTitle>
+        </Title>
 
         <!-- Message d'erreur -->
         <p class="text-color-text mb-8">{{ message }}</p>
 
         <!-- Affichage spécifique pour l'erreur de serveur Discord -->
         <div v-if="errorType === 'guild_required'" class="space-y-6 mb-6">
-          <SpaceTerminal
+          <Terminal
             command="check_discord_membership"
             title="AUTHENTIFICATION · DISCORD"
             className="text-left mb-6"
@@ -90,9 +90,9 @@
               Pour accéder à la plateforme, vous devez d'abord rejoindre notre
               serveur Discord.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
-          <SpaceButton
+          <Button
             tag="a"
             :href="inviteLink"
             target="_blank"
@@ -114,23 +114,23 @@
               </svg>
             </template>
             REJOINDRE LE SERVEUR DISCORD
-          </SpaceButton>
+          </Button>
 
           <p class="text-color-text-muted">
             Après avoir rejoint le serveur Discord,
-            <SpaceButton
+            <Button
               @click="retryAuth"
               variant="ghost"
               size="sm"
               className="ml-1"
             >
               reconnectez-vous
-            </SpaceButton>
+            </Button>
           </p>
         </div>
 
         <div v-else class="mb-6">
-          <SpaceTerminal
+          <Terminal
             command="authentication_error"
             title="AUTHENTIFICATION · SYSTÈME"
             className="text-left mb-6"
@@ -142,9 +142,9 @@
               Veuillez réessayer ou contacter un administrateur si le problème
               persiste.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
-          <SpaceButton
+          <Button
             @click="retryAuth"
             variant="primary"
             size="lg"
@@ -165,10 +165,10 @@
               </svg>
             </template>
             RÉESSAYER LA CONNEXION
-          </SpaceButton>
+          </Button>
         </div>
 
-        <SpaceButton @click="goHome" variant="ghost" size="md">
+        <Button @click="goHome" variant="ghost" size="md">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -182,9 +182,9 @@
             </svg>
           </template>
           RETOUR À L'ACCUEIL
-        </SpaceButton>
+        </Button>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Élément décoratif - ligne de circuit -->
     <div

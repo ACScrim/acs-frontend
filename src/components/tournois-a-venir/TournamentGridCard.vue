@@ -1,5 +1,5 @@
 <template>
-  <SpaceCard
+  <Card
     :variant="getTournamentCardVariant"
     :stars="true"
     :interactive="true"
@@ -153,7 +153,7 @@
         @click.stop
       >
         <!-- Bouton inscription / liste d'attente -->
-        <SpaceButton
+        <Button
           v-if="
             !isUserRegistered && !isUserInWaitlist && !isUserRegisteredAsCaster
           "
@@ -174,10 +174,10 @@
             />
           </svg>
           {{ isTournamentFull ? "Rejoindre la liste d'attente" : "S'inscrire" }}
-        </SpaceButton>
+        </Button>
 
         <!-- Bouton quitter la liste d'attente -->
-        <SpaceButton
+        <Button
           v-else-if="isUserInWaitlist"
           @click="$emit('open-registration', tournament, 'unregister-waitlist')"
           variant="outline"
@@ -196,10 +196,10 @@
             />
           </svg>
           Quitter la liste d'attente
-        </SpaceButton>
+        </Button>
 
         <!-- Bouton check-in -->
-        <SpaceButton
+        <Button
           v-else-if="isCheckInAvailable && isUserRegistered"
           @click="$emit('check-in', tournament._id, !isCheckedIn)"
           :variant="isCheckedIn ? 'success' : 'accent'"
@@ -218,10 +218,10 @@
             />
           </svg>
           {{ isCheckedIn ? "Check-in confirmé" : "Check-in" }}
-        </SpaceButton>
+        </Button>
 
         <!-- Bouton désinscription -->
-        <SpaceButton
+        <Button
           v-else-if="isUserRegistered && !isUserRegisteredAsCaster"
           @click="$emit('open-registration', tournament, 'unregister')"
           variant="outline"
@@ -240,9 +240,9 @@
             />
           </svg>
           Se désinscrire
-        </SpaceButton>
+        </Button>
 
-        <SpaceButton
+        <Button
           v-else-if="isUserRegisteredAsCaster && !isUserRegistered"
           @click="user && $emit('unregister-caster', tournament._id, user._id)"
           variant="outline"
@@ -261,10 +261,10 @@
             />
           </svg>
           Quitter le cast
-        </SpaceButton>
+        </Button>
 
         <!-- Bouton définir niveau -->
-        <SpaceButton
+        <Button
           v-if="
             isUserRegistered && !hasPlayerLevelForGame && !tournament.finished
           "
@@ -285,7 +285,7 @@
             />
           </svg>
           Définir votre niveau
-        </SpaceButton>
+        </Button>
       </div>
     </div>
 
@@ -305,7 +305,7 @@
         />
       </svg>
     </div>
-  </SpaceCard>
+  </Card>
 </template>
 
 <script setup lang="ts">

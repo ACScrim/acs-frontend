@@ -135,11 +135,11 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-  <SpaceCard>
+  <Card>
     <template #header>
       <div class="flex flex-row justify-between items-center">
-        <SpaceTitle size="xl" class="uppercase">Clips du tournoi</SpaceTitle>
-        <SpaceButton @click="showAddClipModal = true">
+        <Title size="xl" class="uppercase">Clips du tournoi</Title>
+        <Button @click="showAddClipModal = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-2"
@@ -153,12 +153,12 @@ const formatDate = (dateString: string): string => {
             />
           </svg>
           Ajouter un clip
-        </SpaceButton>
+        </Button>
       </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 gap-y-8 pt-8">
-      <SpaceCard v-for="(clip, idx) in tournament.clips" class="flex-1/2">
+      <Card v-for="(clip, idx) in tournament.clips" class="flex-1/2">
         <iframe
           class="w-full h-80"
           :src="clip.url"
@@ -184,9 +184,9 @@ const formatDate = (dateString: string): string => {
           </button>
           <p>{{ formatDate(clip.addedAt) }}</p>
         </div>
-      </SpaceCard>
+      </Card>
     </div>
-  </SpaceCard>
+  </Card>
 
   <Teleport to="body" :disabled="!showAddClipModal">
     <SpaceModal
@@ -295,7 +295,7 @@ const formatDate = (dateString: string): string => {
             v-model="clipUrl"
             :errorMessage="errMessage"
           />
-          <SpaceButton type="submit" :loading="isLoading" icon>
+          <Button type="submit" :loading="isLoading" icon>
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -311,19 +311,19 @@ const formatDate = (dateString: string): string => {
               </svg>
             </template>
             Ajouter le clip
-          </SpaceButton>
+          </Button>
         </form>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton
+          <Button
             @click="closeAddClipPrompt"
             variant="ghost"
             size="sm"
             className="text-sm"
           >
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -337,12 +337,12 @@ const formatDate = (dateString: string): string => {
           <span class="text-red-500 font-bold">irréversible</span>.
         </p>
         <div class="flex justify-end gap-2">
-          <SpaceButton @click="closeDeleteClipModal" variant="ghost" size="sm">
+          <Button @click="closeDeleteClipModal" variant="ghost" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deleteclip" variant="danger" size="sm">
+          </Button>
+          <Button @click="deleteclip" variant="danger" size="sm">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </div>
     </SpaceModal>

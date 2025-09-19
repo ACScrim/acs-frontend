@@ -5,7 +5,7 @@
     <div
       class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block"
     >
-      <SpaceCard variant="dark" className="p-3 space-y-1">
+      <Card variant="dark" className="p-3 space-y-1">
         <div class="text-xs text-color-primary font-nasa mb-2 px-2 text-center">
           NAVIGATION
         </div>
@@ -31,11 +31,11 @@
           ></svg>
           <span class="truncate">{{ section.shortLabel }}</span>
         </button>
-      </SpaceCard>
+      </Card>
     </div>
 
     <!-- État d'erreur -->
-    <SpaceTerminal
+    <Terminal
       v-if="error"
       command="get_player_profile --id=${route.params.id}"
       :message="error"
@@ -46,7 +46,7 @@
     <!-- Profil du joueur -->
     <div v-else-if="player" class="max-w-4xl mx-auto">
       <!-- En-tête du profil -->
-      <SpaceCard
+      <Card
         id="profil"
         variant="primary"
         section="profile"
@@ -77,7 +77,7 @@
           </div>
 
           <!-- Nom centré -->
-          <SpaceTitle
+          <Title
             size="4xl"
             :glitch="true"
             :decorated="true"
@@ -91,7 +91,7 @@
             ]"
           >
             {{ player.username }}
-          </SpaceTitle>
+          </Title>
 
           <!-- Barre parfaitement centrée sous le nom -->
           <div
@@ -135,9 +135,9 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section des statistiques - Version simplifiée -->
-      <SpaceCard
+      <Card
         id="statistiques"
         variant="secondary"
         section="statistics"
@@ -156,10 +156,10 @@
               d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"
             />
           </svg>
-          <SpaceTitle size="2xl">Statistiques</SpaceTitle>
+          <Title size="2xl">Statistiques</Title>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
           >
@@ -167,8 +167,8 @@
               {{ playerRanking?.totalVictories || 0 }}
             </div>
             <div class="text-color-text-muted text-sm">Victoires</div>
-          </SpaceCard>
-          <SpaceCard
+          </Card>
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
           >
@@ -176,11 +176,11 @@
               {{ playerRanking?.totalTournaments || 0 }}
             </div>
             <div class="text-color-text-muted text-sm">Tournois</div>
-          </SpaceCard>
+          </Card>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section Palmarès avec podium -->
-      <SpaceCard
+      <Card
         id="palmares"
         variant="accent"
         section="medals"
@@ -201,7 +201,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="2xl">Palmarès</SpaceTitle>
+          <Title size="2xl">Palmarès</Title>
         </div>
 
         <!-- Visualisation du podium -->
@@ -314,7 +314,7 @@
         <!-- Statistiques des médailles -->
         <div class="flex flex-wrap justify-center gap-4 mb-4">
           <!-- Argent -->
-          <SpaceCard
+          <Card
             variant="silver"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
@@ -326,9 +326,9 @@
               {{ medalCount.silver }}
             </div>
             <div class="text-xs text-color-text-muted">2e places</div>
-          </SpaceCard>
+          </Card>
           <!-- Or -->
-          <SpaceCard
+          <Card
             variant="gold"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
@@ -338,10 +338,10 @@
               {{ medalCount.gold }}
             </div>
             <div class="text-xs text-color-text-muted">victoires</div>
-          </SpaceCard>
+          </Card>
 
           <!-- Bronze -->
-          <SpaceCard
+          <Card
             variant="bronze"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
@@ -353,11 +353,11 @@
               {{ medalCount.bronze }}
             </div>
             <div class="text-xs text-color-text-muted">3e places</div>
-          </SpaceCard>
+          </Card>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section Activité et engagement -->
-      <SpaceCard
+      <Card
         id="activite"
         variant="secondary"
         section="activity"
@@ -380,12 +380,12 @@
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <SpaceTitle size="2xl">Activité</SpaceTitle>
+          <Title size="2xl">Activité</Title>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <!-- Membre depuis -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -396,10 +396,10 @@
               {{ memberSince }}
             </div>
             <div class="text-xs text-color-text-muted">depuis</div>
-          </SpaceCard>
+          </Card>
 
           <!-- Dernière activité -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -410,10 +410,10 @@
               {{ lastSeen }}
             </div>
             <div class="text-xs text-color-text-muted">dernière fois</div>
-          </SpaceCard>
+          </Card>
 
           <!-- Participation totale -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -424,11 +424,11 @@
               {{ participationStreak }}
             </div>
             <div class="text-xs text-color-text-muted">tournois joués</div>
-          </SpaceCard>
+          </Card>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section Performance par jeu -->
-      <SpaceCard
+      <Card
         id="performance"
         variant="primary"
         section="performance"
@@ -455,10 +455,10 @@
                 d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
               />
             </svg>
-            <SpaceTitle size="2xl">Performance par jeu</SpaceTitle>
+            <Title size="2xl">Performance par jeu</Title>
           </div>
 
-          <SpaceButton
+          <Button
             v-if="gameStats.length > 3"
             @click="expandedGameStats = !expandedGameStats"
             :variant="expandedGameStats ? 'secondary' : 'primary'"
@@ -467,11 +467,11 @@
             {{
               expandedGameStats ? "RÉDUIRE" : `TOUT VOIR (${gameStats.length})`
             }}
-          </SpaceButton>
+          </Button>
         </div>
 
         <div v-if="gameStats.length > 0" class="space-y-4">
-          <SpaceCard
+          <Card
             v-for="gameStat in displayedGameStats"
             :key="gameStat.gameId"
             variant="dark"
@@ -558,10 +558,10 @@
                 </div>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
 
-        <SpaceTerminal
+        <Terminal
           v-else
           command="search --stats --games"
           title="Recherche de statistiques"
@@ -570,10 +570,10 @@
           <div class="text-color-text-muted">
             Aucune donnée de performance disponible
           </div>
-        </SpaceTerminal>
-      </SpaceCard>
+        </Terminal>
+      </Card>
       <!-- Section Statistiques sociales -->
-      <SpaceCard
+      <Card
         id="collaborations"
         variant="secondary"
         section="collaborations"
@@ -600,10 +600,10 @@
                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 01-5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <SpaceTitle size="2xl">Collaborations</SpaceTitle>
+            <Title size="2xl">Collaborations</Title>
           </div>
 
-          <SpaceButton
+          <Button
             v-if="totalCollaborators > 5"
             @click="expandedCollaborations = !expandedCollaborations"
             :variant="expandedCollaborations ? 'primary' : 'secondary'"
@@ -614,7 +614,7 @@
                 ? "RÉDUIRE"
                 : `TOUT VOIR (${totalCollaborators})`
             }}
-          </SpaceButton>
+          </Button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -651,7 +651,7 @@
               v-if="socialStats.frequentTeammates.length > 0"
               class="space-y-3"
             >
-              <SpaceCard
+              <Card
                 v-for="teammate in displayedFrequentTeammates"
                 :key="teammate.playerId"
                 variant="dark"
@@ -690,7 +690,7 @@
                     </div>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
 
               <!-- Indicateur s'il y a plus d'éléments cachés -->
               <div
@@ -707,7 +707,7 @@
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-else
               command="search --teammates"
               title="Recherche de coéquipiers"
@@ -716,7 +716,7 @@
               <div class="text-color-text-muted">
                 Aucune collaboration répétée
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
 
           <!-- Partenaires de victoire -->
@@ -752,7 +752,7 @@
               v-if="socialStats.winningPartners.length > 0"
               class="space-y-3"
             >
-              <SpaceCard
+              <Card
                 v-for="partner in displayedWinningPartners"
                 :key="partner.playerId"
                 variant="dark"
@@ -788,7 +788,7 @@
                     </div>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
 
               <!-- Indicateur s'il y a plus d'éléments cachés -->
               <div
@@ -805,19 +805,19 @@
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-else
               command="search --partners --wins"
               title="Recherche de partenaires"
               :showCursor="true"
             >
               <div class="text-color-text-muted">Aucune victoire en équipe</div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section des badges -->
-      <SpaceCard
+      <Card
         id="badges"
         variant="primary"
         section="badges"
@@ -838,19 +838,19 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="2xl">
+          <Title size="2xl">
             Badges
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ badgeCount }}
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
 
         <div
           v-if="hasBadges"
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          <SpaceCard
+          <Card
             v-for="badge in player.badges"
             :key="badge._id"
             variant="dark"
@@ -871,10 +871,10 @@
                 {{ badge.title }}
               </span>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
 
-        <SpaceTerminal
+        <Terminal
           v-else
           command="search --badges"
           title="Recherche de badges"
@@ -883,10 +883,10 @@
           <div class="text-color-text-muted">
             Aucun badge obtenu pour le moment
           </div>
-        </SpaceTerminal>
-      </SpaceCard>
+        </Terminal>
+      </Card>
       <!-- Section Réalisations et progression -->
-      <SpaceCard
+      <Card
         id="records"
         variant="accent"
         section="records"
@@ -909,12 +909,12 @@
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <SpaceTitle size="2xl">Records personnels</SpaceTitle>
+          <Title size="2xl">Records personnels</Title>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <!-- Plus longue série de victoires -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -927,10 +927,10 @@
             <div class="text-xs text-color-text-muted">
               victoires consécutives
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Taux de top 25% -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -941,10 +941,10 @@
               {{ top25PercentRate }}%
             </div>
             <div class="text-xs text-color-text-muted">des tournois</div>
-          </SpaceCard>
+          </Card>
 
           <!-- Taux de victoire -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -963,10 +963,10 @@
               }}%
             </div>
             <div class="text-xs text-color-text-muted">de victoire</div>
-          </SpaceCard>
+          </Card>
 
           <!-- Taux de podium -->
-          <SpaceCard
+          <Card
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
@@ -987,11 +987,11 @@
               }}%
             </div>
             <div class="text-xs text-color-text-muted">de podiums</div>
-          </SpaceCard>
+          </Card>
         </div>
 
         <!-- Graphique de progression intégré -->
-        <SpaceCard variant="dark" className="border border-color-accent/20">
+        <Card variant="dark" className="border border-color-accent/20">
           <h3
             class="text-lg font-nasa text-color-accent-light mb-4 flex items-center"
           >
@@ -1110,7 +1110,7 @@
             </div>
 
             <!-- État vide si pas de données -->
-            <SpaceTerminal
+            <Terminal
               v-else
               command="analyze --performance-data"
               title="Analyse des performances"
@@ -1120,13 +1120,13 @@
                 Pas assez de données
                 <p class="text-xs mt-1">Participez à plus de tournois</p>
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
-        </SpaceCard>
-      </SpaceCard>
+        </Card>
+      </Card>
 
       <!-- Section des tournois -->
-      <SpaceCard
+      <Card
         id="tournois"
         variant="primary"
         :stars="true"
@@ -1152,12 +1152,12 @@
             <path d="M8 12v5h6" />
             <path d="M8 17h3v5H8z" />
           </svg>
-          <SpaceTitle size="2xl">
+          <Title size="2xl">
             Tournois
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ tournamentCount }}
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
 
         <!-- Options de tri pour les tournois -->
@@ -1196,7 +1196,7 @@
               :key="tournament._id"
               class="flex flex-col sm:flex-row items-start sm:items-center justify-between"
             >
-              <SpaceCard variant="dark" className="w-full">
+              <Card variant="dark" className="w-full">
                 <div
                   class="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-3"
                 >
@@ -1255,7 +1255,7 @@
                       :to="`/tournois/${tournament._id}`"
                       class="order-3 sm:order-none"
                     >
-                      <SpaceButton variant="primary" size="xs" icon>
+                      <Button variant="primary" size="xs" icon>
                         <template #icon>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -1271,11 +1271,11 @@
                           </svg>
                         </template>
                         Détails
-                      </SpaceButton>
+                      </Button>
                     </router-link>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </li>
           </ul>
 
@@ -1291,15 +1291,15 @@
           </div>
         </div>
 
-        <SpaceTerminal
+        <Terminal
           v-else
           command="search --tournaments"
           title="Recherche de tournois"
           :showCursor="true"
         >
           <div class="text-color-text-muted">Aucun tournoi pour le moment</div>
-        </SpaceTerminal>
-      </SpaceCard>
+        </Terminal>
+      </Card>
     </div>
 
     <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
@@ -1323,26 +1323,26 @@
         </div>
 
         <!-- Badge title with enhanced styling -->
-        <SpaceTitle size="xl" :glitch="true" className="mb-2 text-center">
+        <Title size="xl" :glitch="true" className="mb-2 text-center">
           {{ selectedBadge.title }}
-        </SpaceTitle>
+        </Title>
 
         <!-- Badge description with background -->
-        <SpaceCard variant="dark" className="w-full mt-2">
+        <Card variant="dark" className="w-full mt-2">
           <p class="text-color-text text-sm text-center">
             {{
               selectedBadge.description ||
               "Ce badge est une récompense mystérieuse. Aucune description disponible."
             }}
           </p>
-        </SpaceCard>
+        </Card>
       </div>
 
       <template #footer>
         <div class="flex justify-center">
-          <SpaceButton @click="selectedBadge = null" variant="primary">
+          <Button @click="selectedBadge = null" variant="primary">
             Fermer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

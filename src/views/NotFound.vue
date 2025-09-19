@@ -21,7 +21,7 @@
       }"
     ></div>
 
-    <SpaceCard
+    <Card
       variant="primary"
       :stars="true"
       :decorated="true"
@@ -30,13 +30,13 @@
       <div class="flex flex-col items-center justify-center space-y-6 py-8">
         <!-- Code d'erreur avec effet glitch -->
         <div class="relative">
-          <SpaceTitle
+          <Title
             size="4xl"
             :glitch="true"
             className="font-mono tracking-widest glitch-text"
           >
             404
-          </SpaceTitle>
+          </Title>
 
           <!-- Effet d'écho pour le 404 -->
           <div
@@ -56,9 +56,7 @@
         </div>
 
         <!-- Message d'erreur -->
-        <SpaceTitle size="2xl" className="text-center">
-          SIGNAL PERDU
-        </SpaceTitle>
+        <Title size="2xl" className="text-center"> SIGNAL PERDU </Title>
 
         <div class="max-w-md text-center">
           <p class="text-color-text mb-6">
@@ -68,7 +66,7 @@
           </p>
 
           <!-- Terminal avec message d'erreur -->
-          <SpaceTerminal
+          <Terminal
             command="locate_page"
             title="NAVIGATION · SYSTÈME"
             className="mb-6 text-left"
@@ -80,11 +78,11 @@
             <div class="text-color-text-muted mt-2">
               Vérifiez les coordonnées ou retournez à la station de base.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
           <!-- Bouton de retour à l'accueil -->
           <router-link to="/">
-            <SpaceButton variant="primary" size="lg" className="animate-hover">
+            <Button variant="primary" size="lg" className="animate-hover">
               <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -98,11 +96,11 @@
                 </svg>
               </template>
               RETOUR À LA BASE
-            </SpaceButton>
+            </Button>
           </router-link>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Éléments décoratifs en arrière-plan -->
     <div

@@ -36,7 +36,7 @@
         v-if="isPanelOpen"
         class="absolute top-full z-50 mt-2 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-0 sm:transform-none w-80 sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-[90vw]"
       >
-        <SpaceCard
+        <Card
           variant="dark"
           :stars="true"
           className="shadow-2xl border border-color-primary/20"
@@ -235,7 +235,7 @@
               <span class="sm:hidden">Tout effacer</span>
             </button>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </transition>
   </div>

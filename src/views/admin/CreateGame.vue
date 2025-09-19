@@ -2,7 +2,7 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-2xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         :title="isEditing ? 'Modification d\'un jeu' : 'Création d\'un jeu'"
         titleSize="3xl"
         :showMissionInfo="true"
@@ -13,15 +13,10 @@
             games.length
           }}</SpaceBadge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Formulaire de création/modification de jeu -->
-      <SpaceCard
-        variant="primary"
-        :stars="true"
-        :decorated="true"
-        className="mb-8"
-      >
+      <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
         <form @submit.prevent="isEditing ? updateGame() : createGame()">
           <div class="mb-6">
             <label
@@ -218,11 +213,7 @@
             </label>
 
             <!-- Liste des rôles existants -->
-            <SpaceCard
-              variant="secondary"
-              className="mb-4 p-4"
-              :noPadding="false"
-            >
+            <Card variant="secondary" className="mb-4 p-4" :noPadding="false">
               <div
                 v-if="game.roles && game.roles.length > 0"
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
@@ -262,7 +253,7 @@
 
                   <!-- Boutons d'action -->
                   <div class="flex justify-end space-x-1 z-10">
-                    <SpaceButton
+                    <Button
                       @click.prevent="editRole(index)"
                       variant="secondary"
                       size="xs"
@@ -279,8 +270,8 @@
                           d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
                         />
                       </svg>
-                    </SpaceButton>
-                    <SpaceButton
+                    </Button>
+                    <Button
                       @click.prevent="removeRole(index)"
                       variant="error"
                       size="xs"
@@ -299,12 +290,12 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                    </SpaceButton>
+                    </Button>
                   </div>
                 </div>
               </div>
 
-              <SpaceTerminal
+              <Terminal
                 v-else
                 command="search --game-roles"
                 title="Recherche de rôles"
@@ -314,11 +305,11 @@
                   Aucun rôle défini pour ce jeu. Ajoutez des rôles pour
                   permettre aux joueurs de spécifier leurs positions préférées.
                 </div>
-              </SpaceTerminal>
-            </SpaceCard>
+              </Terminal>
+            </Card>
 
             <!-- Formulaire d'ajout de rôle -->
-            <SpaceCard
+            <Card
               :variant="editingRoleIndex !== null ? 'accent' : 'dark'"
               className="p-4"
               :noPadding="false"
@@ -328,7 +319,7 @@
                   <span
                     class="w-1 h-6 bg-gradient-to-b from-color-primary to-color-accent rounded-full mr-3"
                   ></span>
-                  <SpaceTitle
+                  <Title
                     size="sm"
                     :className="
                       editingRoleIndex !== null
@@ -341,7 +332,7 @@
                         ? "Modifier le rôle"
                         : "Ajouter un rôle"
                     }}
-                  </SpaceTitle>
+                  </Title>
                 </div>
               </template>
 
@@ -377,7 +368,7 @@
               </div>
 
               <div class="flex justify-end space-x-3 relative z-10">
-                <SpaceButton
+                <Button
                   v-if="editingRoleIndex !== null"
                   @click.prevent="cancelEditRole"
                   variant="outline"
@@ -398,8 +389,8 @@
                     </svg>
                   </template>
                   Annuler
-                </SpaceButton>
-                <SpaceButton
+                </Button>
+                <Button
                   @click.prevent="addOrUpdateRole"
                   :variant="editingRoleIndex !== null ? 'accent' : 'primary'"
                   size="sm"
@@ -419,27 +410,27 @@
                     </svg>
                   </template>
                   {{ editingRoleIndex !== null ? "Mettre à jour" : "Ajouter" }}
-                </SpaceButton>
+                </Button>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
 
           <div class="flex justify-between">
             <!-- Bouton Annuler (apparaît uniquement en mode édition) -->
-            <SpaceButton
+            <Button
               v-if="isEditing"
               @click="cancelEdit"
               variant="outline"
               size="lg"
             >
               Annuler
-            </SpaceButton>
+            </Button>
 
             <!-- Spacer quand pas en mode édition -->
             <div v-else></div>
 
             <!-- Bouton Créer/Modifier -->
-            <SpaceButton
+            <Button
               type="submit"
               :variant="isEditing ? 'accent' : 'primary'"
               size="lg"
@@ -447,16 +438,16 @@
               :disabled="isLoading"
             >
               {{ isEditing ? "Modifier le jeu" : "Créer le jeu" }}
-            </SpaceButton>
+            </Button>
           </div>
         </form>
-      </SpaceCard>
+      </Card>
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
       <Toast v-if="success" type="success" :message="success" />
 
       <!-- Liste des jeux existants -->
-      <SpaceCard variant="secondary" :stars="true" :decorated="true">
+      <Card variant="secondary" :stars="true" :decorated="true">
         <template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center">
@@ -470,7 +461,7 @@
                   d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
                 />
               </svg>
-              <SpaceTitle size="xl">Jeux disponibles</SpaceTitle>
+              <Title size="xl">Jeux disponibles</Title>
             </div>
             <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{
               games.length
@@ -479,7 +470,7 @@
         </template>
 
         <div v-if="loadingGames" class="py-12 flex justify-center items-center">
-          <SpaceLoader size="lg" text="Chargement des jeux..." />
+          <Loader size="lg" text="Chargement des jeux..." />
         </div>
 
         <div
@@ -536,7 +527,7 @@
 
             <!-- Actions (édition et suppression) -->
             <div class="flex justify-end gap-2 mt-2 z-10 relative">
-              <SpaceButton
+              <Button
                 @click="editGame(existingGame)"
                 variant="secondary"
                 size="sm"
@@ -557,8 +548,8 @@
                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
-              </SpaceButton>
-              <SpaceButton
+              </Button>
+              <Button
                 @click="confirmDelete(existingGame)"
                 variant="error"
                 size="sm"
@@ -579,12 +570,12 @@
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </div>
 
-        <SpaceTerminal
+        <Terminal
           v-else
           command="list --games"
           title="Liste des jeux"
@@ -593,8 +584,8 @@
           <div class="text-color-text-muted">
             Aucun jeu disponible pour le moment
           </div>
-        </SpaceTerminal>
-      </SpaceCard>
+        </Terminal>
+      </Card>
     </div>
 
     <!-- Dialogue de confirmation pour la suppression -->
@@ -608,17 +599,17 @@
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton @click="cancelDelete" variant="outline" size="sm">
+          <Button @click="cancelDelete" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteGame"
             variant="error"
             size="sm"
             :loading="isDeleting"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

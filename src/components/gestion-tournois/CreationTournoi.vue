@@ -2,7 +2,7 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="CRÉATION DE TOURNOI"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -10,12 +10,7 @@
     />
 
     <!-- Formulaire principal -->
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      :decorated="true"
-      className="mt-6"
-    >
+    <Card variant="primary" :stars="true" :decorated="true" className="mt-6">
       <form @submit.prevent="createTournament" class="space-y-6">
         <!-- Nom du Tournoi -->
         <div>
@@ -421,7 +416,7 @@
 
         <!-- Bouton de soumission -->
         <div class="flex justify-center mt-8">
-          <SpaceButton
+          <Button
             type="submit"
             variant="accent"
             size="lg"
@@ -443,10 +438,10 @@
               </svg>
             </template>
             Créer le Tournoi
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />

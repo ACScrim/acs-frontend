@@ -1,15 +1,39 @@
+<!--
+  🎃 HORROR CARD COMPONENT - Documentation d'utilisation
+  
+  Composant de carte polyvalent avec thème Halloween gothique.
+  
+  📋 PROPS PRINCIPAUX :
+  • variant : "primary" | "secondary" | "accent" | "dark" | "gold" | "silver" | "bronze"
+  • section : "profile" | "statistics" | "medals" | "activity" | "performance" | "collaborations" | "badges" | "records"
+  • elevation : "flat" | "low" | "medium" | "high" - Profondeur d'ombre
+  • interactive : boolean - Rend la carte cliquable
+  • hover : boolean - Active l'effet de survol
+  
+  🎨 SLOTS :
+  • header : En-tête de la carte
+  • default : Contenu principal
+  • footer : Pied de page
+  • badge : Badge de statut (coin supérieur droit)
+  
+  💡 EXEMPLE :
+  <Card variant="primary" section="profile" :hover="true">
+    <template #header>Profil Joueur</template>
+    Contenu de la carte...
+  </Card>
+-->
 <template>
   <div
     :class="[
-      'color-card relative overflow-hidden rounded-lg transition-all duration-300',
+      'card relative overflow-hidden rounded-lg transition-all duration-300',
       {
-        'color-card--interactive': interactive,
-        'color-card--hover': hover,
-        'color-card--floating': floating,
+        'card--interactive': interactive,
+        'card--hover': hover,
+        'card--floating': floating,
       },
       variantClasses,
       elevationClasses,
-      section ? `color-card--section-${section}` : '',
+      section ? `card--section-${section}` : '',
       className,
     ]"
     :data-variant="variant"
@@ -34,64 +58,51 @@
     <!-- Contenu principal -->
     <div :class="['relative z-10', contentPadding ? 'p-6' : '']">
       <!-- En-tête -->
-      <div v-if="$slots.header" class="color-card-header">
+      <div v-if="$slots.header" class="card-header">
         <slot name="header"></slot>
       </div>
 
       <!-- Corps -->
-      <div class="color-card-body">
+      <div class="card-body">
         <slot></slot>
       </div>
 
       <!-- Pied de page -->
       <div
         v-if="$slots.footer"
-        class="color-card-footer mt-4 pt-4 border-t border-color-bg-light"
+        class="card-footer mt-4 pt-4 border-t border-color-bg-light"
       >
         <slot name="footer"></slot>
       </div>
     </div>
 
-    <!-- Éléments décoratifs spatiaux -->
-    <div v-if="decorated" class="color-card-decorations pointer-events-none">
+    <!-- Éléments décoratifs -->
+    <div v-if="decorated" class="card-decorations pointer-events-none">
       <!-- Ligne supérieure -->
-      <div class="color-card-line top"></div>
+      <div class="card-line top"></div>
 
       <!-- Ligne inférieure -->
-      <div class="color-card-line bottom"></div>
+      <div class="card-line bottom"></div>
 
       <!-- Coin supérieur droit -->
-      <div class="color-card-corner top-right"></div>
+      <div class="card-corner top-right"></div>
 
       <!-- Coin inférieur gauche -->
-      <div class="color-card-corner bottom-left"></div>
+      <div class="card-corner bottom-left"></div>
     </div>
 
     <!-- Effet de particules d'étoiles -->
-    <div v-if="stars" class="color-card-stars pointer-events-none">
+    <div v-if="stars" class="card-stars pointer-events-none">
       <div
         v-for="n in 5"
         :key="n"
-        class="space-star"
+        class="card-star"
         :style="{
           top: `${Math.random() * 100}%`,
           left: `${Math.random() * 100}%`,
           animationDelay: `${Math.random() * 4}s`,
         }"
       ></div>
-    </div>
-
-    <!-- Système orbital décoratif -->
-    <div class="orbit-system">
-      <div class="planet-orbit">
-        <div class="planet planet-1"></div>
-      </div>
-      <div class="planet-orbit orbit-2">
-        <div class="planet planet-2"></div>
-      </div>
-      <div class="planet-orbit orbit-3">
-        <div class="planet planet-3"></div>
-      </div>
     </div>
   </div>
 </template>
@@ -180,23 +191,23 @@ const elevationClasses = computed(() => {
 </script>
 
 <style scoped>
-.color-card {
+.card {
   background: var(--color-card-bg) !important;
   backdrop-filter: blur(10px);
   border: 1px solid var(--color-card-border) !important;
   box-shadow: var(--shadow-card-base), 0 0 15px var(--color-card-shadow) !important;
 }
 
-.color-card--interactive {
+.card--interactive {
   cursor: pointer;
 }
 
-.color-card--hover:hover {
+.card--hover:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px -10px var(--color-bg-dark);
 }
 
-.color-card--floating {
+.card--floating {
   animation: float 6s ease-in-out infinite;
 }
 
@@ -210,7 +221,7 @@ const elevationClasses = computed(() => {
   }
 }
 
-.color-card-line {
+.card-line {
   position: absolute;
   height: 1px;
   background: linear-gradient(90deg, transparent, currentColor, transparent);
@@ -218,17 +229,17 @@ const elevationClasses = computed(() => {
   opacity: 0.5;
 }
 
-.color-card-line.top {
+.card-line.top {
   top: 10px;
   left: 25%;
 }
 
-.color-card-line.bottom {
+.card-line.bottom {
   bottom: 10px;
   right: 25%;
 }
 
-.color-card-corner {
+.card-corner {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -236,25 +247,25 @@ const elevationClasses = computed(() => {
   opacity: 0.7;
 }
 
-.color-card-corner.top-right {
+.card-corner.top-right {
   top: 5px;
   right: 5px;
   border-top: 1px solid;
   border-right: 1px solid;
 }
 
-.color-card-corner.bottom-left {
+.card-corner.bottom-left {
   bottom: 5px;
   left: 5px;
   border-bottom: 1px solid;
   border-left: 1px solid;
 }
 
-.space-star {
+.card-star {
   position: absolute;
   width: 2px;
   height: 2px;
-  background-color: white;
+  background-color: var(--color-primary);
   border-radius: 50%;
   opacity: 0.8;
   animation: twinkle 4s ease-in-out infinite;
@@ -272,46 +283,42 @@ const elevationClasses = computed(() => {
   }
 }
 
-.color-card--interactive.color-card:hover
-  .color-card-decorations
-  .color-card-line,
-.color-card--interactive.color-card:hover
-  .color-card-decorations
-  .color-card-corner {
+.card--interactive.card:hover .card-decorations .card-line,
+.card--interactive.card:hover .card-decorations .card-corner {
   opacity: 1;
 }
 
-.color-card[data-variant="primary"] .color-card-decorations {
+.card[data-variant="primary"] .card-decorations {
   color: var(--color-primary);
 }
 
-.color-card[data-variant="secondary"] .color-card-decorations {
+.card[data-variant="secondary"] .card-decorations {
   color: var(--color-secondary);
 }
 
-.color-card[data-variant="accent"] .color-card-decorations {
+.card[data-variant="accent"] .card-decorations {
   color: var(--color-accent);
 }
 
-.color-card[data-variant="gold"] .color-card-decorations {
+.card[data-variant="gold"] .card-decorations {
   color: var(--color-gold);
 }
 
-.color-card[data-variant="silver"] .color-card-decorations {
+.card[data-variant="silver"] .card-decorations {
   color: var(--color-silver);
 }
 
-.color-card[data-variant="bronze"] .color-card-decorations {
+.card[data-variant="bronze"] .card-decorations {
   color: var(--color-bronze);
 }
 
-.color-card-header {
+.card-header {
   border-bottom: 1px solid var(--color-card-border);
   padding-bottom: 0.75rem;
   position: relative;
 }
 
-.color-card-header::before {
+.card-header::before {
   content: "";
   position: absolute;
   left: 0;
@@ -325,101 +332,8 @@ const elevationClasses = computed(() => {
   );
 }
 
-.color-card-orbit-system {
-  position: relative;
-}
-
-.orbit-system {
-  position: absolute;
-  right: -60px;
-  top: -60px;
-  width: 200px;
-  height: 200px;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.planet-orbit {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 1px dashed var(--space-orbit-border);
-  border-radius: 50%;
-  animation: rotate 60s linear infinite;
-}
-
-.orbit-2 {
-  width: 70%;
-  height: 70%;
-  top: 15%;
-  left: 15%;
-  animation-duration: 40s;
-}
-
-.orbit-3 {
-  width: 40%;
-  height: 40%;
-  top: 30%;
-  left: 30%;
-  animation-duration: 20s;
-}
-
-.planet {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.planet-1 {
-  top: 0;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet1-start),
-    var(--space-planet1-end)
-  );
-  box-shadow: 0 0 10px var(--space-planet1-glow);
-}
-
-.planet-2 {
-  top: 0;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet2-start),
-    var(--space-planet2-end)
-  );
-  box-shadow: 0 0 8px var(--space-planet2-glow);
-}
-
-.planet-3 {
-  top: 0;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  background: linear-gradient(
-    135deg,
-    var(--space-planet3-start),
-    var(--space-planet3-end)
-  );
-  box-shadow: 0 0 6px var(--space-planet3-glow);
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Section-specific card styles */
-.color-card--section-profile {
+.card--section-profile {
   box-shadow: var(--shadow-glow-profile) !important;
   border-width: 2px !important;
   border-image: linear-gradient(
@@ -431,7 +345,7 @@ const elevationClasses = computed(() => {
     1 !important;
 }
 
-.color-card--section-statistics {
+.card--section-statistics {
   border-image: linear-gradient(
       to bottom,
       var(--color-section-statistics-color),
@@ -441,12 +355,12 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.color-card--section-statistics:hover {
+.card--section-statistics:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(var(--color-section-statistics-rgb), 0.3) !important;
 }
 
-.color-card--section-medals {
+.card--section-medals {
   border-image: linear-gradient(
       to bottom,
       var(--color-section-medals-color),
@@ -456,12 +370,12 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-medals) !important;
 }
 
-.color-card--section-medals:hover {
+.card--section-medals:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(var(--color-section-medals-rgb), 0.3) !important;
 }
 
-.color-card--section-activity {
+.card--section-activity {
   border-image: linear-gradient(
       to right,
       var(--color-section-statistics-fade),
@@ -472,7 +386,7 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.color-card--section-performance {
+.card--section-performance {
   border-image: linear-gradient(
       45deg,
       var(--color-section-profile-color),
@@ -482,12 +396,12 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-performance) !important;
 }
 
-.color-card--section-performance:hover {
+.card--section-performance:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(var(--color-section-profile-rgb), 0.3) !important;
 }
 
-.color-card--section-collaborations {
+.card--section-collaborations {
   border-image: linear-gradient(
       135deg,
       var(--color-section-statistics-color),
@@ -497,7 +411,7 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-statistics) !important;
 }
 
-.color-card--section-badges {
+.card--section-badges {
   border-image: linear-gradient(
       to right,
       var(--color-section-profile-fade),
@@ -508,7 +422,7 @@ const elevationClasses = computed(() => {
   box-shadow: var(--shadow-card-base), var(--shadow-glow-profile) !important;
 }
 
-.color-card--section-records {
+.card--section-records {
   border-image: linear-gradient(
       to right,
       var(--color-section-medals-color),
@@ -520,38 +434,38 @@ const elevationClasses = computed(() => {
 }
 
 /* Animation effects for section cards */
-.color-card--section-profile:hover,
-.color-card--section-badges:hover,
-.color-card--section-records:hover {
+.card--section-profile:hover,
+.card--section-badges:hover,
+.card--section-records:hover {
   transform: translateY(-8px) !important;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.color-card--section-statistics:hover,
-.color-card--section-activity:hover,
-.color-card--section-collaborations:hover {
+.card--section-statistics:hover,
+.card--section-activity:hover,
+.card--section-collaborations:hover {
   transform: translateY(-5px) scale(1.01) !important;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.color-card--section-medals:hover,
-.color-card--section-performance:hover {
+.card--section-medals:hover,
+.card--section-performance:hover {
   transform: translateY(-6px) scale(1.02) !important;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Special effects for child cards based on parent section */
-.color-card--section-performance .color-card {
+.card--section-performance .card {
   border-color: rgba(var(--color-section-profile-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
 
-.color-card--section-collaborations .color-card {
+.card--section-collaborations .card {
   border-color: rgba(var(--color-section-statistics-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
 
-.color-card--section-records .color-card {
+.card--section-records .card {
   border-color: rgba(var(--color-section-medals-rgb), 0.4) !important;
   transition: all 0.3s ease;
 }
