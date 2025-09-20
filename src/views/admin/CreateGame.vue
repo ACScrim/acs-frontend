@@ -9,9 +9,7 @@
         mission="GAMES-MGMT"
       >
         <template #badge v-if="games.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
-            games.length
-          }}</SpaceBadge>
+          <Badge variant="primary" size="lg">{{ games.length }}</Badge>
         </template>
       </Header>
 
@@ -35,7 +33,7 @@
               </svg>
               Nom du jeu <span class="text-color-accent ml-1">*</span>
             </label>
-            <SpaceInput
+            <Input
               id="name"
               name="name"
               v-model="game.name"
@@ -44,7 +42,7 @@
               required
               :error="errors.name"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <!-- Résultats de recherche RAWG -->
@@ -109,7 +107,7 @@
               </svg>
               Description
             </label>
-            <SpaceInput
+            <Input
               id="description"
               v-model="game.description"
               type="textarea"
@@ -118,7 +116,7 @@
               :error="errors.description"
               maxlength="200"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <div class="mb-6">
@@ -140,14 +138,14 @@
               </svg>
               Image URL
             </label>
-            <SpaceInput
+            <Input
               id="imageUrl"
               v-model="game.imageUrl"
               @input="validateImageUrl"
               placeholder="URL de l'image du jeu (optionnel)"
               :error="errors.imageUrl"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <!-- Prévisualisation de l'image -->
@@ -338,11 +336,11 @@
 
               <div class="flex items-center space-x-3 mb-4 relative z-10">
                 <div class="flex-grow">
-                  <SpaceInput
+                  <Input
                     v-model="newRole.name"
                     placeholder="Nom du rôle (Ex: Support, Tank, DPS)"
                   >
-                  </SpaceInput>
+                  </Input>
                 </div>
                 <div class="relative w-20 h-10 flex-shrink-0">
                   <input
@@ -463,9 +461,9 @@
               </svg>
               <Title size="xl">Jeux disponibles</Title>
             </div>
-            <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{
+            <Badge variant="secondary" size="lg" v-if="games.length > 0">{{
               games.length
-            }}</SpaceBadge>
+            }}</Badge>
           </div>
         </template>
 

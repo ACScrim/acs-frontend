@@ -43,7 +43,7 @@
       </div>
       <!-- Badge statut du tournoi (uniquement pour les tournois terminés) -->
       <div v-if="tournament.finished" class="absolute top-3 right-3">
-        <SpaceBadge
+        <Badge
           variant="success"
           size="sm"
           className="flex items-center gap-1 font-bold shadow-md"
@@ -68,7 +68,7 @@
             />
           </svg>
           Terminé
-        </SpaceBadge>
+        </Badge>
       </div>
     </div>
 
@@ -96,9 +96,9 @@
             />
           </svg>
           <div class="flex items-center">
-            <SpaceBadge variant="secondary" size="sm" className="mr-2">
+            <Badge variant="secondary" size="sm" className="mr-2">
               {{ getWeekday(tournament.date) }}
-            </SpaceBadge>
+            </Badge>
             <span>{{ formatLocalDate(tournament.date) }}</span>
           </div>
         </div>
@@ -135,14 +135,14 @@
           <span :style="getParticipantsDisplayStyle">{{
             formatParticipants()
           }}</span>
-          <SpaceBadge
+          <Badge
             v-if="isTournamentFull"
             variant="error"
             size="sm"
             className="ml-2"
           >
             COMPLET
-          </SpaceBadge>
+          </Badge>
         </div>
       </div>
 

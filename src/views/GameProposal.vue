@@ -7,9 +7,7 @@
       :showMissionInfo="true"
     >
       <template #badge v-if="proposals.length > 0">
-        <SpaceBadge variant="accent" size="lg">{{
-          proposals.length
-        }}</SpaceBadge>
+        <Badge variant="accent" size="lg">{{ proposals.length }}</Badge>
       </template>
     </Header>
 
@@ -88,7 +86,7 @@
               <label class="block mb-2 font-nasa text-color-accent-light"
                 >Rechercher un jeu</label
               >
-              <SpaceInput
+              <Input
                 v-model="searchTerm"
                 placeholder="Nom du jeu..."
                 @input="handleSearch"
@@ -111,7 +109,7 @@
                     />
                   </svg>
                 </template>
-              </SpaceInput>
+              </Input>
             </div>
             <Button
               @click="showProposalForm = true"
@@ -224,7 +222,7 @@
             Rechercher un jeu
           </label>
           <div class="relative">
-            <SpaceInput
+            <Input
               v-model="searchQuery"
               @input="debounceSearch"
               placeholder="Entrez le nom d'un jeu..."
@@ -236,7 +234,7 @@
                   class="animate-spin h-4 w-4 border-2 border-t-color-primary rounded-full"
                 ></div>
               </template>
-            </SpaceInput>
+            </Input>
           </div>
 
           <!-- Résultats de recherche -->
@@ -278,7 +276,7 @@
           >
             Nom du jeu
           </label>
-          <SpaceInput v-model="newProposal.name" variant="primary" />
+          <Input v-model="newProposal.name" variant="primary" />
         </div>
 
         <div>

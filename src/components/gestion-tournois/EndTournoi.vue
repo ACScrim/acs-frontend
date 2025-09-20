@@ -8,14 +8,14 @@
       mission="END-TOURNAMENT-2025"
     >
       <template #badge v-if="selectedTournamentDetails">
-        <SpaceBadge
+        <Badge
           :variant="
             selectedTournamentDetails.finished ? 'success' : 'secondary'
           "
           size="lg"
         >
           {{ selectedTournamentDetails.finished ? "Terminé" : "En cours" }}
-        </SpaceBadge>
+        </Badge>
       </template>
     </Header>
 
@@ -64,13 +64,13 @@
             </span>
           </div>
         </div>
-        <SpaceBadge
+        <Badge
           v-if="selectedTournamentDetails.finished"
           variant="success"
           size="md"
         >
           Tournoi terminé
-        </SpaceBadge>
+        </Badge>
       </div>
       <div v-else>
         <SpaceAlert variant="warning" className="text-center">
@@ -229,12 +229,9 @@
 
           <!-- Badge de rang si l'équipe est classée -->
           <div v-if="team.ranking > 0" class="mb-4">
-            <SpaceBadge
-              :variant="getRankingBadgeVariant(team.ranking)"
-              size="lg"
-            >
+            <Badge :variant="getRankingBadgeVariant(team.ranking)" size="lg">
               {{ getRankingLabel(team.ranking) }}
-            </SpaceBadge>
+            </Badge>
           </div>
 
           <!-- Liste des joueurs -->
@@ -323,14 +320,12 @@
               </Title>
               <!-- Badge avec score actuel -->
               <div v-if="team.score > 0">
-                <SpaceBadge variant="accent" size="sm">
-                  {{ team.score }} pts
-                </SpaceBadge>
+                <Badge variant="accent" size="sm"> {{ team.score }} pts </Badge>
               </div>
             </div>
 
             <div class="flex items-center gap-2">
-              <SpaceInput
+              <Input
                 v-model="teamScores[team._id]"
                 type="number"
                 min="0"

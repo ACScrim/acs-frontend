@@ -8,9 +8,7 @@
       :showMissionInfo="true"
     >
       <template #badge v-if="badges.length > 0">
-        <SpaceBadge variant="secondary" size="lg">{{
-          badges.length
-        }}</SpaceBadge>
+        <Badge variant="secondary" size="lg">{{ badges.length }}</Badge>
       </template>
     </Header>
 
@@ -39,7 +37,7 @@
       </template>
       <form @submit.prevent="createBadge" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SpaceInput
+          <Input
             id="title"
             v-model="newBadge.title"
             label="Titre"
@@ -108,7 +106,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <SpaceInput
+            <Input
               id="imageUrl"
               v-model="newBadge.imageUrl"
               label="URL de l'image"
@@ -141,7 +139,7 @@
           </div>
         </div>
         <div>
-          <SpaceInput
+          <Input
             id="description"
             v-model="newBadge.description"
             label="Description (optionnelle)"
@@ -625,7 +623,7 @@
             {{ badge.description }}
           </p>
           <div class="mt-2 flex items-center">
-            <SpaceBadge
+            <Badge
               :variant="badge.categoryType === 'acs' ? 'primary' : 'info'"
               size="sm"
             >
@@ -634,7 +632,7 @@
                   ? "ACS"
                   : getGameName(badge.categoryId)
               }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </div>
       </div>
@@ -668,7 +666,7 @@
     <!-- Modal de modification de badge -->
     <SpaceModal v-model="showEditModal" title="Modifier le badge">
       <form @submit.prevent="updateBadge" class="space-y-6">
-        <SpaceInput
+        <Input
           id="edit-title"
           v-model="editingBadge.title"
           label="Titre"
@@ -735,7 +733,7 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <SpaceInput
+          <Input
             id="edit-imageUrl"
             v-model="editingBadge.imageUrl"
             label="URL de l'image"
@@ -766,7 +764,7 @@
           </div>
         </div>
         <div>
-          <SpaceInput
+          <Input
             id="edit-description"
             v-model="editingBadge.description"
             label="Description (optionnelle)"

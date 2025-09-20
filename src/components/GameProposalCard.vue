@@ -60,16 +60,14 @@
             {{ proposal.name }}
           </h3>
           <!-- Badge statut -->
-          <SpaceBadge
+          <Badge
             v-if="proposal.status === 'approved'"
             variant="success"
             size="sm"
           >
             Approuvé
-          </SpaceBadge>
-          <SpaceBadge v-else variant="warning" size="sm">
-            En attente
-          </SpaceBadge>
+          </Badge>
+          <Badge v-else variant="warning" size="sm"> En attente </Badge>
         </div>
 
         <!-- Description -->

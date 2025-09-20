@@ -8,11 +8,11 @@
       mission="CHECKIN-STATUS-2025"
     >
       <template #badge v-if="selectedTournamentDetails">
-        <SpaceBadge variant="secondary" size="lg">
+        <Badge variant="secondary" size="lg">
           {{ getCheckedInCount() }}/{{
             selectedTournamentDetails.players.length
           }}
-        </SpaceBadge>
+        </Badge>
       </template>
     </Header>
     <!-- Information du tournoi sélectionné -->
@@ -58,13 +58,13 @@
             </span>
           </div>
         </div>
-        <SpaceBadge
+        <Badge
           v-if="selectedTournamentDetails.finished"
           variant="error"
           size="md"
         >
           Tournoi terminé
-        </SpaceBadge>
+        </Badge>
       </div>
       <div v-else>
         <SpaceAlert variant="warning" className="text-center">
@@ -151,7 +151,7 @@
         >
           <!-- Badge de statut -->
           <div class="absolute top-3 right-3">
-            <SpaceBadge
+            <Badge
               :variant="
                 player._id && selectedTournamentDetails?.checkIns?.[player._id]
                   ? 'success'
@@ -186,7 +186,7 @@
                   ? "Présent"
                   : "Absent"
               }}
-            </SpaceBadge>
+            </Badge>
           </div>
 
           <!-- Avatar et informations -->

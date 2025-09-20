@@ -1,20 +1,26 @@
 <!-- Vue template avec optimisations de performance -->
 <template>
-  <div
+  <component
+    :is="hasProfile ? 'router-link' : 'div'"
+    v-bind="
+      hasProfile ? { to: { name: 'Profil', params: { id: playerId } } } : {}
+    "
     :class="[
-      'space-member-card relative overflow-hidden rounded-xl',
-      'bg-color-bg-dark/80 backdrop-blur-sm border',
+      'member-card group relative overflow-hidden rounded-xl',
+      'bg-color-card-bg backdrop-blur-sm border-2',
+      'block transition-all duration-300',
+      hasProfile ? 'cursor-pointer' : 'cursor-default',
       memberTypeClass,
       className,
     ]"
   >
     <!-- En-tête de la carte avec badge de rôle -->
     <div
-      class="space-member-header relative z-10 p-3 flex justify-between items-center border-b border-color-primary/10"
+      class="member-header relative z-10 p-3 flex justify-between items-center border-b border-color-bg-light"
     >
-      <SpaceBadge :variant="badgeVariant" size="sm" :className="badgeClasses">
+      <Badge :variant="badgeVariant" size="sm" :className="badgeClasses">
         {{ roleLabel }}
-      </SpaceBadge>
+      </Badge>
       <div class="text-color-text-muted text-xs font-mono">
         ID: {{ userId ? userId.substring(0, 8) : "N/A" }}
       </div>
@@ -22,7 +28,7 @@
 
     <!-- Corps de la carte -->
     <div
-      class="space-member-body relative z-10 p-4 flex flex-col items-center text-center"
+      class="member-body relative z-10 p-4 flex flex-col items-center text-center"
     >
       <!-- Container Avatar simplifié -->
       <div class="avatar-container mb-4 relative">
@@ -46,7 +52,7 @@
             avatarBorderClass,
           ]"
         >
-          <span class="text-color-primary-light text-xl font-bold font-mono">
+          <span class="text-color-primary-light text-xl font-bold font-body">
             {{ initials }}
           </span>
         </div>
@@ -54,62 +60,49 @@
 
       <!-- Nom d'utilisateur -->
       <div class="mb-4">
-        <component
-          :is="hasProfile ? 'router-link' : 'span'"
-          v-bind="
-            hasProfile
-              ? { to: { name: 'Profil', params: { id: playerId } } }
-              : {}
-          "
+        <span
           :class="[
-            'block text-xl font-bold font-nasa transition-colors',
+            'block text-xl font-bold font-heading transition-colors duration-300',
             hasProfile
-              ? 'text-color-primary-light hover:text-color-primary cursor-pointer'
+              ? 'text-color-primary-light group-hover:text-color-accent'
               : 'text-color-text',
           ]"
         >
           {{ username }}
-        </component>
-        <div class="text-color-text-muted text-sm mt-1 font-mono">
+        </span>
+        <div class="text-color-text-muted text-sm mt-1 font-body">
           {{ roleLabel }}
         </div>
       </div>
 
-      <!-- Boutons d'action -->
-      <div class="space-member-actions w-full flex flex-col gap-2">
-        <!-- Bouton Voir le profil (si joueur) -->
-        <Button
-          v-if="hasProfile"
-          :to="{ name: 'Profil', params: { id: playerId } }"
-          variant="primary"
-          size="sm"
-          className="space-view-profile-button space-member-cta"
-        >
-          <template #icon>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </template>
-          Voir le profil
-        </Button>
-
-        <!-- Message si pas de profil joueur -->
+      <!-- Indicateur de profil -->
+      <div class="member-actions w-full">
         <div
-          v-else
-          class="space-restricted-access text-center p-2 rounded text-xs text-color-text-muted border border-color-primary/20"
+          v-if="hasProfile"
+          class="text-center text-xs text-color-primary-light font-body opacity-70"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mx-auto mb-1"
+            class="h-4 w-4 inline mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Cliquez pour voir le profil
+        </div>
+
+        <div
+          v-else
+          class="text-center text-xs text-color-text-muted opacity-60"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 inline mr-1"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -123,7 +116,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -196,9 +189,9 @@ const badgeVariant = computed((): ComponentVariant => {
 
 const memberTypeClass = computed(() => {
   if (hasProfile.value) {
-    return `space-member-card-player space-member-card-${props.role}`;
+    return `member-card-player member-card-${props.role}`;
   }
-  return `space-member-card-basic space-member-card-${props.role}`;
+  return `member-card-basic member-card-${props.role}`;
 });
 
 const avatarBorderClass = computed(() => {
@@ -231,93 +224,145 @@ const badgeClasses = computed(() => {
 const handleImageError = (e: Event) => {
   if (e.target instanceof HTMLImageElement) {
     const fallbackInitials = initials.value;
-    e.target.src = `https://ui-avatars.com/api/?name=${fallbackInitials}&background=6D28D9&color=F9FAFB&size=150&bold=true&font-family=monospace`;
+    e.target.src = `https://ui-avatars.com/api/?name=${fallbackInitials}&background=7c2d12&color=F9FAFB&size=150&bold=true&font-family=serif`;
   }
 };
 </script>
 
 <style scoped>
-/* Base card styles - optimisé pour performance */
-.space-member-card {
+/* Base card styles Halloween */
+.member-card {
   height: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: var(--color-card-bg) !important;
+  border-color: var(--color-secondary) !important;
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-secondary) !important;
   contain: layout style;
+  transition: all 0.3s ease;
 }
 
-/* Avatar styles simplifiés */
+.member-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-secondary),
+    0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Header et body */
+.member-header {
+  background: linear-gradient(
+    90deg,
+    rgba(124, 45, 18, 0.1) 0%,
+    rgba(217, 119, 6, 0.05) 50%,
+    rgba(124, 45, 18, 0.1) 100%
+  );
+}
+
+.member-body {
+  position: relative;
+}
+
+/* Avatar styles */
 .avatar-container {
   position: relative;
   z-index: 1;
 }
 
-/* Classes de types de membres simplifiées */
-.space-member-card-user {
+.avatar-container::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(
+    45deg,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent),
+    var(--color-primary)
+  );
+  background-size: 400% 400%;
+  border-radius: 50%;
+  z-index: -1;
+  animation: avatar-border-glow 4s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+@keyframes avatar-border-glow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Classes de types de membres Halloween */
+.member-card-user {
+  border-color: var(--color-primary) !important;
+}
+
+.member-card-admin {
+  border-color: var(--color-secondary) !important;
   background: linear-gradient(
     135deg,
-    rgba(15, 15, 30, 0.85),
-    rgba(20, 20, 35, 0.95)
-  );
+    var(--color-card-bg) 0%,
+    rgba(124, 45, 18, 0.05) 100%
+  ) !important;
 }
 
-.space-member-card-admin {
+.member-card-superadmin {
+  border-color: var(--color-accent) !important;
   background: linear-gradient(
     135deg,
-    rgba(25, 15, 45, 0.85),
-    rgba(30, 18, 50, 0.95)
-  );
+    var(--color-card-bg) 0%,
+    rgba(88, 28, 135, 0.05) 100%
+  ) !important;
 }
 
-.space-member-card-superadmin {
+.member-card-player {
   background: linear-gradient(
     135deg,
-    rgba(36, 14, 40, 0.85),
-    rgba(34, 13, 38, 0.95)
-  );
+    var(--color-card-bg) 0%,
+    rgba(217, 119, 6, 0.03) 100%
+  ) !important;
 }
 
-.space-member-card-player {
-  background: linear-gradient(
-    135deg,
-    rgba(25, 17, 45, 0.85),
-    rgba(23, 15, 41, 0.95)
-  );
+.member-card-basic {
+  background: var(--color-card-bg) !important;
 }
 
-.space-member-card-basic {
-  background: linear-gradient(
-    135deg,
-    rgba(20, 20, 35, 0.85),
-    rgba(15, 15, 30, 0.95)
-  );
-}
-
-/* Boutons et actions simplifiés */
-.space-view-profile-button {
-  position: relative;
-  z-index: 1;
-}
-
-.space-member-cta {
-  position: relative;
-}
-
-.space-restricted-access {
-  background: rgba(var(--color-bg-light-rgb), 0.1);
-  backdrop-filter: blur(2px);
-}
-
-/* Performance optimisée - suppression de toutes les animations coûteuses */
-.space-member-card *,
-.space-member-card *::before,
-.space-member-card *::after {
-  animation: none !important;
-  transition: opacity 0.1s ease !important;
+/* Performance optimisée */
+.member-card *,
+.member-card *::before,
+.member-card *::after {
+  will-change: auto;
 }
 
 /* Responsive simplifié */
 @media (max-width: 640px) {
-  .space-member-card {
+  .member-card {
     margin-bottom: 1rem;
   }
+
+  .avatar-container::before {
+    animation-duration: 6s;
+  }
+}
+
+/* Effets de hover spécifiques par rôle */
+.member-card-admin:hover {
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-secondary),
+    0 0 25px rgba(124, 45, 18, 0.4) !important;
+}
+
+.member-card-superadmin:hover {
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-accent),
+    0 0 25px rgba(88, 28, 135, 0.4) !important;
+}
+
+.member-card-player:hover {
+  box-shadow: var(--shadow-card-base), var(--shadow-glow-primary),
+    0 0 25px rgba(217, 119, 6, 0.4) !important;
 }
 </style>

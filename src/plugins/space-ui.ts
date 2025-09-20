@@ -25,8 +25,8 @@ import Container from "@/components/ui/layout/Container.vue";
 const components = {
   // Atoms
   Button: Button,
-  SpaceInput: Input,
-  SpaceBadge: Badge,
+  Input: Input,
+  Badge: Badge,
   Title: Title,
   Loader: Loader,
   SpaceToggle: Toggle,
@@ -37,7 +37,7 @@ const components = {
   SpaceAlert: Alert,
   SpaceModal: Modal,
   Header: Header,
-  SpaceMemberCard: MemberCard,
+  MemberCard: MemberCard,
 
   // Organisms
   SpacePagination: Pagination,

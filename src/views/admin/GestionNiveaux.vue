@@ -9,11 +9,11 @@
     >
       <template #badge v-if="filteredPlayerLevels.length > 0">
         <div class="flex items-center gap-2">
-          <SpaceBadge variant="secondary" size="lg">{{
+          <Badge variant="secondary" size="lg">{{
             filteredPlayerLevels.length
-          }}</SpaceBadge>
+          }}</Badge>
           <div v-if="hasActiveFilters" class="flex items-center gap-1">
-            <SpaceBadge variant="accent" size="sm">
+            <Badge variant="accent" size="sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-3 w-3 mr-1"
@@ -27,7 +27,7 @@
                 />
               </svg>
               Filtré
-            </SpaceBadge>
+            </Badge>
           </div>
         </div>
       </template>
@@ -72,7 +72,7 @@
           </svg>
           Rechercher un joueur
         </label>
-        <SpaceInput
+        <Input
           id="searchInput"
           v-model="searchTerm"
           placeholder="Nom d'utilisateur, pseudo Discord, pseudo dans le jeu..."
@@ -93,7 +93,7 @@
               />
             </svg>
           </template>
-        </SpaceInput>
+        </Input>
 
         <!-- Raccourcis clavier -->
         <div class="flex flex-wrap gap-2 mt-2 text-xs text-color-text-muted">
@@ -600,12 +600,12 @@
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
-                  <SpaceBadge
+                  <Badge
                     :variant="getLevelBadgeVariant(playerLevel.level)"
                     className="px-2 py-1"
                   >
                     {{ capitalizeFirstLetter(playerLevel.level) }}
-                  </SpaceBadge>
+                  </Badge>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
                   <div
@@ -646,7 +646,7 @@
                     "
                   >
                     <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
-                    <SpaceBadge
+                    <Badge
                       v-if="
                         hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
                       "
@@ -668,7 +668,7 @@
                         />
                       </svg>
                       Fill
-                    </SpaceBadge>
+                    </Badge>
 
                     <!-- Afficher les rôles individuels si certains sont sélectionnés -->
                     <div v-else class="flex flex-wrap gap-1">
@@ -777,12 +777,12 @@
               </div>
 
               <!-- Badge de niveau à droite -->
-              <SpaceBadge
+              <Badge
                 :variant="getLevelBadgeVariant(playerLevel.level)"
                 className="px-2 py-1"
               >
                 {{ capitalizeFirstLetter(playerLevel.level) }}
-              </SpaceBadge>
+              </Badge>
             </div>
 
             <!-- Contenu de la carte en 2 colonnes -->
@@ -874,7 +874,7 @@
                       playerLevel.selectedRoles.length > 0
                     "
                   >
-                    <SpaceBadge
+                    <Badge
                       v-if="
                         hasAllRoles(playerLevel.game, playerLevel.selectedRoles)
                       "
@@ -883,7 +883,7 @@
                       :title="playerLevel.selectedRoles.join(', ')"
                     >
                       Fill
-                    </SpaceBadge>
+                    </Badge>
                     <div v-else class="flex flex-wrap gap-1">
                       <span
                         v-for="roleName in playerLevel.selectedRoles.slice(
@@ -1026,12 +1026,12 @@
             >
               Niveau
             </div>
-            <SpaceBadge
+            <Badge
               :variant="getLevelBadgeVariant(playerLevel.level)"
               className="px-2 py-1"
             >
               {{ capitalizeFirstLetter(playerLevel.level) }}
-            </SpaceBadge>
+            </Badge>
           </div>
 
           <!-- Rang -->
@@ -1081,7 +1081,7 @@
               "
             >
               <!-- Afficher "Fill" si tous les rôles sont sélectionnés -->
-              <SpaceBadge
+              <Badge
                 v-if="hasAllRoles(playerLevel.game, playerLevel.selectedRoles)"
                 variant="primary"
                 className="flex items-center"
@@ -1101,7 +1101,7 @@
                   />
                 </svg>
                 Fill
-              </SpaceBadge>
+              </Badge>
 
               <!-- Afficher les rôles individuels si certains sont sélectionnés -->
               <div v-else class="flex flex-wrap gap-1">

@@ -168,13 +168,13 @@
                 </svg>
                 <Title size="xl">PROCHAIN TOURNOI</Title>
               </div>
-              <SpaceBadge
+              <Badge
                 :variant="isTournamentLive ? 'error' : 'warning'"
                 size="md"
                 className="animate-pulse-slow"
               >
                 {{ isTournamentLive ? "LIVE" : "BIENTÔT" }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </template>
 
@@ -370,7 +370,7 @@
                 </svg>
                 <Title size="xl">DERNIER TOURNOI</Title>
               </div>
-              <SpaceBadge variant="success" size="md"> TERMINÉ </SpaceBadge>
+              <Badge variant="success" size="md"> TERMINÉ </Badge>
             </div>
           </template>
 
@@ -440,12 +440,9 @@
                         </svg>
                       </template>
                       <template v-else>
-                        <SpaceBadge
-                          :variant="getRankBadgeVariant(index)"
-                          size="md"
-                        >
+                        <Badge :variant="getRankBadgeVariant(index)" size="md">
                           {{ index + 1 }}
-                        </SpaceBadge>
+                        </Badge>
                       </template>
                     </div>
                     <div
@@ -476,7 +473,7 @@
                       Membres:
                     </div>
                     <div class="flex flex-wrap gap-1">
-                      <SpaceBadge
+                      <Badge
                         v-for="player in team.players"
                         :key="player._id"
                         :variant="index === 0 ? 'warning' : 'accent'"
@@ -496,7 +493,7 @@
                           />
                         </svg>
                         {{ player.username || "Joueur" }}
-                      </SpaceBadge>
+                      </Badge>
                     </div>
                   </div>
                 </Card>

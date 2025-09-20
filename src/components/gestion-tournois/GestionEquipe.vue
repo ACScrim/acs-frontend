@@ -49,13 +49,13 @@
             </span>
           </div>
         </div>
-        <SpaceBadge
+        <Badge
           v-if="selectedTournamentDetails.finished"
           variant="danger"
           size="md"
         >
           Tournoi terminé
-        </SpaceBadge>
+        </Badge>
       </div>
       <div v-else>
         <SpaceAlert variant="warning" className="text-center">
@@ -134,7 +134,7 @@
             </svg>
             Nombre d'équipes
           </Title>
-          <SpaceInput
+          <Input
             v-model="numTeams"
             type="number"
             min="2"
@@ -221,7 +221,7 @@
       </template>
       <!-- Barre de recherche -->
       <div class="relative mb-6">
-        <SpaceInput
+        <Input
           v-model="searchQuery"
           type="text"
           placeholder="Rechercher un joueur par nom..."
@@ -243,7 +243,7 @@
               />
             </svg>
           </template>
-        </SpaceInput>
+        </Input>
 
         <!-- Message aucun résultat -->
         <div
@@ -286,9 +286,9 @@
             <span class="font-medium text-color-text">{{
               result.player.username
             }}</span>
-            <SpaceBadge variant="primary" size="sm">
+            <Badge variant="primary" size="sm">
               {{ result.teamName }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </Card>
       </div>
@@ -353,11 +353,11 @@
                   <Title size="lg" className="text-color-secondary-light">
                     {{ team.name || `Équipe ${index + 1}` }}
                   </Title>
-                  <SpaceBadge :variant="getTeamBalanceVariant(team)" size="sm">
+                  <Badge :variant="getTeamBalanceVariant(team)" size="sm">
                     {{ team.players.length }} joueur{{
                       team.players.length > 1 ? "s" : ""
                     }}
-                  </SpaceBadge>
+                  </Badge>
                 </div>
                 <div class="flex items-center gap-2">
                   <Button
@@ -511,7 +511,7 @@
 
                 <div class="flex items-center gap-2">
                   <span class="text-color-text text-sm">Nom de l'équipe:</span>
-                  <SpaceInput
+                  <Input
                     v-model="teams[activeTeamTab].name"
                     type="text"
                     placeholder="Entrez un nom pour cette équipe"
@@ -656,9 +656,9 @@
             <Title size="xl" className="text-space-danger-light">
               Joueurs non assignés
             </Title>
-            <SpaceBadge variant="danger" size="md">
+            <Badge variant="danger" size="md">
               {{ unassignedPlayers.length }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 

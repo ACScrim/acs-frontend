@@ -9,9 +9,7 @@
         mission="ADMIN-MGMT"
       >
         <template #badge v-if="users.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
-            users.length
-          }}</SpaceBadge>
+          <Badge variant="primary" size="lg">{{ users.length }}</Badge>
         </template>
       </Header>
 
@@ -34,7 +32,7 @@
               />
             </svg>
           </div>
-          <SpaceInput
+          <Input
             type="text"
             v-model="searchTerm"
             placeholder="Rechercher un utilisateur..."
@@ -149,7 +147,7 @@
 
             <!-- Badge de rôle -->
             <div class="items-center px-2 hidden md:flex">
-              <SpaceBadge
+              <Badge
                 :variant="
                   user.role === 'superadmin'
                     ? 'accent'
@@ -160,7 +158,7 @@
                 className="capitalize"
               >
                 {{ user.role }}
-              </SpaceBadge>
+              </Badge>
             </div>
 
             <!-- Actions -->

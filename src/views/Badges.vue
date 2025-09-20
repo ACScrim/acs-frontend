@@ -7,9 +7,7 @@
       :showMissionInfo="true"
     >
       <template #badge v-if="badges.length > 0">
-        <SpaceBadge variant="secondary" size="lg">{{
-          badges.length
-        }}</SpaceBadge>
+        <Badge variant="secondary" size="lg">{{ badges.length }}</Badge>
       </template>
     </Header>
 
@@ -149,11 +147,8 @@
                           <h3 class="text-color-text text-lg font-heading">
                             {{ badge.title }}
                           </h3>
-                          <SpaceBadge
-                            variant="secondary"
-                            size="sm"
-                            className="mt-1"
-                            >ACS</SpaceBadge
+                          <Badge variant="secondary" size="sm" className="mt-1"
+                            >ACS</Badge
                           >
                         </div>
                       </div>
@@ -237,13 +232,13 @@
                             <h3 class="text-color-text text-lg font-heading">
                               {{ badge.title }}
                             </h3>
-                            <SpaceBadge
+                            <Badge
                               variant="primary"
                               size="sm"
                               className="mt-1 max-w-full truncate"
                             >
                               {{ game.name }}
-                            </SpaceBadge>
+                            </Badge>
                           </div>
                         </div>
 
@@ -366,11 +361,11 @@
                           >
                             {{ badge.title }}
                           </h3>
-                          <SpaceBadge
+                          <Badge
                             variant="secondary"
                             size="sm"
                             className="mt-1 opacity-70"
-                            >ACS</SpaceBadge
+                            >ACS</Badge
                           >
                         </div>
                       </div>
@@ -436,13 +431,13 @@
                             >
                               {{ badge.title }}
                             </h3>
-                            <SpaceBadge
+                            <Badge
                               variant="primary"
                               size="sm"
                               className="mt-1 opacity-70 max-w-full truncate"
                             >
                               {{ game.name }}
-                            </SpaceBadge>
+                            </Badge>
                           </div>
                         </div>
 
@@ -544,7 +539,7 @@
         </div>
 
         <div class="flex items-center gap-2 mb-2">
-          <SpaceBadge
+          <Badge
             :variant="
               selectedBadge.categoryType === 'acs' ? 'secondary' : 'primary'
             "
@@ -555,9 +550,9 @@
                 ? "ACS"
                 : getGameName(selectedBadge.categoryId)
             }}
-          </SpaceBadge>
+          </Badge>
           <!-- Badge de rareté si applicable -->
-          <SpaceBadge
+          <Badge
             v-if="
               getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'
             "
@@ -566,8 +561,8 @@
             className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 text-white border-0"
           >
             LÉGENDAIRE
-          </SpaceBadge>
-          <SpaceBadge
+          </Badge>
+          <Badge
             v-else-if="
               getBadgeRarityClass(selectedBadge) === 'special-badge-gold'
             "
@@ -575,8 +570,8 @@
             size="lg"
           >
             RARE
-          </SpaceBadge>
-          <SpaceBadge
+          </Badge>
+          <Badge
             v-else-if="
               getBadgeRarityClass(selectedBadge) === 'special-badge-silver'
             "
@@ -584,8 +579,8 @@
             size="lg"
           >
             PEU COMMUN
-          </SpaceBadge>
-          <SpaceBadge
+          </Badge>
+          <Badge
             v-else-if="
               getBadgeRarityClass(selectedBadge) === 'special-badge-bronze'
             "
@@ -593,7 +588,7 @@
             size="lg"
           >
             SPÉCIAL
-          </SpaceBadge>
+          </Badge>
         </div>
 
         <p

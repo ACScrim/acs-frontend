@@ -9,9 +9,9 @@
         mission="TOURNAMENT-MGMT"
       >
         <template #badge v-if="activeTournaments.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
+          <Badge variant="primary" size="lg">{{
             activeTournaments.length
-          }}</SpaceBadge>
+          }}</Badge>
         </template>
       </Header>
 

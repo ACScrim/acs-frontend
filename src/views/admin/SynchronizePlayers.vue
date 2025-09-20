@@ -8,9 +8,9 @@
       mission="PLAYER-SYNC"
     >
       <template #badge>
-        <SpaceBadge v-if="players.length > 0" variant="primary" size="lg">
+        <Badge v-if="players.length > 0" variant="primary" size="lg">
           {{ players.length }}
-        </SpaceBadge>
+        </Badge>
       </template>
     </Header>
 
@@ -48,9 +48,9 @@
             class="text-color-text font-body text-sm sm:text-base leading-relaxed"
           >
             Assurez-vous que les noms d'utilisateur de
-            <SpaceBadge variant="primary" className="mx-1">Player</SpaceBadge>
+            <Badge variant="primary" className="mx-1">Player</Badge>
             et de
-            <SpaceBadge variant="secondary" className="mx-1">User</SpaceBadge>
+            <Badge variant="secondary" className="mx-1">User</Badge>
             soient similaires avant de lancer la synchronisation.
           </p>
         </div>
@@ -80,7 +80,7 @@
             Rechercher un joueur
           </label>
           <div class="relative">
-            <SpaceInput
+            <Input
               id="searchInput"
               v-model="searchQuery"
               placeholder="Rechercher par nom ou Discord ID..."
@@ -120,7 +120,7 @@
                   </svg>
                 </button>
               </template>
-            </SpaceInput>
+            </Input>
           </div>
         </div>
 
@@ -266,9 +266,9 @@
               </svg>
               <Title size="lg">Players</Title>
             </div>
-            <SpaceBadge variant="primary" size="lg">
+            <Badge variant="primary" size="lg">
               {{ filteredPlayers.length }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 
@@ -303,7 +303,7 @@
 
                 <div class="flex items-center gap-2">
                   <!-- Badge de statut -->
-                  <SpaceBadge
+                  <Badge
                     v-if="player.userId"
                     variant="success"
                     className="flex items-center"
@@ -322,8 +322,8 @@
                       />
                     </svg>
                     Sync
-                  </SpaceBadge>
-                  <SpaceBadge
+                  </Badge>
+                  <Badge
                     v-else
                     variant="warning"
                     className="flex items-center"
@@ -342,7 +342,7 @@
                       />
                     </svg>
                     Attente
-                  </SpaceBadge>
+                  </Badge>
 
                   <Button
                     @click.stop="editPlayerUsername(player)"
@@ -392,9 +392,9 @@
               </svg>
               <Title size="lg">Users</Title>
             </div>
-            <SpaceBadge variant="secondary" size="lg">
+            <Badge variant="secondary" size="lg">
               {{ filteredUsers.length }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 

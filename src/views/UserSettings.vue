@@ -51,7 +51,7 @@
               </label>
               <div class="flex gap-3">
                 <div class="flex-1 relative">
-                  <SpaceInput
+                  <Input
                     v-model="formData.twitchUsername"
                     placeholder="votre_nom_twitch"
                     :disabled="isSaving"
@@ -68,7 +68,7 @@
                         />
                       </svg>
                     </template>
-                  </SpaceInput>
+                  </Input>
                 </div>
               </div>
             </div>
@@ -818,11 +818,11 @@
               </div>
 
               <div v-if="filteredGames.length > 0">
-                <SpaceBadge variant="secondary" size="md">
+                <Badge variant="secondary" size="md">
                   {{ filteredGames.length }} jeu{{
                     filteredGames.length > 1 ? "x" : ""
                   }}
-                </SpaceBadge>
+                </Badge>
               </div>
             </div>
           </template>

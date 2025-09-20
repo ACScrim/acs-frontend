@@ -90,20 +90,6 @@
       <!-- Coin inférieur gauche -->
       <div class="card-corner bottom-left"></div>
     </div>
-
-    <!-- Effet de particules d'étoiles -->
-    <div v-if="stars" class="card-stars pointer-events-none">
-      <div
-        v-for="n in 5"
-        :key="n"
-        class="card-star"
-        :style="{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 4}s`,
-        }"
-      ></div>
-    </div>
   </div>
 </template>
 
@@ -133,7 +119,6 @@ interface Props {
   hover?: boolean;
   floating?: boolean;
   decorated?: boolean;
-  stars?: boolean;
   contentPadding?: boolean;
   bgImage?: string;
   className?: string;
@@ -147,7 +132,6 @@ const props = withDefaults(defineProps<Props>(), {
   hover: false,
   floating: false,
   decorated: true,
-  stars: true,
   contentPadding: true,
   bgImage: "",
   className: "",

@@ -67,7 +67,7 @@
             </svg>
             Nom du Tournoi <span class="text-color-accent ml-1">*</span>
           </label>
-          <SpaceInput
+          <Input
             id="name"
             v-model="name"
             placeholder="Nom du tournoi"
@@ -123,12 +123,7 @@
               </svg>
               Date <span class="text-color-accent ml-1">*</span>
             </label>
-            <SpaceInput
-              id="date"
-              v-model="date"
-              type="datetime-local"
-              required
-            />
+            <Input id="date" v-model="date" type="datetime-local" required />
           </div>
 
           <!-- Nom du channel Discord -->
@@ -173,7 +168,7 @@
                 </div>
               </div>
             </label>
-            <SpaceInput
+            <Input
               id="discordChannelName"
               v-model="discordChannelName"
               placeholder="Ex: tournoi-mario-kart"
@@ -225,7 +220,7 @@
                 </div>
               </div>
             </label>
-            <SpaceInput
+            <Input
               id="discordReminderDate"
               v-model="discordReminderDate"
               type="datetime-local"
@@ -275,7 +270,7 @@
                 </div>
               </div>
             </label>
-            <SpaceInput
+            <Input
               id="privateReminderDate"
               v-model="privateReminderDate"
               type="datetime-local"
@@ -325,7 +320,7 @@
               </div>
             </div>
           </label>
-          <SpaceInput
+          <Input
             id="playerCap"
             v-model="playerCap"
             type="number"
@@ -354,7 +349,7 @@
             </svg>
             Description <span class="text-color-accent ml-1">*</span>
           </label>
-          <SpaceInput
+          <Input
             id="description"
             v-model="description"
             type="textarea"

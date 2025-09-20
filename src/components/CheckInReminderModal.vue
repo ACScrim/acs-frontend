@@ -50,13 +50,9 @@
               <Title size="xl">CHECK-IN REQUIS</Title>
             </div>
 
-            <SpaceBadge
-              variant="error"
-              size="md"
-              className="animate-pulse-slow"
-            >
+            <Badge variant="error" size="md" className="animate-pulse-slow">
               URGENT
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 

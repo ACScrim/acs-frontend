@@ -69,24 +69,24 @@
                 TOURNOI
               </div>
               <div class="flex items-center space-x-1 sm:space-x-2">
-                <SpaceBadge
+                <Badge
                   variant="primary"
                   size="md"
                   className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
                 >
                   {{ currentTournamentIndex + 1 }}
-                </SpaceBadge>
+                </Badge>
                 <span
                   class="text-color-text-muted font-mono text-sm sm:text-base"
                   >/</span
                 >
-                <SpaceBadge
+                <Badge
                   variant="secondary"
                   size="md"
                   className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
                 >
                   {{ allTournaments.length }}
-                </SpaceBadge>
+                </Badge>
               </div>
 
               <!-- Barre de progression -->
@@ -277,7 +277,7 @@
 
           <!-- Badge "Terminé" -->
           <div class="absolute top-2 sm:top-4 right-2 sm:right-4">
-            <SpaceBadge
+            <Badge
               v-if="tournament.finished"
               variant="success"
               size="md"
@@ -297,7 +297,7 @@
               </svg>
               <span class="hidden sm:inline">Tournoi terminé</span>
               <span class="sm:hidden">Terminé</span>
-            </SpaceBadge>
+            </Badge>
           </div>
 
           <!-- Titre et informations principales -->
@@ -1237,13 +1237,13 @@
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <SpaceBadge
+                        <Badge
                           variant="accent"
                           size="xs"
                           className="animate-pulse"
                         >
                           LIVE
-                        </SpaceBadge>
+                        </Badge>
                       </a>
 
                       <!-- Badge check-in -->
@@ -1253,16 +1253,16 @@
                           tournament?.checkIns?.[teamPlayer._id]
                         "
                       >
-                        <SpaceBadge variant="success" size="xs">
+                        <Badge variant="success" size="xs">
                           <span class="hidden sm:inline">Check-in</span>
                           <span class="sm:hidden">✓</span>
-                        </SpaceBadge>
+                        </Badge>
                       </span>
                       <span v-else-if="isCheckInAvailable">
-                        <SpaceBadge variant="error" size="xs">
+                        <Badge variant="error" size="xs">
                           <span class="hidden sm:inline">En attente</span>
                           <span class="sm:hidden">⏳</span>
-                        </SpaceBadge>
+                        </Badge>
                       </span>
                     </div>
                   </li>
@@ -1313,29 +1313,29 @@
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <SpaceBadge
+                      <Badge
                         variant="accent"
                         size="xs"
                         className="animate-pulse"
                       >
                         LIVE
-                      </SpaceBadge>
+                      </Badge>
                     </a>
 
                     <!-- Badge check-in -->
                     <span
                       v-if="player._id && tournament?.checkIns?.[player._id]"
                     >
-                      <SpaceBadge variant="success" size="xs">
+                      <Badge variant="success" size="xs">
                         <span class="hidden sm:inline">Check-in</span>
                         <span class="sm:hidden">✓</span>
-                      </SpaceBadge>
+                      </Badge>
                     </span>
                     <span v-else-if="isCheckInAvailable">
-                      <SpaceBadge variant="error" size="xs">
+                      <Badge variant="error" size="xs">
                         <span class="hidden sm:inline">En attente</span>
                         <span class="sm:hidden">⏳</span>
-                      </SpaceBadge>
+                      </Badge>
                     </span>
                   </div>
                 </div>
@@ -1372,9 +1372,9 @@
                 </svg>
                 <span class="hidden sm:inline">Liste d'attente</span>
                 <span class="sm:hidden">Attente</span>
-                <SpaceBadge variant="warning" size="sm" className="ml-2">
+                <Badge variant="warning" size="sm" className="ml-2">
                   {{ waitlistCount }}
-                </SpaceBadge>
+                </Badge>
               </h3>
 
               <Card variant="warning" className="p-3">
@@ -1399,9 +1399,9 @@
                       <span class="sm:hidden text-xs text-color-text-muted"
                         >Position:
                       </span>
-                      <SpaceBadge variant="warning" size="xs">
+                      <Badge variant="warning" size="xs">
                         {{ index + 1 }}
-                      </SpaceBadge>
+                      </Badge>
                     </div>
 
                     <!-- Joueur -->
@@ -1495,27 +1495,23 @@
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <SpaceBadge
-                      variant="accent"
-                      size="xs"
-                      className="animate-pulse"
-                    >
+                    <Badge variant="accent" size="xs" className="animate-pulse">
                       LIVE
-                    </SpaceBadge>
+                    </Badge>
                   </a>
 
                   <!-- Badge check-in -->
                   <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
-                    <SpaceBadge variant="success" size="xs">
+                    <Badge variant="success" size="xs">
                       <span class="hidden sm:inline">Check-in</span>
                       <span class="sm:hidden">✓</span>
-                    </SpaceBadge>
+                    </Badge>
                   </span>
                   <span v-else-if="isCheckInAvailable">
-                    <SpaceBadge variant="error" size="xs">
+                    <Badge variant="error" size="xs">
                       <span class="hidden sm:inline">En attente</span>
                       <span class="sm:hidden">⏳</span>
-                    </SpaceBadge>
+                    </Badge>
                   </span>
                 </div>
               </div>
@@ -1570,20 +1566,16 @@
           </h3>
 
           <div class="flex flex-wrap items-center gap-2">
-            <SpaceBadge
-              variant="primary"
-              size="sm"
-              className="text-xs sm:text-sm"
-            >
+            <Badge variant="primary" size="sm" className="text-xs sm:text-sm">
               {{ formatLocalDate(lastFinishedTournament.date) }}
-            </SpaceBadge>
-            <SpaceBadge
+            </Badge>
+            <Badge
               variant="secondary"
               size="sm"
               className="text-xs sm:text-sm break-words"
             >
               {{ lastFinishedTournament.name }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </div>
 
@@ -1606,13 +1598,13 @@
               class="p-3 bg-color-success/20 flex items-center justify-between"
             >
               <div class="flex items-center min-w-0 flex-1">
-                <SpaceBadge
+                <Badge
                   variant="accent"
                   size="sm"
                   className="mr-2 sm:mr-3 flex-shrink-0"
                 >
                   1
-                </SpaceBadge>
+                </Badge>
                 <h5
                   class="text-color-text font-heading text-sm sm:text-base truncate"
                 >

@@ -292,7 +292,7 @@
               >
                 <td class="px-6 py-3 whitespace-nowrap text-center">
                   <div class="flex items-center justify-center">
-                    <SpaceBadge
+                    <Badge
                       v-if="calculateGlobalRank(index) <= 3"
                       :variant="
                         getRankBadgeVariant(calculateGlobalRank(index) - 1)
@@ -300,7 +300,7 @@
                       class="mr-2 transform scale-125 shadow-glow"
                     >
                       {{ calculateGlobalRank(index) }}
-                    </SpaceBadge>
+                    </Badge>
                     <span v-else class="text-color-text-muted">{{
                       calculateGlobalRank(index)
                     }}</span>
@@ -403,14 +403,14 @@
               <div class="flex items-center">
                 <!-- Rang -->
                 <div class="w-10 flex-shrink-0 flex justify-center">
-                  <SpaceBadge
+                  <Badge
                     v-if="calculateGlobalRank(index) <= 3"
                     :variant="
                       getRankBadgeVariant(calculateGlobalRank(index) - 1)
                     "
                   >
                     {{ calculateGlobalRank(index) }}
-                  </SpaceBadge>
+                  </Badge>
                   <span v-else class="text-color-text-muted">{{
                     calculateGlobalRank(index)
                   }}</span>

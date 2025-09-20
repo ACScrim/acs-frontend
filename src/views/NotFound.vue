@@ -1,177 +1,148 @@
 <template>
   <div
-    class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24 min-h-screen relative"
+    class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden horror-container"
   >
-    <!-- Grille spatiale en arrière-plan -->
-    <div
-      class="space-grid absolute inset-0 opacity-20 pointer-events-none z-0"
-    ></div>
-
-    <!-- Particules d'étoiles -->
-    <div
-      v-for="n in 20"
-      :key="`star-${n}`"
-      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
-      :style="{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 3 + 2}s`,
-        opacity: Math.random() * 0.7 + 0.3,
-      }"
-    ></div>
-
     <Card
-      variant="primary"
-      :stars="true"
+      variant="secondary"
+      :stars="false"
       :decorated="true"
-      className="max-w-2xl mx-auto z-10 relative"
+      className="max-w-2xl w-full z-10 relative horror-card"
     >
-      <div class="flex flex-col items-center justify-center space-y-6 py-8">
-        <!-- Code d'erreur avec effet glitch -->
-        <div class="relative">
+      <div class="flex flex-col items-center justify-center space-y-8 py-12">
+        <!-- Code d'erreur avec effet horrifique -->
+        <div class="relative text-center">
           <Title
             size="4xl"
-            :glitch="true"
-            className="font-mono tracking-widest glitch-text"
+            :decorated="true"
+            className="font-horror tracking-widest horror-404"
           >
             404
           </Title>
 
-          <!-- Effet d'écho pour le 404 -->
+          <!-- Effet d'ombre sanglante pour le 404 -->
           <div
-            class="absolute -inset-0.5 opacity-30 blur-sm text-4xl font-mono text-color-primary-light tracking-widest text-center z-[-1]"
+            class="absolute -inset-1 opacity-40 blur-lg text-4xl font-horror text-color-secondary tracking-widest text-center z-[-1]"
           >
             404
           </div>
         </div>
 
-        <!-- Ligne de séparation avec effet spatial -->
-        <div
-          class="w-32 h-0.5 bg-gradient-to-r from-transparent via-color-primary to-transparent relative"
-        >
-          <div
-            class="absolute inset-0 animate-pulse-slow opacity-70 bg-gradient-to-r from-transparent via-color-primary-light to-transparent"
-          ></div>
-        </div>
-
-        <!-- Message d'erreur -->
-        <Title size="2xl" className="text-center"> SIGNAL PERDU </Title>
-
-        <div class="max-w-md text-center">
-          <p class="text-color-text mb-6">
-            Les coordonnées spatio-temporelles de cette page n'existent pas dans
-            notre base de données. Votre vaisseau semble avoir dérivé dans un
-            secteur inconnu.
+        <div class="max-w-lg text-center space-y-6">
+          <p class="text-color-text mb-6 font-body leading-relaxed">
+            Cette page a été bannie dans les limbes par une malédiction
+            ancienne. Votre âme semble avoir erré dans un royaume interdit où
+            seules les ombres demeurent.
           </p>
 
-          <!-- Terminal avec message d'erreur -->
+          <!-- Terminal avec message d'erreur Halloween -->
           <Terminal
-            command="locate_page"
-            title="NAVIGATION · SYSTÈME"
-            className="mb-6 text-left"
+            command="locate_cursed_page"
+            title="DIVINATION · SYSTÈME"
+            className="mb-8 text-left horror-terminal"
             :showCursor="true"
           >
-            <div class="text-color-error">
-              Erreur: La page demandée n'a pas été trouvée.
+            <div class="text-color-secondary font-mono">
+              💀 Malédiction: La page demandée a été engloutie par les ténèbres.
             </div>
-            <div class="text-color-text-muted mt-2">
-              Vérifiez les coordonnées ou retournez à la station de base.
+            <div class="text-color-text-muted mt-2 font-body">
+              🎃 Consultez le grimoire ou retournez au sanctuaire principal.
             </div>
           </Terminal>
 
-          <!-- Bouton de retour à l'accueil -->
-          <router-link to="/">
-            <Button variant="primary" size="lg" className="animate-hover">
+          <!-- Bouton de retour Halloween -->
+          <router-link to="/" class="block">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="horror-return-button"
+            >
               <template #icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
-                  />
-                </svg>
+                <span class="text-xl mr-2">🏚️</span>
               </template>
-              RETOUR À LA BASE
+              RETOUR
             </Button>
           </router-link>
         </div>
       </div>
     </Card>
-
-    <!-- Éléments décoratifs en arrière-plan -->
-    <div
-      class="absolute bottom-10 left-10 w-32 h-32 rounded-full border border-color-primary-light/30 opacity-20 z-0 animate-ping-slow"
-    ></div>
-    <div
-      class="absolute top-20 right-10 w-48 h-48 rounded-full border border-color-secondary-light/20 opacity-10 z-0 animate-pulse-slow"
-    ></div>
-
-    <!-- "Planète" en arrière-plan -->
-    <div
-      class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-color-primary-dark/20 to-color-primary/5 opacity-30 z-0 blur-xl"
-    ></div>
   </div>
 </template>
-
 <script setup lang="ts">
 // Pas de logique spécifique nécessaire
 </script>
 
 <style scoped>
-.space-grid {
-  background-image: linear-gradient(
-      rgba(109, 40, 217, 0.1) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center center;
+/* Container principal Halloween */
+.horror-container {
+  background: linear-gradient(
+    180deg,
+    var(--color-bg) 0%,
+    var(--color-bg-dark) 50%,
+    var(--color-bg) 100%
+  );
+  font-family: var(--font-body);
 }
 
-.glitch-text {
-  text-shadow: 0 0 10px var(--color-primary-light),
-    0 0 20px var(--color-primary-light);
+/* Carte Halloween */
+.horror-card {
+  background: var(--color-card-bg) !important;
+  border: 2px solid var(--color-secondary) !important;
+  box-shadow: var(--shadow-glow-secondary), 0 0 40px rgba(124, 45, 18, 0.3),
+    inset 0 1px 0 rgba(220, 38, 38, 0.1) !important;
 }
 
-@keyframes ping-slow {
+/* 404 horrifique */
+.horror-404 {
+  font-family: var(--font-horror) !important;
+  color: var(--color-secondary) !important;
+  text-shadow: 0 0 20px rgba(124, 45, 18, 0.8), 0 0 40px rgba(124, 45, 18, 0.4),
+    4px 4px 8px rgba(0, 0, 0, 0.9) !important;
+  animation: horror-404-pulse 3s ease-in-out infinite;
+}
+
+@keyframes horror-404-pulse {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.2;
+    text-shadow: 0 0 20px rgba(124, 45, 18, 0.8),
+      0 0 40px rgba(124, 45, 18, 0.4), 4px 4px 8px rgba(0, 0, 0, 0.9);
   }
   50% {
-    transform: scale(1.2);
-    opacity: 0.3;
+    transform: scale(1.02);
+    text-shadow: 0 0 30px rgba(124, 45, 18, 1), 0 0 60px rgba(124, 45, 18, 0.6),
+      4px 4px 8px rgba(0, 0, 0, 0.9);
   }
 }
 
-.animate-ping-slow {
-  animation: ping-slow 8s cubic-bezier(0, 0, 0.2, 1) infinite;
+/* Terminal Halloween */
+.horror-terminal {
+  border: 2px solid var(--color-secondary) !important;
+  background: rgba(15, 15, 15, 0.95) !important;
+  box-shadow: var(--shadow-glow-secondary),
+    inset 0 0 20px rgba(124, 45, 18, 0.1) !important;
 }
 
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 0.3;
-  }
+/* Bouton de retour Halloween */
+.horror-return-button {
+  font-family: var(--font-body) !important;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-hover {
-  transition: transform 0.3s ease;
-}
-
-.animate-hover:hover {
+.horror-return-button:hover {
   transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-secondary), 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Responsive mobile */
+@media (max-width: 640px) {
+  .horror-container {
+    padding: 1rem;
+  }
+
+  .horror-card {
+    margin: 0.5rem;
+  }
 }
 </style>

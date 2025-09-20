@@ -101,7 +101,7 @@
           <!-- Titres de Champion de Saisons -->
           <div v-if="seasonChampionships.length > 0" class="mt-6">
             <div class="flex flex-wrap justify-center gap-2">
-              <SpaceBadge
+              <Badge
                 v-for="championship in seasonChampionships"
                 :key="championship.seasonId"
                 variant="gold"
@@ -120,7 +120,7 @@
                     }}
                   </span>
                 </div>
-              </SpaceBadge>
+              </Badge>
             </div>
             <div class="text-center mt-2">
               <span
@@ -219,14 +219,14 @@
                   alt="Avatar"
                   class="w-12 h-12 rounded-full object-cover border-2 border-color-silver shadow-glow"
                 />
-                <SpaceBadge
+                <Badge
                   variant="silver"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   2
-                </SpaceBadge>
+                </Badge>
               </div>
               <div
                 class="w-16 sm:w-24 bg-gradient-to-t from-color-silver to-color-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-color-silver shadow-inner relative overflow-hidden podium-column podium-silver"
@@ -252,14 +252,14 @@
                   alt="Avatar"
                   class="w-14 h-14 rounded-full object-cover border-2 border-color-gold shadow-glow"
                 />
-                <SpaceBadge
+                <Badge
                   variant="gold"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center animate-pulse font-bold"
                 >
                   1
-                </SpaceBadge>
+                </Badge>
               </div>
               <div
                 class="w-16 sm:w-24 bg-gradient-to-t from-color-gold to-color-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-color-gold shadow-inner shadow-color-gold/20 relative overflow-hidden podium-column podium-gold"
@@ -283,14 +283,14 @@
                   alt="Avatar"
                   class="w-10 h-10 rounded-full object-cover border-2 border-color-bronze shadow-glow"
                 />
-                <SpaceBadge
+                <Badge
                   variant="bronze"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   3
-                </SpaceBadge>
+                </Badge>
               </div>
               <div
                 class="w-16 sm:w-24 bg-gradient-to-t from-color-bronze to-color-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-color-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
@@ -642,9 +642,9 @@
               </div>
 
               <!-- Compteur pour cette section -->
-              <SpaceBadge variant="secondary" size="sm">
+              <Badge variant="secondary" size="sm">
                 {{ socialStats.frequentTeammates.length }}
-              </SpaceBadge>
+              </Badge>
             </h3>
 
             <div
@@ -743,9 +743,9 @@
               </div>
 
               <!-- Compteur pour cette section -->
-              <SpaceBadge variant="accent" size="sm">
+              <Badge variant="accent" size="sm">
                 {{ socialStats.winningPartners.length }}
-              </SpaceBadge>
+              </Badge>
             </h3>
 
             <div
@@ -840,9 +840,9 @@
           </svg>
           <Title size="2xl">
             Badges
-            <SpaceBadge variant="primary" size="sm" className="ml-2">
+            <Badge variant="primary" size="sm" className="ml-2">
               {{ badgeCount }}
-            </SpaceBadge>
+            </Badge>
           </Title>
         </div>
 
@@ -1154,9 +1154,9 @@
           </svg>
           <Title size="2xl">
             Tournois
-            <SpaceBadge variant="primary" size="sm" className="ml-2">
+            <Badge variant="primary" size="sm" className="ml-2">
               {{ tournamentCount }}
-            </SpaceBadge>
+            </Badge>
           </Title>
         </div>
 
@@ -1234,7 +1234,7 @@
                     >
 
                     <!-- Badge de placement -->
-                    <SpaceBadge
+                    <Badge
                       v-if="tournament && 'rank' in tournament"
                       :variant="getRankingBadgeVariant(tournament.rank ?? 0)"
                       size="sm"
@@ -1244,11 +1244,9 @@
                         {{ getRankingLabel(tournament.rank ?? 0) }} /
                         {{ tournament.numberOfTeams }}
                       </span>
-                    </SpaceBadge>
+                    </Badge>
 
-                    <SpaceBadge v-if="tournament.isMvp" variant="gold">
-                      MVP
-                    </SpaceBadge>
+                    <Badge v-if="tournament.isMvp" variant="gold"> MVP </Badge>
 
                     <!-- Bouton détails -->
                     <router-link

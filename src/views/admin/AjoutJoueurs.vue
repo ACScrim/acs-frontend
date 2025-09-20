@@ -9,9 +9,7 @@
         mission="CREWMATES-MGMT"
       >
         <template #badge v-if="players.length > 0">
-          <SpaceBadge variant="secondary" size="lg">{{
-            players.length
-          }}</SpaceBadge>
+          <Badge variant="secondary" size="lg">{{ players.length }}</Badge>
         </template>
       </Header>
       <!-- Formulaire d'ajout -->
@@ -36,7 +34,7 @@
               </svg>
               Nom du joueur <span class="text-color-accent ml-1">*</span>
             </label>
-            <SpaceInput
+            <Input
               id="username"
               name="username"
               v-model="player.username"
@@ -45,7 +43,7 @@
               aria-required="true"
               :error="formErrors.username"
             >
-            </SpaceInput>
+            </Input>
             <div
               v-if="formErrors.username"
               class="text-color-error text-sm mt-1 font-mono"
@@ -140,9 +138,7 @@
                 </svg>
                 <Title size="xl">Liste des joueurs</Title>
               </div>
-              <SpaceBadge variant="secondary" size="lg">{{
-                players.length
-              }}</SpaceBadge>
+              <Badge variant="secondary" size="lg">{{ players.length }}</Badge>
             </div>
           </template>
 

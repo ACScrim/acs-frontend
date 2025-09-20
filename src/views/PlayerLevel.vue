@@ -204,7 +204,7 @@
                   </div>
 
                   <div class="flex flex-wrap gap-1 mt-1">
-                    <SpaceBadge
+                    <Badge
                       v-for="roleName in level.selectedRoles"
                       :key="roleName"
                       variant="primary"
@@ -214,7 +214,7 @@
                       :title="roleName"
                     >
                       <span class="truncate">{{ roleName }}</span>
-                    </SpaceBadge>
+                    </Badge>
                   </div>
                 </div>
 
@@ -335,7 +335,7 @@
     <SpaceModal v-model="showGameSelector" title="SÉLECTION DU JEU">
       <!-- Recherche de jeux -->
       <div class="mb-5 relative">
-        <SpaceInput
+        <Input
           v-model="gameSearch"
           placeholder="Rechercher un jeu..."
           :clearable="true"
@@ -355,7 +355,7 @@
               />
             </svg>
           </template>
-        </SpaceInput>
+        </Input>
       </div>
 
       <!-- État vide -->
@@ -435,9 +435,9 @@
 
             <!-- Indicateur de niveau déjà défini -->
             <div v-if="hasLevelForGame(game)" class="ml-3">
-              <SpaceBadge variant="outline" size="sm">
+              <Badge variant="outline" size="sm">
                 {{ getLevelForGame(game)?.level }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </div>
         </Card>
@@ -515,7 +515,7 @@
           >
             Pseudo dans le jeu (optionnel)
           </label>
-          <SpaceInput
+          <Input
             id="gameUsername"
             v-model="gameUsername"
             placeholder="Votre pseudo dans ce jeu"
@@ -551,7 +551,7 @@
               <span class="text-color-error ml-1">*</span>
             </label>
 
-            <SpaceInput
+            <Input
               id="rank"
               v-model="rank"
               placeholder="Ex: Diamant 2, Master, Silver 3..."
@@ -622,10 +622,10 @@
                 </template>
                 Tout sélectionner
               </Button>
-              <SpaceBadge variant="primary" size="sm">
+              <Badge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
                 {{ selectedGame?.roles?.length || 0 }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </label>
 

@@ -7,9 +7,9 @@
       :showMissionInfo="true"
     >
       <template #badge v-if="filteredTournaments.length > 0">
-        <SpaceBadge variant="accent" size="lg">
+        <Badge variant="accent" size="lg">
           {{ filteredTournaments.length }}
-        </SpaceBadge>
+        </Badge>
       </template>
     </Header>
 

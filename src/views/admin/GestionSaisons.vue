@@ -8,13 +8,9 @@
       mission="SEASON-MGMT"
     >
       <template #badge>
-        <SpaceBadge
-          v-if="seasons && seasons.length > 0"
-          variant="primary"
-          size="lg"
-        >
+        <Badge v-if="seasons && seasons.length > 0" variant="primary" size="lg">
           {{ seasons.length }}
-        </SpaceBadge>
+        </Badge>
       </template>
     </Header>
 
@@ -71,7 +67,7 @@
                 </svg>
                 Numéro de saison <span class="text-color-accent ml-1">*</span>
               </label>
-              <SpaceInput
+              <Input
                 id="numero"
                 v-model.number="seasonForm.numero"
                 type="number"
@@ -225,11 +221,11 @@
                 v-if="season.tournois && season.tournois.length > 0"
                 class="mt-2"
               >
-                <SpaceBadge variant="outline" size="sm">
+                <Badge variant="outline" size="sm">
                   {{ season.tournois.length }} tournoi{{
                     season.tournois.length > 1 ? "s" : ""
                   }}
-                </SpaceBadge>
+                </Badge>
               </div>
             </div>
           </div>

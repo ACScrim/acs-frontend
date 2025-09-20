@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import tournamentService from "../../services/tournamentService";
 import type { Clip, Tournament } from "../../types";
-import SpaceInput from "../ui/atoms/Input.vue";
+import Input from "../ui/atoms/Input.vue";
 import { useUserStore } from "../../stores/userStore";
 import Toast from "../../shared/Toast.vue";
 
@@ -289,7 +289,7 @@ const formatDate = (dateString: string): string => {
         </div>
 
         <form action="" @submit.prevent="addClip" class="space-y-4">
-          <SpaceInput
+          <Input
             placeholder="https://youtube.com/watch?v=dQw4w9WgXcQ"
             :clearable="true"
             v-model="clipUrl"
