@@ -1063,7 +1063,7 @@
     <Toast v-if="message" :type="messageType" :message="message" />
 
     <!-- Modal de confirmation pour modifications non sauvegardées -->
-    <SpaceModal
+    <Modal
       v-if="showUnsavedChangesDialog"
       v-model="showUnsavedChangesDialog"
       title="MODIFICATIONS NON SAUVEGARDÉES"
@@ -1098,10 +1098,10 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal de confirmation pour réinitialisation -->
-    <SpaceModal
+    <Modal
       v-if="showResetDialog"
       v-model="showResetDialog"
       title="RÉINITIALISER LES MODIFICATIONS"
@@ -1136,7 +1136,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 

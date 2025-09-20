@@ -1707,7 +1707,7 @@
     <Toast v-if="success" type="success" :message="success" />
 
     <!-- Modales -->
-    <SpaceModal
+    <Modal
       v-model="showPopup"
       :title="`CONFIRMATION D'${
         actionType === 'register' ||
@@ -1799,9 +1799,9 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
-    <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
+    <Modal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
       <div class="space-y-3 sm:space-y-4">
         <p class="text-color-text text-sm sm:text-base">
           Vous n'avez pas encore défini votre niveau pour
@@ -1847,7 +1847,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 <script setup lang="ts">

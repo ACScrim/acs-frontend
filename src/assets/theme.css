@@ -76,6 +76,8 @@
   --color-section-statistics-fade: rgba(139, 92, 246, 0.2);
   --color-section-medals-color: rgba(220, 38, 38, 0.8); /* Rouge sang */
   --color-section-medals-fade: rgba(220, 38, 38, 0.2);
+
+  /* Variables RGB pour les animations Halloween */
   --color-primary-rgb: 217, 119, 6; /* Orange citrouille */
   --color-primary-light-rgb: 245, 158, 11;
   --color-primary-dark-rgb: 161, 98, 7;

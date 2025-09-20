@@ -558,7 +558,7 @@
 
     <!-- Modal de confirmation de suppression -->
     <!-- Modal de confirmation de suppression -->
-    <SpaceModal
+    <Modal
       v-model="showConfirmationDialog"
       title="Confirmer la suppression"
       className="max-w-md"
@@ -607,7 +607,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 

@@ -178,7 +178,7 @@
 
         <!-- Pagination -->
         <div class="mt-6">
-          <SpacePagination
+          <Pagination
             v-if="filteredTournaments.length > itemsPerPage"
             :current-page="currentPage"
             :total-pages="totalPages"
@@ -208,7 +208,7 @@
     </div>
 
     <!-- Modal de niveau requis -->
-    <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
+    <Modal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
       <div class="space-y-4">
         <p class="text-color-text">
           Vous n'avez pas encore défini votre niveau pour
@@ -245,10 +245,10 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal de confirmation d'inscription/désinscription -->
-    <SpaceModal
+    <Modal
       v-model="showPopup"
       :title="`CONFIRMATION D'${
         actionType === 'register' || actionType === 'waitlist'
@@ -327,7 +327,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </Container>
 </template>
 

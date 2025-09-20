@@ -189,7 +189,7 @@ const formatDate = (dateString: string): string => {
   </Card>
 
   <Teleport to="body" :disabled="!showAddClipModal">
-    <SpaceModal
+    <Modal
       v-model="showAddClipModal"
       title="AJOUTER UN CLIP"
       className="max-w-3xl!"
@@ -326,11 +326,11 @@ const formatDate = (dateString: string): string => {
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </Teleport>
 
   <Teleport to="body" :disabled="!showDeleteClipModal">
-    <SpaceModal v-model="showDeleteClipModal" title="SUPPRIMER UN CLIP">
+    <Modal v-model="showDeleteClipModal" title="SUPPRIMER UN CLIP">
       <div class="space-y-4">
         <p class="text-color-text text-base">
           Êtes-vous sûr de vouloir supprimer ce clip&nbsp;? Cette action est
@@ -345,7 +345,7 @@ const formatDate = (dateString: string): string => {
           </Button>
         </div>
       </div>
-    </SpaceModal>
+    </Modal>
   </Teleport>
 
   <!-- Notifications -->

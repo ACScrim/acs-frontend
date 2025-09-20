@@ -664,7 +664,7 @@
       </div>
     </Card>
     <!-- Modal de modification de badge -->
-    <SpaceModal v-model="showEditModal" title="Modifier le badge">
+    <Modal v-model="showEditModal" title="Modifier le badge">
       <form @submit.prevent="updateBadge" class="space-y-6">
         <Input
           id="edit-title"
@@ -781,9 +781,9 @@
           <Button type="submit" variant="info" size="lg"> Enregistrer </Button>
         </div>
       </form>
-    </SpaceModal>
+    </Modal>
     <!-- Modal de confirmation de suppression -->
-    <SpaceModal v-model="showDeleteModal" title="Confirmer la suppression">
+    <Modal v-model="showDeleteModal" title="Confirmer la suppression">
       <div class="text-center space-y-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -823,7 +823,7 @@
           </Button>
         </div>
       </div>
-    </SpaceModal>
+    </Modal>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />

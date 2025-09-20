@@ -2,7 +2,6 @@
   <Card
     variant="primary"
     :interactive="true"
-    :stars="true"
     :decorated="true"
     :className="
       [
@@ -370,13 +369,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Animation pour les votants */
-.space-voter-animate {
+/* Animation Halloween pour les votants */
+.voter-animate {
   position: relative;
   overflow: hidden;
 }
 
-.space-voter-animate::after {
+.voter-animate::after {
   content: "";
   position: absolute;
   top: 0;
@@ -386,7 +385,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    rgba(var(--color-primary-rgb), 0.1),
     transparent
   );
   animation: voter-slide 2s ease-in-out infinite;
@@ -401,5 +400,36 @@ onBeforeUnmount(() => {
   100% {
     left: 100%;
   }
+}
+
+/* Effet de lueur Halloween pour les cartes approuvées */
+.proposal-approved {
+  border-left: 3px solid var(--color-gold);
+  box-shadow: 0 0 15px rgba(var(--color-gold-rgb), 0.2);
+}
+
+.proposal-pending {
+  border-left: 3px solid var(--color-secondary);
+  box-shadow: 0 0 15px rgba(var(--color-secondary-rgb), 0.1);
+}
+
+.proposal-rejected {
+  border-left: 3px solid var(--color-error);
+  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.1);
+}
+
+/* Animation de pulsation pour les éléments actifs */
+@keyframes halloween-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: halloween-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 </style>

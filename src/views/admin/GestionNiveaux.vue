@@ -1173,7 +1173,7 @@
         </div>
 
         <!-- Pagination -->
-        <SpacePagination
+        <Pagination
           v-if="totalPages > 1"
           :current-page="currentPage"
           :total-pages="totalPages"

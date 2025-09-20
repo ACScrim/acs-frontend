@@ -1279,7 +1279,7 @@
 
           <!-- Pagination pour les tournois -->
           <div v-if="totalTournamentPages > 1" class="mt-6">
-            <SpacePagination
+            <Pagination
               :current-page="currentTournamentPage"
               :total-pages="totalTournamentPages"
               @prev-page="prevTournamentPage"
@@ -1302,7 +1302,7 @@
 
     <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
     <!-- Remplacer la div avec selectedBadge par ce code -->
-    <SpaceModal
+    <Modal
       v-model="selectedBadge"
       title="DÉTAILS DU BADGE"
       v-if="selectedBadge"
@@ -1343,7 +1343,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 

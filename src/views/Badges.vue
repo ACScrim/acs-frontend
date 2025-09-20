@@ -519,10 +519,7 @@
 
   <!-- Modal détail badge -->
   <!-- La modale est déplacée en dehors du Container pour un positionnement correct -->
-  <SpaceModal
-    v-model="showModal"
-    :title="selectedBadge ? selectedBadge.title : ''"
-  >
+  <Modal v-model="showModal" :title="selectedBadge ? selectedBadge.title : ''">
     <div v-if="selectedBadge" class="space-y-6">
       <!-- Image et description du badge -->
       <div class="flex flex-col items-center">
@@ -665,7 +662,7 @@
         <Button @click="showModal = false" variant="primary"> Fermer </Button>
       </div>
     </template>
-  </SpaceModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">

@@ -332,7 +332,7 @@
     </Card>
 
     <!-- Modal pour sélectionner un jeu -->
-    <SpaceModal v-model="showGameSelector" title="SÉLECTION DU JEU">
+    <Modal v-model="showGameSelector" title="SÉLECTION DU JEU">
       <!-- Recherche de jeux -->
       <div class="mb-5 relative">
         <Input
@@ -450,10 +450,10 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal pour définir le niveau -->
-    <SpaceModal
+    <Modal
       v-model="showLevelSelector"
       :title="
         selectedGame?.name
@@ -745,10 +745,10 @@
           </Button>
         </div>
       </form>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal de confirmation de suppression -->
-    <SpaceModal
+    <Modal
       v-if="showDeleteConfirmation"
       v-model="showDeleteConfirmation"
       title="CONFIRMATION DE SUPPRESSION"
@@ -791,7 +791,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
     <!-- Toast pour les notifications -->
     <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>

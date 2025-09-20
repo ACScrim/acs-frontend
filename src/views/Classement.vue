@@ -448,7 +448,7 @@
 
         <!-- Pagination -->
         <div class="py-4 px-6">
-          <SpacePagination
+          <Pagination
             :current-page="currentPage"
             :total-pages="totalPages"
             @prev-page="prevPage"

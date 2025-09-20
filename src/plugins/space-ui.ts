@@ -34,13 +34,13 @@ const components = {
 
   // Molecules
   Card: Card,
-  SpaceAlert: Alert,
-  SpaceModal: Modal,
+  Alert: Alert,
+  Modal: Modal,
   Header: Header,
   MemberCard: MemberCard,
 
   // Organisms
-  SpacePagination: Pagination,
+  Pagination: Pagination,
   Terminal: Terminal,
 
   // Layout

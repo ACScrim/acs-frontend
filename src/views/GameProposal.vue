@@ -3,7 +3,7 @@
     <!-- En-tête de la page -->
     <Header
       title="PROPOSITIONS DE JEUX"
-      mission="GAMES-DISCOVERY"
+      mission="HALLOWEEN-2025"
       :showMissionInfo="true"
     >
       <template #badge v-if="proposals.length > 0">
@@ -29,7 +29,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-primary-light"
+            <label class="block mb-2 font-heading text-color-primary-light"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
@@ -50,7 +50,7 @@
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-secondary-light"
+            <label class="block mb-2 font-heading text-color-secondary-light"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
@@ -83,7 +83,7 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-nasa text-color-accent-light"
+              <label class="block mb-2 font-heading text-color-accent-light"
                 >Rechercher un jeu</label
               >
               <Input
@@ -114,7 +114,7 @@
             <Button
               @click="showProposalForm = true"
               variant="accent"
-              className="w-full hover:scale-105 transition-transform duration-300 shine-effect"
+              className="w-full hover:scale-105 transition-transform duration-300 "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,7 @@
 
         <!-- Pagination -->
         <div class="mt-8">
-          <SpacePagination
+          <Pagination
             v-if="filteredProposals.length > itemsPerPage"
             :current-page="currentPage"
             :total-pages="totalPages"
@@ -213,11 +213,11 @@
     </div>
 
     <!-- Modal de proposition de jeu -->
-    <SpaceModal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
+    <Modal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
       <div class="space-y-6">
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
           >
             Rechercher un jeu
           </label>
@@ -227,7 +227,6 @@
               @input="debounceSearch"
               placeholder="Entrez le nom d'un jeu..."
               variant="primary"
-              :stars="true"
             >
               <template #rightIcon v-if="searching">
                 <div
@@ -272,7 +271,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
           >
             Nom du jeu
           </label>
@@ -281,7 +280,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
           >
             Description (optionnelle)
           </label>
@@ -312,7 +311,7 @@
           </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
     <!-- Toast via le composant partagé -->
     <Toast
@@ -322,10 +321,7 @@
     />
 
     <!-- Dialog de confirmation de suppression -->
-    <SpaceModal
-      v-model="deleteDialogVisible"
-      title="SUPPRIMER CETTE PROPOSITION"
-    >
+    <Modal v-model="deleteDialogVisible" title="SUPPRIMER CETTE PROPOSITION">
       <p class="text-color-text">
         Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
         jeu ? Cette action est irréversible.
@@ -339,9 +335,9 @@
           <Button @click="deleteProposal" variant="error"> Supprimer </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </Container>
-  <SpaceModal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
+  <Modal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
@@ -471,7 +467,7 @@
         <Button @click="showVoteInfo = false">Fermer</Button>
       </div>
     </template>
-  </SpaceModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -1015,7 +1011,7 @@ onMounted(() => {
   gap: 1.5rem;
 }
 
-/* Stylisation des cartes de proposition avec effets spatiaux */
+/* Stylisation des cartes de proposition avec effets Halloween */
 .proposal-card-wrapper {
   position: relative;
   transition: all 0.3s ease;
@@ -1033,8 +1029,8 @@ onMounted(() => {
   backdrop-filter: blur(5px);
 }
 
-/* Animations améliorées */
-@keyframes glow {
+/* Animations Halloween */
+@keyframes mystical-glow {
   0% {
     box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
   }
@@ -1065,10 +1061,10 @@ onMounted(() => {
     var(--color-primary),
     transparent
   );
-  animation: scanline 1s ease-out;
+  animation: mystic-line 1s ease-out;
 }
 
-@keyframes scanline {
+@keyframes mystic-line {
   0% {
     top: 0;
     opacity: 0;
@@ -1082,33 +1078,33 @@ onMounted(() => {
   }
 }
 
-/* Scrollbar personnalisée */
+/* Scrollbar personnalisée Halloween */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(30, 30, 45, 0.2);
+  background: var(--color-bg-dark);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(109, 40, 217, 0.5);
+  background: var(--color-primary);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(109, 40, 217, 0.7);
+  background: var(--color-primary-light);
 }
 
-/* Ajouter les styles pour l'animation des votants */
-.space-voter-animate {
+/* Animation pour les votants */
+.voter-animate {
   position: relative;
   overflow: hidden;
 }
 
-.space-voter-animate::after {
+.voter-animate::after {
   content: "";
   position: absolute;
   top: 0;
@@ -1118,7 +1114,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    rgba(var(--color-primary-rgb), 0.1),
     transparent
   );
   animation: voter-slide 2s ease-in-out infinite;
@@ -1144,44 +1140,52 @@ onMounted(() => {
   border-left: 3px solid var(--color-secondary);
 }
 
+.proposal-rejected {
+  border-left: 3px solid var(--color-error);
+}
+
 /* Amélioration des transitions */
 .proposal-card-wrapper,
 .game-search-result,
-.space-voter-animate {
+.voter-animate {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Effet de surbrillance pour les boutons importants */
-.shine-effect {
-  position: relative;
-  overflow: hidden;
+/* Styles pour les select Halloween */
+select {
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-primary-dark);
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
 }
 
-.shine-effect::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(30deg);
-  animation: shine 4s infinite linear;
-  pointer-events: none;
+select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3),
+    0 0 10px rgba(var(--color-primary-rgb), 0.2);
+  outline: none;
 }
 
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) rotate(30deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(30deg);
-  }
+select:hover {
+  border-color: var(--color-primary-light);
+  background: var(--color-bg-light);
+}
+
+/* Textarea Halloween */
+textarea {
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-primary-dark);
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+}
+
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3),
+    0 0 10px rgba(var(--color-primary-rgb), 0.2);
+  outline: none;
 }
 
 /* Réactivité améliorée */
@@ -1189,5 +1193,11 @@ onMounted(() => {
   .proposals-grid {
     gap: 1rem;
   }
+}
+
+/* Styles Halloween spéciaux pour les labels */
+label {
+  font-family: var(--font-heading);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 </style>
