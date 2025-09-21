@@ -25,7 +25,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
         <!-- Le podium physique pour desktop -->
         <div
-          class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative space-podium"
+          class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative podium"
         >
           <!-- 2ème place -->
           <div class="w-1/5 relative">
@@ -864,7 +864,7 @@ const handleImageError = (e: Event, player: Player) => {
 }
 
 /* Podium et médailles */
-.space-podium {
+.podium {
   position: relative;
   overflow: hidden;
 }

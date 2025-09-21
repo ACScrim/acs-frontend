@@ -95,13 +95,13 @@
             </div>
 
             <!-- Message si aucun tournoi actif disponible -->
-            <SpaceAlert
+            <Alert
               v-if="activeTournaments.length === 0"
               variant="info"
               className="mt-4"
             >
               Aucun tournoi actif disponible actuellement.
-            </SpaceAlert>
+            </Alert>
           </div>
 
           <!-- Sélection pour les tournois terminés -->
@@ -208,12 +208,12 @@
             </div>
 
             <!-- Message si aucun tournoi terminé disponible -->
-            <SpaceAlert
+            <Alert
               v-else-if="selectedGame && finishedTournaments.length === 0"
               variant="warning"
             >
               Aucun tournoi terminé disponible pour ce jeu.
-            </SpaceAlert>
+            </Alert>
           </div>
         </div>
       </Card>

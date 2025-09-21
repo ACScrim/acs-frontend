@@ -58,14 +58,14 @@
         </Badge>
       </div>
       <div v-else>
-        <SpaceAlert variant="warning" className="text-center">
+        <Alert variant="warning" className="text-center">
           Veuillez sélectionner un tournoi dans le menu en haut de la page
-        </SpaceAlert>
+        </Alert>
       </div>
     </Card>
 
     <!-- Alerte si tournoi terminé -->
-    <SpaceAlert
+    <Alert
       v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
       variant="danger"
       className="mb-6"
@@ -93,7 +93,7 @@
           vous ne pouvez plus les modifier.
         </p>
       </div>
-    </SpaceAlert>
+    </Alert>
     <!-- Section de génération des équipes -->
     <Card
       v-if="selectedTournamentDetails"
@@ -250,7 +250,7 @@
           v-if="searchQuery && searchResults.length === 0 && searchFocused"
           class="absolute top-full left-0 right-0 mt-2 z-10"
         >
-          <SpaceAlert variant="warning">
+          <Alert variant="warning">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -268,7 +268,7 @@
               </svg>
             </template>
             Aucun joueur trouvé
-          </SpaceAlert>
+          </Alert>
         </div>
 
         <!-- Résultats de recherche avec Space UI -->

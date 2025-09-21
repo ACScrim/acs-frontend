@@ -1185,7 +1185,7 @@
     </Card>
 
     <!-- Messages d'état -->
-    <SpaceAlert
+    <Alert
       v-if="error"
       variant="error"
       :title="'Erreur'"
@@ -1194,9 +1194,9 @@
       @close="error = null"
     >
       {{ error }}
-    </SpaceAlert>
+    </Alert>
 
-    <SpaceAlert
+    <Alert
       v-if="success"
       variant="success"
       :title="'Succès'"
@@ -1205,7 +1205,7 @@
       @close="success = null"
     >
       {{ success }}
-    </SpaceAlert>
+    </Alert>
   </div>
 </template>
 

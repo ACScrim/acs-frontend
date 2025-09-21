@@ -31,10 +31,10 @@
     </button>
 
     <!-- Panel de notifications -->
-    <transition name="space-fade">
+    <transition name="mystical-fade">
       <div
         v-if="isPanelOpen"
-        class="absolute top-full z-50 mt-2 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-0 sm:transform-none w-80 sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-[90vw]"
+        class="absolute top-full z-50 mt-2 notification-panel"
       >
         <Card
           variant="dark"
@@ -45,7 +45,7 @@
           <div class="p-3 sm:p-4 border-b border-color-primary/20">
             <div class="flex items-center justify-between">
               <h3
-                class="text-color-text font-nasa text-base sm:text-lg font-bold truncate mr-2"
+                class="text-color-text font-heading text-base sm:text-lg font-bold truncate mr-2"
               >
                 Notifications
               </h3>
@@ -58,7 +58,7 @@
                   v-if="!isSubscribed && permission !== 'denied'"
                   @click="handleSubscribe"
                   :disabled="loading"
-                  class="px-2 sm:px-3 py-1 bg-color-primary/20 hover:bg-color-primary/30 text-color-primary text-xs rounded-md transition-colors font-nasa whitespace-nowrap"
+                  class="px-2 sm:px-3 py-1 bg-color-primary/20 hover:bg-color-primary/30 text-color-primary text-xs rounded-md transition-colors font-heading whitespace-nowrap"
                 >
                   {{ loading ? "..." : "Activer" }}
                 </button>
@@ -192,7 +192,7 @@
                   <!-- Contenu -->
                   <div class="flex-1 min-w-0">
                     <h4
-                      class="text-sm font-semibold text-color-text font-nasa leading-tight"
+                      class="text-sm font-semibold text-color-text font-heading leading-tight"
                       :class="{ 'text-color-primary': !notification.read }"
                     >
                       {{ notification.title }}
@@ -350,13 +350,46 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-.space-fade-enter-active,
-.space-fade-leave-active {
+/* Positionnement responsive du panel de notifications */
+.notification-center {
+  position: relative;
+}
+
+.notification-panel {
+  /* Positionnement de base : centré sous l'icône */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rem; /* 320px */
+  max-width: calc(100vw - 1rem);
+}
+
+/* Sur mobile, ajuster pour éviter de sortir de l'écran */
+@media (max-width: 640px) {
+  .notification-panel {
+    width: calc(100vw - 2rem);
+    max-width: 20rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Sur tablette et plus grand */
+@media (min-width: 641px) {
+  .notification-panel {
+    width: 24rem; /* 384px */
+    max-width: none;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.mystical-fade-enter-active,
+.mystical-fade-leave-active {
   transition: all 0.3s ease;
 }
 
-.space-fade-enter-from,
-.space-fade-leave-to {
+.mystical-fade-enter-from,
+.mystical-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }

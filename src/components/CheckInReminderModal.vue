@@ -299,14 +299,14 @@
       toastMessage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
     "
   >
-    <SpaceAlert
+    <Alert
       :variant="toastType"
       :dismissible="true"
       @dismiss="toastMessage = ''"
       className="backdrop-blur-sm"
     >
       {{ toastMessage }}
-    </SpaceAlert>
+    </Alert>
   </div>
 </template>
 

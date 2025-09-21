@@ -67,9 +67,9 @@
         </Badge>
       </div>
       <div v-else>
-        <SpaceAlert variant="warning" className="text-center">
+        <Alert variant="warning" className="text-center">
           Veuillez sélectionner un tournoi dans le menu en haut de la page
-        </SpaceAlert>
+        </Alert>
       </div>
     </Card>
     <!-- Détails du tournoi et statuts des check-ins -->

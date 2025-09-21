@@ -1155,7 +1155,7 @@
             </h3>
 
             <!-- Vue des équipes si toutes ont au moins un joueur -->
-            <SpaceAlert
+            <Alert
               v-if="
                 tournament.teams &&
                 tournament.teams.length > 0 &&
@@ -1182,7 +1182,7 @@
               <p class="text-sm sm:text-base">
                 Équipes en cours de création...
               </p>
-            </SpaceAlert>
+            </Alert>
 
             <!-- Affichage des équipes -->
             <div
@@ -1343,7 +1343,7 @@
             </div>
 
             <!-- Message si aucun participant -->
-            <SpaceAlert
+            <Alert
               v-else
               variant="info"
               className="bg-color-bg-light/10 text-center py-4 sm:py-6"
@@ -1351,7 +1351,7 @@
               <p class="text-color-text-muted italic text-sm sm:text-base">
                 Aucun participant inscrit pour ce tournoi.
               </p>
-            </SpaceAlert>
+            </Alert>
 
             <!-- Section Liste d'attente -->
             <div v-if="hasWaitlist" class="mt-6 sm:mt-8 space-fade-in">
@@ -1740,7 +1740,7 @@
           ?
         </p>
 
-        <SpaceAlert
+        <Alert
           v-if="actionType === 'register' || actionType === 'waitlist'"
           variant="info"
           className="mb-4"
@@ -1754,9 +1754,9 @@
               Vous serez automatiquement inscrit si des places se libèrent.
             </span>
           </p>
-        </SpaceAlert>
+        </Alert>
 
-        <SpaceAlert
+        <Alert
           v-if="
             actionType === 'unregister' || actionType === 'unregister-waitlist'
           "
@@ -1772,7 +1772,7 @@
               Vous ne serez plus contacté si des places se libèrent.
             </span>
           </p>
-        </SpaceAlert>
+        </Alert>
       </div>
 
       <template #footer>

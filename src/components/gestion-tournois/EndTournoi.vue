@@ -73,9 +73,9 @@
         </Badge>
       </div>
       <div v-else>
-        <SpaceAlert variant="warning" className="text-center">
+        <Alert variant="warning" className="text-center">
           Veuillez sélectionner un tournoi dans le menu en haut de la page
-        </SpaceAlert>
+        </Alert>
       </div>
     </Card>
 
@@ -392,11 +392,11 @@
       </template>
 
       <div class="space-y-4">
-        <SpaceAlert variant="warning">
+        <Alert variant="warning">
           <div class="text-color-text">
             <strong>Attention :</strong> Cette action est irréversible !
           </div>
-        </SpaceAlert>
+        </Alert>
 
         <div class="text-color-text-muted leading-relaxed">
           Êtes-vous sûr de vouloir terminer ce tournoi ? Les conséquences seront
@@ -499,12 +499,12 @@
       </template>
 
       <div class="space-y-4">
-        <SpaceAlert variant="info">
+        <Alert variant="info">
           <div class="text-color-text">
             Cette action permettra de modifier à nouveau les résultats du
             tournoi.
           </div>
-        </SpaceAlert>
+        </Alert>
 
         <div class="text-color-text-muted leading-relaxed">
           Êtes-vous sûr de vouloir annuler la finalisation de ce tournoi ?
