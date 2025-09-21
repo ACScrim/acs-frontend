@@ -123,6 +123,14 @@
     0 0 50px rgba(217, 119, 6, 0.15); /* Lueur performance */
   --shadow-card-base: 0 8px 32px rgba(0, 0, 0, 0.8),
     0 4px 16px rgba(220, 38, 38, 0.2); /* Ombre de carte sinistre */
+  
+  /* Variables pour les composants interactifs Halloween */
+  --shadow-toggle-inactive: inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2); /* Ombre toggle inactif */
+  --shadow-toggle-active: inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(var(--color-accent-rgb), 0.2); /* Ombre toggle actif */
+  --shadow-toggle-thumb: 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(var(--color-primary-rgb), 0.3); /* Ombre bouton toggle */
 }
 
 /* Classes utilitaires pour les polices Halloween */

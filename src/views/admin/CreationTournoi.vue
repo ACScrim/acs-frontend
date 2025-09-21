@@ -36,7 +36,7 @@
         <div class="grid grid-cols-1 gap-6">
           <!-- Bouton pour afficher/masquer les tournois terminés -->
           <div class="flex justify-end mb-2">
-            <SpaceToggle
+            <Toggle
               v-model="showFinishedTournaments"
               label="Afficher les tournois terminés"
               tooltip="Basculer pour voir les tournois terminés"

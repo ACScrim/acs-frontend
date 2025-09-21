@@ -535,7 +535,7 @@
         <!-- Classement -->
         <div>
           <div class="mb-2">
-            <SpaceToggle
+            <Toggle
               v-model="isRanked"
               label="Je joue en classé"
               className="toggle-primary"

@@ -75,7 +75,7 @@
             <div class="space-y-3">
               <!-- Option 1: Afficher les tournois passés -->
               <div class="flex items-center gap-3">
-                <SpaceToggle
+                <Toggle
                   v-model="showFinished"
                   className="bg-color-secondary/20"
                 />
@@ -86,7 +86,7 @@
 
               <!-- Option 2: Ordre chronologique -->
               <div class="flex items-center gap-3">
-                <SpaceToggle
+                <Toggle
                   v-model="sortAscending"
                   className="bg-color-secondary/20"
                 />

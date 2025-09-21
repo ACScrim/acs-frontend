@@ -1,9 +1,9 @@
 <template>
   <Container>
-    <!-- En-tête de la page avec style spatial -->
+    <!-- En-tête de la page avec style Halloween -->
     <Header
       title="COLLECTION DE BADGES"
-      mission="BADGES-EXPLORER"
+      mission="HALLOWEEN-2025"
       :showMissionInfo="true"
     >
       <template #badge v-if="badges.length > 0">
@@ -11,28 +11,28 @@
       </template>
     </Header>
 
-    <!-- Loader spatial -->
+    <!-- Loader Halloween -->
     <div v-if="loading" class="flex justify-center my-12">
-      <Loader text="Analyse des insignes spatiaux..." />
+      <Loader text="Chargement des badges de la guilde..." />
     </div>
 
     <div v-else class="flex flex-col gap-6 mt-6">
       <!-- Onglets de navigation -->
       <Card variant="dark" className="p-4">
-        <div class="space-tabs flex flex-wrap sm:flex-nowrap gap-2">
+        <div class="badge-tabs flex flex-wrap sm:flex-nowrap gap-2">
           <Button
             @click="switchTab('assigned')"
             :variant="activeTab === 'assigned' ? 'primary' : 'outline'"
             className="flex-1"
           >
-            <span class="font-nasa">BADGES ATTRIBUÉS</span>
+            <span class="font-heading">BADGES ATTRIBUÉS</span>
           </Button>
           <Button
             @click="switchTab('available')"
             :variant="activeTab === 'available' ? 'primary' : 'outline'"
             className="flex-1"
           >
-            <span class="font-nasa">BADGES À OBTENIR</span>
+            <span class="font-heading">BADGES À OBTENIR</span>
           </Button>
         </div>
       </Card>
@@ -42,7 +42,7 @@
         <div>
           <label for="gameFilter" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-color-primary-light flex items-center gap-2"
+              class="font-heading text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -117,13 +117,12 @@
                   <div
                     v-for="badge in filteredAssignedAcsBadges"
                     :key="badge._id"
-                    class="space-badge-card"
+                    class="badge-card"
                     :class="getBadgeRarityClass(badge)"
                   >
                     <Card
                       variant="dark"
                       elevation="low"
-                      :stars="true"
                       :interactive="true"
                       :hover="true"
                       @click="selectBadge(badge)"
@@ -144,7 +143,7 @@
                           ></div>
                         </div>
                         <div class="flex-1">
-                          <h3 class="text-color-text text-lg font-heading">
+                          <h3 class="text-color-text text-lg font-body">
                             {{ badge.title }}
                           </h3>
                           <Badge variant="secondary" size="sm" className="mt-1"
@@ -202,13 +201,12 @@
                     <div
                       v-for="badge in getAssignedBadgesByGame(game._id)"
                       :key="badge._id"
-                      class="space-badge-card"
+                      class="badge-card"
                       :class="getBadgeRarityClass(badge)"
                     >
                       <Card
                         variant="dark"
                         elevation="low"
-                        :stars="true"
                         :interactive="true"
                         :hover="true"
                         @click="selectBadge(badge)"
@@ -337,7 +335,7 @@
                   <div
                     v-for="badge in filteredAvailableAcsBadges"
                     :key="badge._id"
-                    class="space-badge-card"
+                    class="badge-card"
                   >
                     <Card
                       variant="dark"
@@ -407,7 +405,7 @@
                     <div
                       v-for="badge in getAvailableBadgesByGame(game._id)"
                       :key="badge._id"
-                      class="space-badge-card"
+                      class="badge-card"
                     >
                       <Card
                         variant="dark"
@@ -859,7 +857,7 @@ const getGameName = (gameId: string): string => {
 // 4.3 Méthodes pour l'interface utilisateur
 const handleFilterChange = () => {
   // Animation visuelle lors du changement de filtre
-  const filterCards = document.querySelectorAll(".space-badge-card");
+  const filterCards = document.querySelectorAll(".badge-card");
   filterCards.forEach((card) => {
     (card as HTMLElement).style.opacity = "0.5";
     setTimeout(() => {
@@ -874,7 +872,7 @@ const switchTab = (tab: string) => {
 
   // Scroll en douceur vers le haut de la section des badges
   setTimeout(() => {
-    const badgesElement = document.querySelector(".space-tabs");
+    const badgesElement = document.querySelector(".badge-tabs");
     if (badgesElement) {
       badgesElement.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -948,7 +946,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.space-badge-card {
+.badge-card {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -1017,13 +1015,13 @@ onMounted(() => {
 }
 
 /* Animation pour les onglets */
-.space-tabs .space-button {
+.badge-tabs .badge-button {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
 }
 
-.space-tabs .space-button::after {
+.badge-tabs .badge-button::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -1035,7 +1033,7 @@ onMounted(() => {
   transform: translateX(-50%);
 }
 
-.space-tabs .space-button:hover::after {
+.badge-tabs .badge-button:hover::after {
   width: 80%;
 }
 
@@ -1125,5 +1123,41 @@ onMounted(() => {
     transform: scale(1) rotate(360deg);
     filter: hue-rotate(360deg);
   }
+}
+
+/* Animations Halloween */
+@keyframes mystical-glow {
+  0% {
+    box-shadow: 0 0 20px var(--halloween-orange),
+      0 0 30px var(--halloween-orange), 0 0 40px var(--halloween-orange);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--halloween-rouge), 0 0 25px var(--halloween-rouge),
+      0 0 35px var(--halloween-rouge);
+  }
+  100% {
+    box-shadow: 0 0 20px var(--halloween-violet),
+      0 0 30px var(--halloween-violet), 0 0 40px var(--halloween-violet);
+  }
+}
+
+@keyframes pumpkin-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: brightness(1.2) drop-shadow(0 0 15px var(--halloween-orange));
+  }
+}
+
+.badge-card:hover {
+  animation: pumpkin-pulse 2s ease-in-out infinite;
+}
+
+.special-badge-legendary {
+  animation: mystical-glow 3s ease-in-out infinite;
 }
 </style>

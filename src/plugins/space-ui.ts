@@ -29,7 +29,7 @@ const components = {
   Badge: Badge,
   Title: Title,
   Loader: Loader,
-  SpaceToggle: Toggle,
+  Toggle: Toggle,
   SpaceDropdown: Dropdown, // Ajout du composant Toggle
 
   // Molecules

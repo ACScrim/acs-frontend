@@ -289,7 +289,7 @@
                   </div>
 
                   <!-- Toggle -->
-                  <SpaceToggle
+                  <Toggle
                     :model-value="notificationPreferences.tournaments"
                     @update:model-value="
                       updateNotificationPreference('tournaments', $event)
@@ -426,7 +426,7 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
+                  <Toggle
                     :model-value="notificationPreferences.badges"
                     @update:model-value="
                       updateNotificationPreference('badges', $event)
@@ -563,7 +563,7 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
+                  <Toggle
                     :model-value="notificationPreferences.reminders"
                     @update:model-value="
                       updateNotificationPreference('reminders', $event)
@@ -700,7 +700,7 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
+                  <Toggle
                     :model-value="notificationPreferences.system"
                     @update:model-value="
                       updateNotificationPreference('system', $event)
@@ -993,7 +993,7 @@
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <SpaceToggle
+                <Toggle
                   :model-value="isGameRoleEnabled(game._id || '')"
                   @update:model-value="toggleGameRole(game._id || '', $event)"
                   size="sm"

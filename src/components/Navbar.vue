@@ -107,7 +107,7 @@
         </router-link>
       </div>
       <!-- Toggle mode allégé -->
-      <SpaceToggle
+      <Toggle
         v-model="isLightMode"
         @update:modelValue="toggleLightMode"
         label="Mode allégé"
@@ -536,7 +536,7 @@
                   </svg>
                   <span>Mode allégé</span>
                 </div>
-                <SpaceToggle
+                <Toggle
                   v-model="isLightMode"
                   @update:modelValue="toggleLightMode"
                   size="sm"
