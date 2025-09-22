@@ -45,7 +45,7 @@
     <!-- Informations du stream -->
     <div class="stream-info p-4">
       <h5
-        class="stream-title font-semibold text-color-text truncate flex items-center font-heading"
+        class="stream-title font-semibold text-color-text truncate flex items-center font-body"
       >
         {{ user.username }}
         <!-- Icône participant -->

@@ -35,7 +35,7 @@
     <!-- Informations utilisateur -->
     <div class="user-info relative z-10 space-y-1">
       <h5
-        class="username text-sm font-semibold text-color-text group-hover:text-color-primary transition-colors truncate font-heading"
+        class="username text-sm font-semibold text-color-text group-hover:text-color-primary transition-colors truncate font-body"
       >
         {{ user.username }}
       </h5>
