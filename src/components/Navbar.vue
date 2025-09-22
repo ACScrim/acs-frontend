@@ -33,7 +33,7 @@
               class="absolute inset-0 bg-color-primary/20 rounded-full blur-sm animate-pulse-slow"
             ></div>
           </div>
-          <div class="tooltip-text font-heading">Menu Admin</div>
+          <div class="tooltip-text font-body">Menu Admin</div>
         </button>
 
         <router-link to="/" class="logo-container mystical-transition">
@@ -50,14 +50,14 @@
       <div class="hidden md:flex flex-grow justify-center space-x-12">
         <router-link
           to="/classement"
-          class="nav-link font-heading"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/classement') }"
         >
           Classement
         </router-link>
         <router-link
           to="/tournois-a-venir"
-          class="nav-link font-heading"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/tournois-a-venir') }"
         >
           Tournois
@@ -65,7 +65,7 @@
         <router-link
           v-if="user"
           to="/membres"
-          class="nav-link font-heading"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/membres') }"
         >
           Membres
@@ -73,7 +73,7 @@
         <router-link
           v-if="user"
           to="/propositions-jeux"
-          class="nav-link font-heading"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/propositions-jeux') }"
         >
           Propositions
@@ -81,7 +81,7 @@
         <router-link
           v-if="user"
           to="/badges"
-          class="nav-link font-heading"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/badges') }"
         >
           Badges
@@ -119,7 +119,7 @@
             />
             <div class="avatar-glow"></div>
           </div>
-          <span class="user-name ml-2 hidden sm:inline font-heading capitalize">
+          <span class="user-name ml-2 hidden sm:inline font-body capitalize">
             {{ user.username }}
           </span>
           <svg
@@ -143,7 +143,7 @@
         <button
           v-else
           @click="loginWithDiscord"
-          class="discord-login-btn font-heading"
+          class="discord-login-btn font-body"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@
             v-if="menuOpen"
             class="user-dropdown absolute top-full right-0 mt-2 w-56 z-50"
           >
-            <div class="dropdown-header font-heading">
+            <div class="dropdown-header font-body">
               <div class="dropdown-title">PANNEAU DE CONTRÔLE</div>
               <div class="dropdown-subtitle">STATION UTILISATEUR</div>
             </div>
@@ -302,7 +302,7 @@
             v-if="mobileMenuOpen"
             class="mobile-dropdown absolute top-full right-0 left-0 mt-2 z-50 mx-4"
           >
-            <div class="dropdown-header font-heading">
+            <div class="dropdown-header font-body">
               <div class="dropdown-title">NAVIGATION</div>
               <div class="dropdown-subtitle">SYSTÈME PRINCIPAL</div>
             </div>
@@ -327,7 +327,7 @@
                   </div>
                   <div class="flex-1">
                     <div
-                      class="text-color-primary-light font-heading capitalize text-sm"
+                      class="text-color-primary-light font-body capitalize text-sm"
                     >
                       {{ user.username }}
                     </div>
@@ -586,7 +586,7 @@
         v-if="adminMenuOpen"
         class="admin-dropdown absolute left-0 top-full z-40"
       >
-        <div class="dropdown-header font-heading">
+        <div class="dropdown-header font-body">
           <div class="dropdown-title">PANNEAU ADMIN</div>
           <div class="dropdown-subtitle">ACCÈS RESTREINT</div>
         </div>
@@ -925,12 +925,30 @@ onBeforeUnmount(() => {
 .navbar-bg {
   background: linear-gradient(
     135deg,
-    rgba(var(--color-primary-rgb), 0.15),
-    rgba(var(--color-secondary-rgb), 0.15)
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(var(--color-secondary-rgb), 0.2) 25%,
+    /* Sang */ rgba(var(--color-primary-rgb), 0.15) 50%,
+    /* Citrouille */ rgba(var(--color-accent-rgb), 0.2) 75%,
+    /* Violet mystique */ rgba(0, 0, 0, 0.9) 100%
   );
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--color-accent);
-  box-shadow: 0 4px 20px rgba(var(--color-primary-rgb), 0.1);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-secondary); /* Rouge sang */
+  box-shadow: 0 6px 25px rgba(var(--color-secondary-rgb), 0.3),
+    inset 0 -2px 8px rgba(var(--color-primary-rgb), 0.2);
+  animation: spooky-flicker 6s infinite alternate;
+}
+
+/* Effet de lueur/flicker pour un rendu vivant */
+@keyframes spooky-flicker {
+  0%,
+  100% {
+    box-shadow: 0 6px 25px rgba(var(--color-secondary-rgb), 0.3),
+      inset 0 -2px 8px rgba(var(--color-primary-rgb), 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(var(--color-accent-rgb), 0.4),
+      inset 0 -3px 10px rgba(var(--color-secondary-rgb), 0.3);
+  }
 }
 
 /* Animation de pulsation lente */

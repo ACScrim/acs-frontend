@@ -599,14 +599,17 @@
             </span>
             <div class="flex items-center gap-3">
               <Button
-                @click="selectAllRoles"
+                @click="
+                  allRolesSelected ? deselectAllRoles() : selectAllRoles()
+                "
                 type="button"
                 variant="ghost"
                 size="xs"
-                className="flex items-center"
+                className="flex items-center px-2 py-1 text-[11px]"
               >
                 <template #icon>
                   <svg
+                    v-if="!allRolesSelected"
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-3 w-3 mr-1"
                     viewBox="0 0 20 20"
@@ -619,8 +622,23 @@
                       clip-rule="evenodd"
                     />
                   </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5 12a1 1 0 011-1h12a1 1 0 110 2H6a1 1 0 01-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
                 </template>
-                Tout sélectionner
+                {{
+                  allRolesSelected ? "Tout désélectionner" : "Tout sélectionner"
+                }}
               </Button>
               <Badge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
@@ -689,7 +707,7 @@
             for="comment"
             class="block text-color-primary-light text-sm font-nasa mb-2"
           >
-            Commentaire (optionnel)
+            Commentaire <span class="text-color-error ml-1">*</span>
           </label>
           <textarea
             id="comment"
@@ -697,10 +715,19 @@
             rows="3"
             placeholder="Informations complémentaires, rôle préféré, etc."
             maxlength="150"
-            class="w-full p-3 bg-color-bg-light border border-color-bg-light rounded-md text-color-text focus:border-color-primary focus:outline-none focus:ring-1 focus:ring-color-primary/30 font-mono resize-none"
+            class="w-full p-3 bg-color-bg-light border rounded-md text-color-text focus:outline-none font-body resize-none"
+            :class="[
+              commentError
+                ? 'border-color-error focus:ring-1 focus:ring-color-error/50 focus:border-color-error'
+                : 'border-color-bg-light focus:border-color-primary focus:ring-1 focus:ring-color-primary/30',
+            ]"
+            @input="commentError = false"
           ></textarea>
-          <div class="flex justify-end mt-1">
-            <p class="text-xs text-color-text-muted">
+          <div class="flex justify-between mt-1">
+            <p class="text-xs text-color-error" v-if="commentError">
+              Veuillez renseigner un commentaire
+            </p>
+            <p class="text-xs text-color-text-muted ml-auto">
               {{ comment.length }}/150
             </p>
           </div>
@@ -819,6 +846,7 @@ const route = useRoute();
 const router = useRouter();
 
 const rankError = ref(false);
+const commentError = ref(false);
 
 // États des modales
 const showGameSelector = ref(false);
@@ -880,6 +908,12 @@ const filteredGames = computed(() => {
   return games.value
     .filter((game) => !existingGameIds.includes(game._id)) // Jeux sans niveau défini
     .filter((game) => !search || game.name.toLowerCase().includes(search)); // Recherche
+});
+
+// Tous les rôles sont-ils sélectionnés ?
+const allRolesSelected = computed(() => {
+  const total = selectedGame.value?.roles?.length || 0;
+  return total > 0 && selectedRoles.value.length === total;
 });
 // #endregion
 
@@ -1000,6 +1034,14 @@ const selectAllRoles = () => {
   }
 };
 
+/**
+ * Désélectionne tous les rôles
+ */
+const deselectAllRoles = () => {
+  selectedRoles.value = [];
+  // Laisser roleError à false; la validation se fera au submit si nécessaire
+};
+
 // #endregion
 
 // -----------------------------------------------
@@ -1054,6 +1096,7 @@ const saveLevel = async (e?: Event) => {
   // Réinitialiser les états d'erreur
   rankError.value = false;
   roleError.value = false;
+  commentError.value = false;
 
   // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
@@ -1076,6 +1119,13 @@ const saveLevel = async (e?: Event) => {
   ) {
     roleError.value = true;
     showToast("Veuillez sélectionner au moins un rôle", "error");
+    return;
+  }
+
+  // Vérifier que le commentaire est renseigné
+  if (!comment.value.trim()) {
+    commentError.value = true;
+    showToast("Veuillez renseigner un commentaire", "error");
     return;
   }
 
@@ -1220,6 +1270,7 @@ const resetForm = () => {
   selectedRoles.value = [];
   editingLevelId.value = null;
   roleError.value = false;
+  commentError.value = false;
 };
 
 // #endregion

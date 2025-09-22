@@ -63,7 +63,7 @@
         <div
           class="offline-indicator w-2 h-2 bg-color-secondary rounded-full mr-1.5 opacity-75"
         ></div>
-        <span class="font-body">Dans les ombres</span>
+        <span class="font-body">Hors ligne</span>
       </div>
 
       <!-- Badge participant textuel Halloween -->

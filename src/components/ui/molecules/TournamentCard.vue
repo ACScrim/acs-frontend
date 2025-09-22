@@ -39,8 +39,8 @@
       >
         {{ tournament.name }}
       </h3>
-      <!-- Contenu personnalisable -->
-      <slot name="content">
+      <!-- Contenu personnalisable (slot par défaut) -->
+      <slot>
         <div class="tournament-details space-y-0.5">
           <div
             class="flex items-center text-color-text-muted text-3xs xs:text-2xs sm:text-xs"
@@ -107,6 +107,11 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   variant: "primary",
 });
+
+// Déclaration des slots (Volar/TS)
+defineSlots<{
+  default?: () => any;
+}>();
 
 // Calcule les classes CSS pour la variante de carte
 const getVariantClass = computed(() => {

@@ -2,19 +2,35 @@
   <div
     class="relative min-h-screen overflow-x-hidden overflow-y-auto scroll-smooth flex flex-col"
   >
-    <!-- Fond dynamique pour le mode allégé avec étoiles fixes -->
+    <!-- Fond Halloween pour le mode allégé (sans thème espace) -->
     <div
       v-if="isLightMode"
       class="absolute inset-0 w-full h-full z-10"
       aria-hidden="true"
     >
-      <!-- Étoiles fixes statiques -->
-      <div class="stars-layer stars-static-small"></div>
-      <div class="stars-layer stars-static-medium"></div>
-      <div class="stars-layer stars-static-large"></div>
+      <!-- Dégradé sombre avec nuances Halloween -->
+      <div class="halloween-layer halloween-gradient"></div>
 
-      <!-- Planète améliorée -->
-      <div class="planet-jupiter-static"></div>
+      <!-- Vignette sombre pour focaliser le contenu -->
+      <div class="halloween-layer halloween-vignette"></div>
+
+      <!-- Brumes fantomatiques très subtiles -->
+      <div class="halloween-layer halloween-fog fog-back"></div>
+      <div class="halloween-layer halloween-fog fog-front"></div>
+
+      <!-- Lueurs thématiques (citrouille / mystique) très légères -->
+      <div class="halloween-layer glow-pumpkin"></div>
+      <div class="halloween-layer glow-mystic"></div>
+
+      <!-- Petites citrouilles et fantômes volants (subtils) -->
+      <div class="halloween-layer flying-spirits" aria-hidden="true">
+        <span class="spirit ghost" style="left: 8%; top: 22%">👻</span>
+        <span class="spirit ghost" style="left: 72%; top: 12%">👻</span>
+        <span class="spirit ghost" style="left: 86%; top: 66%">👻</span>
+        <span class="spirit pumpkin" style="left: 18%; top: 76%">🎃</span>
+        <span class="spirit pumpkin" style="left: 52%; top: 38%">🎃</span>
+        <span class="spirit pumpkin" style="left: 90%; top: 30%">🎃</span>
+      </div>
     </div>
 
     <!-- Fond vidéo pour le mode allégé -->
@@ -109,99 +125,141 @@ html {
   ); /* Overlay subtil pour ajuster contraste/luminosité */
 }
 
-/* Couche d'étoiles pour le mode allégé */
-.stars-layer {
+/* Couche utilitaire pour les overlays Halloween */
+.halloween-layer {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  opacity: 0.7;
+  inset: 0;
 }
 
-/* Styles pour le mode allégé - Étoiles fixes */
-.stars-static-small {
-  background-image: radial-gradient(
-      1px 1px at 15% 20%,
-      #ffffff 100%,
-      transparent
+/* Dégradé général sombre légèrement teinté Halloween */
+.halloween-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 15, 15, 0.95) 0%,
+    rgba(124, 45, 18, 0.07) 50%,
+    rgba(88, 28, 135, 0.07) 100%
+  );
+}
+
+/* Vignette pour assombrir les bords et focaliser le centre */
+.halloween-vignette {
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.7),
+    inset 0 0 280px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* Brumes fantomatiques (subtiles) */
+.halloween-fog {
+  background: radial-gradient(
+      1000px 600px at 10% 85%,
+      rgba(255, 255, 255, 0.04),
+      transparent 70%
     ),
-    radial-gradient(1px 1px at 25% 60%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 35% 35%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 45% 80%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 55% 10%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 65% 50%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 75% 25%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 85% 70%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 95% 40%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 8% 85%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 18% 5%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 28% 45%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 38% 90%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 48% 15%, #ffffff 100%, transparent),
-    radial-gradient(1px 1px at 58% 75%, #ffffff 100%, transparent);
-  background-size: 100% 100%;
-  opacity: 0.8;
+    radial-gradient(
+      900px 500px at 80% 20%,
+      rgba(255, 255, 255, 0.03),
+      transparent 70%
+    );
+  filter: blur(6px);
+  opacity: 0.45;
+  animation: fog-drift 60s linear infinite;
 }
 
-.stars-static-medium {
-  background-image: radial-gradient(
-      1.5px 1.5px at 20% 30%,
-      #ffffff 100%,
-      transparent
-    ),
-    radial-gradient(1.5px 1.5px at 30% 70%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 40% 15%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 50% 85%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 60% 40%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 70% 60%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 80% 25%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 90% 80%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 10% 50%, #ffffff 100%, transparent),
-    radial-gradient(1.5px 1.5px at 22% 95%, #ffffff 100%, transparent);
-  background-size: 100% 100%;
-  opacity: 0.9;
+.fog-back {
+  opacity: 0.25;
+  animation-duration: 90s;
 }
 
-.stars-static-large {
-  background-image: radial-gradient(
-      2px 2px at 12% 25%,
-      #ffffff 100%,
-      transparent
-    ),
-    radial-gradient(2px 2px at 35% 65%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 52% 18%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 68% 75%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 82% 35%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 15% 85%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 45% 55%, #ffffff 100%, transparent),
-    radial-gradient(2px 2px at 75% 12%, #ffffff 100%, transparent);
-  background-size: 100% 100%;
-  opacity: 1;
+.fog-front {
+  opacity: 0.35;
+  animation-direction: reverse;
 }
 
-/* Planètes statiques pour le mode allégé */
-.planet-jupiter-static {
+@keyframes fog-drift {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-2%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Respecte la préférence utilisateur de réduction des animations */
+@media (prefers-reduced-motion: reduce) {
+  .halloween-fog {
+    animation: none;
+  }
+}
+
+/* Lueurs très légères pour rythme chromatique Halloween */
+.glow-pumpkin {
+  background: radial-gradient(
+    400px 260px at 85% 85%,
+    rgba(217, 119, 6, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.glow-mystic {
+  background: radial-gradient(
+    360px 220px at 10% 15%,
+    rgba(139, 92, 246, 0.07),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Esprits volants (fantômes et citrouilles) */
+.flying-spirits {
   position: absolute;
-  top: 15%;
-  right: 12%;
-  width: 120px;
-  height: 120px;
-  background-image: linear-gradient(to bottom right, #f97316, #e11d48, #7e22ce);
-  border-radius: 50%;
-  box-shadow: 0 0 25px rgba(249, 115, 22, 0.4),
-    inset 0 0 35px rgba(17, 24, 39, 0.7);
-  z-index: 3;
-  opacity: 0.85;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-@media (max-width: 768px) {
-  .planet-jupiter-static {
-    width: 80px;
-    height: 80px;
-    right: 8%;
-    top: 12%;
+.spirit {
+  position: absolute;
+  display: inline-block;
+  font-size: 18px;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.15));
+  animation: spirit-float 10s ease-in-out infinite;
+}
+
+.spirit.ghost {
+  animation-duration: 12s;
+}
+
+.spirit.pumpkin {
+  animation-duration: 14s;
+  filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.15));
+}
+
+@keyframes spirit-float {
+  0% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) translateX(3px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(6px) translateX(-3px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spirit {
+    animation: none;
   }
 }
 </style>

@@ -2,25 +2,6 @@
   <div
     class="relative flex items-center justify-center min-h-screen p-4 pb-16 navbar-spacing overflow-hidden"
   >
-    <!-- Grille spatiale en arrière-plan -->
-    <div
-      class="space-grid absolute inset-0 opacity-10 pointer-events-none"
-    ></div>
-
-    <!-- Étoiles en arrière-plan -->
-    <div
-      v-for="n in 25"
-      :key="`star-${n}`"
-      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
-      :style="{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 3 + 2}s`,
-        opacity: Math.random() * 0.7 + 0.3,
-      }"
-    ></div>
-
     <!-- "Planète" décorative en arrière-plan -->
     <div
       class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-color-primary-dark/10 to-color-primary/5 opacity-30 blur-xl pointer-events-none"
@@ -183,49 +164,47 @@
           </div>
           <div v-else-if="nextTournament" class="space-y-3">
             <TournamentCard :tournament="nextTournament" variant="primary">
-              <template #content>
-                <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
-                  <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
+              <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
+                <div
+                  class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>{{ formatDate(nextTournament.date) }}</span>
-                  </div>
-
-                  <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{{ formatTime(nextTournament.date) }}</span>
-                  </div>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{{ formatDate(nextTournament.date) }}</span>
                 </div>
-              </template>
+
+                <div
+                  class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>{{ formatTime(nextTournament.date) }}</span>
+                </div>
+              </div>
             </TournamentCard>
 
             <div class="grid grid-cols-2 gap-4">
@@ -382,11 +361,9 @@
               :tournament="lastFinishedTournament"
               variant="secondary"
             >
-              <template #content>
-                <div
-                  class="text-sm text-color-text-muted flex items-center mt-1"
-                ></div>
-              </template>
+              <div
+                class="text-sm text-color-text-muted flex items-center mt-1"
+              ></div>
             </TournamentCard>
 
             <!-- Podium -->
@@ -1097,17 +1074,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Grille spatiale en arrière-plan */
-.space-grid {
-  background-image: linear-gradient(
-      rgba(109, 40, 217, 0.1) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center center;
-}
-
 /* Animation pulse lente */
 @keyframes pulse-slow {
   0%,
@@ -1136,21 +1102,6 @@ onUnmounted(() => {
 
 .animate-float-subtle {
   animation: float-subtle 5s ease-in-out infinite;
-}
-
-/* Animation pour les éléments du compteur */
-.pulse-animation {
-  animation: pulse-bg 2s infinite;
-}
-
-@keyframes pulse-bg {
-  0%,
-  100% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 0.3;
-  }
 }
 
 /* Animation de fondu vers le haut */
@@ -1256,25 +1207,6 @@ onUnmounted(() => {
   .space-y-6 > *:last-child {
     margin-bottom: 1.5rem;
   }
-}
-
-/* Style spécifique pour les badges de rang */
-.getRankBadgeVariant-0 {
-  background-color: rgba(251, 146, 60, 0.2);
-  color: var(--color-accent-light);
-  border-color: rgba(251, 146, 60, 0.5);
-}
-
-.getRankBadgeVariant-1 {
-  background-color: rgba(2, 132, 199, 0.2);
-  color: var(--color-secondary-light);
-  border-color: rgba(2, 132, 199, 0.5);
-}
-
-.getRankBadgeVariant-2 {
-  background-color: rgba(109, 40, 217, 0.2);
-  color: var(--color-primary-light);
-  border-color: rgba(109, 40, 217, 0.5);
 }
 
 /* Espacement par rapport à la navbar */

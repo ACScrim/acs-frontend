@@ -74,13 +74,8 @@ const formatDoomDate = () => {
   padding-top: 24px;
   padding-bottom: 24px;
   border-bottom: 2px solid rgba(220, 38, 38, 0.3);
-  background: linear-gradient(
-    135deg,
-    rgba(15, 15, 15, 0.95) 0%,
-    rgba(124, 45, 18, 0.08) 50%,
-    rgba(15, 15, 15, 0.95) 100%
-  );
-  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.15);
+  background: transparent;
+  box-shadow: none;
   width: 100%;
   max-width: 100%;
   overflow: hidden;

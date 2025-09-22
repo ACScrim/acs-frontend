@@ -5,12 +5,12 @@
     <div
       class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
     >
-      <!-- Bouton retour -->
+      <!-- Bouton retour invisible pour maintenir l'espacement -->
       <Button
         @click="goBackToTournaments"
         variant="secondary"
         size="sm"
-        className="flex items-center justify-center sm:justify-start w-full sm:w-auto"
+        className="flex items-center justify-center sm:justify-start w-full sm:w-auto opacity-0 pointer-events-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -237,6 +237,19 @@
         <div
           class="relative h-32 sm:h-40 md:h-56 lg:h-64 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-4 sm:mb-6 overflow-hidden"
         >
+          <!-- Bouton retour en haut à gauche de l'image -->
+          <div class="absolute top-2 sm:top-4 left-2 sm:left-4 z-10">
+            <Button
+              @click="goBackToTournaments"
+              variant="secondary"
+              size="sm"
+              className="group flex items-center justify-center w-10 h-10 rounded-full bg-color-bg/90 backdrop-blur-sm border border-color-primary/30 hover:bg-color-bg hover:border-color-primary/50 transition-all duration-300 hover:scale-110"
+              title="Retour aux tournois"
+            >
+              <
+            </Button>
+          </div>
+
           <!-- Image du jeu si elle existe -->
           <template v-if="tournament.game.imageUrl && !imageError">
             <img
@@ -1214,7 +1227,7 @@
                     <router-link
                       v-if="teamPlayer._id"
                       :to="{ name: 'Profil', params: { id: teamPlayer._id } }"
-                      class="text-color-text hover:text-color-secondary-light transition-colors truncate min-w-0 flex-1"
+                      class="text-color-text hover:text-color-secondary-light hover:underline underline-offset-2 transition-colors truncate min-w-0 flex-1"
                     >
                       {{ teamPlayer.username }}
                     </router-link>
@@ -1293,7 +1306,7 @@
                   <router-link
                     v-if="player._id"
                     :to="{ name: 'Profil', params: { id: player._id } }"
-                    class="text-color-text hover:text-color-primary-light transition-colors truncate min-w-0 flex-1"
+                    class="text-color-text hover:text-color-primary-light hover:underline underline-offset-2 transition-colors truncate min-w-0 flex-1"
                   >
                     {{ player.username }}
                   </router-link>
@@ -1412,7 +1425,7 @@
                       <router-link
                         v-if="player._id"
                         :to="{ name: 'Profil', params: { id: player._id } }"
-                        class="text-color-text hover:text-color-primary-light transition-colors"
+                        class="text-color-text hover:text-color-primary-light hover:underline underline-offset-2 transition-colors"
                       >
                         {{ player.username }}
                       </router-link>
@@ -1442,77 +1455,83 @@
                 </p>
               </Card>
             </div>
-          </div>
 
-          <!-- Affichage des casters -->
-          <div
-            v-if="tournament.casters && tournament.casters.length > 0"
-            class="pt-10"
-          >
-            <h3
-              class="text-base sm:text-lg text-color-text font-heading mb-3 sm:mb-4 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-color-primary"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                />
-              </svg>
-              Liste des casters
-            </h3>
+            <!-- Affichage des casters -->
             <div
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              v-if="tournament.casters && tournament.casters.length > 0"
+              class="pt-10"
             >
-              <div
-                v-for="caster in tournament.casters"
-                :key="caster._id"
-                class="flex items-center justify-between p-2 sm:p-3 bg-color-bg-light/10 rounded-lg border-l-2 border-color-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0"
+              <h3
+                class="text-base sm:text-lg text-color-text font-heading mb-3 sm:mb-4 flex items-center"
               >
-                <router-link
-                  v-if="caster._id"
-                  :to="{ name: 'Profil', params: { id: caster._id } }"
-                  class="text-color-text hover:text-color-primary-light transition-colors truncate min-w-0 flex-1"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-color-primary"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
                 >
-                  {{ caster.username }}
-                </router-link>
-                <span v-else class="text-color-text truncate min-w-0 flex-1">
-                  {{ caster.username || "Joueur inconnu" }}
-                </span>
-
+                  <path
+                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+                  />
+                </svg>
+                Liste des casters
+              </h3>
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              >
                 <div
-                  class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
+                  v-for="caster in tournament.casters"
+                  :key="caster._id"
+                  class="flex items-center justify-between p-2 sm:p-3 bg-color-bg-light/10 rounded-lg border-l-2 border-color-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0"
                 >
-                  <!-- Badge pour les streams live -->
-                  <a
-                    v-if="getPlayerLiveStatus(caster)"
-                    :href="`https://twitch.tv/${getPlayerTwitchUsername(
-                      caster
-                    )}`"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <router-link
+                    v-if="caster._id"
+                    :to="{ name: 'Profil', params: { id: caster._id } }"
+                    class="text-color-text hover:text-color-primary-light hover:underline underline-offset-2 transition-colors truncate min-w-0 flex-1"
                   >
-                    <Badge variant="accent" size="xs" className="animate-pulse">
-                      LIVE
-                    </Badge>
-                  </a>
+                    {{ caster.username }}
+                  </router-link>
+                  <span v-else class="text-color-text truncate min-w-0 flex-1">
+                    {{ caster.username || "Joueur inconnu" }}
+                  </span>
 
-                  <!-- Badge check-in -->
-                  <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
-                    <Badge variant="success" size="xs">
-                      <span class="hidden sm:inline">Check-in</span>
-                      <span class="sm:hidden">✓</span>
-                    </Badge>
-                  </span>
-                  <span v-else-if="isCheckInAvailable">
-                    <Badge variant="error" size="xs">
-                      <span class="hidden sm:inline">En attente</span>
-                      <span class="sm:hidden">⏳</span>
-                    </Badge>
-                  </span>
+                  <div
+                    class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
+                  >
+                    <!-- Badge pour les streams live -->
+                    <a
+                      v-if="getPlayerLiveStatus(caster)"
+                      :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                        caster
+                      )}`"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Badge
+                        variant="accent"
+                        size="xs"
+                        className="animate-pulse"
+                      >
+                        LIVE
+                      </Badge>
+                    </a>
+
+                    <!-- Badge check-in -->
+                    <span
+                      v-if="caster._id && tournament?.checkIns?.[caster._id]"
+                    >
+                      <Badge variant="success" size="xs">
+                        <span class="hidden sm:inline">Check-in</span>
+                        <span class="sm:hidden">✓</span>
+                      </Badge>
+                    </span>
+                    <span v-else-if="isCheckInAvailable">
+                      <Badge variant="error" size="xs">
+                        <span class="hidden sm:inline">En attente</span>
+                        <span class="sm:hidden">⏳</span>
+                      </Badge>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2862,98 +2881,10 @@ watch(activeTab, (newTab) => {
   border-radius: 4px;
 }
 
-/* Responsive breakpoints personnalisés */
-@media (max-width: 440px) {
-  .xs\:hidden {
-    display: none;
-  }
-
-  .xs\:inline {
-    display: inline;
-  }
-}
-
-/* Amélioration de la gestion du texte sur mobile */
-@media (max-width: 640px) {
-  .tournament-details {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  /* Ajustement des grilles sur très petits écrans */
-  .grid-cols-1 {
-    grid-template-columns: 1fr;
-  }
-
-  /* Espacement réduit sur mobile */
-  .space-y-3 > * + * {
-    margin-top: 0.75rem;
-  }
-
-  .space-y-4 > * + * {
-    margin-top: 1rem;
-  }
-
-  /* Padding réduit pour les cartes sur mobile */
-  .mobile-card-padding {
-    padding: 0.75rem;
-  }
-}
-
-/* Optimisation pour les très petits écrans */
-@media (max-width: 375px) {
-  .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  /* Réduction de la taille des badges sur très petits écrans */
-  .space-badge-xs {
-    font-size: 0.6rem;
-    padding: 0.125rem 0.25rem;
-  }
-}
-
 /* Amélioration de la scrollabilité horizontale des onglets */
 .space-tabs {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-}
-
-/* Amélioration des interactions tactiles sur mobile */
-@media (hover: none) and (pointer: coarse) {
-  .hover\:scale-105:hover {
-    transform: scale(1.02);
-    transition: transform 0.2s ease;
-  }
-
-  .hover\:bg-color-bg-light\/10:hover {
-    background-color: rgba(var(--color-bg-light-rgb), 0.15);
-  }
-}
-
-/* Fix pour les éléments fixed sur mobile */
-@media (max-width: 640px) {
-  .fixed.bottom-4.right-4 {
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 40;
-  }
-}
-
-/* Amélioration de la lisibilité sur mobile */
-@media (max-width: 640px) {
-  .text-xs {
-    font-size: 0.7rem;
-  }
-
-  .text-sm {
-    font-size: 0.8rem;
-  }
-
-  .text-base {
-    font-size: 0.9rem;
-  }
 }
 
 /* Scrollbar fine pour les éléments en overflow */
