@@ -966,6 +966,29 @@ onBeforeUnmount(() => {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Animations pour le logo au hover */
+@keyframes logo-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: scale(1.1) rotate(5deg) translateY(0px);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg) translateY(-3px);
+  }
+}
+
 /* Logo Halloween */
 .logo-container {
   position: relative;
@@ -977,24 +1000,25 @@ onBeforeUnmount(() => {
 }
 
 .logo-container:hover .logo-glow {
-  /* Ne pas accentuer le glow au hover pour éviter l'effet de cadre */
-  opacity: 0.15;
-  filter: blur(10px);
+  /* Effet de lueur amélioré au hover */
+  opacity: 0.3;
+  filter: blur(15px);
+  animation: logo-pulse 2s ease-in-out infinite;
 }
 
 .navbar-logo {
   height: 40px;
-  /* Désactiver le drop-shadow par défaut pour éviter l'effet de bord */
   filter: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   outline: none;
   border: none;
 }
 
 .logo-container:hover .navbar-logo {
-  /* Pas de drop-shadow supplémentaire au hover */
-  filter: none;
-  transform: scale(1.05);
+  /* Effet combiné au hover : scale, rotation et ombre */
+  filter: drop-shadow(0 0 8px rgba(var(--color-primary-rgb), 0.6));
+  transform: scale(1.1) rotate(5deg);
+  animation: logo-float 3s ease-in-out infinite;
 }
 
 /* Remove any default outline on hover while keeping accessible focus ring */

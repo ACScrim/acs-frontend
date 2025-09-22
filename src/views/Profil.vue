@@ -355,6 +355,21 @@
             <div class="text-xs text-color-text-muted">3e places</div>
           </Card>
         </div>
+
+        <!-- Statistique MVP -->
+        <div class="flex justify-center mt-4">
+          <Card
+            variant="accent"
+            :stars="true"
+            className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] max-w-[250px]"
+          >
+            <div class="text-color-accent text-lg font-nasa mb-1">🏆 MVP</div>
+            <div class="text-2xl font-bold text-white">
+              {{ mvpCount }}
+            </div>
+            <div class="text-xs text-color-text-muted">fois élu MVP</div>
+          </Card>
+        </div>
       </Card>
       <!-- Section Activité et engagement -->
       <Card
@@ -1596,6 +1611,15 @@ const medalCount = computed(() => {
   });
 
   return counts;
+});
+
+// Compte des MVP
+const mvpCount = computed(() => {
+  if (!playerRanking.value?.tournamentsParticipated) return 0;
+
+  return playerRanking.value.tournamentsParticipated.filter(
+    (tournament) => tournament.isMvp
+  ).length;
 });
 
 // Données pour le graphique de progression

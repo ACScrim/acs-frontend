@@ -6,6 +6,7 @@
         title="PARAMÈTRES UTILISATEUR"
         mission="SETTINGS-CONFIG-25"
         :decorated="true"
+        :showMissionInfo="false"
         className="mb-8"
       />
 

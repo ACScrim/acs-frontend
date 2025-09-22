@@ -180,7 +180,7 @@
                 v-model.trim="searchQuery"
                 type="text"
                 inputmode="search"
-                placeholder="Ex: Ragnar, MiDo, ..."
+                placeholder="Ex: Heekoz, Tekninon, ..."
                 class="w-full rounded-lg border-2 border-color-bg-light/40 bg-color-bg-light text-color-text px-4 py-2 focus:ring-2 focus:ring-color-primary/40 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary placeholder:text-color-text-muted"
                 style="box-shadow: 0 0 10px rgba(148, 163, 184, 0.15)"
                 aria-label="Rechercher un joueur par nom"

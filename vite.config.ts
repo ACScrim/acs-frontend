@@ -13,6 +13,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,mp4}"],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB au lieu de 2 MB par défaut
         // Exclure les routes d'authentification du cache
         navigateFallbackDenylist: [
           /^\/api\//,           // Toutes les routes API

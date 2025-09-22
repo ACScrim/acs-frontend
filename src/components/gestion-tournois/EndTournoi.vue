@@ -21,23 +21,24 @@
 
     <!-- Information du tournoi sélectionné -->
     <Card variant="primary" :stars="true" className="mb-6">
-      <template #header>
-        <div class="flex items-center gap-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-primary-light"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <Title size="lg">Tournoi sélectionné</Title>
-        </div>
-      </template>
+      <!-- En-tête intégré dans le contenu -->
+      <div
+        class="flex items-center gap-3 mb-4 pb-4 border-b border-color-primary/20"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-color-primary-light"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <Title size="lg">Tournoi sélectionné</Title>
+      </div>
 
       <!-- Affichage du tournoi ou message si aucun tournoi sélectionné -->
       <div v-if="selectedTournamentDetails">
@@ -86,50 +87,51 @@
       :stars="true"
       className="mb-6"
     >
-      <template #header>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
+      <!-- En-tête intégré dans le contenu -->
+      <div
+        class="flex items-center justify-between mb-4 pb-4 border-b border-color-accent/20"
+      >
+        <div class="flex items-center gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-green-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <Title size="lg" className="text-green-400">
+            Ce tournoi est déjà terminé
+          </Title>
+        </div>
+        <Button
+          @click="confirmUnfinishTournament()"
+          variant="warning"
+          size="md"
+        >
+          <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-green-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
+                fill-rule="evenodd"
+                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                clip-rule="evenodd"
               />
             </svg>
-            <Title size="lg" className="text-green-400">
-              Ce tournoi est déjà terminé
-            </Title>
-          </div>
-          <Button
-            @click="confirmUnfinishTournament()"
-            variant="warning"
-            size="md"
-          >
-            <template #icon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </template>
-            Annuler la finalisation
-          </Button>
-        </div>
-      </template>
+          </template>
+          Annuler la finalisation
+        </Button>
+      </div>
     </Card>
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
     <div v-if="teams.length > 0">
@@ -144,25 +146,26 @@
         :stars="true"
         className="mb-6"
       >
-        <template #header>
-          <div class="flex items-center gap-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-color-accent-light"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <Title size="lg">Finaliser le tournoi</Title>
-          </div>
-        </template>
+        <!-- En-tête intégré dans le contenu -->
+        <div
+          class="flex items-center gap-3 mb-4 pb-4 border-b border-color-accent/20"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-color-accent-light"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <Title size="lg">Finaliser le tournoi</Title>
+        </div>
 
         <div
           class="flex flex-col md:flex-row md:items-center justify-between gap-4"
@@ -371,26 +374,26 @@
       title="MISSION: TERMINER TOURNOI"
       className="max-w-lg"
     >
-      <template #header>
-        <div class="flex items-center gap-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-error"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <Title size="lg" className="text-color-error">
-            CONFIRMATION REQUISE
-          </Title>
-        </div>
-      </template>
-
+      <!-- En-tête intégré dans le contenu -->
+      <div
+        class="flex items-center gap-3 mb-6 pb-4 border-b border-color-error/20"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-color-error"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <Title size="lg" className="text-color-error">
+          CONFIRMATION REQUISE
+        </Title>
+      </div>
       <div class="space-y-4">
         <Alert variant="warning">
           <div class="text-color-text">
@@ -442,34 +445,35 @@
         </div>
       </div>
 
-      <template #footer>
-        <div class="flex justify-end gap-3">
-          <Button
-            @click="showConfirmationDialog = false"
-            variant="ghost"
-            size="md"
-          >
-            Annuler
-          </Button>
-          <Button @click="finishTournament" variant="error" size="md">
-            <template #icon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </template>
-            Terminer le tournoi
-          </Button>
-        </div>
-      </template>
+      <!-- Footer intégré dans le contenu -->
+      <div
+        class="flex justify-end gap-3 mt-6 pt-4 border-t border-color-bg-light/20"
+      >
+        <Button
+          @click="showConfirmationDialog = false"
+          variant="ghost"
+          size="md"
+        >
+          Annuler
+        </Button>
+        <Button @click="finishTournament" variant="error" size="md">
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          Terminer le tournoi
+        </Button>
+      </div>
     </Modal>
 
     <!-- Modal de confirmation d'annulation de finalisation -->
@@ -478,25 +482,26 @@
       title="MISSION: ANNULER FINALISATION"
       className="max-w-lg"
     >
-      <template #header>
-        <div class="flex items-center gap-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-warning"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <Title size="lg" className="text-color-warning">
-            ANNULATION FINALISATION
-          </Title>
-        </div>
-      </template>
+      <!-- En-tête intégré dans le contenu -->
+      <div
+        class="flex items-center gap-3 mb-6 pb-4 border-b border-color-warning/20"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-color-warning"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <Title size="lg" className="text-color-warning">
+          ANNULATION FINALISATION
+        </Title>
+      </div>
 
       <div class="space-y-4">
         <Alert variant="info">
@@ -534,38 +539,38 @@
         </div>
       </div>
 
-      <template #footer>
-        <div class="flex justify-end gap-3">
-          <Button
-            @click="showUnfinishConfirmationDialog = false"
-            variant="ghost"
-            size="md"
-          >
-            Annuler
-          </Button>
-          <Button @click="unfinishTournament" variant="warning" size="md">
-            <template #icon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </template>
-            Annuler la finalisation
-          </Button>
-        </div>
-      </template>
+      <!-- Footer intégré dans le contenu -->
+      <div
+        class="flex justify-end gap-3 mt-6 pt-4 border-t border-color-bg-light/20"
+      >
+        <Button
+          @click="showUnfinishConfirmationDialog = false"
+          variant="ghost"
+          size="md"
+        >
+          Annuler
+        </Button>
+        <Button @click="unfinishTournament" variant="warning" size="md">
+          <template #icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </template>
+          Annuler la finalisation
+        </Button>
+      </div>
     </Modal>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import gameService from "../../services/gameService";
