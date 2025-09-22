@@ -22,14 +22,16 @@
         class="flex flex-col items-center justify-center"
         :class="!user ? 'max-w-md' : ''"
       >
-        <!-- Titre principal avec effet spatial -->
+        <!-- Titre principal avec effet terrifiant -->
         <div class="title-container relative mb-3 sm:mb-4 mt-0">
           <div class="title-bg"></div>
           <h1
-            class="title-text font-nasa text-center leading-tight relative z-10"
+            class="title-text horror-title font-nasa text-center leading-tight relative z-10"
           >
             ALORS, <br />ÇA SCRIM ?
           </h1>
+          <!-- Soulignement "gouttes" décoratif -->
+          <div class="horror-drip" aria-hidden="true"></div>
         </div>
         <!-- Logo -->
         <div
@@ -39,7 +41,7 @@
             class="absolute inset-0 rounded-full bg-color-primary/10 filter blur-xl group-hover:bg-color-primary/20 transition-all duration-500 opacity-70"
           ></div>
           <img
-            src="../assets/sanslueur.png"
+            src="../assets/logo_halloween.png"
             class="h-36 sm:h-40 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
             alt="Logo"
           />
@@ -1074,6 +1076,94 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Effet terrifiant du titre */
+.horror-title {
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.35),
+    0 0 28px rgba(217, 119, 6, 0.25), 0 0 46px rgba(124, 45, 18, 0.2);
+  letter-spacing: 0.18em;
+  animation: horror-flicker 3.2s infinite;
+}
+
+@keyframes horror-flicker {
+  0%,
+  100% {
+    opacity: 1;
+    filter: saturate(1) brightness(1);
+  }
+  5% {
+    opacity: 0.9;
+  }
+  8% {
+    opacity: 0.6;
+    filter: brightness(1.15);
+  }
+  10% {
+    opacity: 0.95;
+    filter: brightness(1);
+  }
+  13% {
+    opacity: 0.7;
+    filter: saturate(1.1);
+  }
+  20% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.97;
+  }
+  58% {
+    opacity: 0.65;
+    filter: brightness(1.12) saturate(1.05);
+  }
+  60% {
+    opacity: 0.98;
+  }
+}
+
+/* Soulignement façon gouttes de sang (subtil) */
+.horror-drip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
+  width: min(360px, 80%);
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(190, 18, 60, 0.35),
+    transparent
+  );
+  filter: blur(0.3px);
+}
+
+.horror-drip::before,
+.horror-drip::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 12px;
+  background: rgba(190, 18, 60, 0.5);
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  top: 6px;
+}
+
+.horror-drip::before {
+  left: 25%;
+  height: 14px;
+}
+.horror-drip::after {
+  left: 68%;
+  height: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .horror-title {
+    animation: none;
+  }
+}
+
 /* Animation pulse lente */
 @keyframes pulse-slow {
   0%,
