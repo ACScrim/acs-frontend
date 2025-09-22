@@ -16,15 +16,12 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB au lieu de 2 MB par défaut
         // Exclure les routes d'authentification du cache
         navigateFallbackDenylist: [
-          /^\/api\//,           // Toutes les routes API
-          /\/auth\//,           // Routes d'authentification
-          /\/discord\/callback/ // Callback Discord spécifiquement
+          /^\/api\//, // Toutes les routes API
+          /\/auth\//, // Routes d'authentification
+          /\/discord\/callback/, // Callback Discord spécifiquement
         ],
         // Exclure du précaching
-        globIgnores: [
-          "**/api/**",
-          "**/auth/**"
-        ],
+        globIgnores: ["**/api/**", "**/auth/**"],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/acscrim\.fr\/api\/.*/,
