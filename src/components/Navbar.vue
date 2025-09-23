@@ -96,6 +96,17 @@
         containerClassName="hidden sm:flex items-center mr-6"
       />
 
+      <!-- Bouton Halloween Screamer -->
+      <button
+        @click="triggerScreamer"
+        class="halloween-button group relative mr-4 hidden sm:flex items-center"
+        title="Tu es prévenu... 👻"
+      >
+        <span class="halloween-text">Ne clique pas</span>
+        <div class="halloween-glow"></div>
+        <div class="tooltip-text font-body">Tu es prévenu... 👻</div>
+      </button>
+
       <!-- Centre de notifications -->
       <div class="notification-center flex items-center mr-4">
         <NotificationCenter />
@@ -523,6 +534,17 @@
                   size="sm"
                 />
               </div>
+
+              <!-- Bouton Halloween Screamer mobile -->
+              <button
+                @click="triggerScreamer"
+                class="dropdown-item halloween-mobile-button w-full text-left"
+              >
+                <div class="flex items-center">
+                  <span class="mr-2">👻</span>
+                  <span>Ne clique pas</span>
+                </div>
+              </button>
             </div>
 
             <!-- Section connexion/déconnexion -->
@@ -851,6 +873,11 @@ const mobileMenuOpen = ref(false);
 const router = useRouter();
 const route = useRoute();
 
+// Émettre des événements vers le parent
+const emit = defineEmits<{
+  triggerScreamer: [];
+}>();
+
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
   adminMenuOpen.value = false;
@@ -908,6 +935,11 @@ const loginWithDiscord = () => {
   window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&scope=identify+guilds+email`;
+};
+
+const triggerScreamer = () => {
+  emit("triggerScreamer");
+  closeAllMenus(); // Fermer les menus ouverts
 };
 
 onMounted(() => {
@@ -1476,5 +1508,90 @@ input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   .navbar-logo {
     height: 36px;
   }
+}
+
+/* Bouton Halloween "Ne clique pas" */
+.halloween-button {
+  position: relative;
+  background: rgba(139, 69, 19, 0.2);
+  border: 1px solid rgba(255, 69, 0, 0.4);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.halloween-text {
+  color: #ff4500;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+}
+
+.halloween-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 69, 0, 0.3),
+    rgba(139, 69, 19, 0.3),
+    rgba(255, 140, 0, 0.3)
+  );
+  border-radius: 8px;
+  filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.halloween-button:hover {
+  background: rgba(139, 69, 19, 0.4);
+  border-color: rgba(255, 69, 0, 0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+}
+
+.halloween-button:hover .halloween-glow {
+  opacity: 0.6;
+  animation: spooky-pulse 1.5s ease-in-out infinite;
+}
+
+.halloween-button:hover .halloween-text {
+  color: #ffa500;
+  text-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+}
+
+.halloween-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.4);
+}
+
+@keyframes spooky-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(6px);
+  }
+}
+
+/* Version mobile du bouton Halloween */
+.halloween-mobile-button {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.halloween-mobile-button:hover {
+  background: rgba(255, 69, 0, 0.1) !important;
+  color: #ff4500 !important;
+  border-left: 2px solid #ff4500 !important;
 }
 </style>

@@ -57,7 +57,7 @@
       <div class="video-background__overlay"></div>
     </div>
     <div class="relative z-20 flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar @trigger-screamer="triggerScreamer" />
       <main class="flex-grow pb-safe">
         <router-view></router-view>
       </main>
@@ -65,19 +65,36 @@
 
       <!-- Composants PWA -->
       <PWAInstallPrompt />
+
+      <!-- Screamer Halloween (apparition manuelle) -->
+      <HalloweenScreamer
+        ref="screamerRef"
+        :enable-sound="true"
+        :sound-volume="0.6"
+        :auto-hide-duration="0"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
 import PWAInstallPrompt from "./components/PWAInstallPrompt.vue";
+import HalloweenScreamer from "./components/HalloweenScreamer.vue";
 import { useSettingsStore } from "./stores/settingsStore";
 
 const settingsStore = useSettingsStore();
 const isLightMode = computed(() => settingsStore.isLightMode);
+
+// Référence au composant screamer
+const screamerRef = ref<InstanceType<typeof HalloweenScreamer> | null>(null);
+
+// Fonction pour déclencher le screamer depuis la navbar
+const triggerScreamer = () => {
+  screamerRef.value?.forceShow();
+};
 </script>
 
 <style>
