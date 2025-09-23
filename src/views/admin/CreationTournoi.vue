@@ -47,7 +47,7 @@
           <div v-if="!showFinishedTournaments" class="w-full">
             <!-- Version alternative avec select natif -->
             <div class="relative">
-              <SpaceDropdown
+              <Dropdown
                 v-model="selectedTournament"
                 @change="handleTournamentChange"
                 id="activeTournamentSelect"
@@ -75,7 +75,7 @@
                 >
                   {{ tournament.name }}
                 </option>
-              </SpaceDropdown>
+              </Dropdown>
               <div
                 class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
               >
@@ -109,7 +109,7 @@
             <!-- Sélection du jeu pour les tournois terminés -->
             <div class="w-full">
               <div class="relative">
-                <SpaceDropdown
+                <Dropdown
                   v-model="selectedGame"
                   @change="handleGameChange"
                   id="globalGameSelect"
@@ -135,7 +135,7 @@
                   >
                     {{ game.name }}
                   </option>
-                </SpaceDropdown>
+                </Dropdown>
                 <div
                   class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >
@@ -159,7 +159,7 @@
             <div class="w-full" v-if="finishedTournaments.length > 0">
               <!-- Version alternative avec select natif -->
               <div class="relative">
-                <SpaceDropdown
+                <Dropdown
                   v-model="selectedTournament"
                   @change="handleTournamentChange"
                   id="finishedTournamentSelect"
@@ -187,7 +187,7 @@
                   >
                     {{ tournament.name }}
                   </option>
-                </SpaceDropdown>
+                </Dropdown>
                 <div
                   class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >

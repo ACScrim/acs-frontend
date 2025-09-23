@@ -165,14 +165,14 @@
             <div class="flex items-center px-2 gap-2">
               <!-- Sélecteur de rôle -->
               <div class="relative w-full">
-                <SpaceDropdown
+                <Dropdown
                   v-model="user.role"
                   @change="() => updateUserRole(user)"
                 >
                   <option value="user">Utilisateur</option>
                   <option value="admin">Admin</option>
                   <option value="superadmin">Superadmin</option>
-                </SpaceDropdown>
+                </Dropdown>
               </div>
 
               <!-- Bouton de suppression -->

@@ -156,14 +156,14 @@
           <!-- Tri -->
           <div class="flex items-center gap-2">
             <span class="text-color-text-muted font-nasa text-sm">Tri:</span>
-            <SpaceDropdown v-model="sortBy" className="w-48">
+            <Dropdown v-model="sortBy" className="w-48">
               <option value="username-asc">Nom A→Z</option>
               <option value="username-desc">Nom Z→A</option>
               <option value="status-synced">Synchronisés d'abord</option>
               <option value="status-unsynced">Non synchronisés d'abord</option>
               <option value="discord-asc">Discord ID A→Z</option>
               <option value="discord-desc">Discord ID Z→A</option>
-            </SpaceDropdown>
+            </Dropdown>
           </div>
         </div>
       </div>

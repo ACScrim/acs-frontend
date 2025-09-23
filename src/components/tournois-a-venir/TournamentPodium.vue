@@ -616,137 +616,243 @@
         </Card>
       </div>
     </Card>
-    <Card v-else-if="tournament.mvps && tournament.mvps.length > 0">
-      <template #header>
-        <Title size="xl" class="uppercase">MVP du tournoi</Title>
-      </template>
+    <Card
+      v-else-if="tournament.mvps && tournament.mvps.length > 0"
+      variant="accent"
+      :stars="true"
+      :decorated="true"
+      className="relative overflow-hidden mvp-main-card"
+    >
+      <!-- En-tête avec effet spécial -->
+      <div class="flex items-center justify-center mb-8 relative">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-color-accent/20 to-transparent"
+        ></div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-8 w-8 mr-3 text-color-accent animate-pulse"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+          />
+        </svg>
+        <Title
+          size="2xl"
+          :decorated="true"
+          className="text-color-accent uppercase tracking-wider"
+        >
+          🏆 MVP du tournoi 🏆
+        </Title>
+      </div>
 
       <div
         v-for="mvp in tournament.mvps?.filter((mvp) => mvp.isMvp)"
-        class="py-4"
+        :key="mvp.player._id"
+        class="py-6"
       >
         <Card
-          variant="primary"
+          variant="gold"
           :stars="true"
           :decorated="true"
-          className="overflow-hidden"
+          className="overflow-hidden mvp-winner-card relative"
         >
-          <!-- Structure simplifiée : tout centré -->
-          <div class="text-center">
-            <!-- Avatar centré -->
-            <div class="avatar-container inline-block mb-4">
+          <!-- Effet de particules en arrière-plan -->
+          <div class="absolute inset-0 mvp-particles"></div>
+
+          <!-- Couronne flottante au-dessus -->
+          <div
+            class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-6xl animate-bounce z-10"
+          >
+            👑
+          </div>
+
+          <!-- Structure principale -->
+          <div class="text-center relative z-10">
+            <!-- Avatar amélioré -->
+            <div class="avatar-container inline-block mb-6 relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-color-accent to-color-gold rounded-full animate-pulse opacity-30 scale-110"
+              ></div>
               <img
                 v-if="mvp.player && mvp.player.avatarUrl"
                 :src="mvp.player.avatarUrl"
-                alt="Avatar"
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
+                alt="Avatar MVP"
+                class="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover border-4 border-color-accent shadow-2xl relative z-10 mvp-avatar"
                 loading="lazy"
                 @error="handleImageError($event, mvp.player)"
               />
               <div
                 v-else
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
+                class="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-gradient-to-br from-color-accent to-color-gold flex items-center justify-center border-4 border-color-accent mx-auto relative z-10 mvp-avatar"
               >
-                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
+                <span class="text-color-bg text-4xl sm:text-5xl font-bold">
                   {{ getInitials(mvp.player.username) }}
                 </span>
               </div>
+              <!-- Badge MVP flottant -->
+              <div
+                class="absolute -bottom-4 -right-4 bg-color-accent text-color-bg px-3 py-1 rounded-full text-sm font-bold animate-pulse"
+              >
+                🏆 MVP
+              </div>
             </div>
 
-            <!-- Nom centré -->
+            <!-- Nom avec effet spécial -->
             <Title
               size="4xl"
-              :glitch="true"
+              :glitch="false"
               :decorated="true"
-              className="capitalize break-words mb-4"
+              className="capitalize break-words mb-6 text-color-accent font-bold"
               :class="[
                 mvp.player.username.length > 15
-                  ? 'text-2xl sm:text-4xl'
-                  : mvp.player.username.length > 10
                   ? 'text-3xl sm:text-5xl'
-                  : 'text-4xl sm:text-5xl',
+                  : mvp.player.username.length > 10
+                  ? 'text-4xl sm:text-6xl'
+                  : 'text-5xl sm:text-7xl',
               ]"
             >
               {{ mvp.player.username }}
             </Title>
 
-            <!-- Barre parfaitement centrée sous le nom -->
+            <!-- Séparateur amélioré -->
+            <div class="flex justify-center items-center mb-6">
+              <div
+                class="h-1 w-16 bg-gradient-to-r from-transparent to-color-accent rounded-full"
+              ></div>
+              <div
+                class="h-1 w-16 bg-gradient-to-l from-transparent to-color-accent rounded-full"
+              ></div>
+            </div>
+
+            <!-- Informations de vote améliorées -->
             <div
-              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
-            ></div>
-            <p class="text-center text-color-primary-light text-lg">
-              Gagnant avec
-              <b
-                >{{ mvp.votes.length }} vote{{
-                  mvp.votes.length > 1 ? "s" : ""
-                }}</b
-              >
-            </p>
+              class="bg-color-bg-light/20 rounded-lg p-4 border border-color-accent/30"
+            >
+              <p class="text-center text-color-accent text-xl font-bold mb-3">
+                🗳️ Élu MVP avec
+              </p>
+              <div class="flex justify-center items-center space-x-3 mb-3">
+                <span class="text-4xl font-black text-color-accent">
+                  {{ mvp.votes.length }}
+                </span>
+                <span class="text-color-text-light text-lg">
+                  vote{{ mvp.votes.length > 1 ? "s" : "" }}
+                </span>
+              </div>
+              <!-- Étoiles correspondant exactement au nombre de votes -->
+              <div class="flex justify-center">
+                <div class="flex space-x-1">
+                  <span
+                    v-for="n in mvp.votes.length"
+                    :key="n"
+                    class="text-color-gold text-xl"
+                    >⭐</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       </div>
-      <div class="hidden sm:flex flex-row gap-x-10">
-        <Card
-          v-for="mvp in tournament.mvps
-            ?.filter((mvp) => !mvp.isMvp)
-            .sort((a, b) => b.votes.length - a.votes.length)
-            .slice(0, 3)"
-          variant="primary"
-          :stars="true"
-          :decorated="true"
-          className="overflow-hidden basis-1/3"
-        >
-          <div class="text-center">
-            <!-- Avatar centré -->
-            <div class="avatar-container inline-block mb-4">
-              <img
-                v-if="mvp.player && mvp.player.avatarUrl"
-                :src="mvp.player.avatarUrl"
-                alt="Avatar"
-                class="size-10 sm:size-14 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
-                loading="lazy"
-                @error="handleImageError($event, mvp.player)"
-              />
+      <!-- Section des autres candidats MVP -->
+      <div
+        v-if="tournament.mvps?.filter((mvp) => !mvp.isMvp).length > 0"
+        class="mt-8"
+      >
+        <div class="text-center mb-6">
+          <Title
+            size="lg"
+            :decorated="true"
+            className="text-color-text-light mb-2"
+          >
+            🥈 Autres candidats méritants
+          </Title>
+          <div
+            class="h-px bg-gradient-to-r from-transparent via-color-text-muted to-transparent"
+          ></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card
+            v-for="(mvp, index) in tournament.mvps
+              ?.filter((mvp) => !mvp.isMvp)
+              .sort((a, b) => b.votes.length - a.votes.length)
+              .slice(0, 6)"
+            :key="mvp.player._id"
+            variant="secondary"
+            :stars="true"
+            className="overflow-hidden transition-all hover:scale-105 mvp-candidate-card"
+          >
+            <div class="text-center p-4">
+              <!-- Position du candidat -->
               <div
-                v-else
-                class="size-10 sm:size-14 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
+                class="absolute -top-3 -right-3 bg-color-secondary text-color-bg rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold"
               >
-                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
-                  {{ getInitials(mvp.player.username) }}
-                </span>
+                {{ index + 2 }}
+              </div>
+
+              <!-- Avatar du candidat -->
+              <div class="avatar-container inline-block mb-4 relative">
+                <img
+                  v-if="mvp.player && mvp.player.avatarUrl"
+                  :src="mvp.player.avatarUrl"
+                  alt="Avatar candidat MVP"
+                  class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-color-secondary shadow-lg"
+                  loading="lazy"
+                  @error="handleImageError($event, mvp.player)"
+                />
+                <div
+                  v-else
+                  class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-color-secondary to-color-primary flex items-center justify-center border-2 border-color-secondary mx-auto"
+                >
+                  <span class="text-color-bg text-lg sm:text-xl font-bold">
+                    {{ getInitials(mvp.player.username) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Nom du candidat -->
+              <Title
+                size="lg"
+                className="capitalize break-words mb-3 text-color-text"
+                :class="[
+                  mvp.player.username.length > 12
+                    ? 'text-sm sm:text-base'
+                    : 'text-base sm:text-lg',
+                ]"
+              >
+                {{ mvp.player.username }}
+              </Title>
+
+              <!-- Votes reçus -->
+              <div
+                class="bg-color-bg-light/30 rounded-lg p-3 border border-color-secondary/20"
+              >
+                <div class="flex justify-center items-center space-x-2 mb-2">
+                  <span class="text-xl font-bold text-color-secondary">
+                    {{ mvp.votes.length }}
+                  </span>
+                  <span class="text-color-text-muted text-sm">
+                    vote{{ mvp.votes.length > 1 ? "s" : "" }}
+                  </span>
+                </div>
+                <!-- Étoiles correspondant exactement au nombre de votes -->
+                <div class="flex justify-center">
+                  <div class="flex space-x-1">
+                    <span
+                      v-for="n in mvp.votes.length"
+                      :key="n"
+                      class="text-color-secondary"
+                      >⭐</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
-
-            <!-- Nom centré -->
-            <Title
-              size="4xl"
-              :glitch="true"
-              :decorated="true"
-              className="capitalize break-words mb-4"
-              :class="[
-                mvp.player.username.length > 15
-                  ? 'text-lg sm:text-2xl'
-                  : mvp.player.username.length > 10
-                  ? 'text-lg sm:text-2xl'
-                  : 'text-lg sm:text-2xl',
-              ]"
-            >
-              {{ mvp.player.username }}
-            </Title>
-
-            <!-- Barre parfaitement centrée sous le nom -->
-            <div
-              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
-            ></div>
-            <p class="text-center text-color-primary-light text-lg">
-              <b
-                >{{ mvp.votes.length }} vote{{
-                  mvp.votes.length > 1 ? "s" : ""
-                }}</b
-              >
-            </p>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </Card>
     <TournamentClip
@@ -1022,6 +1128,93 @@ const handleImageError = (e: Event, player: Player) => {
 
   50% {
     box-shadow: 0 0 20px rgba(var(--color-bronze-rgb), 0.6);
+  }
+}
+
+/* Styles MVP améliorés */
+.mvp-main-card {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-accent-rgb), 0.1) 0%,
+    rgba(var(--color-gold-rgb), 0.05) 100%
+  );
+  border: 2px solid rgba(var(--color-accent-rgb), 0.3);
+}
+
+.mvp-winner-card {
+  position: relative;
+  overflow: visible;
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 0 30px rgba(var(--color-accent-rgb), 0.5),
+    0 0 60px rgba(var(--color-gold-rgb), 0.3);
+}
+
+.mvp-particles {
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(var(--color-accent-rgb), 0.3) 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 60% 80%,
+      rgba(var(--color-gold-rgb), 0.2) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 80% 40%,
+      rgba(var(--color-accent-rgb), 0.2) 1px,
+      transparent 1px
+    );
+  background-size: 50px 50px, 30px 30px, 40px 40px;
+  animation: mvp-sparkle 4s ease-in-out infinite;
+}
+
+.mvp-avatar {
+  animation: mvp-glow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.mvp-avatar:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+.mvp-candidate-card {
+  position: relative;
+  border: 1px solid rgba(var(--color-secondary-rgb), 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-secondary-rgb), 0.05) 0%,
+    rgba(var(--color-primary-rgb), 0.05) 100%
+  );
+}
+
+.mvp-candidate-card:hover {
+  border-color: rgba(var(--color-secondary-rgb), 0.6);
+  box-shadow: 0 5px 20px rgba(var(--color-secondary-rgb), 0.2);
+}
+
+/* Animations MVP */
+@keyframes mvp-sparkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes mvp-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.5),
+      0 0 40px rgba(var(--color-accent-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(var(--color-accent-rgb), 0.8),
+      0 0 60px rgba(var(--color-accent-rgb), 0.5);
   }
 }
 </style>

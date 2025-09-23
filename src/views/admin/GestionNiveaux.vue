@@ -127,7 +127,7 @@
             </svg>
             Jeu
           </label>
-          <SpaceDropdown
+          <Dropdown
             id="gameSelect"
             v-model="selectedGameId"
             @change="fetchPlayerLevels"
@@ -138,7 +138,7 @@
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Filtre par niveau -->
@@ -161,7 +161,7 @@
             </svg>
             Niveau
           </label>
-          <SpaceDropdown
+          <Dropdown
             id="levelFilter"
             v-model="selectedLevel"
             placeholder="Tous les niveaux"
@@ -172,7 +172,7 @@
             <option value="intermédiaire">Intermédiaire</option>
             <option value="avancé">Avancé</option>
             <option value="expert">Expert</option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Filtre par statut de rang -->
@@ -193,7 +193,7 @@
             </svg>
             Rang
           </label>
-          <SpaceDropdown
+          <Dropdown
             id="rankFilter"
             v-model="selectedRankFilter"
             placeholder="Tous les joueurs"
@@ -202,7 +202,7 @@
             <option value="">Tous les joueurs</option>
             <option value="ranked">Avec rang</option>
             <option value="unranked">Sans rang</option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Sélection de tournoi -->
@@ -223,7 +223,7 @@
             </svg>
             Tournoi
           </label>
-          <SpaceDropdown
+          <Dropdown
             id="tournamentSelect"
             v-model="selectedTournamentId"
             @change="filterPlayersByTournament"
@@ -238,7 +238,7 @@
             >
               {{ tournament.name }} - {{ formatDate(tournament.date) }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
       </div>
       <!-- Boutons d'action rapide et options d'affichage -->
@@ -263,7 +263,7 @@
           </Button>
 
           <!-- Options de tri -->
-          <SpaceDropdown v-model="sortBy" size="sm" placeholder="Trier par...">
+          <Dropdown v-model="sortBy" size="sm" placeholder="Trier par...">
             <option value="">Ordre par défaut</option>
             <option value="username">Nom d'utilisateur (A-Z)</option>
             <option value="username-desc">Nom d'utilisateur (Z-A)</option>
@@ -271,7 +271,7 @@
             <option value="level-desc">Niveau (Expert → Débutant)</option>
             <option value="rank">Rang (Meilleur → Moins bon)</option>
             <option value="gameUsername">Pseudo de jeu (A-Z)</option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <div class="flex items-center gap-2">
@@ -1150,7 +1150,7 @@
             <label class="text-sm text-color-text-muted font-nasa">
               Afficher par page :
             </label>
-            <SpaceDropdown
+            <Dropdown
               v-model="itemsPerPage"
               @change="currentPage = 1"
               size="sm"
@@ -1160,7 +1160,7 @@
               <option :value="20">20</option>
               <option :value="50">50</option>
               <option :value="100">100</option>
-            </SpaceDropdown>
+            </Dropdown>
           </div>
 
           <div class="text-sm text-color-text-muted">

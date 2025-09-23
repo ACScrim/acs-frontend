@@ -30,7 +30,7 @@
             Sélectionner un Tournoi
             <span class="text-color-accent ml-1">*</span>
           </label>
-          <SpaceDropdown
+          <Dropdown
             id="tournament"
             v-model="selectedTournament"
             @change="loadTournamentDetails"
@@ -44,7 +44,7 @@
             >
               {{ tournament.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Nom du tournoi -->
@@ -93,12 +93,12 @@
             </svg>
             Jeu <span class="text-color-accent ml-1">*</span>
           </label>
-          <SpaceDropdown id="game" v-model="game" required>
+          <Dropdown id="game" v-model="game" required>
             <option value="" disabled selected>Sélectionnez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Grid pour la mise en page responsive -->

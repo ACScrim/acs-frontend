@@ -58,12 +58,12 @@
             </svg>
             Jeu <span class="text-color-accent ml-1">*</span>
           </label>
-          <SpaceDropdown id="game" v-model="game" required>
+          <Dropdown id="game" v-model="game" required>
             <option value="" disabled selected>Sélectionnez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <!-- Deux champs par ligne sur grand écran -->

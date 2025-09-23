@@ -92,7 +92,7 @@
         </div>
         <!-- Sélecteur de jeu, visible uniquement si catégorie = jeu -->
         <div v-if="newBadge.categoryType === 'game'">
-          <SpaceDropdown
+          <Dropdown
             id="categoryId"
             v-model="newBadge.categoryId"
             label="Jeu associé"
@@ -102,7 +102,7 @@
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -280,7 +280,7 @@
         </div>
         <!-- PARTIE MANQUANTE : Sélection du badge à associer -->
         <div class="mt-6">
-          <SpaceDropdown
+          <Dropdown
             id="badgeToAssign"
             v-model="badgeId"
             label="Badge à associer"
@@ -304,7 +304,7 @@
             <option v-for="badge in badges" :key="badge._id" :value="badge._id">
               {{ badge.title }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
           <!-- Prévisualisation du badge sélectionné -->
           <div
             v-if="badgeId"
@@ -719,7 +719,7 @@
         </div>
 
         <div v-if="editingBadge.categoryType === 'game'">
-          <SpaceDropdown
+          <Dropdown
             id="edit-categoryId"
             v-model="editingBadge.categoryId"
             label="Jeu associé"
@@ -729,7 +729,7 @@
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
