@@ -1142,41 +1142,90 @@
 </template>
 
 <script setup lang="ts">
-// ========================================
-// SECTION: IMPORTS ET DÉPENDANCES
-// ========================================
+//-------------------------------------------------------
+// IMPORTS ET TYPES
+//-------------------------------------------------------
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { onBeforeRouteLeave } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useUserStore } from "../stores/userStore";
 import profileService from "../services/profileService";
 import gameService from "../services/gameService";
+import { notificationService } from "../services/notificationService";
+import Toast from "@/shared/Toast.vue";
 import type { Game } from "../types";
 import type { GameRoles } from "../types/User";
-import Toast from "@/shared/Toast.vue";
-import { notificationService } from "../services/notificationService";
 
-// ========================================
-// SECTION: STORES ET DONNÉES RÉACTIVES
-// ========================================
+//-------------------------------------------------------
+// ÉTAT RÉACTIF ET STORES
+//-------------------------------------------------------
+
+// Store utilisateur et router
 const userStore = useUserStore();
+const router = useRouter();
 
-// États de l'interface utilisateur
+// États principaux
 const loading = ref(true);
+const error = ref<string | null>(null);
+const games = ref<Game[]>([]);
+
+// États du formulaire
+const formData = ref({
+  twitchUsername: "",
+  gameRoles: [] as GameRoles[],
+});
+
+const originalData = ref({
+  twitchUsername: "",
+  gameRoles: [] as GameRoles[],
+});
+
+// États d'interface
 const isSaving = ref(false);
 const message = ref("");
 const messageType = ref<"success" | "error">("success");
-const error = ref<string | null>(null);
-const games = ref<Game[]>([]);
+
+// États pour les modales de confirmation
+const showUnsavedChangesDialog = ref(false);
+const showResetDialog = ref(false);
+const pendingRoute = ref<string | null>(null); // Route de destination
+
+// États pour les rôles de jeu
 const gameRoleStatus = ref<
   Record<string, "syncing" | "success" | "error" | null>
 >({});
 
-//  États pour les dialogs de confirmation
-const showUnsavedChangesDialog = ref(false);
-const showResetDialog = ref(false);
-const pendingRouteNavigation = ref<(() => void) | null>(null);
+// États pour les notifications
+const notificationActivated = ref(false);
+const notificationPreferences = ref({
+  tournaments: true,
+  badges: true,
+  reminders: true,
+  system: true,
+});
 
-// ✅ NOUVEAU : Liste des jeux autorisés
+const notificationStatus = ref<
+  Record<string, "pending" | "saving" | "saved" | "error" | null>
+>({
+  tournaments: null,
+  badges: null,
+  reminders: null,
+  system: null,
+});
+
+const notificationTimers = ref<Record<string, number | null>>({
+  tournaments: null,
+  badges: null,
+  reminders: null,
+  system: null,
+});
+
+//-------------------------------------------------------
+// CONFIGURATION
+//-------------------------------------------------------
+
+/**
+ * Liste des jeux autorisés pour les rôles Discord
+ */
 const allowedGames = [
   "League of Legends",
   "Rocket League",
@@ -1186,65 +1235,81 @@ const allowedGames = [
   "Overwatch",
 ];
 
-// Utilisateur connecté (depuis le store)
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - AUTHENTIFICATION
+//-------------------------------------------------------
+
+/**
+ * Référence à l'utilisateur connecté depuis le store
+ * @returns L'utilisateur connecté ou undefined
+ */
 const user = computed(() => userStore.user);
 
-// Données du formulaire de paramètres
-const formData = ref({
-  twitchUsername: "",
-  gameRoles: [] as GameRoles[],
-});
-
-// Copie des données originales pour détecter les modifications
-const originalData = ref({
-  twitchUsername: "",
-  gameRoles: [] as GameRoles[],
-});
-
-// ========================================
-// SECTION: COMPUTED PROPERTIES
-// ========================================
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - VALIDATION ET ÉTAT
+//-------------------------------------------------------
 
 /**
  * Détecte s'il y a des changements non sauvegardés
- * Compare les données actuelles avec les données originales
+ * @returns true s'il y a des modifications non sauvegardées
  */
 const hasChanges = computed(() => {
-  // Seulement comparer le nom Twitch, pas les gameRoles
   return formData.value.twitchUsername !== originalData.value.twitchUsername;
 });
 
 /**
- * ✅ NOUVEAU : Retourne uniquement les jeux autorisés
+ * Filtre les jeux selon la liste autorisée et les trie par priorité
+ * @returns Liste des jeux autorisés triés
  */
 const filteredGames = computed(() => {
   return games.value
     .filter((game) =>
-      allowedGames.some(
-        (allowedName) =>
-          game.name.toLowerCase().includes(allowedName.toLowerCase()) ||
-          allowedName.toLowerCase().includes(game.name.toLowerCase())
+      allowedGames.some((allowedGame) =>
+        game.name.toLowerCase().includes(allowedGame.toLowerCase())
       )
     )
     .sort((a, b) => {
-      // Trier par ordre de priorité dans allowedGames
-      const indexA = allowedGames.findIndex(
-        (name) =>
-          a.name.toLowerCase().includes(name.toLowerCase()) ||
-          name.toLowerCase().includes(a.name.toLowerCase())
+      const indexA = allowedGames.findIndex((allowedGame) =>
+        a.name.toLowerCase().includes(allowedGame.toLowerCase())
       );
-      const indexB = allowedGames.findIndex(
-        (name) =>
-          b.name.toLowerCase().includes(name.toLowerCase()) ||
-          name.toLowerCase().includes(b.name.toLowerCase())
+      const indexB = allowedGames.findIndex((allowedGame) =>
+        b.name.toLowerCase().includes(allowedGame.toLowerCase())
       );
       return indexA - indexB;
     });
 });
 
-// ========================================
-// SECTION: MÉTHODES D'INITIALISATION
-// ========================================
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - NOTIFICATIONS
+//-------------------------------------------------------
+
+/**
+ * Vérifie s'il y a des changements de notifications en attente
+ * @returns true s'il y a des changements en attente
+ */
+const hasPendingChanges = computed(() =>
+  Object.values(notificationStatus.value).some((status) => status === "pending")
+);
+
+/**
+ * Vérifie si des notifications sont en cours de sauvegarde
+ * @returns true si des notifications sont en train d'être sauvegardées
+ */
+const isAnySaving = computed(() =>
+  Object.values(notificationStatus.value).some((status) => status === "saving")
+);
+
+/**
+ * Vérifie si toutes les notifications ont été sauvegardées
+ * @returns true si toutes les notifications sont sauvegardées
+ */
+const allSaved = computed(() =>
+  Object.values(notificationStatus.value).some((status) => status === "saved")
+);
+
+//-------------------------------------------------------
+// MÉTHODES - INITIALISATION
+//-------------------------------------------------------
 
 /**
  * Initialise les données du formulaire depuis le profil utilisateur
@@ -1252,21 +1317,18 @@ const filteredGames = computed(() => {
  */
 const initializeUserProfile = () => {
   try {
-    if (user.value && user.value.profile) {
-      // Utilisateur avec profil existant
+    if (user.value?.profile) {
       formData.value = {
         twitchUsername: user.value.profile.twitchUsername || "",
         gameRoles: user.value.profile.gameRoles || [],
       };
     } else {
-      // Utilisateur sans profil - valeurs par défaut
       formData.value = {
         twitchUsername: "",
         gameRoles: [],
       };
     }
 
-    // Sauvegarder une copie pour la comparaison
     originalData.value = JSON.parse(JSON.stringify(formData.value));
   } catch (error) {
     console.error("Erreur lors de l'initialisation du profil:", error);
@@ -1289,57 +1351,29 @@ const loadGames = async () => {
   }
 };
 
-// ========================================
-// SECTION: MÉTHODES DE CONFIRMATION DIALOG
-// ========================================
-
 /**
- * ✅ NOUVEAU : Gestion de la confirmation pour quitter
+ * Charge les préférences de notifications depuis l'API
  */
-const confirmLeave = () => {
-  showUnsavedChangesDialog.value = false;
-  if (pendingRouteNavigation.value) {
-    pendingRouteNavigation.value();
-    pendingRouteNavigation.value = null;
+const loadNotificationPreferences = async () => {
+  if (!user.value) return;
+
+  try {
+    const response = await profileService.getNotificationPreferences();
+    const { preferences } = response;
+    notificationPreferences.value = {
+      tournaments: preferences.tournaments ?? true,
+      badges: preferences.badges ?? true,
+      reminders: preferences.reminders ?? true,
+      system: preferences.system ?? true,
+    };
+  } catch (error) {
+    console.error("Erreur lors du chargement des préférences:", error);
   }
 };
 
-/**
- * ✅ NOUVEAU : Annulation de la navigation
- */
-const cancelLeave = () => {
-  showUnsavedChangesDialog.value = false;
-  pendingRouteNavigation.value = null;
-};
-
-/**
- * ✅ NOUVEAU : Reset des modifications
- */
-const resetChanges = () => {
-  if (hasChanges.value) {
-    showResetDialog.value = true;
-  }
-};
-
-/**
- * ✅ NOUVEAU : Confirmation du reset
- */
-const confirmReset = () => {
-  showResetDialog.value = false;
-  initializeUserProfile(); // Reset aux valeurs originales
-  showMessage("Modifications annulées", "success");
-};
-
-/**
- * ✅ NOUVEAU : Annulation du reset
- */
-const cancelReset = () => {
-  showResetDialog.value = false;
-};
-
-// ========================================
-// SECTION: MÉTHODES DE GESTION DES RÔLES
-// ========================================
+//-------------------------------------------------------
+// MÉTHODES - GESTION DES RÔLES DE JEU
+//-------------------------------------------------------
 
 /**
  * Vérifie si un rôle de jeu est activé pour l'utilisateur
@@ -1352,7 +1386,7 @@ const isGameRoleEnabled = (gameId: string): boolean => {
 };
 
 /**
- * Active ou désactive un rôle de jeu pour l'utilisateur
+ * Active ou désactive un rôle de jeu avec synchronisation immédiate
  * @param gameId - Identifiant unique du jeu
  * @param enabled - État du rôle (activé/désactivé)
  */
@@ -1367,46 +1401,35 @@ const toggleGameRole = async (gameId: string, enabled: boolean) => {
     formData.value.gameRoles.push({ gameId, enabled });
   }
 
-  // ✅ NOUVEAU : Synchronisation immédiate avec le backend
   if (user.value) {
     gameRoleStatus.value[gameId] = "syncing";
 
     try {
-      // Appel immédiat au backend pour synchroniser ce rôle spécifique
       await profileService.updateUserProfile({
         userId: user.value._id,
         twitchUsername: formData.value.twitchUsername || null,
         gameRoles: formData.value.gameRoles,
       });
 
-      // Mettre à jour les données originales pour éviter le "hasChanges"
       originalData.value = JSON.parse(JSON.stringify(formData.value));
-
-      // Feedback de succès
       gameRoleStatus.value[gameId] = "success";
-
-      // Recharger les données utilisateur pour être sûr
       await userStore.fetchUser();
 
-      // Auto-clear le feedback après 2 secondes
       setTimeout(() => {
         gameRoleStatus.value[gameId] = null;
       }, 2000);
     } catch (error) {
       console.error("Erreur lors de la synchronisation du rôle:", error);
 
-      // Annuler le changement en cas d'erreur
       if (existingIndex >= 0) {
         formData.value.gameRoles[existingIndex].enabled = !enabled;
       } else {
         formData.value.gameRoles.pop();
       }
 
-      // Feedback d'erreur
       gameRoleStatus.value[gameId] = "error";
       showMessage("Erreur lors de la synchronisation du rôle Discord", "error");
 
-      // Auto-clear l'erreur après 3 secondes
       setTimeout(() => {
         gameRoleStatus.value[gameId] = null;
       }, 3000);
@@ -1414,297 +1437,61 @@ const toggleGameRole = async (gameId: string, enabled: boolean) => {
   }
 };
 
-// ========================================
-// SECTION: MÉTHODES DE SAUVEGARDE
-// ========================================
+//-------------------------------------------------------
+// MÉTHODES - NOTIFICATIONS
+//-------------------------------------------------------
 
 /**
- * Sauvegarde les paramètres utilisateur via l'API
- * Met à jour le profil utilisateur avec les nouvelles données
+ * Met à jour une préférence de notification avec debounce automatique
+ * @param type - Type de notification (tournaments, badges, etc.)
+ * @param enabled - État de la préférence
  */
-const saveSettings = async () => {
-  // Vérifications préliminaires
-  if (!hasChanges.value || isSaving.value || !user.value) return;
-
-  isSaving.value = true;
-  message.value = "";
-
-  try {
-    // Appel API pour mettre à jour le profil (principalement Twitch)
-    await profileService.updateUserProfile({
-      userId: user.value._id,
-      twitchUsername: formData.value.twitchUsername || null,
-      gameRoles: formData.value.gameRoles, // On garde au cas où
-    });
-
-    // Recharger les données utilisateur depuis le serveur
-    await userStore.fetchUser();
-
-    // Réinitialiser le formulaire avec les nouvelles données
-    initializeUserProfile();
-
-    // Message simple car les rôles Discord sont déjà synchronisés
-    showMessage("Profil Twitch sauvegardé avec succès !", "success");
-  } catch (error: any) {
-    console.error("Erreur lors de la sauvegarde:", error);
-    showMessage(
-      error.response?.data?.message || "Erreur lors de la sauvegarde",
-      "error"
-    );
-  } finally {
-    isSaving.value = false;
-  }
-};
-
-// ========================================
-// SECTION: MÉTHODES UTILITAIRES
-// ========================================
-
-/**
- * Affiche un message de feedback à l'utilisateur via Toast
- * @param text - Texte du message à afficher
- * @param type - Type du message (success/error)
- */
-const showMessage = (text: string, type: "success" | "error") => {
-  message.value = text;
-  messageType.value = type;
-  // Auto-masquer le message après 4 secondes (durée du nouveau Toast spatial)
-  setTimeout(() => {
-    message.value = "";
-  }, 4000);
-};
-
-/**
- * Gère les erreurs de chargement d'images
- * Masque l'image en cas d'erreur de chargement
- * @param e - Événement d'erreur
- */
-const handleImageError = (e: Event) => {
-  if (e.target instanceof HTMLImageElement) {
-    e.target.style.display = "none";
-  }
-};
-
-// ========================================
-// SECTION: CYCLE DE VIE DU COMPOSANT
-// ========================================
-
-// Garde de route pour prévenir la perte de données
-onBeforeRouteLeave((_, __, next) => {
-  if (hasChanges.value) {
-    pendingRouteNavigation.value = () => next();
-    showUnsavedChangesDialog.value = true;
-    next(false); // Bloquer la navigation pour l'instant
-  } else {
-    next();
-  }
-});
-
-// Garde pour la fermeture de fenêtre
-onMounted(() => {
-  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    if (hasChanges.value) {
-      e.preventDefault();
-      e.returnValue = "";
-    }
-  };
-
-  // ✅ NOUVEAU : Raccourcis clavier
-  const handleKeyDown = (e: KeyboardEvent) => {
-    // Ctrl+S pour sauvegarder
-    if (e.ctrlKey && e.key === "s") {
-      e.preventDefault();
-      if (hasChanges.value && !isSaving.value) {
-        saveSettings();
-      }
-    }
-
-    // Échap pour annuler les modifications
-    if (e.key === "Escape" && hasChanges.value) {
-      resetChanges();
-    }
-  };
-
-  window.addEventListener("beforeunload", handleBeforeUnload);
-  document.addEventListener("keydown", handleKeyDown);
-
-  onUnmounted(() => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-    document.removeEventListener("keydown", handleKeyDown);
-  });
-});
-
-/**
- * Initialisation du composant au montage
- * 1. Vérification de l'utilisateur connecté
- * 2. Initialisation du profil utilisateur
- * 3. Chargement des jeux disponibles
- */
-onMounted(async () => {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    // S'assurer que l'utilisateur est chargé
-    if (!user.value) {
-      await userStore.fetchUser();
-    }
-
-    // Vérifier que l'utilisateur est connecté
-    if (!user.value) {
-      error.value =
-        "Utilisateur non connecté. Veuillez vous reconnecter pour accéder à vos paramètres.";
-      return;
-    }
-
-    // Initialiser les données du formulaire et charger les jeux
-    initializeUserProfile();
-    await loadGames();
-  } catch (err) {
-    console.error("Erreur lors de l'initialisation:", err);
-    error.value =
-      "Impossible de charger vos paramètres. Vérifiez votre connexion et réessayez.";
-  } finally {
-    loading.value = false;
-  }
-});
-
-// ========================================
-// SECTION: GESTION DES NOTIFICATIONS
-// ========================================
-
-const notificationActivated = ref(false);
-
-// Nouvelles propriétés réactives pour les notifications
-const notificationPreferences = ref({
-  tournaments: true,
-  badges: true,
-  reminders: true,
-  system: true,
-});
-
-const notificationStatus = ref<
-  Record<string, "pending" | "saving" | "saved" | "error" | null>
->({
-  tournaments: null,
-  badges: null,
-  reminders: null,
-  system: null,
-});
-
-// Timers pour le debounce
-const notificationTimers = ref<Record<string, number | null>>({
-  tournaments: null,
-  badges: null,
-  reminders: null,
-  system: null,
-});
-
-// Computed pour les statuts globaux
-const hasPendingChanges = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "pending")
-);
-
-const isAnySaving = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "saving")
-);
-
-const allSaved = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "saved")
-);
-
-// Fonction pour charger les préférences de notifications
-const loadNotificationPreferences = async () => {
-  if (!user.value) return;
-
-  try {
-    // Appel API pour récupérer les préférences
-    const response = await profileService.getNotificationPreferences();
-    const { preferences } = response;
-    notificationPreferences.value = {
-      tournaments: preferences.tournaments ?? true,
-      badges: preferences.badges ?? true,
-      reminders: preferences.reminders ?? true,
-      system: preferences.system ?? true,
-    };
-  } catch (error) {
-    console.error("Erreur lors du chargement des préférences:", error);
-    // Garder les valeurs par défaut en cas d'erreur
-  }
-};
-
-// Fonction pour mettre à jour une préférence avec debounce
 const updateNotificationPreference = (type: string, enabled: boolean) => {
-  // Mettre à jour immédiatement l'interface
   (notificationPreferences.value as any)[type] = enabled;
 
-  // Annuler le timer précédent s'il existe
   if (notificationTimers.value[type]) {
     clearTimeout(notificationTimers.value[type]!);
   }
 
-  // Marquer comme en attente
   notificationStatus.value[type] = "pending";
 
-  // Programmer la sauvegarde après 1.5 secondes
   notificationTimers.value[type] = setTimeout(async () => {
     if (!user.value) return;
 
-    // Marquer comme en cours de sauvegarde
     notificationStatus.value[type] = "saving";
 
     try {
-      // Appel API pour sauvegarder la préférence
       await profileService.updateNotificationPreferences({
         userId: user.value._id,
         type: type,
         enabled: enabled,
       });
 
-      // Marquer comme sauvegardé
       notificationStatus.value[type] = "saved";
-
-      // Auto-clear après 2 secondes
       setTimeout(() => {
         notificationStatus.value[type] = null;
       }, 2000);
     } catch (error) {
       console.error(`Erreur lors de la sauvegarde de ${type}:`, error);
-
-      // Revenir à l'état précédent en cas d'erreur
       (notificationPreferences.value as any)[type] = !enabled;
-
-      // Marquer comme erreur
       notificationStatus.value[type] = "error";
       showMessage(
         `Erreur lors de la sauvegarde des préférences ${type}`,
         "error"
       );
 
-      // Auto-clear après 3 secondes
       setTimeout(() => {
         notificationStatus.value[type] = null;
       }, 3000);
     }
 
-    // Nettoyer le timer
     notificationTimers.value[type] = null;
-  }, 1500); // 1.5 secondes de délai
+  }, 1500);
 };
 
-const subscribeToPush = async () => {
-  try {
-    const subscription = await notificationService.subscribeToPush();
-    if (subscription) {
-      notificationActivated.value = true;
-    } else {
-      showMessage("Échec de l'abonnement", "error");
-    }
-  } catch (error) {
-    showMessage(`Erreur abonnement: ${error}`, "error");
-  }
-};
-
+/**
+ * Active les notifications push
+ */
 const enableNotifications = () => {
   if (window.Notification && Notification.permission !== "granted") {
     Notification.requestPermission().then((permission) => {
@@ -1725,18 +1512,198 @@ const enableNotifications = () => {
   }
 };
 
-// Modifier la fonction onMounted pour charger les préférences
+/**
+ * Souscrit aux notifications push
+ */
+const subscribeToPush = async () => {
+  try {
+    const subscription = await notificationService.subscribeToPush();
+    if (subscription) {
+      notificationActivated.value = true;
+    } else {
+      showMessage("Échec de l'abonnement", "error");
+    }
+  } catch (error) {
+    showMessage(`Erreur abonnement: ${error}`, "error");
+  }
+};
+
+//-------------------------------------------------------
+// MÉTHODES - SAUVEGARDE ET NAVIGATION
+//-------------------------------------------------------
+
+/**
+ * Sauvegarde les paramètres utilisateur via l'API
+ */
+const saveSettings = async () => {
+  if (!hasChanges.value || isSaving.value || !user.value) return;
+
+  isSaving.value = true;
+  message.value = "";
+
+  try {
+    await profileService.updateUserProfile({
+      userId: user.value._id,
+      twitchUsername: formData.value.twitchUsername || null,
+      gameRoles: formData.value.gameRoles,
+    });
+
+    await userStore.fetchUser();
+    initializeUserProfile();
+    showMessage("Profil Twitch sauvegardé avec succès !", "success");
+  } catch (error: any) {
+    console.error("Erreur lors de la sauvegarde:", error);
+    showMessage(
+      error.response?.data?.message || "Erreur lors de la sauvegarde",
+      "error"
+    );
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+/**
+ * Gestion de la confirmation pour quitter
+ */
+const confirmLeave = () => {
+  showUnsavedChangesDialog.value = false;
+
+  // Réinitialiser les données originales pour que hasChanges devienne false
+  originalData.value = JSON.parse(JSON.stringify(formData.value));
+
+  // Naviguer vers la route de destination
+  if (pendingRoute.value) {
+    router.push(pendingRoute.value);
+    pendingRoute.value = null;
+  }
+};
+
+/**
+ * Annulation de la navigation
+ */
+const cancelLeave = () => {
+  showUnsavedChangesDialog.value = false;
+  pendingRoute.value = null;
+};
+
+/**
+ * Reset des modifications
+ */
+const resetChanges = () => {
+  if (hasChanges.value) {
+    showResetDialog.value = true;
+  }
+};
+
+/**
+ * Confirmation du reset
+ */
+const confirmReset = () => {
+  showResetDialog.value = false;
+  initializeUserProfile();
+  showMessage("Modifications annulées", "success");
+};
+
+/**
+ * Annulation du reset
+ */
+const cancelReset = () => {
+  showResetDialog.value = false;
+};
+
+//-------------------------------------------------------
+// MÉTHODES - UTILITAIRES
+//-------------------------------------------------------
+
+/**
+ * Affiche un message de feedback à l'utilisateur
+ * @param text - Texte du message à afficher
+ * @param type - Type du message (success/error)
+ */
+const showMessage = (text: string, type: "success" | "error") => {
+  message.value = text;
+  messageType.value = type;
+  setTimeout(() => {
+    message.value = "";
+  }, 4000);
+};
+
+/**
+ * Gère les erreurs de chargement d'images
+ * @param e - Événement d'erreur
+ */
+const handleImageError = (e: Event) => {
+  if (e.target instanceof HTMLImageElement) {
+    e.target.style.display = "none";
+  }
+};
+
+//-------------------------------------------------------
+// CYCLE DE VIE - NAVIGATION ET ÉVÉNEMENTS
+//-------------------------------------------------------
+
+// Garde de route pour prévenir la perte de données
+onBeforeRouteLeave((to, _, next) => {
+  // Si il y a des changements, demander confirmation
+  if (hasChanges.value) {
+    pendingRoute.value = to.path; // Stocker la route de destination
+    showUnsavedChangesDialog.value = true;
+    next(false); // Bloquer la navigation
+  } else {
+    next();
+  }
+});
+
+// Gestionnaires d'événements globaux
+onMounted(() => {
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    if (hasChanges.value) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === "s") {
+      e.preventDefault();
+      if (hasChanges.value && !isSaving.value) {
+        saveSettings();
+      }
+    }
+
+    if (e.key === "Escape" && hasChanges.value) {
+      resetChanges();
+    }
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+  document.addEventListener("keydown", handleKeyDown);
+
+  onUnmounted(() => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+    document.removeEventListener("keydown", handleKeyDown);
+    Object.values(notificationTimers.value).forEach((timer) => {
+      if (timer) clearTimeout(timer);
+    });
+  });
+});
+
+//-------------------------------------------------------
+// CYCLE DE VIE - INITIALISATION
+//-------------------------------------------------------
+
+/**
+ * Initialisation complète du composant
+ */
 onMounted(async () => {
   loading.value = true;
   error.value = null;
 
   try {
-    // S'assurer que l'utilisateur est chargé
     if (!user.value) {
       await userStore.fetchUser();
     }
 
-    // Vérifier que l'utilisateur est connecté
     if (!user.value) {
       error.value =
         "Utilisateur non connecté. Veuillez vous reconnecter pour accéder à vos paramètres.";
@@ -1746,7 +1713,6 @@ onMounted(async () => {
     notificationActivated.value =
       window.Notification && Notification.permission === "granted";
 
-    // Initialiser les données du formulaire et charger les jeux et préférences
     initializeUserProfile();
     await Promise.all([loadGames(), loadNotificationPreferences()]);
   } catch (err) {
@@ -1757,29 +1723,170 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-
-// Nettoyer les timers à la destruction du composant
-onUnmounted(() => {
-  Object.values(notificationTimers.value).forEach((timer) => {
-    if (timer) clearTimeout(timer);
-  });
-});
 </script>
 
 <style scoped>
-/* Animation pour synchronisation */
+/* ========================================
+   ANIMATIONS ET EFFETS
+   ======================================== */
+
 @keyframes pulse-sync {
   0%,
   100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0.5;
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
 .animate-pulse-sync {
   animation: pulse-sync 2s infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ========================================
+   INTERACTIONS ET TRANSITIONS
+   ======================================== */
+
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+.transform:hover {
+  transform: translateY(-1px);
+}
+
+/* States pour les inputs */
+.input-focus:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.input-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* States pour les boutons */
+.btn-saving {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-saving::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 1s infinite;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .flex-col {
+    gap: 1rem;
+  }
+
+  .text-xl {
+    font-size: 1.125rem;
+  }
+
+  .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.5rem;
+  }
+
+  .p-4 {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .max-w-4xl {
+    max-width: 100%;
+  }
+
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITÉ
+   ======================================== */
+
+.focus-visible:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-sync,
+  .animate-fade-in,
+  .loading-shimmer,
+  .transition-all {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ========================================
+   THÈME SOMBRE AMÉLIORÉ
+   ======================================== */
+
+.dark .card-hover:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 </style>
