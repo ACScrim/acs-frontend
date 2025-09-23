@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="dropdown-label text-lg text-color-primary-light mb-3 font-heading flex items-center"
+      class="dropdown-label text-sm text-color-text mb-2 font-body flex items-center"
     >
       <slot name="icon"></slot>
       {{ label }}
@@ -21,7 +21,7 @@
           );
           $emit('change', ($event.target as HTMLSelectElement).value);
         "
-        class="dropdown-select w-full rounded-lg p-3 text-color-text font-body outline-none appearance-none mystical-transition"
+        class="dropdown-select w-full rounded-lg px-3 py-2 text-color-text font-body outline-none appearance-none mystical-transition text-sm"
         :class="{
           'dropdown-select--disabled': disabled,
           'dropdown-select--error': error,
@@ -43,11 +43,11 @@
       </select>
 
       <div
-        class="dropdown-arrow absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
+        class="dropdown-arrow absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-color-text"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mystical-transition"
+          class="h-4 w-4 mystical-transition"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -110,19 +110,18 @@ defineEmits(["update:modelValue", "change"]);
   position: relative;
 }
 
-/* Label avec effet terrifiant */
+/* Label plus discret */
 .dropdown-label {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 10px rgba(var(--color-primary-rgb), 0.4);
+  text-shadow: none;
   transition: all 0.3s ease;
+  color: rgba(var(--color-text-rgb), 0.8);
 }
 
 .dropdown-label:hover {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 15px rgba(var(--color-primary-rgb), 0.6);
+  color: rgba(var(--color-text-rgb), 1);
 }
 
-/* Conteneur du select avec effets mystiques */
+/* Conteneur du select simplifié */
 .dropdown-container {
   position: relative;
 }
@@ -135,55 +134,47 @@ defineEmits(["update:modelValue", "change"]);
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(var(--color-primary-rgb), 0.5) 0%,
-    rgba(var(--color-accent-rgb), 0.3) 50%,
-    rgba(var(--color-secondary-rgb), 0.4) 100%
+    rgba(var(--color-primary-rgb), 0.3) 0%,
+    rgba(var(--color-accent-rgb), 0.2) 50%,
+    rgba(var(--color-secondary-rgb), 0.25) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: exclude;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.4;
   transition: all 0.3s ease;
 }
 
 .dropdown-container:hover::before {
-  opacity: 1;
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-primary-rgb), 0.8) 0%,
-    rgba(var(--color-accent-rgb), 0.6) 50%,
-    rgba(var(--color-secondary-rgb), 0.7) 100%
-  );
+  opacity: 0.7;
 }
 
-/* Select principal avec design Halloween */
+/* Select principal plus compact */
 .dropdown-select {
-  background: #1a1a1a !important;
-  border: 2px solid rgba(var(--color-primary-rgb), 0.3);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(var(--color-primary-rgb), 0.1);
-  backdrop-filter: blur(8px);
+  background: rgba(26, 26, 26, 0.9) !important;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(var(--color-primary-rgb), 0.1);
+  backdrop-filter: blur(4px);
   cursor: pointer;
   color: #f5f5f5 !important;
   color-scheme: dark !important;
+  line-height: 1.4;
 }
 
 .dropdown-select:hover {
-  border-color: rgba(var(--color-primary-rgb), 0.6);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4),
-    0 0 25px rgba(var(--color-primary-rgb), 0.2),
-    0 0 40px rgba(var(--color-accent-rgb), 0.1);
-  transform: translateY(-1px);
+  border-color: rgba(var(--color-primary-rgb), 0.5);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .dropdown-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(var(--color-primary-rgb), 0.4),
-    0 0 60px rgba(var(--color-accent-rgb), 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(var(--color-primary-rgb), 0.7);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-primary-rgb), 0.3);
+  outline: none;
 }
 
 /* États spéciaux */
@@ -229,34 +220,24 @@ defineEmits(["update:modelValue", "change"]);
 
 /* Styles pour les options */
 .dropdown-select option {
-  background: #000000 !important;
+  background: #1a1a1a !important;
   color: #f5f5f5 !important;
-  padding: 12px 16px;
+  padding: 8px 12px;
   font-family: var(--font-body) !important;
   border: none !important;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-size: 0.875rem;
 }
 
 .dropdown-select option:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-primary-rgb), 0.3) 0%,
-    rgba(var(--color-accent-rgb), 0.2) 100%
-  ) !important;
+  background: rgba(var(--color-primary-rgb), 0.2) !important;
   color: #f5f5f5 !important;
-  box-shadow: inset 0 0 10px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .dropdown-select option:checked,
 .dropdown-select option:selected {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-primary-rgb), 0.5) 0%,
-    rgba(var(--color-accent-rgb), 0.4) 100%
-  ) !important;
+  background: rgba(var(--color-primary-rgb), 0.3) !important;
   color: #f5f5f5 !important;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.8);
+  font-weight: 500;
 }
 
 .dropdown-select option:disabled {
@@ -288,33 +269,44 @@ defineEmits(["update:modelValue", "change"]);
   }
 }
 
-/* Animation d'apparition mystique */
-.horror-dropdown {
-  animation: mystical-appear 0.6s ease-out;
+/* Placeholder discret */
+.dropdown-placeholder {
+  color: rgba(var(--color-text-muted-rgb), 0.7) !important;
+  font-style: italic;
 }
 
-/* Effet de lueur au focus pour l'accessibilité */
-.dropdown-select:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+/* Animation d'apparition plus douce */
+.horror-dropdown {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive design */
 @media (max-width: 640px) {
   .dropdown-label {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .dropdown-select {
-    padding: 0.75rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
   }
 }
 
 /* Amélioration des performances selon les préférences utilisateur */
 @media (prefers-reduced-motion: reduce) {
   .dropdown-select,
-  .dropdown-arrow svg,
-  .dropdown-error {
+  .dropdown-arrow svg {
     transition: none;
     animation: none;
   }
@@ -325,13 +317,6 @@ defineEmits(["update:modelValue", "change"]);
 
   .dropdown-container::before {
     transition: none;
-  }
-}
-
-/* Mode sombre amélioré */
-@media (prefers-color-scheme: dark) {
-  .dropdown-select option {
-    background-color: #000000 !important;
   }
 }
 </style>

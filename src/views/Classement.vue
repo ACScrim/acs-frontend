@@ -1,11 +1,9 @@
 <template>
   <Container>
-    <!-- En-tête de la page avec style NASA -->
     <Header title="CLASSEMENT" mission="RANKING" />
     <div class="flex flex-col gap-6">
-      <!-- En-tête de la page -->
+      <!-- Bouton d'export CSV -->
       <div class="relative flex justify-between items-center">
-        <!-- Bouton d'export -->
         <Button
           @click="exportCSV"
           variant="secondary"
@@ -31,16 +29,19 @@
         </Button>
       </div>
 
-      <!-- Filtres -->
+      <!-- Filtres de recherche et sélection -->
       <Card variant="primary" :stars="false" className="overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Sélecteur de jeux -->
           <div>
-            <label for="game" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-body text-color-primary-light flex items-center gap-2"
-              >
-                <!-- Icône de citrouille pour les jeux -->
+            <Dropdown
+              id="game"
+              v-model="selectedGame"
+              label="Filtrer par jeu"
+              placeholder="Tous les jeux"
+              class="compact-dropdown game-dropdown"
+            >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
@@ -48,54 +49,27 @@
                   fill="currentColor"
                 >
                   <path
-                    d="M12 2c-1.1 0-2 .9-2 2 0 .5.2 1 .6 1.3-.4.2-.6.6-.6 1.1v.6c-2.2.4-4 2.2-4 4.5v3c0 2.8 2.2 5 5 5h2c2.8 0 5-2.2 5-5v-3c0-2.3-1.8-4.1-4-4.5v-.6c0-.5-.2-.9-.6-1.1.4-.3.6-.8.6-1.3 0-1.1-.9-2-2-2zm-3 9.5c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm6 0c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm-3 3c-.8 0-1.5.7-1.5 1.5 0 .4.2.8.5 1l-1 1c-.3-.2-.5-.5-.5-1 0-.8.7-1.5 1.5-1.5z"
+                    d="M21,6H18A6,6 0 0,0 12,0A6,6 0 0,0 6,6H3A3,3 0 0,0 0,9V19A3,3 0 0,0 3,22H21A3,3 0 0,0 24,19V9A3,3 0 0,0 21,6M12,2A4,4 0 0,1 16,6H8A4,4 0 0,1 12,2M22,19A1,1 0 0,1 21,20H3A1,1 0 0,1 2,19V9A1,1 0 0,1 3,8H21A1,1 0 0,1 22,9"
                   />
                 </svg>
-                Filtrer par jeu
-              </div>
-            </label>
-            <div class="relative">
-              <select
-                id="game"
-                v-model="selectedGame"
-                class="w-full rounded-lg border-2 border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary"
-                style="box-shadow: 0 0 10px rgba(217, 119, 6, 0.2)"
-              >
-                <option value="">Tous les jeux</option>
-                <option v-for="game in games" :key="game._id" :value="game._id">
-                  {{ game.name }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-              >
-                <!-- Icône de flèche vers le bas avec style Halloween -->
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  style="filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.6))"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
+              </template>
+              <option value="">Tous les jeux</option>
+              <option v-for="game in games" :key="game._id" :value="game._id">
+                {{ game.name }}
+              </option>
+            </Dropdown>
           </div>
 
           <!-- Sélecteur de saisons -->
           <div>
-            <label for="season" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-body text-color-secondary-light flex items-center gap-2"
-              >
-                <!-- Icône de lune sanglante pour les saisons -->
+            <Dropdown
+              id="season"
+              v-model="selectedSeason"
+              label="Filtrer par saison"
+              placeholder="Classement général"
+              class="compact-dropdown season-dropdown"
+            >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
@@ -103,89 +77,48 @@
                   fill="currentColor"
                 >
                   <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                    opacity="0.3"
-                  />
-                  <path
-                    d="M12 22c5.52 0 10-4.48 10-10 0-1.19-.22-2.33-.62-3.38-.4-.72-1.43-.65-1.71.13-.37 1.04-.99 1.96-1.82 2.68C16.93 12.45 16 13.68 16 15.12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.44-.93-2.67-1.85-3.69-.83-.72-1.45-1.64-1.82-2.68-.28-.78-1.31-.85-1.71-.13C2.22 9.67 2 10.81 2 12c0 5.52 4.48 10 10 10z"
+                    d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"
                   />
                 </svg>
-                Filtrer par saison
-              </div>
-            </label>
-            <div class="relative">
-              <select
-                id="season"
-                v-model="selectedSeason"
-                class="w-full rounded-lg border-2 border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/50 focus:border-color-secondary focus:outline-none transition-all duration-300 hover:border-color-secondary/50 hover:shadow-glow-secondary"
-                style="box-shadow: 0 0 10px rgba(220, 38, 38, 0.2)"
+              </template>
+              <option value="">Classement général</option>
+              <option
+                v-for="season in seasons"
+                :key="season._id"
+                :value="season._id"
               >
-                <option value="">Classement général</option>
-                <option
-                  v-for="season in seasons"
-                  :key="season._id"
-                  :value="season._id"
-                >
-                  {{
-                    season.numero === 0
-                      ? "Alors ça chill"
-                      : `Saison ${season.numero}`
-                  }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-              >
-                <!-- Icône de flèche vers le bas avec style Halloween sang -->
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-secondary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  style="filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.6))"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
+                {{
+                  season.numero === 0
+                    ? "Alors ça chill"
+                    : `Saison ${season.numero}`
+                }}
+              </option>
+            </Dropdown>
           </div>
 
-          <!-- Recherche par joueur -->
+          <!-- Recherche par nom de joueur -->
           <div>
-            <label for="search" class="mb-3 flex items-center gap-2">
-              <div class="font-body text-color-text flex items-center gap-2">
-                <!-- Icône loupe fantomatique -->
+            <Input
+              id="search"
+              v-model="searchQuery"
+              label="Rechercher un joueur"
+              type="text"
+              placeholder="Ex: Heekoz, Tekninon, ..."
+              class="compact-input search-input"
+            >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-text-muted"
+                  class="h-5 w-5"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path
-                    d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"
+                    d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
                   />
                 </svg>
-                Rechercher un joueur
-              </div>
-            </label>
-            <div class="relative">
-              <input
-                id="search"
-                v-model.trim="searchQuery"
-                type="text"
-                inputmode="search"
-                placeholder="Ex: Heekoz, Tekninon, ..."
-                class="w-full rounded-lg border-2 border-color-bg-light/40 bg-color-bg-light text-color-text px-4 py-2 focus:ring-2 focus:ring-color-primary/40 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary placeholder:text-color-text-muted"
-                style="box-shadow: 0 0 10px rgba(148, 163, 184, 0.15)"
-                aria-label="Rechercher un joueur par nom"
-              />
-            </div>
+              </template>
+            </Input>
           </div>
         </div>
       </Card>
@@ -195,7 +128,7 @@
         <Loader text="Chargement du classement..." />
       </div>
 
-      <!-- Message si aucun résultat -->
+      <!-- Message d'absence de résultats -->
       <Terminal
         v-else-if="sortedRankings.length === 0"
         :command="`search_players ${
@@ -213,9 +146,9 @@
         </div>
       </Terminal>
 
-      <!-- Tableau de classement -->
+      <!-- Tableau de classement principal -->
       <Card v-else variant="dark" :stars="false" className="overflow-hidden ">
-        <!-- Barre d'options au-dessus du tableau -->
+        <!-- Barre d'options et contrôles -->
         <div
           class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-color-bg-light/10 border-b border-color-bg-light/30"
         >
@@ -224,15 +157,17 @@
               class="font-heading text-xs uppercase tracking-wider text-color-text-muted"
               >Éléments/page</span
             >
-            <select
-              v-model.number="itemsPerPage"
-              class="rounded-md border-2 border-color-bg-light/40 bg-color-bg-light text-color-text px-2 py-1 text-sm focus:ring-2 focus:ring-color-primary/40 focus:border-color-primary"
-              aria-label="Nombre d'éléments par page"
+            <Dropdown
+              id="itemsPerPage"
+              v-model="itemsPerPage"
+              placeholder="10"
+              size="sm"
+              class="compact-dropdown"
             >
               <option :value="10">10</option>
               <option :value="25">25</option>
               <option :value="50">50</option>
-            </select>
+            </Dropdown>
           </div>
 
           <div class="flex items-center gap-2 ml-auto">
@@ -246,7 +181,8 @@
             </Button>
           </div>
         </div>
-        <!-- Version desktop du tableau (caché sur mobile) -->
+
+        <!-- Version desktop du tableau -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
             <thead class="bg-color-bg-light/40 backdrop-blur sticky top-0 z-10">
@@ -439,9 +375,9 @@
           </table>
         </div>
 
-        <!-- Version mobile du tableau (affichée uniquement sur mobile) -->
+        <!-- Version mobile du tableau -->
         <div class="block md:hidden">
-          <!-- Barre de tri pour mobile -->
+          <!-- Barre de tri mobile -->
           <div
             class="flex justify-between items-center p-3 bg-color-bg-light/20 border-b border-color-bg-light/30"
           >
@@ -498,7 +434,7 @@
             </div>
           </div>
 
-          <!-- Liste des joueurs version mobile -->
+          <!-- Liste des joueurs mobile -->
           <div>
             <div
               v-for="(ranking, index) in paginatedRankings"
@@ -507,7 +443,6 @@
               :class="[index % 2 === 0 ? 'row-even' : 'row-odd', 'row-hover']"
             >
               <div class="flex items-center">
-                <!-- Rang -->
                 <div class="w-10 flex-shrink-0 flex justify-center">
                   <Badge
                     v-if="calculateGlobalRank(index) <= 3"
@@ -522,7 +457,6 @@
                   }}</span>
                 </div>
 
-                <!-- Joueur avec troncature -->
                 <div class="flex-grow min-w-0">
                   <router-link
                     :to="{ name: 'Profil', params: { id: ranking.playerId } }"
@@ -533,7 +467,6 @@
                   </router-link>
                 </div>
 
-                <!-- Victoires -->
                 <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex items-center">
                     <span
@@ -552,7 +485,7 @@
           </div>
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination du tableau -->
         <div class="py-4 px-6">
           <Pagination
             :current-page="currentPage"
@@ -570,46 +503,38 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-// Types pour le typage fort
 import type { PlayerRanking, Season, Game } from "../types";
-
-// Services
 import seasonService from "../services/seasonService";
 import gameService from "../services/gameService";
 import playerService from "../services/playerService";
 
-// Router
 const route = useRoute();
 const router = useRouter();
 
-// État du composant
+//-------------------------------------------------------
+// ÉTAT RÉACTIF
+//-------------------------------------------------------
+
 const isLoading = ref(true);
 const games = ref<Game[]>([]);
 const seasons = ref<Season[]>([]);
 const rankings = ref<PlayerRanking[]>([]);
 
-// État du tri
 const sortKey = ref<keyof PlayerRanking>("totalVictories");
 const sortOrder = ref<"asc" | "desc">("desc");
-
-// Recherche
 const searchQuery = ref("");
-
-// État de la pagination
 const currentPage = ref(1);
-const itemsPerPage = ref(10); // Nombre d'éléments par page
+const itemsPerPage = ref(10);
 
-// Filtres
 const selectedGame = ref<string>("");
 const selectedSeason = ref<string>("");
 
 //-------------------------------------------------------
-// SECTION: Récupération des données et actions
+// SERVICES ET ACTIONS
 //-------------------------------------------------------
 
 /**
- * Récupère les saisons disponibles
+ * Récupère la liste des saisons disponibles depuis l'API
  */
 const fetchSeasons = async () => {
   try {
@@ -620,7 +545,7 @@ const fetchSeasons = async () => {
 };
 
 /**
- * Récupère les jeux disponibles
+ * Récupère la liste des jeux disponibles depuis l'API
  */
 const fetchGames = async () => {
   try {
@@ -631,22 +556,20 @@ const fetchGames = async () => {
 };
 
 /**
- * Met à jour le classement selon les filtres sélectionnés (jeu et saison)
+ * Met à jour le classement en fonction des filtres sélectionnés (jeu et saison)
  */
 const fetchRankingsByFilter = async () => {
   isLoading.value = true;
-  currentPage.value = 1; // Réinitialiser à la première page
+  currentPage.value = 1;
 
   try {
     if (selectedSeason.value) {
-      // Récupérer le classement par saison
       const result = await seasonService.getSeasonRanking(
         selectedSeason.value,
         selectedGame.value
       );
       rankings.value = result.rankings || [];
     } else {
-      // Récupérer le classement général
       if (selectedGame.value) {
         rankings.value = await playerService.getPlayerRankingsByGame(
           selectedGame.value
@@ -663,7 +586,13 @@ const fetchRankingsByFilter = async () => {
   }
 };
 
-//--- URL <-> State synchronisation helpers ----------------------------------
+//-------------------------------------------------------
+// SYNCHRONISATION URL
+//-------------------------------------------------------
+
+/**
+ * Synchronise l'état local avec les paramètres d'URL
+ */
 const syncFromRoute = () => {
   const q = route.query;
   if (typeof q.g === "string") selectedGame.value = q.g;
@@ -677,9 +606,11 @@ const syncFromRoute = () => {
   }
 };
 
+/**
+ * Met à jour l'URL avec les paramètres de filtrage actuels
+ */
 const updateRouteQuery = () => {
   const next: Record<string, any> = { ...route.query };
-  // Minimal keys
   if (selectedGame.value) next.g = selectedGame.value;
   else delete next.g;
   if (selectedSeason.value) next.s = selectedSeason.value;
@@ -691,31 +622,29 @@ const updateRouteQuery = () => {
   router.replace({ query: next });
 };
 
+//-------------------------------------------------------
+// UTILITAIRES
+//-------------------------------------------------------
+
 /**
- * Exporte les données en CSV
+ * Exporte les données du classement au format CSV
  */
 const exportCSV = () => {
-  // Créer l'en-tête CSV
   let csvContent = "Rang,Joueur,Tournois,Victoires\n";
 
-  // Ajouter chaque ligne
   sortedRankings.value.forEach((player, index) => {
     csvContent += `${index + 1},${player.username},${player.totalTournaments},${
       player.totalVictories
     }\n`;
   });
 
-  // Créer un blob et télécharger
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
 
-  // Générer un nom de fichier avec date et filtres
   const date = new Date().toISOString().split("T")[0];
-
   let fileName = "classement";
 
-  // Ajouter info sur la saison
   if (selectedSeason.value) {
     const season = seasons.value.find((s) => s._id === selectedSeason.value);
     if (season) {
@@ -727,7 +656,6 @@ const exportCSV = () => {
     fileName += "-general";
   }
 
-  // Ajouter info sur le jeu
   if (selectedGame.value) {
     const gameName =
       games.value.find((g) => g._id === selectedGame.value)?.name ||
@@ -750,7 +678,7 @@ const exportCSV = () => {
 };
 
 /**
- * Réinitialise les filtres et la recherche
+ * Réinitialise tous les filtres aux valeurs par défaut
  */
 const resetFilters = () => {
   selectedGame.value = "";
@@ -764,53 +692,39 @@ const resetFilters = () => {
   fetchRankingsByFilter();
 };
 
-//-------------------------------------------------------
-// SECTION: Gestion du tri
-//-------------------------------------------------------
-
 /**
- * Gère le tri du tableau de classement
- * @param key - Clé de colonne sur laquelle effectuer le tri
+ * Gère le tri des colonnes du tableau
+ * @param key - Nom de la propriété sur laquelle trier
  */
 const sortBy = (key: string) => {
   const typedKey = key as keyof PlayerRanking;
 
-  // Si on clique sur la même colonne
   if (sortKey.value === typedKey) {
-    // Inverser l'ordre de tri
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
   } else {
-    // Nouvelle colonne: définir la clé et commencer par ordre ascendant
     sortKey.value = typedKey;
     sortOrder.value = "asc";
   }
 
-  // Revenir à la première page après un tri
   currentPage.value = 1;
 };
 
 /**
- * Détermine la variante de badge pour les rangs 1, 2 et 3
+ * Retourne la variante de badge appropriée selon le rang
+ * @param rank - Position dans le classement (0-based)
+ * @returns Variante de badge (gold, silver, bronze, primary)
  */
-const getRankBadgeVariant = (index: number) => {
-  switch (index) {
-    case 0:
-      return "gold"; // 1er place (Or)
-    case 1:
-      return "silver"; // 2ème place (Argent)
-    case 2:
-      return "bronze"; // 3ème place (Bronze)
-    default:
-      return "primary";
-  }
+const getRankBadgeVariant = (rank: number) => {
+  const variants = ["gold", "silver", "bronze"] as const;
+  return variants[rank] || "primary";
 };
 
 //-------------------------------------------------------
-// SECTION: Propriétés calculées
+// PROPRIÉTÉS CALCULÉES
 //-------------------------------------------------------
 
 /**
- * Filtre par recherche (nom de joueur)
+ * Filtre les classements selon la recherche textuelle
  */
 const filteredRankings = computed(() => {
   const q = searchQuery.value.trim().toLowerCase();
@@ -819,31 +733,29 @@ const filteredRankings = computed(() => {
 });
 
 /**
- * Propriété calculée qui retourne le classement trié selon les critères actuels
+ * Trie les classements filtrés selon les critères sélectionnés
  */
 const sortedRankings = computed(() => {
   return [...filteredRankings.value].sort((a, b) => {
     const valueA = a[sortKey.value];
     const valueB = b[sortKey.value];
 
-    let result;
-    // Tri spécifique pour les chaînes de caractères
+    let result = 0;
     if (typeof valueA === "string" && typeof valueB === "string") {
       result = valueA.localeCompare(valueB);
-    }
-    // Tri pour les autres types de données
-    else {
+    } else {
       result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     }
 
-    // Si on trie par victoires et qu'il y a égalité, départager par le nombre de tournois
+    // Départage spécial : victoires en priorité, puis tournois seulement si égalité parfaite sur les victoires
     if (sortKey.value === "totalVictories" && result === 0) {
-      return sortOrder.value === "asc"
-        ? a.totalTournaments - b.totalTournaments
-        : b.totalTournaments - a.totalTournaments;
+      // Si égalité sur les victoires, on départage par le nombre de tournois (moins = mieux)
+      result =
+        sortOrder.value === "asc"
+          ? a.totalTournaments - b.totalTournaments
+          : a.totalTournaments - b.totalTournaments; // Toujours croissant pour départager
     }
 
-    // Inverser le résultat si l'ordre est descendant
     return sortOrder.value === "asc" ? result : -result;
   });
 });
@@ -856,20 +768,19 @@ const totalPages = computed(() =>
 );
 
 /**
- * Extrait les classements à afficher sur la page courante
+ * Retourne les classements à afficher sur la page courante
  */
 const paginatedRankings = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = Math.min(start + itemsPerPage.value, sortedRankings.value.length);
-  return sortedRankings.value.slice(start, end);
+  return sortedRankings.value.slice(start, start + itemsPerPage.value);
 });
 
 //-------------------------------------------------------
-// SECTION: Méthodes de pagination
+// PAGINATION
 //-------------------------------------------------------
 
 /**
- * Passe à la page suivante
+ * Passe à la page suivante si possible
  */
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
@@ -878,7 +789,7 @@ const nextPage = () => {
 };
 
 /**
- * Revient à la page précédente
+ * Revient à la page précédente si possible
  */
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -887,17 +798,24 @@ const prevPage = () => {
 };
 
 /**
- * Calcule le rang global d'un joueur baséé sur son index dans la page courante
+ * Calcule le rang global d'un joueur basé sur la pagination
+ * @param index - Index du joueur dans la page courante
+ * @returns Rang global du joueur
  */
 const calculateGlobalRank = (index: number): number => {
   return (currentPage.value - 1) * itemsPerPage.value + index + 1;
 };
 
 //-------------------------------------------------------
-// SECTION: Cycle de vie et watchers
+// WATCHERS ET CYCLE DE VIE
 //-------------------------------------------------------
 
-// Petite fonction de debounce pour éviter les appels répétitifs
+/**
+ * Fonction de debounce pour limiter les appels répétitifs
+ * @param fn - Fonction à debouncer
+ * @param wait - Délai d'attente en millisecondes
+ * @returns Fonction debouncée
+ */
 function debounce<T extends (...args: any[]) => any>(fn: T, wait = 250) {
   let t: any;
   return (...args: Parameters<T>) => {
@@ -906,47 +824,27 @@ function debounce<T extends (...args: any[]) => any>(fn: T, wait = 250) {
   };
 }
 
-const debouncedFetch = debounce(fetchRankingsByFilter, 250);
 const debouncedUpdateRoute = debounce(updateRouteQuery, 200);
 
-// Observer les changements de selectedGame et selectedSeason
-watch([() => selectedGame.value, () => selectedSeason.value], () => {
-  debouncedFetch();
-  debouncedUpdateRoute();
-});
-
-// Revenir à la première page quand on recherche ou change le nombre d'éléments par page
-watch(searchQuery, () => {
+const updateData = debounce(() => {
   currentPage.value = 1;
-  debouncedUpdateRoute();
-});
-watch(itemsPerPage, () => {
-  currentPage.value = 1;
-  debouncedUpdateRoute();
-});
-watch(currentPage, () => {
-  debouncedUpdateRoute();
-});
+  fetchRankingsByFilter();
+  updateRouteQuery();
+}, 250);
 
-/**
- * Initialisation du composant au montage
- */
+watch([selectedGame, selectedSeason, searchQuery, itemsPerPage], updateData);
+watch(currentPage, debouncedUpdateRoute);
+
 onMounted(async () => {
   isLoading.value = true;
   try {
-    // Charger les saisons et les jeux
     await Promise.all([fetchSeasons(), fetchGames()]);
-
-    // Synchroniser depuis l'URL si disponible
     syncFromRoute();
 
-    // Définir la saison actuelle comme valeur par défaut si aucune dans l'URL
     if (!route.query.s && seasons.value.length > 0) {
-      // Les saisons sont triées par numéro décroissant, donc la première est la plus récente
       selectedSeason.value = seasons.value[0]._id;
     }
 
-    // Charger le classement initial
     await fetchRankingsByFilter();
     updateRouteQuery();
   } catch (error) {
@@ -958,6 +856,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* Utilitaires de base */
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -965,42 +864,35 @@ onMounted(async () => {
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* Améliorations pour la responsivité des mobiles */
-@media (max-width: 640px) {
-  .space-page-container {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  /* Assure que les cartes ne débordent pas sur mobile */
-  .color-card {
-    overflow: hidden;
-  }
+/* Structure du tableau avec thème Halloween */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-th {
-  position: relative;
-  text-align: center;
-  font-size: 0.95rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
+th,
 td {
   position: relative;
   text-align: center;
-  font-size: 1.05rem;
   padding: 1rem 0.75rem;
 }
 
+th {
+  font-size: 0.95rem;
+}
+
+td {
+  font-size: 1.05rem;
+}
+
+/* Séparateurs verticaux entre colonnes */
 th:not(:last-child)::after,
 td:not(:last-child)::after {
   content: "";
@@ -1018,52 +910,143 @@ td:not(:last-child)::after {
 }
 
 /* Lignes alternées avec thème Halloween */
-.row-even {
-  background-color: transparent;
-}
-
 .row-odd {
-  background-color: rgba(
-    var(--color-primary-rgb),
-    0.08
-  ); /* Orange Halloween au lieu de violet */
+  background-color: rgba(var(--color-primary-rgb), 0.08);
 }
 
 .row-hover:hover {
-  background-color: rgba(
-    var(--color-primary-rgb),
-    0.15
-  ); /* Orange plus intense au survol */
-  z-index: 1;
+  background-color: rgba(var(--color-primary-rgb), 0.15);
   box-shadow: inset 0 0 8px rgba(var(--color-primary-rgb), 0.2);
-  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-/* Structure du tableau */
-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-tbody tr {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Effet de lueur pour les badges des premiers */
+/* Animation de lueur pour les badges de podium */
 .shadow-glow {
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  animation: pulse 2s infinite;
+  animation: mystical-glow 2s infinite;
 }
 
-@keyframes pulse {
-  0% {
+@keyframes mystical-glow {
+  0%,
+  100% {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   }
   50% {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
   }
-  100% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  }
+}
+
+/* Styles spécifiques pour les dropdowns compacts */
+.compact-dropdown :deep(.dropdown-label) {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  font-family: var(--font-body) !important;
+  color: rgba(var(--color-text-rgb), 0.8) !important;
+}
+
+.compact-dropdown :deep(.dropdown-select) {
+  padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  min-height: auto !important;
+  line-height: 1.4 !important;
+}
+
+.compact-dropdown :deep(.dropdown-label svg) {
+  margin-right: 0.5rem !important;
+}
+
+.compact-dropdown :deep(.dropdown-arrow) {
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+.compact-dropdown :deep(.dropdown-arrow svg) {
+  height: 0.75rem !important;
+  width: 0.75rem !important;
+}
+
+/* Couleurs spécifiques pour différents types de dropdowns */
+.game-dropdown :deep(.dropdown-label) {
+  color: rgba(var(--color-secondary-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-secondary-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.game-dropdown :deep(.dropdown-select) {
+  border-color: rgba(var(--color-secondary-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-secondary-rgb), 0.3) !important;
+}
+
+.game-dropdown :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--color-secondary-rgb), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-secondary-rgb), 0.5) !important;
+}
+
+.season-dropdown :deep(.dropdown-label) {
+  color: rgba(var(--color-accent-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.season-dropdown :deep(.dropdown-select) {
+  border-color: rgba(var(--color-accent-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.3) !important;
+}
+
+.season-dropdown :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--color-accent-rgb), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-accent-rgb), 0.5) !important;
+}
+
+/* Harmonisation de la taille de l'input avec les dropdowns */
+.compact-input :deep(input) {
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+  font-family: var(--font-body) !important;
+}
+
+.compact-input :deep(label) {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  font-family: var(--font-body) !important;
+  color: rgba(var(--color-text-rgb), 0.8) !important;
+}
+
+.compact-input :deep(.absolute.inset-y-0.left-0) {
+  padding-left: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  pointer-events: none !important;
+}
+
+.compact-input :deep(.absolute.inset-y-0.left-0 svg) {
+  height: 1rem !important;
+  width: 1rem !important;
+  color: rgba(var(--color-text-rgb), 0.6) !important;
+}
+
+.search-input :deep(label) {
+  color: rgba(var(--color-primary-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.search-input :deep(input) {
+  border-color: rgba(var(--color-primary-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3) !important;
+}
+
+.search-input :deep(input:hover) {
+  border-color: rgba(var(--color-primary-rgb), 0.8) !important;
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4) !important;
+}
+
+.search-input :deep(input:focus) {
+  border-color: rgba(var(--color-primary-rgb), 1) !important;
+  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.6) !important;
 }
 </style>

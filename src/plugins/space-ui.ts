@@ -30,7 +30,7 @@ const components = {
   Title: Title,
   Loader: Loader,
   Toggle: Toggle,
-  Dropdown: Dropdown, // Ajout du composant Toggle
+  Dropdown: Dropdown,
 
   // Molecules
   Card: Card,
