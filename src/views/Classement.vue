@@ -39,7 +39,7 @@
               v-model="selectedGame"
               label="Filtrer par jeu"
               placeholder="Tous les jeux"
-              class="compact-dropdown game-dropdown"
+              class="game-filter"
             >
               <template #icon>
                 <svg
@@ -67,7 +67,7 @@
               v-model="selectedSeason"
               label="Filtrer par saison"
               placeholder="Classement général"
-              class="compact-dropdown season-dropdown"
+              class="season-filter"
             >
               <template #icon>
                 <svg
@@ -104,7 +104,7 @@
               label="Rechercher un joueur"
               type="text"
               placeholder="Ex: Heekoz, Tekninon, ..."
-              class="compact-input search-input"
+              class="search-filter"
             >
               <template #icon>
                 <svg
@@ -162,7 +162,7 @@
               v-model="itemsPerPage"
               placeholder="10"
               size="sm"
-              class="compact-dropdown"
+              class="w-20"
             >
               <option :value="10">10</option>
               <option :value="25">25</option>
@@ -966,87 +966,97 @@ td:not(:last-child)::after {
   width: 0.75rem !important;
 }
 
-/* Couleurs spécifiques pour différents types de dropdowns */
-.game-dropdown :deep(.dropdown-label) {
-  color: rgba(var(--color-secondary-rgb), 1) !important;
-  text-shadow: 0 0 8px rgba(var(--color-secondary-rgb), 0.6) !important;
-  font-weight: 500 !important;
+/* Filtres avec variables CSS pour les couleurs */
+.game-filter {
+  --filter-color: var(--color-secondary-rgb);
 }
 
-.game-dropdown :deep(.dropdown-select) {
-  border-color: rgba(var(--color-secondary-rgb), 0.5) !important;
-  box-shadow: 0 0 10px rgba(var(--color-secondary-rgb), 0.3) !important;
+.season-filter {
+  --filter-color: var(--color-accent-rgb);
 }
 
-.game-dropdown :deep(.dropdown-select:hover) {
-  border-color: rgba(var(--color-secondary-rgb), 0.8) !important;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(var(--color-secondary-rgb), 0.5) !important;
+.search-filter {
+  --filter-color: var(--color-primary-rgb);
 }
 
-.season-dropdown :deep(.dropdown-label) {
-  color: rgba(var(--color-accent-rgb), 1) !important;
-  text-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.6) !important;
-  font-weight: 500 !important;
-}
-
-.season-dropdown :deep(.dropdown-select) {
-  border-color: rgba(var(--color-accent-rgb), 0.5) !important;
-  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.3) !important;
-}
-
-.season-dropdown :deep(.dropdown-select:hover) {
-  border-color: rgba(var(--color-accent-rgb), 0.8) !important;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(var(--color-accent-rgb), 0.5) !important;
-}
-
-/* Harmonisation de la taille de l'input avec les dropdowns */
-.compact-input :deep(input) {
-  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
-  font-size: 0.875rem !important;
-  line-height: 1.4 !important;
-  font-family: var(--font-body) !important;
-}
-
-.compact-input :deep(label) {
+/* Styles communs pour tous les filtres */
+.game-filter :deep(.dropdown-label),
+.season-filter :deep(.dropdown-label),
+.search-filter :deep(label) {
   font-size: 0.875rem !important;
   margin-bottom: 0.5rem !important;
   font-family: var(--font-body) !important;
-  color: rgba(var(--color-text-rgb), 0.8) !important;
+  font-weight: 500 !important;
+  color: rgba(var(--filter-color), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--filter-color), 0.6) !important;
 }
 
-.compact-input :deep(.absolute.inset-y-0.left-0) {
+.game-filter :deep(.dropdown-select),
+.season-filter :deep(.dropdown-select) {
+  padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-body) !important;
+  line-height: 1.4 !important;
+  border-color: rgba(var(--filter-color), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
+}
+
+.game-filter :deep(.dropdown-select:hover),
+.season-filter :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--filter-color), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--filter-color), 0.5) !important;
+}
+
+.game-filter :deep(.dropdown-label svg),
+.season-filter :deep(.dropdown-label svg) {
+  margin-right: 0.5rem !important;
+}
+
+.game-filter :deep(.dropdown-arrow),
+.season-filter :deep(.dropdown-arrow) {
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+.game-filter :deep(.dropdown-arrow svg),
+.season-filter :deep(.dropdown-arrow svg) {
+  height: 0.75rem !important;
+  width: 0.75rem !important;
+}
+
+/* Input de recherche */
+.search-filter :deep(input) {
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-body) !important;
+  line-height: 1.4 !important;
+  border-color: rgba(var(--filter-color), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
+}
+
+.search-filter :deep(input:hover) {
+  border-color: rgba(var(--filter-color), 0.8) !important;
+  box-shadow: 0 0 15px rgba(var(--filter-color), 0.4) !important;
+}
+
+.search-filter :deep(input:focus) {
+  border-color: rgba(var(--filter-color), 1) !important;
+  box-shadow: 0 0 20px rgba(var(--filter-color), 0.6) !important;
+}
+
+.search-filter :deep(.absolute.inset-y-0.left-0) {
   padding-left: 0.75rem !important;
   display: flex !important;
   align-items: center !important;
   pointer-events: none !important;
 }
 
-.compact-input :deep(.absolute.inset-y-0.left-0 svg) {
+.search-filter :deep(.absolute.inset-y-0.left-0 svg) {
   height: 1rem !important;
   width: 1rem !important;
   color: rgba(var(--color-text-rgb), 0.6) !important;
-}
-
-.search-input :deep(label) {
-  color: rgba(var(--color-primary-rgb), 1) !important;
-  text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6) !important;
-  font-weight: 500 !important;
-}
-
-.search-input :deep(input) {
-  border-color: rgba(var(--color-primary-rgb), 0.5) !important;
-  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3) !important;
-}
-
-.search-input :deep(input:hover) {
-  border-color: rgba(var(--color-primary-rgb), 0.8) !important;
-  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4) !important;
-}
-
-.search-input :deep(input:focus) {
-  border-color: rgba(var(--color-primary-rgb), 1) !important;
-  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.6) !important;
 }
 </style>

@@ -261,7 +261,7 @@
                 </p>
                 <p class="text-color-primary-light text-xs">
                   <span v-if="game.released">{{
-                    formatGameReleaseDate(game.released)
+                    formatGameReleaseDate(game.released || "")
                   }}</span>
                 </p>
               </div>
@@ -342,14 +342,17 @@
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
         <h4 class="text-color-text text-lg font-heading mb-2">
-          {{ selectedProposal.name }}
+          {{ selectedProposal?.name || "Proposition inconnue" }}
         </h4>
         <div
           class="flex justify-center items-center text-sm text-color-text-muted space-x-4"
         >
           <div>
             <span class="text-color-secondary">Total:</span>
-            <span :class="getVoteCountClass(selectedProposal)">
+            <span
+              v-if="selectedProposal"
+              :class="getVoteCountClass(selectedProposal)"
+            >
               {{ getDisplayVoteCount(selectedProposal) }}
             </span>
           </div>
@@ -454,7 +457,11 @@
                 {{ getVoterName(vote) }}
               </p>
               <p class="text-xs text-color-text-muted">
-                {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
+                {{
+                  formatDate(
+                    vote.createdAt || selectedProposal?.createdAt || ""
+                  )
+                }}
               </p>
             </div>
           </div>
@@ -471,6 +478,9 @@
 </template>
 
 <script setup lang="ts">
+//-------------------------------------------------------
+// IMPORTS ET TYPES
+//-------------------------------------------------------
 import { ref, computed, onMounted, watch } from "vue";
 import { useUserStore } from "../stores/userStore";
 import gameProposalService from "../services/gameProposalService";
@@ -480,72 +490,203 @@ import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
 import Container from "@/components/ui/layout/Container.vue";
 
-// ===================================
-// ÉTAT ET RÉFÉRENCES
-// ===================================
+//-------------------------------------------------------
+// ÉTAT RÉACTIF ET STORES
+//-------------------------------------------------------
 
-const showVoteInfo = ref(false);
-const activeTab = ref<"positive" | "negative">("positive");
-const selectedProposal = ref<GameProposal | null>(null);
-
-// État utilisateur
+// Store utilisateur et authentification
 const userStore = useUserStore();
-const isAuthenticated = computed(() => !!userStore.user);
-const isAdmin = computed(() =>
-  ["admin", "superadmin"].includes(userStore.user?.role || "")
-);
 
-// Propositions de jeux
+// États principaux
 const proposals = ref<GameProposal[]>([]);
 const loading = ref(true);
 const activeFilter = ref("approved");
 
-// Filtres disponibles
-const filters = [
-  { label: "Approuvés", value: "approved" },
-  { label: "En attente", value: "pending" },
-];
-const sortOption = ref("default");
-
-const onlyPositiveVotes = ref(false);
-
-// Modal de nouvelle proposition
+// Modal et interface
 const showProposalForm = ref(false);
+const showVoteInfo = ref(false);
+const deleteDialogVisible = ref(false);
+const activeTab = ref<"positive" | "negative">("positive");
+const selectedProposal = ref<GameProposal | null>(null);
+const proposalToDelete = ref<string>("");
+
+// Formulaire de nouvelle proposition
 const newProposal = ref({
   name: "",
   description: "",
   imageUrl: "",
   rawgId: undefined as number | undefined,
 });
-const isProposalValid = computed(
-  () => newProposal.value.name.trim().length > 0
-);
 const submitting = ref(false);
 
-// Recherche de jeux
+// Recherche de jeux via RAWG API
 const searchQuery = ref("");
 const searchResults = ref<RawgGame[]>([]);
 const searching = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
-// Dialog de suppression
-const deleteDialogVisible = ref(false);
-const proposalToDelete = ref<string>("");
+// Pagination et filtres
+const itemsPerPage = 10;
+const currentPage = ref(1);
+const searchTerm = ref("");
+const sortOption = ref("default");
+const onlyPositiveVotes = ref(false);
 
-// Notification toast
+// Système de notifications
 const toastInfo = ref({
   visible: false,
   message: "",
   type: "success" as "success" | "error",
 });
 
-// ===================================
-// PAGINATION ET RECHERCHE
-// ===================================
+// Debounce pour la recherche
+const searchDebounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 
-// Pagination
-const itemsPerPage = 10;
-const currentPage = ref(1);
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - AUTHENTIFICATION
+//-------------------------------------------------------
+
+/**
+ * Vérifie si l'utilisateur est authentifié
+ * @returns true si l'utilisateur est connecté
+ */
+const isAuthenticated = computed(() => !!userStore.user);
+
+/**
+ * Vérifie si l'utilisateur a des droits d'administration
+ * @returns true si l'utilisateur est admin ou superadmin
+ */
+const isAdmin = computed(() =>
+  ["admin", "superadmin"].includes(userStore.user?.role || "")
+);
+
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - VALIDATION
+//-------------------------------------------------------
+
+/**
+ * Valide si la proposition en cours de création est valide
+ * @returns true si le nom de la proposition n'est pas vide
+ */
+const isProposalValid = computed(
+  () => newProposal.value.name.trim().length > 0
+);
+
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - FILTRAGE ET TRI
+//-------------------------------------------------------
+
+/**
+ * Filtre les propositions selon les critères de recherche et de tri
+ * @returns Liste des propositions filtrées et triées
+ */
+const filteredProposals = computed(() => {
+  let result = proposals.value;
+
+  // Correction de l'erreur de description potentiellement undefined
+  if (searchTerm.value.trim()) {
+    const searchTermLower = searchTerm.value.toLowerCase();
+    result = result.filter(
+      (proposal) =>
+        proposal.name.toLowerCase().includes(searchTermLower) ||
+        proposal.description?.toLowerCase().includes(searchTermLower) ||
+        false
+    );
+  }
+
+  // Tri selon l'option sélectionnée
+  if (sortOption.value === "votesDesc" || sortOption.value === "votesAsc") {
+    result = [...result].sort((a, b) => {
+      const aVotes = getDisplayVoteCount(a);
+      const bVotes = getDisplayVoteCount(b);
+      return sortOption.value === "votesDesc"
+        ? bVotes - aVotes
+        : aVotes - bVotes;
+    });
+  }
+
+  return result;
+});
+
+/**
+ * Calcule le nombre total de pages pour la pagination
+ * @returns Nombre total de pages
+ */
+const totalPages = computed(() => {
+  return Math.ceil(filteredProposals.value.length / itemsPerPage);
+});
+
+/**
+ * Retourne les propositions à afficher sur la page courante
+ * @returns Liste des propositions paginées
+ */
+const paginatedProposals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredProposals.value.slice(startIndex, endIndex);
+});
+
+/**
+ * Génère un message contextuel pour l'état vide
+ * @returns Message explicatif adapté au contexte
+ */
+const emptyStateMessage = computed(() => {
+  if (searchTerm.value) {
+    return `Aucune proposition ne correspond à votre recherche "${searchTerm.value}".`;
+  }
+
+  if (activeFilter.value === "pending") {
+    return "Aucune proposition en attente de modération.";
+  } else if (activeFilter.value === "approved") {
+    return "Aucune proposition approuvée. Soyez le premier à proposer un jeu!";
+  }
+
+  return "Aucune proposition trouvée. Soyez le premier à proposer un jeu!";
+});
+
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - GESTION DES VOTES
+//-------------------------------------------------------
+
+/**
+ * Récupère les votes positifs de la proposition sélectionnée
+ * @returns Liste des votes positifs
+ */
+const positiveVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === 1);
+});
+
+/**
+ * Récupère les votes négatifs de la proposition sélectionnée
+ * @returns Liste des votes négatifs
+ */
+const negativeVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === -1);
+});
+
+/**
+ * Retourne la liste des votes actuelle selon l'onglet sélectionné
+ * @returns Liste des votes de l'onglet actif
+ */
+const currentVotesList = computed(() => {
+  return activeTab.value === "positive"
+    ? positiveVotes.value
+    : negativeVotes.value;
+});
+
+//-------------------------------------------------------
+// CONFIGURATION
+//-------------------------------------------------------
+
+/**
+ * Options de filtrage disponibles
+ */
+const filters = [
+  { label: "Approuvés", value: "approved" },
+  { label: "En attente", value: "pending" },
+];
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -565,10 +706,6 @@ const goToPage = (page: number) => {
   }
 };
 
-// Recherche
-const searchTerm = ref("");
-const searchDebounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
-
 /**
  * Effectue la recherche avec debounce
  */
@@ -586,119 +723,110 @@ const handleSearch = () => {
   }, 300);
 };
 
-// Propositions filtrées selon la recherche
-const filteredProposals = computed(() => {
-  let result = proposals.value;
+//-------------------------------------------------------
+// FONCTIONS DE CHARGEMENT DES DONNÉES
+//-------------------------------------------------------
 
-  if (searchTerm.value.trim()) {
-    const searchTermLower = searchTerm.value.toLowerCase();
-    result = result.filter(
-      (proposal) =>
-        proposal.name.toLowerCase().includes(searchTermLower) ||
-        (proposal.description &&
-          proposal.description.toLowerCase().includes(searchTermLower))
-    );
+/**
+ * Charge les propositions selon le filtre actif
+ */
+const loadProposals = async () => {
+  try {
+    loading.value = true;
+    const status = activeFilter.value;
+    const result = await gameProposalService.getProposals(status);
+    proposals.value = result;
+  } catch (error) {
+    console.error("Erreur lors du chargement des propositions:", error);
+    showToast("Erreur lors du chargement des propositions", "error");
+  } finally {
+    loading.value = false;
   }
-
-  // Appliquer le tri selon l'option sélectionnée
-  if (sortOption.value === "votesDesc" || sortOption.value === "votesAsc") {
-    result = [...result].sort((a, b) => {
-      // Calculer les scores selon la préférence utilisateur
-      const scoreA = onlyPositiveVotes.value
-        ? a.votes?.filter((v) => v.value > 0).length || 0
-        : a.totalVotes;
-      const scoreB = onlyPositiveVotes.value
-        ? b.votes?.filter((v) => v.value > 0).length || 0
-        : b.totalVotes;
-
-      // Tri ascendant ou descendant selon l'option
-      return sortOption.value === "votesDesc"
-        ? scoreB - scoreA
-        : scoreA - scoreB;
-    });
-  }
-
-  return result;
-});
-
-// Propositions paginées
-const paginatedProposals = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return filteredProposals.value.slice(startIndex, endIndex);
-});
-
-// Nombre total de pages
-const totalPages = computed(() => {
-  return Math.ceil(filteredProposals.value.length / itemsPerPage);
-});
-
-// Si la page actuelle devient invalide après un changement
-watch(filteredProposals, () => {
-  // Ajuster la page actuelle si elle dépasse le nombre total de pages
-  if (currentPage.value > totalPages.value && totalPages.value > 0) {
-    currentPage.value = totalPages.value;
-  }
-  // Si aucun résultat, revenir à la page 1
-  if (totalPages.value === 0) {
-    currentPage.value = 1;
-  }
-});
-
-watch(sortOption, () => {
-  // Rester à la page 1 quand on change de tri
-  currentPage.value = 1;
-});
-
-watch(onlyPositiveVotes, () => {
-  // Rester à la page 1 quand on change le mode de comptage des votes
-  currentPage.value = 1;
-});
-
-// Ouvrir la modale d'information des votes
-const showVoteInfoModal = (proposal: GameProposal) => {
-  selectedProposal.value = proposal;
-  activeTab.value = "positive"; // Reset à l'onglet positif par défaut
-  showVoteInfo.value = true;
 };
 
-// Listes des votes
-const positiveVotes = computed(() => {
-  if (!selectedProposal.value?.votes) return [];
-  return selectedProposal.value.votes.filter((vote) => vote.value === 1);
-});
+//-------------------------------------------------------
+// FONCTIONS DE GESTION DES VOTES (AJOUT DES MANQUANTES)
+//-------------------------------------------------------
 
-const negativeVotes = computed(() => {
-  if (!selectedProposal.value?.votes) return [];
-  return selectedProposal.value.votes.filter((vote) => vote.value === -1);
-});
+/**
+ * Calcule le nombre de votes à afficher selon le mode sélectionné
+ * @param proposal - La proposition dont on veut calculer les votes
+ * @returns Nombre de votes à afficher
+ */
+const getDisplayVoteCount = (proposal: GameProposal | null) => {
+  if (!proposal) return 0;
 
-const currentVotesList = computed(() => {
-  return activeTab.value === "positive"
-    ? positiveVotes.value
-    : negativeVotes.value;
-});
-
-// Récupère le nombre de votes à afficher selon le mode sélectionné
-const getDisplayVoteCount = (proposal: GameProposal) => {
   if (onlyPositiveVotes.value) {
-    // Si on veut voir uniquement les votes positifs, compter seulement ceux-ci
+    // Mode votes positifs uniquement
     return proposal.votes?.filter((v) => v.value > 0).length || 0;
   } else {
-    // Sinon afficher le total normal (votes pour - votes contre)
+    // Mode total normal (votes pour - votes contre)
     return proposal.totalVotes;
   }
 };
 
-// Détermine les classes CSS pour l'affichage du nombre de votes
-const getVoteCountClass = (proposal: GameProposal) => {
+/**
+ * Détermine les classes CSS pour l'affichage du nombre de votes
+ * @param proposal - La proposition à analyser
+ * @returns Classes CSS appropriées selon le nombre de votes
+ */
+const getVoteCountClass = (proposal: GameProposal | null) => {
+  if (!proposal) return "text-color-text";
+
   const count = getDisplayVoteCount(proposal);
   if (count > 0) return "text-color-gold";
   if (count < 0) return "text-color-error";
   return "text-color-text";
 };
 
-// Récupère le nom d'un votant depuis un objet vote
+/**
+ * Gère les votes sur une proposition
+ * @param proposalId - ID de la proposition
+ * @param value - Valeur du vote (1 pour positif, -1 pour négatif)
+ */
+const handleVote = async (proposalId: string, value: number) => {
+  // Vérification de l'authentification
+  if (!isAuthenticated.value) {
+    showToast("Veuillez vous connecter pour voter", "error");
+    return;
+  }
+
+  // Vérification du statut de la proposition
+  const proposal = proposals.value.find((p) => p._id === proposalId);
+  if (proposal?.status === "pending") {
+    showToast("Impossible de voter pour une proposition en attente", "error");
+    return;
+  }
+
+  try {
+    await gameProposalService.voteProposal(proposalId, value);
+    await loadProposals();
+    showToast("Vote enregistré avec succès!", "success");
+  } catch (error) {
+    console.error("Erreur lors du vote:", error);
+    showToast("Erreur lors du vote", "error");
+  }
+};
+
+/**
+ * Ouvre la modale d'information des votes
+ * @param proposal - Proposition à afficher dans la modale
+ */
+const showVoteInfoModal = (proposal: GameProposal) => {
+  selectedProposal.value = proposal;
+  activeTab.value = "positive"; // Reset à l'onglet positif par défaut
+  showVoteInfo.value = true;
+};
+
+//-------------------------------------------------------
+// FONCTIONS UTILITAIRES POUR LES UTILISATEURS
+//-------------------------------------------------------
+
+/**
+ * Récupère le nom d'un votant depuis un objet vote
+ * @param vote - Objet vote contenant les informations du votant
+ * @returns Nom d'affichage du votant
+ */
 const getVoterName = (vote: any): string => {
   if (!vote || !vote.player) return "Utilisateur inconnu";
 
@@ -713,7 +841,11 @@ const getVoterName = (vote: any): string => {
   return "Utilisateur inconnu";
 };
 
-// Calcule les initiales d'un nom d'utilisateur
+/**
+ * Calcule les initiales d'un nom d'utilisateur
+ * @param name - Nom d'utilisateur
+ * @returns Initiales formatées
+ */
 const getInitials = (name: string): string => {
   if (!name) return "?";
 
@@ -731,79 +863,15 @@ const getInitials = (name: string): string => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-// ===================================
-// CHARGEMENT DES DONNÉES
-// ===================================
-
 /**
  * Charge les propositions selon le filtre actif
  */
-const loadProposals = async () => {
-  try {
-    loading.value = true;
-    const status = activeFilter.value; // Suppression de la condition pour "all"
-    const result = await gameProposalService.getProposals(status);
-    proposals.value = result;
-  } catch (error) {
-    showToast("Erreur lors du chargement des propositions", "error");
-    console.error("Erreur lors du chargement des propositions:", error);
-  } finally {
-    loading.value = false;
-  }
-};
+//-------------------------------------------------------
+// FONCTIONS DE GESTION DES PROPOSITIONS
+//-------------------------------------------------------
 
 /**
- * Message à afficher quand aucune proposition n'est trouvée
- */
-const emptyStateMessage = computed(() => {
-  if (searchTerm.value) {
-    return `Aucune proposition ne correspond à votre recherche "${searchTerm.value}".`;
-  }
-
-  if (activeFilter.value === "pending") {
-    return "Aucune proposition en attente de modération.";
-  } else if (activeFilter.value === "approved") {
-    return "Aucune proposition approuvée. Soyez le premier à proposer un jeu!";
-  }
-
-  return "Aucune proposition trouvée. Soyez le premier à proposer un jeu!";
-});
-
-// ===================================
-// GESTION DES VOTES
-// ===================================
-
-/**
- * Gestion des votes sur une proposition
- */
-const handleVote = async (proposalId: string, value: number) => {
-  // Vérification de connexion
-  if (!isAuthenticated.value) {
-    showToast("Veuillez vous connecter pour voter", "error");
-    return;
-  }
-
-  // Vérification du statut
-  const proposal = proposals.value.find((p) => p._id === proposalId);
-  if (proposal?.status === "pending") {
-    showToast("Impossible de voter pour une proposition en attente", "error");
-    return;
-  }
-
-  try {
-    await gameProposalService.voteProposal(proposalId, value);
-    await loadProposals();
-  } catch (error) {
-    showToast("Erreur lors du vote", "error");
-  }
-};
-
-// ===================================
-// GESTION DES PROPOSITIONS
-// ===================================
-
-/**
- * Soumettre une nouvelle proposition de jeu
+ * Soumet une nouvelle proposition de jeu
  */
 const submitProposal = async () => {
   if (!isProposalValid.value) return;
@@ -825,7 +893,8 @@ const submitProposal = async () => {
     if (error.response?.status === 409) {
       showToast("Ce jeu a déjà été proposé", "error");
     } else {
-      showToast("Erreur lors de la soumission de la proposition", "error");
+      showToast("Erreur lors de la soumission", "error");
+      console.error("Erreur lors de la soumission:", error);
     }
   } finally {
     submitting.value = false;
@@ -833,7 +902,7 @@ const submitProposal = async () => {
 };
 
 /**
- * Réinitialiser le formulaire de proposition
+ * Réinitialise le formulaire de proposition
  */
 const resetProposalForm = () => {
   newProposal.value = {
@@ -844,40 +913,12 @@ const resetProposalForm = () => {
   };
 };
 
-/**
- * Formate une date pour l'affichage
- */
-const formatDate = (dateString: string | undefined): string => {
-  if (!dateString) return "Date inconnue";
-
-  try {
-    const date = new Date(dateString);
-
-    // Vérifier si la date est valide
-    if (isNaN(date.getTime())) {
-      return "Date invalide";
-    }
-
-    // Formater la date avec l'API Intl pour le support des locales
-    return new Intl.DateTimeFormat("fr-FR", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  } catch (error) {
-    console.error("Erreur de formatage de date:", error);
-    return "Erreur de date";
-  }
-};
-
-// ===================================
-// RECHERCHE DE JEUX (RAWG API)
-// ===================================
+//-------------------------------------------------------
+// FONCTIONS DE RECHERCHE DE JEUX (RAWG API)
+//-------------------------------------------------------
 
 /**
- * Recherche avec délai d'attente (debounce)
+ * Recherche de jeux avec délai d'attente (debounce) pour éviter trop d'appels API
  */
 const debounceSearch = () => {
   if (searchTimeout) clearTimeout(searchTimeout);
@@ -894,7 +935,7 @@ const debounceSearch = () => {
       const results = await rawgService.searchGames(searchQuery.value);
       searchResults.value = results || [];
     } catch (error) {
-      showToast("Erreur lors de la recherche de jeux", "error");
+      console.error("Erreur lors de la recherche:", error);
       searchResults.value = [];
     } finally {
       searching.value = false;
@@ -903,7 +944,8 @@ const debounceSearch = () => {
 };
 
 /**
- * Sélectionne un jeu dans les résultats de recherche
+ * Sélectionne un jeu dans les résultats de recherche et remplit le formulaire
+ * @param game - Jeu sélectionné depuis l'API RAWG
  */
 const selectGame = (game: RawgGame) => {
   newProposal.value = {
@@ -916,25 +958,33 @@ const selectGame = (game: RawgGame) => {
   searchQuery.value = "";
 };
 
-// ===================================
-// MODÉRATION (ADMIN)
-// ===================================
+//-------------------------------------------------------
+// FONCTIONS DE MODÉRATION (ADMIN)
+//-------------------------------------------------------
 
 /**
- * Approuve une proposition (admin)
+ * Approuve une proposition (fonction admin)
+ * @param proposalId - ID de la proposition à approuver
  */
 const approveProposal = async (proposalId: string) => {
+  if (!isAdmin.value) {
+    showToast("Accès non autorisé", "error");
+    return;
+  }
+
   try {
     await gameProposalService.moderateProposal(proposalId, "approved");
     showToast("Proposition approuvée", "success");
     await loadProposals();
   } catch (error) {
+    console.error("Erreur lors de l'approbation:", error);
     showToast("Erreur lors de l'approbation", "error");
   }
 };
 
 /**
  * Ouvre le modal de confirmation de suppression
+ * @param proposalId - ID de la proposition à supprimer
  */
 const confirmDelete = (proposalId: string) => {
   proposalToDelete.value = proposalId;
@@ -942,25 +992,33 @@ const confirmDelete = (proposalId: string) => {
 };
 
 /**
- * Supprime une proposition (admin)
+ * Supprime une proposition (fonction admin)
  */
 const deleteProposal = async () => {
+  if (!isAdmin.value) {
+    showToast("Accès non autorisé", "error");
+    return;
+  }
+
   try {
     await gameProposalService.deleteProposal(proposalToDelete.value);
     deleteDialogVisible.value = false;
     showToast("Proposition supprimée avec succès", "success");
     await loadProposals();
   } catch (error) {
+    console.error("Erreur lors de la suppression:", error);
     showToast("Erreur lors de la suppression", "error");
   }
 };
 
-// ===================================
-// UTILITAIRES
-// ===================================
+//-------------------------------------------------------
+// FONCTIONS UTILITAIRES
+//-------------------------------------------------------
 
 /**
  * Affiche une notification temporaire
+ * @param message - Message à afficher
+ * @param type - Type de notification (success ou error)
  */
 const showToast = (message: string, type: "success" | "error" = "success") => {
   toastInfo.value = {
@@ -975,29 +1033,97 @@ const showToast = (message: string, type: "success" | "error" = "success") => {
 };
 
 /**
- * Formatage de la date de sortie d'un jeu
+ * Formate une date pour l'affichage français
+ * @param dateString - Date au format string
+ * @returns Date formatée en français
+ */
+const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) return "Date inconnue";
+
+  try {
+    const date = new Date(dateString);
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) {
+      return "Date invalide";
+    }
+
+    // Formater la date avec l'API Intl pour le support français
+    return new Intl.DateTimeFormat("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  } catch (error) {
+    console.error("Erreur de formatage de date:", error);
+    return "Erreur de date";
+  }
+};
+
+/**
+ * Formate la date de sortie d'un jeu depuis l'API RAWG
+ * @param dateString - Date de sortie du jeu
+ * @returns Date formatée
  */
 const formatGameReleaseDate = (dateString: string) => {
   if (!dateString) return "Date inconnue";
 
   const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString("fr-FR", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 };
 
-// ===================================
-// CYCLE DE VIE
-// ===================================
+//-------------------------------------------------------
+// WATCHERS ET CYCLE DE VIE
+//-------------------------------------------------------
 
-// Observer les changements de filtre
+/**
+ * Fonction de debounce pour limiter les appels répétitifs
+ * @param fn - Fonction à debouncer
+ * @param wait - Délai d'attente en millisecondes
+ * @returns Fonction debouncée
+ */
+function debounce<T extends (...args: any[]) => any>(fn: T, wait = 300) {
+  let t: any;
+  return (...args: Parameters<T>) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
+// Watchers consolidés avec debouncing
+const debouncedResetPagination = debounce(() => {
+  currentPage.value = 1;
+}, 250);
+
+// Watcher pour ajuster la pagination quand les résultats changent
+watch(filteredProposals, () => {
+  // Ajuster la page actuelle si elle dépasse le nombre total de pages
+  if (currentPage.value > totalPages.value && totalPages.value > 0) {
+    currentPage.value = totalPages.value;
+  }
+  // Si aucun résultat, revenir à la page 1
+  if (totalPages.value === 0) {
+    currentPage.value = 1;
+  }
+});
+
+// Watchers pour réinitialiser la pagination avec debouncing
+watch([searchTerm, sortOption, onlyPositiveVotes], debouncedResetPagination);
+
+// Watcher pour recharger les propositions quand le filtre change
 watch(activeFilter, () => {
   loadProposals();
 });
 
-// Charger les données au montage
+/**
+ * Initialise le composant au montage
+ */
 onMounted(() => {
   loadProposals();
 });

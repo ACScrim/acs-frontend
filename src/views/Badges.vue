@@ -40,10 +40,15 @@
       <!-- Filtre par jeu -->
       <Card variant="primary" className="overflow-hidden">
         <div>
-          <label for="gameFilter" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-heading text-color-primary-light flex items-center gap-2"
-            >
+          <Dropdown
+            id="gameFilter"
+            v-model="selectedGameFilter"
+            label="Filtrer par jeu"
+            placeholder="Tous les jeux"
+            class="game-filter"
+            @update:modelValue="handleFilterChange"
+          >
+            <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -54,41 +59,13 @@
                   d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
                 />
               </svg>
-              Filtrer par jeu
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="gameFilter"
-              v-model="selectedGameFilter"
-              class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-3 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:outline-none transition-all duration-300 hover:border-color-primary/50"
-              @change="handleFilterChange"
-            >
-              <option value="all">Tous les jeux</option>
-              <option value="acs">Badges ACS (Général)</option>
-              <option v-for="game in games" :key="game._id" :value="game._id">
-                {{ game.name }}
-              </option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+            </template>
+            <option value="all">Tous les jeux</option>
+            <option value="acs">Badges ACS (Général)</option>
+            <option v-for="game in games" :key="game._id" :value="game._id">
+              {{ game.name }}
+            </option>
+          </Dropdown>
         </div>
       </Card>
       <!-- Liste des badges attribués -->
@@ -100,7 +77,7 @@
               v-if="
                 (selectedGameFilter === 'all' ||
                   selectedGameFilter === 'acs') &&
-                filteredAssignedAcsBadges.length > 0
+                assignedAcsBadges.length > 0
               "
               class="mb-6"
             >
@@ -115,7 +92,7 @@
                   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                 >
                   <div
-                    v-for="badge in filteredAssignedAcsBadges"
+                    v-for="badge in assignedAcsBadges"
                     :key="badge._id"
                     class="badge-card"
                     :class="getBadgeRarityClass(badge)"
@@ -143,7 +120,7 @@
                           ></div>
                         </div>
                         <div class="flex-1">
-                          <h3 class="text-color-text text-lg font-body">
+                          <h3 class="text-color-text text-lg font-heading">
                             {{ badge.title }}
                           </h3>
                           <Badge variant="secondary" size="sm" className="mt-1"
@@ -318,7 +295,7 @@
               v-if="
                 (selectedGameFilter === 'all' ||
                   selectedGameFilter === 'acs') &&
-                filteredAvailableAcsBadges.length > 0
+                availableAcsBadges.length > 0
               "
               class="mb-6"
             >
@@ -333,7 +310,7 @@
                   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                 >
                   <div
-                    v-for="badge in filteredAvailableAcsBadges"
+                    v-for="badge in availableAcsBadges"
                     :key="badge._id"
                     class="badge-card"
                   >
@@ -664,9 +641,9 @@
 </template>
 
 <script setup lang="ts">
-//------------------------------------------------------
-// 1. IMPORTS
-//------------------------------------------------------
+//-------------------------------------------------------
+// IMPORTS ET TYPES
+//-------------------------------------------------------
 import { ref, onMounted, computed } from "vue";
 import badgeService from "../services/badgeService";
 import playerService from "../services/playerService";
@@ -674,9 +651,10 @@ import userService from "../services/userService";
 import gameService from "../services/gameService";
 import type { Badge, Player } from "../types";
 
-//------------------------------------------------------
-// 2. ÉTAT ET RÉFÉRENCES
-//------------------------------------------------------
+//-------------------------------------------------------
+// ÉTAT RÉACTIF
+//-------------------------------------------------------
+
 // Données principales
 const badges = ref<Badge[]>([]);
 const players = ref<Player[]>([]);
@@ -685,15 +663,19 @@ const users = ref<any[]>([]);
 
 // Interface utilisateur
 const loading = ref(true);
-const activeTab = ref("assigned"); // 'assigned' ou 'available'
+const activeTab = ref("assigned"); // 'assigned' | 'available'
 const selectedGameFilter = ref("all");
 const selectedBadge = ref<Badge | null>(null);
 const showModal = ref(false);
 
-//------------------------------------------------------
-// 3. PROPRIÉTÉS CALCULÉES
-//------------------------------------------------------
-// 3.1 Filtres de base pour les badges
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - FILTRAGE DE BASE
+//-------------------------------------------------------
+
+/**
+ * Badges qui ont été attribués à au moins un joueur
+ * @returns Liste des badges attribués
+ */
 const assignedBadges = computed(() => {
   return badges.value.filter((badge) =>
     players.value.some(
@@ -708,6 +690,10 @@ const assignedBadges = computed(() => {
   );
 });
 
+/**
+ * Badges qui n'ont encore été attribués à aucun joueur
+ * @returns Liste des badges disponibles
+ */
 const availableBadges = computed(() => {
   return badges.value.filter(
     (badge) =>
@@ -723,24 +709,14 @@ const availableBadges = computed(() => {
   );
 });
 
-// 3.2 Filtres par type (ACS vs Jeux)
-const assignedAcsBadges = computed(() => {
-  return assignedBadges.value.filter((badge) => badge.categoryType === "acs");
-});
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - FILTRAGE PAR JEU
+//-------------------------------------------------------
 
-const filteredAssignedAcsBadges = computed(() => {
-  return assignedAcsBadges.value;
-});
-
-const availableAcsBadges = computed(() => {
-  return availableBadges.value.filter((badge) => badge.categoryType === "acs");
-});
-
-const filteredAvailableAcsBadges = computed(() => {
-  return availableAcsBadges.value;
-});
-
-// 3.3 Filtres par jeu sélectionné
+/**
+ * Filtre les badges attribués selon le jeu sélectionné
+ * @returns Liste des badges attribués filtrés
+ */
 const filteredAssignedBadges = computed(() => {
   if (selectedGameFilter.value === "all") {
     return assignedBadges.value;
@@ -755,6 +731,10 @@ const filteredAssignedBadges = computed(() => {
   }
 });
 
+/**
+ * Filtre les badges disponibles selon le jeu sélectionné
+ * @returns Liste des badges disponibles filtrés
+ */
 const filteredAvailableBadges = computed(() => {
   if (selectedGameFilter.value === "all") {
     return availableBadges.value;
@@ -771,7 +751,30 @@ const filteredAvailableBadges = computed(() => {
   }
 });
 
-// 3.4 Listes des jeux avec badges
+/**
+ * Badges ACS attribués (pour la section spéciale)
+ * @returns Liste des badges ACS attribués
+ */
+const assignedAcsBadges = computed(() => {
+  return assignedBadges.value.filter((badge) => badge.categoryType === "acs");
+});
+
+/**
+ * Badges ACS disponibles (pour la section spéciale)
+ * @returns Liste des badges ACS disponibles
+ */
+const availableAcsBadges = computed(() => {
+  return availableBadges.value.filter((badge) => badge.categoryType === "acs");
+});
+
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES - JEUX AVEC BADGES
+//-------------------------------------------------------
+
+/**
+ * Jeux qui ont des badges attribués
+ * @returns Liste des jeux avec badges attribués
+ */
 const gamesWithAssignedBadges = computed(() => {
   const gameIds = new Set();
 
@@ -786,6 +789,10 @@ const gamesWithAssignedBadges = computed(() => {
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
+/**
+ * Jeux qui ont des badges disponibles
+ * @returns Liste des jeux avec badges disponibles
+ */
 const gamesWithAvailableBadges = computed(() => {
   const gameIds = new Set();
 
@@ -800,10 +807,14 @@ const gamesWithAvailableBadges = computed(() => {
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
-//------------------------------------------------------
-// 4. MÉTHODES
-//------------------------------------------------------
-// 4.1 Chargement des données
+//-------------------------------------------------------
+// FONCTIONS DE CHARGEMENT DES DONNÉES
+//-------------------------------------------------------
+
+/**
+ * Charge toutes les données nécessaires à l'affichage des badges
+ * Utilise Promise.all pour optimiser les performances
+ */
 const fetchData = async () => {
   try {
     loading.value = true;
@@ -825,19 +836,37 @@ const fetchData = async () => {
   }
 };
 
-// 4.2 Méthodes d'aide pour filtrer et afficher les badges
+//-------------------------------------------------------
+// FONCTIONS DE FILTRAGE DES BADGES
+//-------------------------------------------------------
+
+/**
+ * Récupère les badges attribués pour un jeu spécifique
+ * @param gameId - ID du jeu à filtrer
+ * @returns Liste des badges attribués pour ce jeu
+ */
 const getAssignedBadgesByGame = (gameId: string) => {
   return assignedBadges.value.filter(
     (badge) => badge.categoryType === "game" && badge.categoryId === gameId
   );
 };
 
+/**
+ * Récupère les badges disponibles pour un jeu spécifique
+ * @param gameId - ID du jeu à filtrer
+ * @returns Liste des badges disponibles pour ce jeu
+ */
 const getAvailableBadgesByGame = (gameId: string) => {
   return availableBadges.value.filter(
     (badge) => badge.categoryType === "game" && badge.categoryId === gameId
   );
 };
 
+/**
+ * Récupère tous les joueurs qui possèdent un badge spécifique
+ * @param badgeId - ID du badge
+ * @returns Liste des joueurs possédant ce badge
+ */
 const getBadgePlayers = (badgeId: string): Player[] => {
   return players.value.filter(
     (player) =>
@@ -848,13 +877,24 @@ const getBadgePlayers = (badgeId: string): Player[] => {
   );
 };
 
+/**
+ * Récupère le nom d'un jeu par son ID
+ * @param gameId - ID du jeu
+ * @returns Nom du jeu ou "Jeu inconnu" si non trouvé
+ */
 const getGameName = (gameId: string): string => {
   if (!gameId) return "";
   const game = games.value.find((g) => g._id === gameId);
   return game ? game.name : "Jeu inconnu";
 };
 
-// 4.3 Méthodes pour l'interface utilisateur
+//-------------------------------------------------------
+// FONCTIONS D'INTERFACE UTILISATEUR
+//-------------------------------------------------------
+
+/**
+ * Gère le changement de filtre avec animation visuelle
+ */
 const handleFilterChange = () => {
   // Animation visuelle lors du changement de filtre
   const filterCards = document.querySelectorAll(".badge-card");
@@ -866,8 +906,11 @@ const handleFilterChange = () => {
   });
 };
 
+/**
+ * Change d'onglet avec scroll automatique
+ * @param tab - Nom de l'onglet à afficher ('assigned' | 'available')
+ */
 const switchTab = (tab: string) => {
-  // Applique la transition avec un effet de scroll doux si nécessaire
   activeTab.value = tab;
 
   // Scroll en douceur vers le haut de la section des badges
@@ -879,6 +922,11 @@ const switchTab = (tab: string) => {
   }, 100);
 };
 
+/**
+ * Détermine la classe CSS de rareté d'un badge
+ * @param badge - Badge à analyser
+ * @returns Classe CSS correspondant à la rareté
+ */
 const getBadgeRarityClass = (badge: Badge): string => {
   if (!badge) return "";
 
@@ -898,7 +946,7 @@ const getBadgeRarityClass = (badge: Badge): string => {
     }
   }
 
-  // Sinon, détermine la rareté en fonction du nombre de joueurs qui ont ce badge
+  // Sinon, détermine la rareté en fonction du pourcentage de joueurs qui possèdent ce badge
   if (badge._id) {
     const playersWithBadge = getBadgePlayers(badge._id).length;
     const totalPlayers = players.value.length;
@@ -921,25 +969,47 @@ const getBadgeRarityClass = (badge: Badge): string => {
   return "";
 };
 
+//-------------------------------------------------------
+// FONCTIONS UTILITAIRES POUR LES UTILISATEURS
+//-------------------------------------------------------
+
+/**
+ * Récupère l'avatar d'un joueur via son userId
+ * @param player - Joueur dont on cherche l'avatar
+ * @returns URL de l'avatar ou undefined si non trouvé
+ */
 const getUserAvatar = (player: Player): string | undefined => {
   if (!player || !player.userId) return undefined;
   const user = users.value.find((u) => u._id === player.userId);
   return user?.avatarUrl || undefined;
 };
 
+/**
+ * Génère les initiales d'un nom d'utilisateur
+ * @param username - Nom d'utilisateur
+ * @returns Première lettre en majuscule ou '?' si vide
+ */
 const getInitials = (username: string): string => {
   if (!username) return "?";
   return username.charAt(0).toUpperCase();
 };
 
+/**
+ * Ouvre la modale de détail d'un badge
+ * @param badge - Badge à afficher dans la modale
+ */
 const selectBadge = (badge: Badge) => {
   selectedBadge.value = badge;
   showModal.value = true;
 };
 
-//------------------------------------------------------
-// 5. CYCLE DE VIE ET OBSERVATEURS
-//------------------------------------------------------
+//-------------------------------------------------------
+// CYCLE DE VIE
+//-------------------------------------------------------
+
+/**
+ * Initialise le composant en chargeant toutes les données
+ */
 onMounted(() => {
   fetchData();
 });
@@ -1081,19 +1151,6 @@ onMounted(() => {
   transition: opacity 0.5s ease-in-out;
 }
 
-.special-badge-legendary:hover::before {
-  opacity: 0.2;
-  background: radial-gradient(
-    circle,
-    var(--color-primary) 0%,
-    var(--color-gold) 25%,
-    var(--color-secondary) 50%,
-    var(--color-bronze) 75%,
-    transparent 100%
-  );
-  animation: legendary-glow 2s ease-in-out infinite alternate;
-}
-
 .special-badge-gold:hover::before {
   opacity: 0.15;
   background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);
@@ -1109,38 +1166,9 @@ onMounted(() => {
   background: radial-gradient(circle, var(--color-bronze) 0%, transparent 70%);
 }
 
-/* Animation spéciale pour les badges légendaires */
-@keyframes legendary-glow {
-  0% {
-    transform: scale(1) rotate(0deg);
-    filter: hue-rotate(0deg);
-  }
-  50% {
-    transform: scale(1.02) rotate(180deg);
-    filter: hue-rotate(180deg);
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-}
+/* Animation spéciale pour les badges légendaires - Supprimée */
 
 /* Animations Halloween */
-@keyframes mystical-glow {
-  0% {
-    box-shadow: 0 0 20px var(--halloween-orange),
-      0 0 30px var(--halloween-orange), 0 0 40px var(--halloween-orange);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--halloween-rouge), 0 0 25px var(--halloween-rouge),
-      0 0 35px var(--halloween-rouge);
-  }
-  100% {
-    box-shadow: 0 0 20px var(--halloween-violet),
-      0 0 30px var(--halloween-violet), 0 0 40px var(--halloween-violet);
-  }
-}
-
 @keyframes pumpkin-pulse {
   0%,
   100% {
@@ -1155,9 +1183,5 @@ onMounted(() => {
 
 .badge-card:hover {
   animation: pumpkin-pulse 2s ease-in-out infinite;
-}
-
-.special-badge-legendary {
-  animation: mystical-glow 3s ease-in-out infinite;
 }
 </style>

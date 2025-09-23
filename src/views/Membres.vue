@@ -32,10 +32,14 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Recherche -->
         <div>
-          <label for="member-search" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-body text-color-primary-light flex items-center gap-2"
-            >
+          <Input
+            id="member-search"
+            v-model="searchTerm"
+            label="Rechercher un membre"
+            placeholder="Nom, rôle..."
+            class="search-filter"
+          >
+            <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -48,21 +52,20 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Rechercher un membre
-            </div>
-          </label>
-          <Input
-            id="member-search"
-            v-model="searchTerm"
-            placeholder="Nom, rôle..."
-            variant="primary"
-          />
+            </template>
+          </Input>
         </div>
 
         <!-- Filtre par rôle -->
         <div>
-          <label for="role-filter" class="mb-3 flex items-center gap-2">
-            <div class="font-body text-color-accent flex items-center gap-2">
+          <Dropdown
+            id="role-filter"
+            v-model="roleFilter"
+            label="Filtrer par rôle"
+            placeholder="Tous les rôles"
+            class="role-filter"
+          >
+            <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -75,47 +78,24 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Filtrer par rôle
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="role-filter"
-              v-model="roleFilter"
-              class="w-full rounded-lg border border-color-accent/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-accent/30 focus:outline-none transition-all duration-300"
-            >
-              <option value="">Tous les rôles</option>
-              <option value="user">Membres</option>
-              <option value="admin">Administrateurs</option>
-              <option value="superadmin">Super Admin</option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-accent"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+            </template>
+            <option value="">Tous les rôles</option>
+            <option value="user">Membres</option>
+            <option value="admin">Administrateurs</option>
+            <option value="superadmin">Super Admin</option>
+          </Dropdown>
         </div>
 
         <!-- Options de tri -->
         <div>
-          <label for="sort-select" class="mb-3 flex items-center gap-2">
-            <div
-              class="font-body text-color-secondary-light flex items-center gap-2"
-            >
+          <Dropdown
+            id="sort-select"
+            v-model="currentSort"
+            label="Trier par"
+            placeholder="Nom (A-Z)"
+            class="sort-filter"
+          >
+            <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -126,42 +106,15 @@
                   d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
                 />
               </svg>
-              Trier par
-            </div>
-          </label>
-          <div class="relative">
-            <select
-              id="sort-select"
-              v-model="currentSort"
-              class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
+            </template>
+            <option
+              v-for="option in sortOptions"
+              :key="option.id"
+              :value="option.id"
             >
-              <option
-                v-for="option in sortOptions"
-                :key="option.id"
-                :value="option.id"
-              >
-                {{ option.label }}
-              </option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-secondary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+              {{ option.label }}
+            </option>
+          </Dropdown>
         </div>
       </div>
 
@@ -286,23 +239,40 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
 
-// Utilisation du store
+//-------------------------------------------------------
+// ÉTAT RÉACTIF ET STORE
+//-------------------------------------------------------
+
+// Utilisation du store pour la gestion des membres
 const memberStore = useMemberStore();
 
-// États pour la recherche et la pagination
+// États locaux pour les filtres et la pagination
 const searchTerm = ref("");
 const roleFilter = ref("");
 const currentPage = ref(1);
-const itemsPerPage = 9; // Modifier pour 9 membres par page (3x3 grid)
+const itemsPerPage = 9; // Configuration pour une grille 3x3
 
-// Options de tri
+//-------------------------------------------------------
+// CONFIGURATION DES OPTIONS
+//-------------------------------------------------------
+
+/**
+ * Options de tri disponibles pour les membres
+ */
 const sortOptions = [
   { id: "username-asc", label: "Nom (A-Z)" },
   { id: "username-desc", label: "Nom (Z-A)" },
 ];
 const currentSort = ref("username-asc");
 
-// Propriétés calculées
+//-------------------------------------------------------
+// PROPRIÉTÉS CALCULÉES
+//-------------------------------------------------------
+
+/**
+ * Calcule les statistiques des membres (nombre d'admins, etc.)
+ * @returns Objet contenant les statistiques des membres
+ */
 const memberStats = computed(() => {
   const stats = {
     admins: 0,
@@ -317,6 +287,10 @@ const memberStats = computed(() => {
   return stats;
 });
 
+/**
+ * Filtre les membres selon les critères de recherche et de rôle
+ * @returns Liste des membres filtrés
+ */
 const searchResults = computed(() => {
   let results = memberStore.members;
 
@@ -351,16 +325,10 @@ const searchResults = computed(() => {
   return results;
 });
 
-const getPlayerIdForUser = (user: any): string | null => {
-  if (!memberStore.members) return null;
-
-  const matchingMember = memberStore.members.find(
-    (member) => member._id === user._id && member.playerId
-  );
-
-  return matchingMember?.playerId || null;
-};
-
+/**
+ * Trie les membres filtrés selon l'option sélectionnée
+ * @returns Liste des membres triés
+ */
 const sortedUsers = computed(() => {
   const usersToSort = [...searchResults.value];
 
@@ -374,16 +342,28 @@ const sortedUsers = computed(() => {
   }
 });
 
+/**
+ * Calcule le nombre total de pages pour la pagination
+ * @returns Nombre total de pages
+ */
 const totalPages = computed(() =>
   Math.ceil(sortedUsers.value.length / itemsPerPage)
 );
 
+/**
+ * Retourne les membres à afficher sur la page courante
+ * @returns Liste des membres paginés
+ */
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return sortedUsers.value.slice(start, end);
 });
 
+/**
+ * Génère un message d'état vide contextuel basé sur les filtres actifs
+ * @returns Message explicatif pour l'état vide
+ */
 const emptyStateMessage = computed(() => {
   const hasFilters = searchTerm.value || roleFilter.value;
 
@@ -403,72 +383,183 @@ const emptyStateMessage = computed(() => {
   return "Aucun membre trouvé dans la base de données.";
 });
 
-// Fonctions utilitaires
+//-------------------------------------------------------
+// FONCTIONS UTILITAIRES
+//-------------------------------------------------------
+
+/**
+ * Récupère l'ID joueur associé à un utilisateur
+ * @param user - L'utilisateur dont on cherche l'ID joueur
+ * @returns L'ID joueur ou null si non trouvé
+ */
+const getPlayerIdForUser = (user: any): string | null => {
+  if (!memberStore.members) return null;
+
+  const matchingMember = memberStore.members.find(
+    (member) => member._id === user._id && member.playerId
+  );
+
+  return matchingMember?.playerId || null;
+};
+
+/**
+ * Réinitialise tous les filtres à leurs valeurs par défaut
+ */
 const resetFilters = () => {
   searchTerm.value = "";
   roleFilter.value = "";
   resetPagination();
 };
 
+/**
+ * Remet la pagination à la première page
+ */
 const resetPagination = () => {
   currentPage.value = 1;
 };
 
+/**
+ * Passe à la page suivante si possible
+ */
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
 
+/**
+ * Revient à la page précédente si possible
+ */
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-// Cycle de vie
+//-------------------------------------------------------
+// WATCHERS ET CYCLE DE VIE
+//-------------------------------------------------------
+
+/**
+ * Fonction de debounce pour limiter les appels répétitifs
+ * @param fn - Fonction à debouncer
+ * @param wait - Délai d'attente en millisecondes
+ * @returns Fonction debouncée
+ */
+function debounce<T extends (...args: any[]) => any>(fn: T, wait = 300) {
+  let t: any;
+  return (...args: Parameters<T>) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
+const debouncedResetPagination = debounce(resetPagination, 250);
+
+// Watcher consolidé pour tous les filtres avec debouncing
+watch([searchTerm, roleFilter, currentSort], debouncedResetPagination);
+
+/**
+ * Initialise le composant au montage
+ */
 onMounted(() => {
   memberStore.fetchMembers();
-});
-
-// Watchers
-watch(searchTerm, () => {
-  resetPagination();
-});
-
-watch(roleFilter, () => {
-  resetPagination();
-});
-
-watch(currentSort, () => {
-  resetPagination();
 });
 </script>
 
 <style scoped>
-.members-grid-container {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+/* Styles spécifiques pour les dropdowns compacts */
+.search-filter {
+  --filter-color: var(--color-primary-rgb);
 }
 
-/* Styles pour les filtres Halloween */
-select {
-  background: var(--color-bg-dark);
-  border: 1px solid var(--color-primary-dark);
-  color: var(--color-text);
-  transition: all 0.3s ease;
-  font-family: var(--font-body);
+.role-filter {
+  --filter-color: var(--color-accent-rgb);
 }
 
-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 0 0 10px rgba(217, 119, 6, 0.2);
-  outline: none;
+.sort-filter {
+  --filter-color: var(--color-secondary-rgb);
 }
 
-select:hover {
-  border-color: var(--color-primary-light);
-  background: var(--color-bg-light);
+/* Styles communs pour tous les filtres */
+.search-filter :deep(label),
+.role-filter :deep(.dropdown-label),
+.sort-filter :deep(.dropdown-label) {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  color: rgba(var(--filter-color), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--filter-color), 0.6) !important;
+}
+
+.role-filter :deep(.dropdown-select),
+.sort-filter :deep(.dropdown-select) {
+  padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-body) !important;
+  line-height: 1.4 !important;
+  border-color: rgba(var(--filter-color), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
+}
+
+.role-filter :deep(.dropdown-select:hover),
+.sort-filter :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--filter-color), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--filter-color), 0.5) !important;
+}
+
+.role-filter :deep(.dropdown-label svg),
+.sort-filter :deep(.dropdown-label svg) {
+  margin-right: 0.5rem !important;
+}
+
+.role-filter :deep(.dropdown-arrow),
+.sort-filter :deep(.dropdown-arrow) {
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+.role-filter :deep(.dropdown-arrow svg),
+.sort-filter :deep(.dropdown-arrow svg) {
+  height: 0.75rem !important;
+  width: 0.75rem !important;
+}
+
+/* Input de recherche */
+.search-filter :deep(input) {
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-body) !important;
+  line-height: 1.4 !important;
+  border-color: rgba(var(--filter-color), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
+}
+
+.search-filter :deep(input:hover) {
+  border-color: rgba(var(--filter-color), 0.8) !important;
+  box-shadow: 0 0 15px rgba(var(--filter-color), 0.4) !important;
+}
+
+.search-filter :deep(input:focus) {
+  border-color: rgba(var(--filter-color), 1) !important;
+  box-shadow: 0 0 20px rgba(var(--filter-color), 0.6) !important;
+}
+
+.search-filter :deep(.absolute.inset-y-0.left-0) {
+  padding-left: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  pointer-events: none !important;
+}
+
+.search-filter :deep(.absolute.inset-y-0.left-0 svg) {
+  height: 1rem !important;
+  width: 1rem !important;
+  color: rgba(var(--color-text-rgb), 0.6) !important;
 }
 
 /* Grid responsive avec animations subtiles */
@@ -480,38 +571,10 @@ select:hover {
   transform: translateY(-2px);
 }
 
-/* Options styling */
-option {
-  background: var(--color-bg-dark);
-  color: var(--color-text);
-  font-family: var(--font-body);
-}
-
-/* Responsive design */
-@media (max-width: 640px) {
-  .members-grid-container {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-}
-
-/* Accessibilité améliorée */
-select:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
 /* Amélioration des performances selon les préférences utilisateur */
 @media (prefers-reduced-motion: reduce) {
-  .members-grid-container .grid > *,
-  select {
+  .members-grid-container .grid > * {
     transition: none;
   }
-}
-
-/* Styles Halloween spéciaux pour les labels */
-label {
-  font-family: var(--font-heading);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 </style>
