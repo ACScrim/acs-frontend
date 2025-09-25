@@ -106,6 +106,9 @@ const screamerImages = [
   "https://i.scdn.co/image/ab67616d0000b2739ae6150575a2dafd89f0fc1a",
   "https://m.media-amazon.com/images/I/61gMKhK6DDL._UY1000_.jpg",
   "https://cdn.sanity.io/images/ccckgjf9/production/8e77b5c892c95d55136b80e90f0851bb2fbd2a1f-804x528.png?max-h=1080&max-w=1920&q=50&fit=scale&auto=format",
+  "https://i.redd.it/289ch4osfyie1.jpeg",
+  "https://marketplace.canva.com/MADB1C1e9sg/1/thumbnail_large-1/canva-funny-smiling-horse-portrait-MADB1C1e9sg.jpg",
+  "https://bebesetmamans.20minutes.fr/images/cwgallery/thumb_7563_cd8ac7843fdedbaede9fdfb328fca6d7.png",
 ];
 
 const screamerImage = ref(props.image);
