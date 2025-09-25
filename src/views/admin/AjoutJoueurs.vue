@@ -2,30 +2,23 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-2xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         title="Ajout de joueurs"
         titleSize="3xl"
         :showMissionInfo="true"
         mission="CREWMATES-MGMT"
       >
         <template #badge v-if="players.length > 0">
-          <SpaceBadge variant="secondary" size="lg">{{
-            players.length
-          }}</SpaceBadge>
+          <Badge variant="secondary" size="lg">{{ players.length }}</Badge>
         </template>
-      </SpaceHeader>
+      </Header>
       <!-- Formulaire d'ajout -->
-      <SpaceCard
-        variant="primary"
-        :stars="true"
-        :decorated="true"
-        className="mb-8"
-      >
+      <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
         <form @submit.prevent="addPlayer" novalidate>
           <div class="mb-6">
             <label
               for="username"
-              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,9 +32,9 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Nom du joueur <span class="text-space-accent ml-1">*</span>
+              Nom du joueur <span class="text-color-accent ml-1">*</span>
             </label>
-            <SpaceInput
+            <Input
               id="username"
               name="username"
               v-model="player.username"
@@ -50,16 +43,16 @@
               aria-required="true"
               :error="formErrors.username"
             >
-            </SpaceInput>
+            </Input>
             <div
               v-if="formErrors.username"
-              class="text-space-error text-sm mt-1 font-mono"
+              class="text-color-error text-sm mt-1 font-mono"
             >
               {{ formErrors.username }}
             </div>
           </div>
           <div class="flex justify-center">
-            <SpaceButton
+            <Button
               type="submit"
               variant="primary"
               size="lg"
@@ -82,16 +75,16 @@
                 </svg>
               </template>
               Ajouter le joueur
-            </SpaceButton>
+            </Button>
           </div>
         </form>
-      </SpaceCard>
+      </Card>
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
       <Toast v-if="success" type="success" :message="success" />
 
       <!-- Bouton pour afficher les joueurs existants -->
-      <SpaceButton
+      <Button
         @click="togglePlayers"
         variant="secondary"
         size="md"
@@ -123,19 +116,19 @@
         {{
           showPlayers ? "Masquer les joueurs" : "Afficher les joueurs existants"
         }}
-      </SpaceButton>
+      </Button>
       <!-- Liste des joueurs existants -->
       <div
         v-if="showPlayers"
         class="transform transition-all duration-500 opacity-100 translate-y-0"
       >
-        <SpaceCard variant="secondary" :stars="true" :decorated="true">
+        <Card variant="secondary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-2 text-space-secondary-light"
+                  class="h-6 w-6 mr-2 text-color-secondary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -143,31 +136,29 @@
                     d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
                   />
                 </svg>
-                <SpaceTitle size="xl">Liste des joueurs</SpaceTitle>
+                <Title size="xl">Liste des joueurs</Title>
               </div>
-              <SpaceBadge variant="secondary" size="lg">{{
-                players.length
-              }}</SpaceBadge>
+              <Badge variant="secondary" size="lg">{{ players.length }}</Badge>
             </div>
           </template>
 
           <div v-if="isLoading" class="py-12 flex justify-center items-center">
-            <SpaceLoader size="lg" text="Chargement des joueurs..." />
+            <Loader size="lg" text="Chargement des joueurs..." />
           </div>
 
           <div v-else-if="players.length > 0" class="space-y-3">
             <div
               v-for="player in players"
               :key="player._id"
-              class="group bg-space-bg-light/30 backdrop-blur-sm rounded-lg p-3 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300 flex justify-between items-center relative overflow-hidden hover:shadow-glow-secondary"
+              class="group bg-color-bg-light/30 backdrop-blur-sm rounded-lg p-3 border border-color-secondary/20 hover:border-color-secondary/50 transition-all duration-300 flex justify-between items-center relative overflow-hidden hover:shadow-glow-secondary"
             >
               <div
-                class="absolute inset-0 bg-gradient-to-r from-transparent via-space-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
+                class="absolute inset-0 bg-gradient-to-r from-transparent via-color-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
               ></div>
-              <span class="text-space-text font-nasa z-10">{{
+              <span class="text-color-text font-nasa z-10">{{
                 player.username
               }}</span>
-              <SpaceButton
+              <Button
                 @click="player._id && confirmDelete(player._id)"
                 variant="error"
                 size="sm"
@@ -188,46 +179,42 @@
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
 
-          <SpaceTerminal
+          <Terminal
             v-else
             command="search --players"
             title="Recherche de joueurs"
             :showCursor="true"
           >
-            <div class="text-space-text-muted">Aucun joueur n'a été trouvé</div>
-          </SpaceTerminal>
-        </SpaceCard>
+            <div class="text-color-text-muted">Aucun joueur n'a été trouvé</div>
+          </Terminal>
+        </Card>
       </div>
     </div>
 
     <!-- Dialogue de confirmation pour la suppression -->
-    <SpaceModal
+    <Modal
       v-model="showConfirmation"
       title="Confirmation de suppression"
       className="max-w-md"
     >
-      <div class="text-space-text mb-6">
+      <div class="text-color-text mb-6">
         Êtes-vous sûr de vouloir supprimer ce joueur ?
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton
-            @click="showConfirmation = false"
-            variant="outline"
-            size="sm"
-          >
+          <Button @click="showConfirmation = false" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deletePlayer" variant="error" size="sm">
+          </Button>
+          <Button @click="deletePlayer" variant="error" size="sm">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 

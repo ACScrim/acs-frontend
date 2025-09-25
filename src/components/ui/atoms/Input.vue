@@ -1,9 +1,9 @@
 <template>
-  <div class="space-input-container">
+  <div class="input-container">
     <label
       v-if="label"
       :for="id"
-      class="block mb-2 text-sm font-heading text-space-text"
+      class="block mb-2 text-sm font-heading text-color-text"
     >
       {{ label }}
     </label>
@@ -27,7 +27,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :class="[
-          'w-full rounded-lg border bg-space-bg-light text-space-text font-body',
+          'w-full rounded-lg border bg-color-bg-light text-color-text font-body',
           'focus:ring-2 focus:outline-none transition-all duration-300',
           {
             'pl-10': $slots.icon,
@@ -35,8 +35,8 @@
             'opacity-60 cursor-not-allowed': disabled,
           },
           errorMessage
-            ? 'border-space-error focus:ring-space-error/50'
-            : 'border-space-primary/30 focus:border-space-primary focus:ring-space-primary/30',
+            ? 'border-color-error focus:ring-color-error/50'
+            : 'border-color-primary/30 focus:border-color-primary focus:ring-color-primary/30',
           className,
         ]"
         :aria-invalid="!!errorMessage"
@@ -52,7 +52,7 @@
         <button
           type="button"
           @click="$emit('update:modelValue', '')"
-          class="text-space-text-dark hover:text-space-text transition-colors"
+          class="text-color-text-dark hover:text-color-text transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -76,22 +76,13 @@
       >
         <slot name="rightIcon"></slot>
       </div>
-
-      <!-- Effets spatiaux (petites étoiles) -->
-      <div
-        class="absolute inset-0 pointer-events-none overflow-hidden rounded-lg"
-      >
-        <div class="star-particle"></div>
-        <div class="star-particle delay-1"></div>
-        <div class="star-particle delay-2"></div>
-      </div>
     </div>
 
     <!-- Message d'erreur -->
     <p
       v-if="errorMessage"
       :id="`${id}-error`"
-      class="mt-1 text-xs text-space-error font-body"
+      class="mt-1 text-xs text-color-error font-body"
     >
       {{ errorMessage }}
     </p>
@@ -127,41 +118,12 @@ defineEmits(["update:modelValue"]);
 </script>
 
 <style scoped>
-.space-input-container input:focus {
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2),
-    0 0 15px rgba(109, 40, 217, 0.1);
+.input-container input:focus {
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 0 0 20px rgba(217, 119, 6, 0.2);
 }
 
-.star-particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background-color: white;
-  border-radius: 50%;
-  opacity: 0;
-  top: 50%;
-  left: 5px;
-  animation: twinkle 4s ease-in-out infinite;
-}
-
-.delay-1 {
-  left: 80%;
-  animation-delay: 1s;
-}
-
-.delay-2 {
-  left: 40%;
-  top: 25%;
-  animation-delay: 2s;
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.8;
-  }
+/* Effet de lueur renforcé au focus */
+.input-container input:focus + .mystic-particle {
+  animation-duration: 2s;
 }
 </style>

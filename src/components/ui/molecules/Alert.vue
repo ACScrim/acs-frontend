@@ -53,8 +53,8 @@ S
       v-if="dismissible"
       type="button"
       :class="[
-        'absolute top-4 right-4 text-space-text-muted hover:text-space-text',
-        'rounded focus:outline-none focus:ring-2 focus:ring-space-primary/50',
+        'absolute top-4 right-4 text-color-text-muted hover:text-color-text',
+        'rounded focus:outline-none focus:ring-2 focus:ring-color-primary/50',
       ]"
       @click="$emit('dismiss')"
       aria-label="Fermer"
@@ -148,65 +148,65 @@ const icons = {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case "info":
-      return "bg-space-info/10 border-space-info/30";
+      return "bg-color-info/10 border-color-info/30";
     case "success":
-      return "bg-space-success/10 border-space-success/30";
+      return "bg-color-success/10 border-color-success/30";
     case "warning":
-      return "bg-space-warning/10 border-space-warning/30";
+      return "bg-color-warning/10 border-color-warning/30";
     case "error":
-      return "bg-space-error/10 border-space-error/30";
+      return "bg-color-error/10 border-color-error/30";
     default:
-      return "bg-space-info/10 border-space-info/30";
+      return "bg-color-info/10 border-color-info/30";
   }
 });
 
 const iconBackground = computed(() => {
   switch (props.variant) {
     case "info":
-      return "bg-space-info/20";
+      return "bg-color-info/20";
     case "success":
-      return "bg-space-success/20";
+      return "bg-color-success/20";
     case "warning":
-      return "bg-space-warning/20";
+      return "bg-color-warning/20";
     case "error":
-      return "bg-space-error/20";
+      return "bg-color-error/20";
     default:
-      return "bg-space-info/20";
+      return "bg-color-info/20";
   }
 });
 
 const iconColor = computed(() => {
   switch (props.variant) {
     case "info":
-      return "text-space-info";
+      return "text-color-info";
     case "success":
-      return "text-space-success";
+      return "text-color-success";
     case "warning":
-      return "text-space-warning";
+      return "text-color-warning";
     case "error":
-      return "text-space-error";
+      return "text-color-error";
     default:
-      return "text-space-info";
+      return "text-color-info";
   }
 });
 
 const titleColor = computed(() => {
   switch (props.variant) {
     case "info":
-      return "text-space-info";
+      return "text-color-info";
     case "success":
-      return "text-space-success";
+      return "text-color-success";
     case "warning":
-      return "text-space-warning";
+      return "text-color-warning";
     case "error":
-      return "text-space-error";
+      return "text-color-error";
     default:
-      return "text-space-info";
+      return "text-color-info";
   }
 });
 
 const messageColor = computed(() => {
-  return "text-space-text";
+  return "text-color-text";
 });
 </script>
 
@@ -225,55 +225,55 @@ const messageColor = computed(() => {
   border-radius: 2px 0 0 2px;
 }
 
-.bg-space-info\/10 {
+.bg-color-info\/10 {
   background-color: rgba(96, 165, 250, 0.1);
 }
-.border-space-info\/30 {
+.border-color-info\/30 {
   border-color: rgba(96, 165, 250, 0.3);
 }
-.bg-space-info\/20 {
+.bg-color-info\/20 {
   background-color: rgba(96, 165, 250, 0.2);
 }
-.text-space-info {
-  color: var(--space-info);
+.text-color-info {
+  color: var(--color-info);
 }
 
-.bg-space-success\/10 {
+.bg-color-success\/10 {
   background-color: rgba(74, 222, 128, 0.1);
 }
-.border-space-success\/30 {
+.border-color-success\/30 {
   border-color: rgba(74, 222, 128, 0.3);
 }
-.bg-space-success\/20 {
+.bg-color-success\/20 {
   background-color: rgba(74, 222, 128, 0.2);
 }
-.text-space-success {
-  color: var(--space-success);
+.text-color-success {
+  color: var(--color-success);
 }
 
-.bg-space-warning\/10 {
+.bg-color-warning\/10 {
   background-color: rgba(250, 204, 21, 0.1);
 }
-.border-space-warning\/30 {
+.border-color-warning\/30 {
   border-color: rgba(250, 204, 21, 0.3);
 }
-.bg-space-warning\/20 {
+.bg-color-warning\/20 {
   background-color: rgba(250, 204, 21, 0.2);
 }
-.text-space-warning {
-  color: var(--space-warning);
+.text-color-warning {
+  color: var(--color-warning);
 }
 
-.bg-space-error\/10 {
+.bg-color-error\/10 {
   background-color: rgba(248, 113, 113, 0.1);
 }
-.border-space-error\/30 {
+.border-color-error\/30 {
   border-color: rgba(248, 113, 113, 0.3);
 }
-.bg-space-error\/20 {
+.bg-color-error\/20 {
   background-color: rgba(248, 113, 113, 0.2);
 }
-.text-space-error {
-  color: var(--space-error);
+.text-color-error {
+  color: var(--color-error);
 }
 </style>

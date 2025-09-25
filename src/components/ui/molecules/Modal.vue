@@ -22,7 +22,7 @@
             :class="[
               'space-modal-container relative max-h-[85vh] overflow-y-auto',
               'rounded-lg bg-gray-900 z-10 w-full max-w-md',
-              'border border-space-primary/30 shadow-xl shadow-space-primary/20',
+              'border border-color-primary/30 shadow-xl shadow-color-primary/20',
               'transform transition-all space-modal-content',
               'overscroll-contain',
               className,
@@ -36,7 +36,7 @@
             <!-- En-tête -->
             <div
               v-if="title || $slots.header"
-              class="space-modal-header p-5 border-b border-space-primary/20 flex items-center justify-between sticky top-0 bg-gray-900 z-10"
+              class="space-modal-header p-5 border-b border-color-primary/20 flex items-center justify-between sticky top-0 bg-gray-900 z-10"
             >
               <div v-if="$slots.header" class="modal-header-content">
                 <slot name="header"></slot>
@@ -44,7 +44,7 @@
               <h3
                 v-else-if="title"
                 id="modal-title"
-                class="text-lg font-nasa text-space-text space-modal-title relative"
+                class="text-lg font-nasa text-color-text space-modal-title relative"
               >
                 {{ title }}
               </h3>
@@ -52,7 +52,7 @@
               <!-- Bouton de fermeture -->
               <button
                 v-if="!hideCloseButton"
-                class="text-space-text-muted hover:text-space-primary transition-all focus:outline-none focus:ring-2 focus:ring-space-primary/50 rounded-full close-button"
+                class="text-color-text-muted hover:text-color-primary transition-all focus:outline-none focus:ring-2 focus:ring-color-primary/50 rounded-full close-button"
                 @click="$emit('update:modelValue', false)"
                 aria-label="Fermer"
               >
@@ -79,7 +79,7 @@
             <!-- Pied de page -->
             <div
               v-if="$slots.footer"
-              class="space-modal-footer p-5 border-t border-space-primary/20 sticky bottom-0 bg-gray-900 z-10"
+              class="space-modal-footer p-5 border-t border-color-primary/20 sticky bottom-0 bg-gray-900 z-10"
             >
               <slot name="footer"></slot>
             </div>
@@ -202,10 +202,10 @@ onMounted(() => {
 /* Conteneur de la modale avec effet de lueur optimisé */
 .space-modal-content {
   background-color: rgb(17, 24, 39); /* gray-900 solid */
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   /* Animation de lueur simplifiée et réduite */
-  box-shadow: 0 0 20px rgba(var(--space-primary-rgb), 0.15),
-    0 0 40px rgba(var(--space-primary-rgb), 0.08);
+  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.15),
+    0 0 40px rgba(var(--color-primary-rgb), 0.08);
 }
 
 /* Holographic scanline effect optimisé */
@@ -215,7 +215,7 @@ onMounted(() => {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(var(--space-primary-rgb), 0.02) 50%,
+    rgba(var(--color-primary-rgb), 0.02) 50%,
     transparent 100%
   );
   background-size: 100% 12px;
@@ -231,7 +231,7 @@ onMounted(() => {
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: var(--space-text);
+  color: var(--color-text);
   position: relative;
   /* Suppression de l'animation pour plus de lisibilité */
 }
@@ -247,7 +247,7 @@ onMounted(() => {
 
 .close-button:hover {
   transform: rotate(90deg) scale(1.1);
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 .close-button-glow {
@@ -256,7 +256,7 @@ onMounted(() => {
   border-radius: 50%;
   background: radial-gradient(
     circle at center,
-    rgba(var(--space-primary-rgb), 0.2),
+    rgba(var(--color-primary-rgb), 0.2),
     transparent 70%
   );
   opacity: 0;
@@ -280,39 +280,39 @@ onMounted(() => {
 .space-modal-decoration.top-left {
   top: 0;
   left: 0;
-  border-top: 2px solid var(--space-primary);
-  border-left: 2px solid var(--space-primary);
+  border-top: 2px solid var(--color-primary);
+  border-left: 2px solid var(--color-primary);
   border-top-left-radius: 8px;
 }
 
 .space-modal-decoration.top-right {
   top: 0;
   right: 0;
-  border-top: 2px solid var(--space-primary);
-  border-right: 2px solid var(--space-primary);
+  border-top: 2px solid var(--color-primary);
+  border-right: 2px solid var(--color-primary);
   border-top-right-radius: 8px;
 }
 
 .space-modal-decoration.bottom-left {
   bottom: 0;
   left: 0;
-  border-bottom: 2px solid var(--space-primary);
-  border-left: 2px solid var(--space-primary);
+  border-bottom: 2px solid var(--color-primary);
+  border-left: 2px solid var(--color-primary);
   border-bottom-left-radius: 8px;
 }
 
 .space-modal-decoration.bottom-right {
   bottom: 0;
   right: 0;
-  border-bottom: 2px solid var(--space-primary);
-  border-right: 2px solid var(--space-primary);
+  border-bottom: 2px solid var(--color-primary);
+  border-right: 2px solid var(--color-primary);
   border-bottom-right-radius: 8px;
 }
 
 .space-modal-container:hover .space-modal-decoration {
   width: 30px;
   height: 30px;
-  border-color: var(--space-gold);
+  border-color: var(--color-gold);
 }
 
 /* Animation pour les accents de coin */
@@ -320,7 +320,7 @@ onMounted(() => {
   position: absolute;
   width: 8px;
   height: 8px;
-  background-color: var(--space-primary-light);
+  background-color: var(--color-primary-light);
   border-radius: 50%;
   opacity: 0;
   transition: all 0.3s ease;
@@ -348,8 +348,8 @@ onMounted(() => {
 
 .space-modal-container:hover .corner-accent {
   opacity: 1;
-  background-color: var(--space-gold);
-  box-shadow: 0 0 10px 2px rgba(var(--space-gold-rgb), 0.5);
+  background-color: var(--color-gold);
+  box-shadow: 0 0 10px 2px rgba(var(--color-gold-rgb), 0.5);
 }
 
 /* Grille futuriste optimisée */
@@ -358,12 +358,12 @@ onMounted(() => {
   inset: 0;
   background-image: linear-gradient(
       to right,
-      rgba(var(--space-primary-rgb), 0.03) 1px,
+      rgba(var(--color-primary-rgb), 0.03) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      rgba(var(--space-primary-rgb), 0.03) 1px,
+      rgba(var(--color-primary-rgb), 0.03) 1px,
       transparent 1px
     );
   background-size: 24px 24px;
@@ -387,7 +387,7 @@ onMounted(() => {
 .orbital-ring {
   position: absolute;
   border-radius: 50%;
-  border: 1px dashed rgba(var(--space-primary-rgb), 0.2);
+  border: 1px dashed rgba(var(--color-primary-rgb), 0.2);
   pointer-events: none;
   z-index: 0;
   opacity: 0.4;
@@ -399,7 +399,7 @@ onMounted(() => {
   top: -20px;
   right: -40px;
   animation: orbit-slow 30s linear infinite;
-  border-color: rgba(var(--space-gold-rgb), 0.25);
+  border-color: rgba(var(--color-gold-rgb), 0.25);
 }
 
 .orbital-ring-2 {
@@ -408,7 +408,7 @@ onMounted(() => {
   bottom: -20px;
   left: -40px;
   animation: orbit-slow 25s linear reverse infinite;
-  border-color: rgba(var(--space-silver-rgb), 0.25);
+  border-color: rgba(var(--color-silver-rgb), 0.25);
 }
 
 .orbital-ring-3 {
@@ -417,7 +417,7 @@ onMounted(() => {
   bottom: -40px;
   right: -50px;
   animation: orbit-slow 35s linear infinite;
-  border-color: rgba(var(--space-bronze-rgb), 0.2);
+  border-color: rgba(var(--color-bronze-rgb), 0.2);
 }
 
 @keyframes orbit-slow {
@@ -435,25 +435,25 @@ onMounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--space-primary);
+  background-color: var(--color-primary);
   top: 0;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .orbital-dot.gold {
-  background-color: var(--space-gold);
-  box-shadow: 0 0 8px 2px rgba(var(--space-gold-rgb), 0.5);
+  background-color: var(--color-gold);
+  box-shadow: 0 0 8px 2px rgba(var(--color-gold-rgb), 0.5);
 }
 
 .orbital-dot.silver {
-  background-color: var(--space-silver);
-  box-shadow: 0 0 8px 2px rgba(var(--space-silver-rgb), 0.5);
+  background-color: var(--color-silver);
+  box-shadow: 0 0 8px 2px rgba(var(--color-silver-rgb), 0.5);
 }
 
 .orbital-dot.bronze {
-  background-color: var(--space-bronze);
-  box-shadow: 0 0 8px 2px rgba(var(--space-bronze-rgb), 0.5);
+  background-color: var(--color-bronze);
+  box-shadow: 0 0 8px 2px rgba(var(--color-bronze-rgb), 0.5);
 }
 
 /* Bordure lumineuse optimisée */
@@ -464,8 +464,8 @@ onMounted(() => {
   border-radius: inherit;
   opacity: 0;
   transition: opacity 0.3s ease;
-  box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.25),
-    0 0 12px 1px rgba(var(--space-primary-rgb), 0.15);
+  box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), 0.25),
+    0 0 12px 1px rgba(var(--color-primary-rgb), 0.15);
   z-index: 0;
 }
 
@@ -477,12 +477,12 @@ onMounted(() => {
 @keyframes border-gentle-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 1px rgba(var(--space-primary-rgb), 0.25),
-      0 0 12px 1px rgba(var(--space-primary-rgb), 0.15);
+    box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), 0.25),
+      0 0 12px 1px rgba(var(--color-primary-rgb), 0.15);
   }
   50% {
-    box-shadow: 0 0 0 1px rgba(var(--space-gold-rgb), 0.3),
-      0 0 15px 1px rgba(var(--space-gold-rgb), 0.18);
+    box-shadow: 0 0 0 1px rgba(var(--color-gold-rgb), 0.3),
+      0 0 15px 1px rgba(var(--color-gold-rgb), 0.18);
   }
 }
 
@@ -492,17 +492,17 @@ onMounted(() => {
 }
 
 .space-modal-container::-webkit-scrollbar-track {
-  background: rgba(var(--space-bg-rgb), 0.2);
+  background: rgba(var(--color-bg-rgb), 0.2);
   border-radius: 0 4px 4px 0;
 }
 
 .space-modal-container::-webkit-scrollbar-thumb {
   background: linear-gradient(
     to bottom,
-    rgba(var(--space-primary-rgb), 0.5),
-    rgba(var(--space-gold-rgb), 0.5),
-    rgba(var(--space-silver-rgb), 0.5),
-    rgba(var(--space-bronze-rgb), 0.5)
+    rgba(var(--color-primary-rgb), 0.5),
+    rgba(var(--color-gold-rgb), 0.5),
+    rgba(var(--color-silver-rgb), 0.5),
+    rgba(var(--color-bronze-rgb), 0.5)
   );
   border-radius: 3px;
 }
@@ -510,10 +510,10 @@ onMounted(() => {
 .space-modal-container::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
     to bottom,
-    rgba(var(--space-primary-rgb), 0.7),
-    rgba(var(--space-gold-rgb), 0.7),
-    rgba(var(--space-silver-rgb), 0.7),
-    rgba(var(--space-bronze-rgb), 0.7)
+    rgba(var(--color-primary-rgb), 0.7),
+    rgba(var(--color-gold-rgb), 0.7),
+    rgba(var(--color-silver-rgb), 0.7),
+    rgba(var(--color-bronze-rgb), 0.7)
   );
 }
 
@@ -528,7 +528,7 @@ onMounted(() => {
 
 /* Ajout d'un fond de contraste pour les textes */
 .space-modal-body {
-  background-color: rgba(var(--space-bg-rgb), 0.4);
+  background-color: rgba(var(--color-bg-rgb), 0.4);
   border-radius: 4px;
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
 }

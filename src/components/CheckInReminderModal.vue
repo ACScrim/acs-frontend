@@ -6,7 +6,7 @@
     >
       <!-- Overlay avec effet de flou et étoiles -->
       <div
-        class="absolute inset-0 bg-space-bg/90 backdrop-blur-sm"
+        class="absolute inset-0 bg-color-bg/90 backdrop-blur-sm"
         @click="close"
       >
         <!-- Étoiles animées en arrière-plan -->
@@ -25,7 +25,7 @@
       </div>
 
       <!-- Contenu de la modale -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -37,7 +37,7 @@
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-3 text-space-primary-light"
+                class="h-6 w-6 mr-3 text-color-primary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -47,16 +47,12 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <SpaceTitle size="xl">CHECK-IN REQUIS</SpaceTitle>
+              <Title size="xl">CHECK-IN REQUIS</Title>
             </div>
 
-            <SpaceBadge
-              variant="error"
-              size="md"
-              className="animate-pulse-slow"
-            >
+            <Badge variant="error" size="md" className="animate-pulse-slow">
               URGENT
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 
@@ -66,22 +62,22 @@
           <div class="flex items-center gap-4">
             <div class="tournament-icon relative">
               <div
-                class="absolute inset-0 rounded-full bg-space-primary/10 animate-pulse-slow"
+                class="absolute inset-0 rounded-full bg-color-primary/10 animate-pulse-slow"
               ></div>
               <img
                 v-if="tournament.game && tournament.game.imageUrl"
                 :src="tournament.game.imageUrl"
                 :alt="tournament.game.name"
-                class="h-14 w-14 rounded-full object-cover border-2 border-space-primary-light relative z-10"
+                class="h-14 w-14 rounded-full object-cover border-2 border-color-primary-light relative z-10"
                 @error="handleImageError"
               />
               <div
                 v-else
-                class="h-14 w-14 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary-light relative z-10"
+                class="h-14 w-14 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary-light relative z-10"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-8 w-8 text-space-primary-light"
+                  class="h-8 w-8 text-color-primary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -103,14 +99,14 @@
             </div>
 
             <div>
-              <h3 class="text-xl font-nasa text-space-primary-light">
+              <h3 class="text-xl font-nasa text-color-primary-light">
                 {{ tournament.name }}
               </h3>
               <div class="flex flex-wrap gap-2 mt-2">
-                <div class="flex items-center text-sm text-space-text">
+                <div class="flex items-center text-sm text-color-text">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 text-space-primary-light"
+                    class="h-4 w-4 mr-1 text-color-primary-light"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -124,10 +120,10 @@
                   </svg>
                   {{ formatDate(tournament.date) }}
                 </div>
-                <div class="flex items-center text-sm text-space-text">
+                <div class="flex items-center text-sm text-color-text">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1 text-space-primary-light"
+                    class="h-4 w-4 mr-1 text-color-primary-light"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -146,26 +142,26 @@
           </div>
 
           <!-- Message d'alerte -->
-          <SpaceTerminal
+          <Terminal
             command="check_tournament_status"
             title="SYSTÈME DE TOURNOI"
             className="mb-6"
           >
-            <div class="text-space-error">
+            <div class="text-color-error">
               ALERTE: Votre participation requiert une confirmation !
             </div>
-            <div class="text-space-text-muted mt-2">
+            <div class="text-color-text-muted mt-2">
               Sans check-in, votre place pourrait être attribuée à un joueur en
               liste d'attente.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
           <!-- Confirmation de check-in -->
-          <SpaceCard v-if="isCheckedIn" variant="success" className="p-3">
+          <Card v-if="isCheckedIn" variant="success" className="p-3">
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-space-success"
+                class="h-5 w-5 mr-2 text-color-success"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -175,11 +171,11 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <p class="text-space-success font-nasa">
+              <p class="text-color-success font-nasa">
                 Votre check-in a été confirmé !
               </p>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
 
         <!-- Actions -->
@@ -187,12 +183,12 @@
           <div class="space-y-4">
             <!-- Ligne séparatrice avec effet spatial -->
             <div
-              class="w-full h-0.5 bg-gradient-to-r from-transparent via-space-primary-light/30 to-transparent"
+              class="w-full h-0.5 bg-gradient-to-r from-transparent via-color-primary-light/30 to-transparent"
             ></div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Bouton de check-in -->
-              <SpaceButton
+              <Button
                 v-if="!isCheckedIn"
                 @click="confirmCheckIn"
                 variant="success"
@@ -214,10 +210,10 @@
                   </svg>
                 </template>
                 Confirmer ma présence
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour annuler le check-in -->
-              <SpaceButton
+              <Button
                 v-else
                 @click="cancelCheckIn"
                 variant="outline-error"
@@ -239,10 +235,10 @@
                   </svg>
                 </template>
                 Annuler mon check-in
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour voir le tournoi -->
-              <SpaceButton
+              <Button
                 @click="goToTournament"
                 variant="primary"
                 size="md"
@@ -263,10 +259,10 @@
                   </svg>
                 </template>
                 Voir le tournoi
-              </SpaceButton>
+              </Button>
 
               <!-- Bouton pour ignorer -->
-              <SpaceButton
+              <Button
                 @click="close"
                 variant="ghost"
                 size="md"
@@ -287,11 +283,11 @@
                   </svg>
                 </template>
                 Plus tard
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </template>
-      </SpaceCard>
+      </Card>
     </div>
   </transition>
 
@@ -303,14 +299,14 @@
       toastMessage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
     "
   >
-    <SpaceAlert
+    <Alert
       :variant="toastType"
       :dismissible="true"
       @dismiss="toastMessage = ''"
       className="backdrop-blur-sm"
     >
       {{ toastMessage }}
-    </SpaceAlert>
+    </Alert>
   </div>
 </template>
 
@@ -527,7 +523,7 @@ const handleEscKey = (e: KeyboardEvent) => {
   position: absolute;
   inset: -5px;
   border-radius: 50%;
-  border: 1px solid var(--space-primary-light);
+  border: 1px solid var(--color-primary-light);
   opacity: 0.5;
   z-index: 5;
 }

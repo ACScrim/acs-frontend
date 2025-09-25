@@ -1,28 +1,24 @@
 <template>
   <div class="container mx-auto p-4 sm:p-6 pt-20 sm:pt-24">
-    <!-- En-tête avec SpaceHeader -->
-    <SpaceHeader
+    <!-- En-tête avec Header -->
+    <Header
       title="NIVEAUX DE JEU"
       :decorated="true"
       mission="PLAYER-SKILLS-25"
     />
 
-    <SpaceCard variant="primary" :stars="true" className="mb-8 mt-6">
+    <Card variant="primary" :stars="true" className="mb-8 mt-6">
       <div v-if="loading" class="flex justify-center py-12">
-        <SpaceLoader text="Analyse des compétences en cours..." />
+        <Loader text="Analyse des compétences en cours..." />
       </div>
 
       <template v-else>
         <!-- Section des jeux avec niveau défini -->
         <div v-if="playerLevels.length > 0" class="mb-10">
-          <SpaceTitle
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-primary-light"
+              class="h-6 w-6 mr-2 text-color-primary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -33,10 +29,10 @@
               />
             </svg>
             Niveaux de compétence actuels
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <SpaceCard
+            <Card
               v-for="level in playerLevels"
               :key="level._id"
               variant="secondary"
@@ -54,11 +50,11 @@
                 />
                 <div
                   v-else
-                  class="w-full h-full flex items-center justify-center bg-space-bg-light"
+                  class="w-full h-full flex items-center justify-center bg-color-bg-light"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-16 w-16 text-space-primary/50"
+                    class="h-16 w-16 text-color-primary/50"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -70,22 +66,22 @@
 
                 <!-- Overlay gradient -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-space-bg/95 to-transparent"
+                  class="absolute inset-0 bg-gradient-to-t from-color-bg/95 to-transparent"
                 ></div>
 
                 <!-- Badge de niveau -->
                 <div class="absolute bottom-3 right-3">
                   <!-- Badge avec fond opaque et bordure -->
                   <div
-                    class="bg-space-bg px-2 py-1 rounded-full shadow-lg border-2 flex items-center justify-center"
+                    class="bg-color-bg px-2 py-1 rounded-full shadow-lg border-2 flex items-center justify-center"
                     :class="{
                       'border-green-500':
                         level.level.toLowerCase() === 'débutant',
-                      'border-[var(--space-primary)]':
+                      'border-[var(--color-primary)]':
                         level.level.toLowerCase() === 'intermédiaire',
-                      'border-[var(--space-secondary)]':
+                      'border-[var(--color-secondary)]':
                         level.level.toLowerCase() === 'avancé',
-                      'border-[var(--space-accent)]':
+                      'border-[var(--color-accent)]':
                         level.level.toLowerCase() === 'expert',
                     }"
                   >
@@ -94,11 +90,11 @@
                       :class="{
                         'text-green-400':
                           level.level.toLowerCase() === 'débutant',
-                        'text-[var(--space-primary-light)]':
+                        'text-[var(--color-primary-light)]':
                           level.level.toLowerCase() === 'intermédiaire',
-                        'text-[var(--space-secondary-light)]':
+                        'text-[var(--color-secondary-light)]':
                           level.level.toLowerCase() === 'avancé',
-                        'text-[var(--space-accent-light)]':
+                        'text-[var(--color-accent-light)]':
                           level.level.toLowerCase() === 'expert',
                       }"
                     >
@@ -136,7 +132,7 @@
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-space-secondary-light flex-shrink-0"
+                    class="h-4 w-4 text-color-secondary-light flex-shrink-0"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -147,10 +143,10 @@
                     />
                   </svg>
                   <div class="flex-1 min-w-0">
-                    <span class="text-space-text-muted text-sm mr-1"
+                    <span class="text-color-text-muted text-sm mr-1"
                       >Pseudo:</span
                     >
-                    <span class="text-space-text text-sm font-mono truncate">{{
+                    <span class="text-color-text text-sm font-mono truncate">{{
                       level.gameUsername
                     }}</span>
                   </div>
@@ -159,12 +155,12 @@
                 <!-- Rang -->
                 <div
                   v-if="level.isRanked && level.rank"
-                  class="bg-space-bg-light/30 p-2 rounded-lg"
+                  class="bg-color-bg-light/30 p-2 rounded-lg"
                 >
                   <div class="flex items-center space-x-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-space-accent-light flex-shrink-0"
+                      class="h-4 w-4 text-color-accent-light flex-shrink-0"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -175,10 +171,10 @@
                       />
                     </svg>
                     <div class="flex-1 min-w-0">
-                      <span class="text-space-text-muted text-sm mr-1"
+                      <span class="text-color-text-muted text-sm mr-1"
                         >Rang:</span
                       >
-                      <span class="text-space-accent-light text-sm font-mono">{{
+                      <span class="text-color-accent-light text-sm font-mono">{{
                         level.rank
                       }}</span>
                     </div>
@@ -188,12 +184,12 @@
                 <!-- Rôles -->
                 <div
                   v-if="level.selectedRoles && level.selectedRoles.length > 0"
-                  class="bg-space-bg-light/30 p-2 rounded-lg"
+                  class="bg-color-bg-light/30 p-2 rounded-lg"
                 >
                   <div class="flex items-center mb-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-space-primary-light mr-2 flex-shrink-0"
+                      class="h-4 w-4 text-color-primary-light mr-2 flex-shrink-0"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -204,11 +200,11 @@
                         d="M12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                       />
                     </svg>
-                    <span class="text-space-text-muted text-sm">Rôles:</span>
+                    <span class="text-color-text-muted text-sm">Rôles:</span>
                   </div>
 
                   <div class="flex flex-wrap gap-1 mt-1">
-                    <SpaceBadge
+                    <Badge
                       v-for="roleName in level.selectedRoles"
                       :key="roleName"
                       variant="primary"
@@ -218,23 +214,23 @@
                       :title="roleName"
                     >
                       <span class="truncate">{{ roleName }}</span>
-                    </SpaceBadge>
+                    </Badge>
                   </div>
                 </div>
 
                 <!-- Commentaire -->
                 <div
                   v-if="level.comment"
-                  class="bg-space-bg-light/30 p-3 rounded-lg"
+                  class="bg-color-bg-light/30 p-3 rounded-lg"
                 >
-                  <p class="text-sm text-space-text-muted italic">
+                  <p class="text-sm text-color-text-muted italic">
                     « {{ level.comment }} »
                   </p>
                 </div>
 
                 <!-- Boutons d'action -->
                 <div class="flex justify-end space-x-3 mt-4">
-                  <SpaceButton
+                  <Button
                     @click="openEditModal(level)"
                     variant="secondary"
                     size="sm"
@@ -253,9 +249,9 @@
                       </svg>
                     </template>
                     Modifier
-                  </SpaceButton>
+                  </Button>
 
-                  <SpaceButton
+                  <Button
                     @click="confirmDelete(level)"
                     variant="error"
                     size="sm"
@@ -276,23 +272,19 @@
                       </svg>
                     </template>
                     Supprimer
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
         </div>
 
         <!-- Section pour ajouter un nouveau niveau -->
         <div>
-          <SpaceTitle
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-accent-light"
+              class="h-6 w-6 mr-2 text-color-accent-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -303,19 +295,19 @@
               />
             </svg>
             Ajouter un niveau
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Carte pour ajouter un nouveau niveau -->
-            <SpaceCard
+            <Card
               @click="showGameSelector = true"
               variant="accent"
               :stars="true"
-              className="border-2 border-dashed border-space-accent/30 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-space-accent/70 h-[320px]"
+              className="border-2 border-dashed border-color-accent/30 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-color-accent/70 h-[320px]"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-16 w-16 text-space-accent/70 mb-4"
+                class="h-16 w-16 text-color-accent/70 mb-4"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -325,25 +317,25 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <p class="text-space-accent-light font-nasa text-lg">
+              <p class="text-color-accent-light font-nasa text-lg">
                 Définir un nouveau niveau
               </p>
               <p
-                class="text-space-text-muted text-sm mt-2 max-w-xs text-center"
+                class="text-color-text-muted text-sm mt-2 max-w-xs text-center"
               >
                 Ajouter vos compétences sur un jeu pour participer aux tournois
               </p>
-            </SpaceCard>
+            </Card>
           </div>
         </div>
       </template>
-    </SpaceCard>
+    </Card>
 
     <!-- Modal pour sélectionner un jeu -->
-    <SpaceModal v-model="showGameSelector" title="SÉLECTION DU JEU">
+    <Modal v-model="showGameSelector" title="SÉLECTION DU JEU">
       <!-- Recherche de jeux -->
       <div class="mb-5 relative">
-        <SpaceInput
+        <Input
           v-model="gameSearch"
           placeholder="Rechercher un jeu..."
           :clearable="true"
@@ -352,7 +344,7 @@
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-space-text-muted"
+              class="h-5 w-5 text-color-text-muted"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -363,29 +355,29 @@
               />
             </svg>
           </template>
-        </SpaceInput>
+        </Input>
       </div>
 
       <!-- État vide -->
-      <SpaceTerminal
+      <Terminal
         v-if="filteredGames.length === 0"
         command="search_games"
         title="Recherche de jeux"
         :showCursor="true"
         className="mb-4"
       >
-        <div v-if="gameSearch" class="text-space-error">
+        <div v-if="gameSearch" class="text-color-error">
           Aucun jeu ne correspond à votre recherche "{{ gameSearch }}"
         </div>
-        <div v-else class="text-space-error">Aucun jeu disponible</div>
-        <div class="text-space-text-muted mt-2">
+        <div v-else class="text-color-error">Aucun jeu disponible</div>
+        <div class="text-color-text-muted mt-2">
           Contactez un administrateur pour ajouter de nouveaux jeux
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Liste de jeux -->
       <div v-else class="max-h-96 overflow-y-auto mb-4 pr-2 space-y-3">
-        <SpaceCard
+        <Card
           v-for="game in filteredGames"
           :key="game._id"
           @click="selectGame(game)"
@@ -400,7 +392,7 @@
           <div class="flex items-center">
             <!-- Image du jeu -->
             <div
-              class="w-14 h-14 rounded overflow-hidden bg-space-bg-light flex-shrink-0 mr-3 border border-space-primary/30"
+              class="w-14 h-14 rounded overflow-hidden bg-color-bg-light flex-shrink-0 mr-3 border border-color-primary/30"
             >
               <img
                 v-if="game.imageUrl"
@@ -415,7 +407,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-8 w-8 text-space-text-muted"
+                  class="h-8 w-8 text-color-text-muted"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -435,7 +427,7 @@
               <h4 class="text-white font-nasa">{{ game.name }}</h4>
               <p
                 v-if="game.description"
-                class="text-space-text-muted text-sm line-clamp-1"
+                class="text-color-text-muted text-sm line-clamp-1"
               >
                 {{ game.description }}
               </p>
@@ -443,25 +435,25 @@
 
             <!-- Indicateur de niveau déjà défini -->
             <div v-if="hasLevelForGame(game)" class="ml-3">
-              <SpaceBadge variant="outline" size="sm">
+              <Badge variant="outline" size="sm">
                 {{ getLevelForGame(game)?.level }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
 
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton @click="showGameSelector = false" variant="ghost">
+          <Button @click="showGameSelector = false" variant="ghost">
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal pour définir le niveau -->
-    <SpaceModal
+    <Modal
       v-model="showLevelSelector"
       :title="
         selectedGame?.name
@@ -472,9 +464,9 @@
       <form @submit.prevent="saveLevel" class="space-y-6">
         <!-- Sélection du niveau -->
         <div>
-          <label class="block text-space-primary-light text-sm font-nasa mb-3">
+          <label class="block text-color-primary-light text-sm font-nasa mb-3">
             Niveau de jeu
-            <span class="text-space-error ml-1">*</span>
+            <span class="text-color-error ml-1">*</span>
           </label>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -484,8 +476,8 @@
               :class="[
                 'p-3 border rounded-md cursor-pointer transition-all duration-300 flex items-center justify-between',
                 selectedLevel === levelOption.value
-                  ? 'border-space-primary bg-space-primary/10 shadow-inner'
-                  : 'border-space-bg-light hover:border-space-primary/30',
+                  ? 'border-color-primary bg-color-primary/10 shadow-inner'
+                  : 'border-color-bg-light hover:border-color-primary/30',
               ]"
               @click="selectedLevel = levelOption.value"
             >
@@ -494,14 +486,14 @@
                   class="w-3 h-3 rounded-full mr-3"
                   :class="getLevelColorClass(levelOption.value)"
                 ></div>
-                <span class="text-space-text font-nasa text-sm">{{
+                <span class="text-color-text font-nasa text-sm">{{
                   levelOption.label
                 }}</span>
               </div>
               <svg
                 v-if="selectedLevel === levelOption.value"
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-primary"
+                class="h-5 w-5 text-color-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -519,22 +511,22 @@
         <div>
           <label
             for="gameUsername"
-            class="block text-space-primary-light text-sm font-nasa mb-2"
+            class="block text-color-primary-light text-sm font-nasa mb-2"
           >
             Pseudo dans le jeu (optionnel)
           </label>
-          <SpaceInput
+          <Input
             id="gameUsername"
             v-model="gameUsername"
             placeholder="Votre pseudo dans ce jeu"
             :maxlength="30"
           />
           <div class="flex justify-between mt-1">
-            <p class="text-xs text-space-text-muted">
+            <p class="text-xs text-color-text-muted">
               Par exemple: Votre pseudo League of Legends pour accéder à votre
               OP.GG
             </p>
-            <p class="text-xs text-space-text-muted">
+            <p class="text-xs text-color-text-muted">
               {{ gameUsername.length }}/30
             </p>
           </div>
@@ -543,7 +535,7 @@
         <!-- Classement -->
         <div>
           <div class="mb-2">
-            <SpaceToggle
+            <Toggle
               v-model="isRanked"
               label="Je joue en classé"
               className="toggle-primary"
@@ -553,13 +545,13 @@
           <div v-if="isRanked" class="mt-3">
             <label
               for="rank"
-              class="block text-space-primary-light text-sm font-nasa mb-2"
+              class="block text-color-primary-light text-sm font-nasa mb-2"
             >
               Rang actuel
-              <span class="text-space-error ml-1">*</span>
+              <span class="text-color-error ml-1">*</span>
             </label>
 
-            <SpaceInput
+            <Input
               id="rank"
               v-model="rank"
               placeholder="Ex: Diamant 2, Master, Silver 3..."
@@ -570,7 +562,7 @@
             />
 
             <div class="flex justify-between mt-1">
-              <p v-if="!rankError" class="text-xs text-space-accent italic">
+              <p v-if="!rankError" class="text-xs text-color-accent italic">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-3 w-3 inline mr-1"
@@ -587,7 +579,7 @@
                 </svg>
                 Merci d'indiquer votre plus haut rang, pas un smurf
               </p>
-              <p class="text-xs text-space-text-muted">{{ rank.length }}/20</p>
+              <p class="text-xs text-color-text-muted">{{ rank.length }}/20</p>
             </div>
           </div>
         </div>
@@ -599,22 +591,25 @@
           "
         >
           <label
-            class="flex items-center justify-between text-space-primary-light text-sm font-nasa mb-2"
+            class="flex items-center justify-between text-color-primary-light text-sm font-nasa mb-2"
           >
             <span class="flex items-center">
               Rôles préférés
-              <span class="text-space-error ml-1">*</span>
+              <span class="text-color-error ml-1">*</span>
             </span>
             <div class="flex items-center gap-3">
-              <SpaceButton
-                @click="selectAllRoles"
+              <Button
+                @click="
+                  allRolesSelected ? deselectAllRoles() : selectAllRoles()
+                "
                 type="button"
                 variant="ghost"
                 size="xs"
-                className="flex items-center"
+                className="flex items-center px-2 py-1 text-[11px]"
               >
                 <template #icon>
                   <svg
+                    v-if="!allRolesSelected"
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-3 w-3 mr-1"
                     viewBox="0 0 20 20"
@@ -627,13 +622,28 @@
                       clip-rule="evenodd"
                     />
                   </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5 12a1 1 0 011-1h12a1 1 0 110 2H6a1 1 0 01-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
                 </template>
-                Tout sélectionner
-              </SpaceButton>
-              <SpaceBadge variant="primary" size="sm">
+                {{
+                  allRolesSelected ? "Tout désélectionner" : "Tout sélectionner"
+                }}
+              </Button>
+              <Badge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
                 {{ selectedGame?.roles?.length || 0 }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </label>
 
@@ -644,8 +654,8 @@
               :class="[
                 'flex items-center p-2 border rounded-md cursor-pointer transition-all duration-300 overflow-hidden',
                 selectedRoles.includes(role.name)
-                  ? 'border-space-primary bg-space-primary/10'
-                  : 'border-space-bg-light hover:border-space-primary/30',
+                  ? 'border-color-primary bg-color-primary/10'
+                  : 'border-color-bg-light hover:border-color-primary/30',
               ]"
               @click="toggleRole(role.name)"
             >
@@ -654,7 +664,7 @@
                 :id="`role-${role.name}`"
                 :checked="selectedRoles.includes(role.name)"
                 @change="toggleRole(role.name)"
-                class="h-4 w-4 text-space-primary focus:ring-space-primary border-space-bg-light rounded bg-space-bg flex-shrink-0"
+                class="h-4 w-4 text-color-primary focus:ring-color-primary border-color-bg-light rounded bg-color-bg flex-shrink-0"
               />
               <label
                 :for="`role-${role.name}`"
@@ -665,14 +675,14 @@
                   class="w-3 h-3 rounded-full mr-2 flex-shrink-0"
                   :style="{ backgroundColor: role.color || '#6B7280' }"
                 ></div>
-                <span class="text-space-text font-nasa text-sm truncate">{{
+                <span class="text-color-text font-nasa text-sm truncate">{{
                   role.name
                 }}</span>
               </label>
             </div>
           </div>
 
-          <p v-if="roleError" class="text-xs text-space-error mt-1">
+          <p v-if="roleError" class="text-xs text-color-error mt-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-3 w-3 inline mr-1"
@@ -695,9 +705,9 @@
         <div>
           <label
             for="comment"
-            class="block text-space-primary-light text-sm font-nasa mb-2"
+            class="block text-color-primary-light text-sm font-nasa mb-2"
           >
-            Commentaire (optionnel)
+            Commentaire <span class="text-color-error ml-1">*</span>
           </label>
           <textarea
             id="comment"
@@ -705,10 +715,19 @@
             rows="3"
             placeholder="Informations complémentaires, rôle préféré, etc."
             maxlength="150"
-            class="w-full p-3 bg-space-bg-light border border-space-bg-light rounded-md text-space-text focus:border-space-primary focus:outline-none focus:ring-1 focus:ring-space-primary/30 font-mono resize-none"
+            class="w-full p-3 bg-color-bg-light border rounded-md text-color-text focus:outline-none font-body resize-none"
+            :class="[
+              commentError
+                ? 'border-color-error focus:ring-1 focus:ring-color-error/50 focus:border-color-error'
+                : 'border-color-bg-light focus:border-color-primary focus:ring-1 focus:ring-color-primary/30',
+            ]"
+            @input="commentError = false"
           ></textarea>
-          <div class="flex justify-end mt-1">
-            <p class="text-xs text-space-text-muted">
+          <div class="flex justify-between mt-1">
+            <p class="text-xs text-color-error" v-if="commentError">
+              Veuillez renseigner un commentaire
+            </p>
+            <p class="text-xs text-color-text-muted ml-auto">
               {{ comment.length }}/150
             </p>
           </div>
@@ -716,12 +735,12 @@
 
         <!-- Boutons d'action -->
         <div
-          class="flex justify-end space-x-3 pt-3 border-t border-space-bg-light"
+          class="flex justify-end space-x-3 pt-3 border-t border-color-bg-light"
         >
-          <SpaceButton type="button" @click="cancelLevelEdit" variant="ghost">
+          <Button type="button" @click="cancelLevelEdit" variant="ghost">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             :disabled="!selectedLevel || isSaving"
@@ -750,13 +769,13 @@
               Enregistrement...
             </template>
             <template v-else>Enregistrer</template>
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceModal>
+    </Modal>
 
     <!-- Modal de confirmation de suppression -->
-    <SpaceModal
+    <Modal
       v-if="showDeleteConfirmation"
       v-model="showDeleteConfirmation"
       title="CONFIRMATION DE SUPPRESSION"
@@ -765,7 +784,7 @@
       <div class="text-center mb-6 space-y-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-space-error mx-auto"
+          class="h-16 w-16 text-color-error mx-auto"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -778,34 +797,28 @@
           />
         </svg>
 
-        <p class="text-space-text">
+        <p class="text-color-text">
           Êtes-vous sûr de vouloir supprimer votre niveau pour
-          <span class="text-space-primary-light font-nasa">
+          <span class="text-color-primary-light font-nasa">
             {{ levelToDelete ? getGameName(levelToDelete) : "Jeu inconnu" }}
           </span>
           ?
         </p>
 
-        <p class="text-space-text-muted text-sm">
+        <p class="text-color-text-muted text-sm">
           Cette action est irréversible.
         </p>
       </div>
 
       <template #footer>
         <div class="flex justify-center space-x-4">
-          <SpaceButton @click="cancelDelete" variant="ghost">
-            Annuler
-          </SpaceButton>
-          <SpaceButton
-            @click="deleteLevel"
-            variant="error"
-            :loading="isDeleting"
-          >
+          <Button @click="cancelDelete" variant="ghost"> Annuler </Button>
+          <Button @click="deleteLevel" variant="error" :loading="isDeleting">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
     <!-- Toast pour les notifications -->
     <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>
@@ -833,6 +846,7 @@ const route = useRoute();
 const router = useRouter();
 
 const rankError = ref(false);
+const commentError = ref(false);
 
 // États des modales
 const showGameSelector = ref(false);
@@ -894,6 +908,12 @@ const filteredGames = computed(() => {
   return games.value
     .filter((game) => !existingGameIds.includes(game._id)) // Jeux sans niveau défini
     .filter((game) => !search || game.name.toLowerCase().includes(search)); // Recherche
+});
+
+// Tous les rôles sont-ils sélectionnés ?
+const allRolesSelected = computed(() => {
+  const total = selectedGame.value?.roles?.length || 0;
+  return total > 0 && selectedRoles.value.length === total;
 });
 // #endregion
 
@@ -1014,6 +1034,14 @@ const selectAllRoles = () => {
   }
 };
 
+/**
+ * Désélectionne tous les rôles
+ */
+const deselectAllRoles = () => {
+  selectedRoles.value = [];
+  // Laisser roleError à false; la validation se fera au submit si nécessaire
+};
+
 // #endregion
 
 // -----------------------------------------------
@@ -1068,6 +1096,7 @@ const saveLevel = async (e?: Event) => {
   // Réinitialiser les états d'erreur
   rankError.value = false;
   roleError.value = false;
+  commentError.value = false;
 
   // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
@@ -1090,6 +1119,13 @@ const saveLevel = async (e?: Event) => {
   ) {
     roleError.value = true;
     showToast("Veuillez sélectionner au moins un rôle", "error");
+    return;
+  }
+
+  // Vérifier que le commentaire est renseigné
+  if (!comment.value.trim()) {
+    commentError.value = true;
+    showToast("Veuillez renseigner un commentaire", "error");
     return;
   }
 
@@ -1234,6 +1270,7 @@ const resetForm = () => {
   selectedRoles.value = [];
   editingLevelId.value = null;
   roleError.value = false;
+  commentError.value = false;
 };
 
 // #endregion

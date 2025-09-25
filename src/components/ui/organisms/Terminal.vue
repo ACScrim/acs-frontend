@@ -1,25 +1,44 @@
+<!--
+  🎃 HORROR TERMINAL COMPONENT - Documentation d'utilisation
+  
+  Composant terminal mystique avec thème Halloween pour affichage d'erreurs et messages.
+  
+  📋 PROPS :
+  • title : string - Titre affiché dans l'en-tête (défaut: "Terminal")
+  • command : string - Commande affichée avant le contenu
+  • showCursor : boolean - Affiche/cache le curseur clignotant (défaut: true)
+  • className : string - Classes CSS additionnelles
+  
+  🎨 SLOTS :
+  • default : Contenu principal du terminal
+  • icon : Icône personnalisée dans l'en-tête
+  
+  💡 EXEMPLES :
+  <Terminal title="Console Maudite" command="invoke_horror --target=players">
+    Erreur 404: Âmes perdues introuvables...
+  </Terminal>
+-->
 <template>
-  <div :class="['space-terminal', className]">
+  <div :class="['terminal', className]">
     <!-- En-tête du terminal -->
-    <div class="space-terminal-header">
-      <div class="space-terminal-controls">
-        <div class="space-terminal-control"></div>
-        <div class="space-terminal-control"></div>
-        <div class="space-terminal-control"></div>
+    <div class="terminal-header">
+      <div class="terminal-controls">
+        <div class="terminal-control"></div>
+        <div class="terminal-control"></div>
+        <div class="terminal-control"></div>
       </div>
-      <div class="space-terminal-title">{{ title }}</div>
-      <div class="space-terminal-icon">
+      <div class="terminal-title">{{ title }}</div>
+      <div class="terminal-icon">
         <slot name="icon">
+          <!-- Icône de crâne Halloween par défaut -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4"
-            viewBox="0 0 20 20"
+            viewBox="0 0 24 24"
             fill="currentColor"
           >
             <path
-              fill-rule="evenodd"
-              d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
-              clip-rule="evenodd"
+              d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1s1-.45 1-1v-1h4v1c0 .55.45 1 1 1s1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zM9 11c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-3 4c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2z"
             />
           </svg>
         </slot>
@@ -27,22 +46,22 @@
     </div>
 
     <!-- Corps du terminal -->
-    <div class="space-terminal-body">
+    <div class="terminal-body">
       <!-- Lignes de commande -->
-      <div class="space-terminal-line">
-        <span class="space-terminal-prompt">></span>
-        <span class="space-terminal-command">{{ command }}</span>
+      <div class="terminal-line">
+        <span class="terminal-prompt">></span>
+        <span class="terminal-command">{{ command }}</span>
       </div>
 
       <!-- Contenu -->
-      <div class="space-terminal-content">
+      <div class="terminal-content">
         <slot></slot>
       </div>
 
       <!-- Ligne de curseur -->
-      <div v-if="showCursor" class="space-terminal-line">
-        <span class="space-terminal-prompt">></span>
-        <span class="space-terminal-cursor blink">_</span>
+      <div v-if="showCursor" class="terminal-line">
+        <span class="terminal-prompt">></span>
+        <span class="terminal-cursor blink">_</span>
       </div>
     </div>
   </div>
@@ -65,123 +84,205 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <style scoped>
-.space-terminal {
-  background-color: rgba(0, 0, 0, 0.9);
+.terminal {
+  background-color: rgba(15, 15, 15, 0.95);
   border-radius: 0.5rem;
   overflow: hidden;
-  font-family: "Space Mono", monospace;
-  border: 1px solid var(--space-bg-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-glow-primary), 0 8px 32px rgba(0, 0, 0, 0.8);
   position: relative;
 }
 
-.space-terminal-header {
+.terminal-header {
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: rgba(30, 41, 59, 0.5);
-  border-bottom: 1px solid var(--space-bg-light);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(217, 119, 6, 0.1) 0%,
+    rgba(124, 45, 18, 0.1) 50%,
+    rgba(88, 28, 135, 0.1) 100%
+  );
+  border-bottom: 1px solid var(--color-primary);
 }
 
-.space-terminal-controls {
+.terminal-controls {
   display: flex;
-  gap: 0.375rem;
+  gap: 0.5rem;
   margin-right: 1rem;
 }
 
-.space-terminal-control {
-  width: 0.75rem;
-  height: 0.75rem;
+.terminal-control {
+  width: 0.875rem;
+  height: 0.875rem;
   border-radius: 50%;
-  background-color: var(--space-bg-light);
-  border: 1px solid rgba(30, 41, 59, 0.7);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary),
+    var(--color-secondary-dark)
+  );
+  border: 1px solid var(--color-secondary-light);
+  box-shadow: 0 0 4px rgba(220, 38, 38, 0.4);
 }
 
-.space-terminal-title {
+.terminal-title {
   flex-grow: 1;
-  font-size: 0.75rem;
-  color: var(--space-text-muted);
+  font-size: 0.875rem;
+  color: var(--color-text);
   text-align: center;
+  font-weight: 600;
+  font-family: var(--font-body);
+  text-shadow: 0 0 8px rgba(217, 119, 6, 0.5);
 }
 
-.space-terminal-icon {
+.terminal-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--space-secondary);
+  color: var(--color-secondary-light);
+  filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.6));
 }
 
-.space-terminal-body {
-  padding: 1rem;
-  min-height: 100px;
+.terminal-body {
+  padding: 1.25rem;
+  min-height: 120px;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 15, 15, 0.9) 0%,
+    rgba(15, 15, 15, 0.95) 100%
+  );
 }
 
-.space-terminal-line {
+.terminal-line {
   display: flex;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   align-items: baseline;
 }
 
-.space-terminal-prompt {
-  color: var(--space-primary);
-  margin-right: 0.5rem;
+.terminal-prompt {
+  color: var(--color-primary);
+  margin-right: 0.75rem;
   font-weight: bold;
+  text-shadow: 0 0 8px var(--color-primary);
 }
 
-.space-terminal-command {
-  color: var(--space-secondary-light);
+.terminal-command {
+  color: var(--color-secondary-light);
   font-weight: 500;
+  text-shadow: 0 0 4px rgba(220, 38, 38, 0.3);
 }
 
-.space-terminal-content {
-  margin: 1rem 0;
-  color: var(--space-text);
-  line-height: 1.5;
+.terminal-content {
+  margin: 1.25rem 0;
+  color: var(--color-text);
+  line-height: 1.6;
+  text-shadow: 0 0 2px rgba(245, 245, 245, 0.1);
 }
 
-.space-terminal-cursor {
-  color: var(--space-primary-light);
+.terminal-cursor {
+  color: var(--color-primary-light);
   font-weight: bold;
+  text-shadow: 0 0 8px var(--color-primary-light);
 }
 
+/* Animation de clignotement Halloween */
 .blink {
-  animation: blink 1s step-end infinite;
+  animation: horror-blink 1.2s ease-in-out infinite;
 }
 
-@keyframes blink {
+@keyframes horror-blink {
   0%,
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  85% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
   100% {
     opacity: 1;
-  }
-  50% {
-    opacity: 0;
+    transform: scale(1);
   }
 }
 
-/* Effet de scan de ligne */
-.space-terminal::after {
+/* Effet de lueur mystique sur les bordures */
+.terminal::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent),
+    var(--color-primary)
+  );
+  background-size: 400% 400%;
+  border-radius: 0.5rem;
+  z-index: -1;
+  animation: horror-border 4s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+@keyframes horror-border {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Effet de particules flottantes */
+.terminal::after {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(109, 40, 217, 0.5),
-    transparent
-  );
-  animation: scan-line 6s linear infinite;
-  opacity: 0.5;
+  bottom: 0;
+  background-image: radial-gradient(
+      1px 1px at 20% 30%,
+      var(--color-accent-light),
+      transparent
+    ),
+    radial-gradient(1px 1px at 40% 70%, var(--color-primary), transparent),
+    radial-gradient(1px 1px at 90% 40%, var(--color-secondary), transparent),
+    radial-gradient(1px 1px at 60% 10%, var(--color-accent), transparent);
+  background-size: 50px 50px, 80px 80px, 40px 40px, 60px 60px;
+  animation: float-particles 8s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
-@keyframes scan-line {
+@keyframes float-particles {
   0% {
-    top: 0;
+    background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
   100% {
-    top: 100%;
+    background-position: 100% 100%, -100% 100%, 100% -100%, -100% -100%;
+  }
+}
+
+/* Amélioration responsive */
+@media (max-width: 640px) {
+  .terminal-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .terminal-body {
+    padding: 1rem;
+    min-height: 100px;
+  }
+
+  .terminal-title {
+    font-size: 0.75rem;
   }
 }
 </style>

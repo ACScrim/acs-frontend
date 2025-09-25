@@ -39,11 +39,11 @@
       >
         {{ tournament.name }}
       </h3>
-      <!-- Contenu personnalisable -->
-      <slot name="content">
+      <!-- Contenu personnalisable (slot par défaut) -->
+      <slot>
         <div class="tournament-details space-y-0.5">
           <div
-            class="flex items-center text-space-text-muted text-3xs xs:text-2xs sm:text-xs"
+            class="flex items-center text-color-text-muted text-3xs xs:text-2xs sm:text-xs"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@
             }}</span>
           </div>
           <div
-            class="flex items-center text-space-text-muted text-3xs xs:text-2xs sm:text-xs"
+            class="flex items-center text-color-text-muted text-3xs xs:text-2xs sm:text-xs"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,19 +108,24 @@ const props = withDefaults(defineProps<Props>(), {
   variant: "primary",
 });
 
+// Déclaration des slots (Volar/TS)
+defineSlots<{
+  default?: () => any;
+}>();
+
 // Calcule les classes CSS pour la variante de carte
 const getVariantClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "border-space-primary/30 bg-space-primary/10 hover:border-space-primary/50";
+      return "border-color-primary/30 bg-color-primary/10 hover:border-color-primary/50";
     case "secondary":
-      return "border-space-secondary/30 bg-space-secondary/10 hover:border-space-secondary/50";
+      return "border-color-secondary/30 bg-color-secondary/10 hover:border-color-secondary/50";
     case "accent":
-      return "border-space-accent/30 bg-space-accent/10 hover:border-space-accent/50";
+      return "border-color-accent/30 bg-color-accent/10 hover:border-color-accent/50";
     case "dark":
-      return "border-space-text/20 bg-space-bg-dark/80 hover:border-space-text/30";
+      return "border-color-text/20 bg-color-bg-dark/80 hover:border-color-text/30";
     default:
-      return "border-space-primary/30 bg-space-primary/10 hover:border-space-primary/50";
+      return "border-color-primary/30 bg-color-primary/10 hover:border-color-primary/50";
   }
 });
 
@@ -128,15 +133,15 @@ const getVariantClass = computed(() => {
 const getTitleClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "text-space-primary-light";
+      return "text-color-primary-light";
     case "secondary":
-      return "text-space-secondary-light";
+      return "text-color-secondary-light";
     case "accent":
-      return "text-space-accent-light";
+      return "text-color-accent-light";
     case "dark":
-      return "text-space-text";
+      return "text-color-text";
     default:
-      return "text-space-primary-light";
+      return "text-color-primary-light";
   }
 });
 
@@ -144,15 +149,15 @@ const getTitleClass = computed(() => {
 const getIconClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "text-space-primary-light";
+      return "text-color-primary-light";
     case "secondary":
-      return "text-space-secondary-light";
+      return "text-color-secondary-light";
     case "accent":
-      return "text-space-accent-light";
+      return "text-color-accent-light";
     case "dark":
-      return "text-space-text";
+      return "text-color-text";
     default:
-      return "text-space-primary-light";
+      return "text-color-primary-light";
   }
 });
 
@@ -160,15 +165,15 @@ const getIconClass = computed(() => {
 const getDecorationClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-space-primary/10";
+      return "bg-color-primary/10";
     case "secondary":
-      return "bg-space-secondary/10";
+      return "bg-color-secondary/10";
     case "accent":
-      return "bg-space-accent/10";
+      return "bg-color-accent/10";
     case "dark":
-      return "bg-space-text/10";
+      return "bg-color-text/10";
     default:
-      return "bg-space-primary/10";
+      return "bg-color-primary/10";
   }
 });
 
@@ -176,15 +181,15 @@ const getDecorationClass = computed(() => {
 const getDecorationLineClass = computed(() => {
   switch (props.variant) {
     case "primary":
-      return "bg-gradient-to-r from-transparent via-space-primary/50 to-transparent";
+      return "bg-gradient-to-r from-transparent via-color-primary/50 to-transparent";
     case "secondary":
-      return "bg-gradient-to-r from-transparent via-space-secondary/50 to-transparent";
+      return "bg-gradient-to-r from-transparent via-color-secondary/50 to-transparent";
     case "accent":
-      return "bg-gradient-to-r from-transparent via-space-accent/50 to-transparent";
+      return "bg-gradient-to-r from-transparent via-color-accent/50 to-transparent";
     case "dark":
-      return "bg-gradient-to-r from-transparent via-space-text/30 to-transparent";
+      return "bg-gradient-to-r from-transparent via-color-text/30 to-transparent";
     default:
-      return "bg-gradient-to-r from-transparent via-space-primary/50 to-transparent";
+      return "bg-gradient-to-r from-transparent via-color-primary/50 to-transparent";
   }
 });
 

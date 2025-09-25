@@ -3,8 +3,8 @@
     <!-- Bouton de notification dans la navbar -->
     <button
       @click="togglePanel"
-      class="relative p-2 text-space-text hover:text-space-primary transition-colors rounded-lg"
-      :class="{ 'text-space-primary': isPanelOpen }"
+      class="relative p-2 text-color-text hover:text-color-primary transition-colors rounded-lg"
+      :class="{ 'text-color-primary': isPanelOpen }"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -24,28 +24,28 @@
       <!-- Badge de notification -->
       <span
         v-if="unreadCount > 0"
-        class="absolute -top-1 -right-1 bg-space-error text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse"
+        class="absolute -top-1 -right-1 bg-color-error text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse"
       >
         {{ unreadCount > 9 ? "9+" : unreadCount }}
       </span>
     </button>
 
     <!-- Panel de notifications -->
-    <transition name="space-fade">
+    <transition name="mystical-fade">
       <div
         v-if="isPanelOpen"
-        class="absolute top-full z-50 mt-2 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-0 sm:transform-none w-80 sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-[90vw]"
+        class="absolute top-full z-50 mt-2 notification-panel"
       >
-        <SpaceCard
+        <Card
           variant="dark"
           :stars="true"
-          className="shadow-2xl border border-space-primary/20"
+          className="shadow-2xl border border-color-primary/20"
         >
           <!-- En-tête -->
-          <div class="p-3 sm:p-4 border-b border-space-primary/20">
+          <div class="p-3 sm:p-4 border-b border-color-primary/20">
             <div class="flex items-center justify-between">
               <h3
-                class="text-space-text font-nasa text-base sm:text-lg font-bold truncate mr-2"
+                class="text-color-text font-heading text-base sm:text-lg font-bold truncate mr-2"
               >
                 Notifications
               </h3>
@@ -58,7 +58,7 @@
                   v-if="!isSubscribed && permission !== 'denied'"
                   @click="handleSubscribe"
                   :disabled="loading"
-                  class="px-2 sm:px-3 py-1 bg-space-primary/20 hover:bg-space-primary/30 text-space-primary text-xs rounded-md transition-colors font-nasa whitespace-nowrap"
+                  class="px-2 sm:px-3 py-1 bg-color-primary/20 hover:bg-color-primary/30 text-color-primary text-xs rounded-md transition-colors font-heading whitespace-nowrap"
                 >
                   {{ loading ? "..." : "Activer" }}
                 </button>
@@ -67,7 +67,7 @@
                 <button
                   v-if="unreadCount > 0"
                   @click="markAllAsRead"
-                  class="text-space-text-muted hover:text-space-text text-xs transition-colors whitespace-nowrap hidden sm:block"
+                  class="text-color-text-muted hover:text-color-text text-xs transition-colors whitespace-nowrap hidden sm:block"
                   title="Marquer toutes comme lues"
                 >
                   ✓ Tout lire
@@ -77,7 +77,7 @@
                 <button
                   v-if="unreadCount > 0"
                   @click="markAllAsRead"
-                  class="text-space-text-muted hover:text-space-text transition-colors sm:hidden"
+                  class="text-color-text-muted hover:text-color-text transition-colors sm:hidden"
                   title="Marquer toutes comme lues"
                 >
                   <svg
@@ -99,7 +99,7 @@
                 <!-- Fermer -->
                 <button
                   @click="closePanel"
-                  class="text-space-text-muted hover:text-space-text transition-colors"
+                  class="text-color-text-muted hover:text-color-text transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -123,17 +123,17 @@
             <div class="mt-2 text-xs">
               <span
                 v-if="permission === 'granted' && isSubscribed"
-                class="text-space-success"
+                class="text-color-success"
               >
                 ● Notifications actives
               </span>
               <span
                 v-else-if="permission === 'denied'"
-                class="text-space-error"
+                class="text-color-error"
               >
                 ● Notifications bloquées
               </span>
-              <span v-else class="text-space-warning">
+              <span v-else class="text-color-warning">
                 ● Notifications désactivées
               </span>
             </div>
@@ -145,7 +145,7 @@
               v-if="recentNotifications.length === 0"
               class="p-4 sm:p-6 text-center"
             >
-              <div class="text-space-text-muted text-sm">
+              <div class="text-color-text-muted text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-2 opacity-50"
@@ -168,11 +168,11 @@
             <div
               v-for="notification in recentNotifications"
               :key="notification.id"
-              class="border-b border-space-primary/10 last:border-b-0"
+              class="border-b border-color-primary/10 last:border-b-0"
             >
               <div
-                class="p-3 sm:p-4 hover:bg-space-bg-light/50 transition-colors cursor-pointer"
-                :class="{ 'bg-space-primary/5': !notification.read }"
+                class="p-3 sm:p-4 hover:bg-color-bg-light/50 transition-colors cursor-pointer"
+                :class="{ 'bg-color-primary/5': !notification.read }"
                 @click="handleNotificationClick(notification)"
               >
                 <div class="flex items-start space-x-2 sm:space-x-3">
@@ -181,10 +181,10 @@
                     <div
                       class="w-2 h-2 rounded-full"
                       :class="{
-                        'bg-space-primary': notification.type === 'tournaments',
-                        'bg-space-accent': notification.type === 'badges',
-                        'bg-space-warning': notification.type === 'system',
-                        'bg-space-secondary': notification.type === 'update',
+                        'bg-color-primary': notification.type === 'tournaments',
+                        'bg-color-accent': notification.type === 'badges',
+                        'bg-color-warning': notification.type === 'system',
+                        'bg-color-secondary': notification.type === 'update',
                       }"
                     ></div>
                   </div>
@@ -192,23 +192,23 @@
                   <!-- Contenu -->
                   <div class="flex-1 min-w-0">
                     <h4
-                      class="text-sm font-semibold text-space-text font-nasa leading-tight"
-                      :class="{ 'text-space-primary': !notification.read }"
+                      class="text-sm font-semibold text-color-text font-heading leading-tight"
+                      :class="{ 'text-color-primary': !notification.read }"
                     >
                       {{ notification.title }}
                     </h4>
                     <p
-                      class="text-xs text-space-text-muted mt-1 line-clamp-2 sm:line-clamp-3 leading-relaxed"
+                      class="text-xs text-color-text-muted mt-1 line-clamp-2 sm:line-clamp-3 leading-relaxed"
                     >
                       {{ notification.body }}
                     </p>
                     <div class="flex items-center justify-between mt-2">
-                      <span class="text-xs text-space-text-muted truncate mr-2">
+                      <span class="text-xs text-color-text-muted truncate mr-2">
                         {{ formatTime(notification.timestamp) }}
                       </span>
                       <button
                         @click.stop="deleteNotification(notification.id)"
-                        class="text-space-text-muted hover:text-space-error text-xs transition-colors flex-shrink-0 p-1"
+                        class="text-color-text-muted hover:text-color-error text-xs transition-colors flex-shrink-0 p-1"
                         title="Supprimer"
                       >
                         ✕
@@ -223,11 +223,11 @@
           <!-- Actions en bas -->
           <div
             v-if="recentNotifications.length > 0"
-            class="p-3 border-t border-space-primary/20 text-center"
+            class="p-3 border-t border-color-primary/20 text-center"
           >
             <button
               @click="clearAllNotifications"
-              class="text-space-text-muted hover:text-space-error text-xs transition-colors"
+              class="text-color-text-muted hover:text-color-error text-xs transition-colors"
             >
               <span class="hidden sm:inline"
                 >Effacer toutes les notifications</span
@@ -235,7 +235,7 @@
               <span class="sm:hidden">Tout effacer</span>
             </button>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </transition>
   </div>
@@ -350,13 +350,46 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-.space-fade-enter-active,
-.space-fade-leave-active {
+/* Positionnement responsive du panel de notifications */
+.notification-center {
+  position: relative;
+}
+
+.notification-panel {
+  /* Positionnement de base : centré sous l'icône */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rem; /* 320px */
+  max-width: calc(100vw - 1rem);
+}
+
+/* Sur mobile, ajuster pour éviter de sortir de l'écran */
+@media (max-width: 640px) {
+  .notification-panel {
+    width: calc(100vw - 2rem);
+    max-width: 20rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Sur tablette et plus grand */
+@media (min-width: 641px) {
+  .notification-panel {
+    width: 24rem; /* 384px */
+    max-width: none;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.mystical-fade-enter-active,
+.mystical-fade-leave-active {
   transition: all 0.3s ease;
 }
 
-.space-fade-enter-from,
-.space-fade-leave-to {
+.mystical-fade-enter-from,
+.mystical-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }

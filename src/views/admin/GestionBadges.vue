@@ -1,28 +1,21 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\GestionBadges.vue -->
 <template>
-  <SpaceContainer>
+  <Container>
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="GESTION DE BADGES"
       mission="BADGES-EXPLORER"
       :showMissionInfo="true"
     >
       <template #badge v-if="badges.length > 0">
-        <SpaceBadge variant="secondary" size="lg">{{
-          badges.length
-        }}</SpaceBadge>
+        <Badge variant="secondary" size="lg">{{ badges.length }}</Badge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Section Création de badge -->
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="primary" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="primary">
+        <Title size="xl" variant="primary">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,11 +33,11 @@
             </svg>
           </template>
           Créer un nouveau badge
-        </SpaceTitle>
+        </Title>
       </template>
       <form @submit.prevent="createBadge" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SpaceInput
+          <Input
             id="title"
             v-model="newBadge.title"
             label="Titre"
@@ -53,13 +46,13 @@
           />
           <div>
             <label
-              class="block text-lg text-space-primary-light mb-2 font-nasa"
+              class="block text-lg text-color-primary-light mb-2 font-nasa"
             >
               Catégorie
             </label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
-                class="flex items-center space-x-3 p-3 rounded-lg bg-space-bg-light/50 border border-space-primary/30 hover:border-space-primary/60 transition-colors duration-300"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-color-bg-light/50 border border-color-primary/30 hover:border-color-primary/60 transition-colors duration-300"
               >
                 <input
                   id="categoryTypeAcs"
@@ -67,17 +60,17 @@
                   type="radio"
                   value="acs"
                   name="categoryType"
-                  class="h-5 w-5 text-space-primary focus:ring-space-primary focus:ring-2 border-space-primary/50"
+                  class="h-5 w-5 text-color-primary focus:ring-color-primary focus:ring-2 border-color-primary/50"
                 />
                 <label
                   for="categoryTypeAcs"
-                  class="text-space-text font-nasa cursor-pointer"
+                  class="text-color-text font-nasa cursor-pointer"
                 >
                   Badge ACS (général)
                 </label>
               </div>
               <div
-                class="flex items-center space-x-3 p-3 rounded-lg bg-space-bg-light/50 border border-space-primary/30 hover:border-space-primary/60 transition-colors duration-300"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-color-bg-light/50 border border-color-primary/30 hover:border-color-primary/60 transition-colors duration-300"
               >
                 <input
                   id="categoryTypeGame"
@@ -85,11 +78,11 @@
                   type="radio"
                   value="game"
                   name="categoryType"
-                  class="h-5 w-5 text-space-primary focus:ring-space-primary focus:ring-2 border-space-primary/50"
+                  class="h-5 w-5 text-color-primary focus:ring-color-primary focus:ring-2 border-color-primary/50"
                 />
                 <label
                   for="categoryTypeGame"
-                  class="text-space-text font-nasa cursor-pointer"
+                  class="text-color-text font-nasa cursor-pointer"
                 >
                   Badge spécifique à un jeu
                 </label>
@@ -99,7 +92,7 @@
         </div>
         <!-- Sélecteur de jeu, visible uniquement si catégorie = jeu -->
         <div v-if="newBadge.categoryType === 'game'">
-          <SpaceDropdown
+          <Dropdown
             id="categoryId"
             v-model="newBadge.categoryId"
             label="Jeu associé"
@@ -109,11 +102,11 @@
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <SpaceInput
+            <Input
               id="imageUrl"
               v-model="newBadge.imageUrl"
               label="URL de l'image"
@@ -127,13 +120,13 @@
             class="flex flex-col items-center justify-center"
           >
             <label
-              class="block text-lg text-space-primary-light mb-2 font-nasa"
+              class="block text-lg text-color-primary-light mb-2 font-nasa"
             >
               Prévisualisation
             </label>
             <div class="badge-preview">
               <div
-                class="w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-space-bg-dark to-space-bg-light p-1 border-2 border-space-primary/50 overflow-hidden shadow-lg"
+                class="w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 border-2 border-color-primary/50 overflow-hidden shadow-lg"
               >
                 <img
                   :src="newBadge.imageUrl"
@@ -146,7 +139,7 @@
           </div>
         </div>
         <div>
-          <SpaceInput
+          <Input
             id="description"
             v-model="newBadge.description"
             label="Description (optionnelle)"
@@ -156,22 +149,17 @@
           />
         </div>
         <div class="flex justify-end mt-6">
-          <SpaceButton variant="primary" size="lg" type="submit">
+          <Button variant="primary" size="lg" type="submit">
             Créer le badge
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Section Association de badge -->
-    <SpaceCard
-      variant="secondary"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="secondary" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="secondary">
+        <Title size="xl" variant="secondary">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -189,13 +177,13 @@
             </svg>
           </template>
           Associer un badge à des joueurs
-        </SpaceTitle>
+        </Title>
       </template>
       <form @submit.prevent="assignBadge" class="space-y-6">
         <!-- Sélection des joueurs -->
         <div class="mb-6">
           <label
-            class="flex items-center text-lg text-space-secondary-light mb-2 font-nasa"
+            class="flex items-center text-lg text-color-secondary-light mb-2 font-nasa"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -218,13 +206,13 @@
               @focus="showPlayerList = true"
               @blur="hidePlayerList"
               @input="searchPlayers"
-              class="w-full py-3 px-4 bg-space-bg-light/50 text-space-text border border-space-secondary/50 rounded-lg font-nasa shadow-glow-secondary-sm transition-all duration-300 focus:outline-none focus:border-space-secondary focus:shadow-glow-secondary"
+              class="w-full py-3 px-4 bg-color-bg-light/50 text-color-text border border-color-secondary/50 rounded-lg font-nasa shadow-glow-secondary-sm transition-all duration-300 focus:outline-none focus:border-color-secondary focus:shadow-glow-secondary"
               placeholder="Rechercher un joueur..."
             />
             <!-- Liste des résultats de recherche -->
             <div
               v-if="showPlayerList"
-              class="absolute mt-2 bg-black border border-space-secondary/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-secondary z-[9999]"
+              class="absolute mt-2 bg-black border border-color-secondary/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-secondary z-[9999]"
               style="width: 100%; top: 100%; left: 0"
             >
               <ul class="py-1">
@@ -232,13 +220,13 @@
                   v-for="player in filteredPlayers"
                   :key="player._id"
                   @mousedown.prevent="addPlayer(player)"
-                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-space-secondary/20 text-space-text font-nasa text-sm"
+                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-color-secondary/20 text-color-text font-nasa text-sm"
                 >
                   {{ player.username }}
                 </li>
                 <li
                   v-if="filteredPlayers.length === 0"
-                  class="px-4 py-3 text-space-text-muted italic text-center text-sm"
+                  class="px-4 py-3 text-color-text-muted italic text-center text-sm"
                 >
                   Aucun joueur trouvé
                 </li>
@@ -251,12 +239,12 @@
             <div
               v-for="player in selectedPlayers"
               :key="player._id"
-              class="flex items-center bg-space-secondary/20 text-space-text px-3 py-2 rounded-full text-sm border border-space-secondary/50 transition-all hover:bg-space-secondary/30 hover:border-space-secondary/70 hover:shadow-glow-secondary font-nasa"
+              class="flex items-center bg-color-secondary/20 text-color-text px-3 py-2 rounded-full text-sm border border-color-secondary/50 transition-all hover:bg-color-secondary/30 hover:border-color-secondary/70 hover:shadow-glow-secondary font-nasa"
             >
               {{ player.username }}
               <button
                 @click="removePlayer(player)"
-                class="ml-2 text-space-text-muted hover:text-space-danger transition-colors"
+                class="ml-2 text-color-text-muted hover:text-space-danger transition-colors"
                 type="button"
                 aria-label="Retirer le joueur"
               >
@@ -292,7 +280,7 @@
         </div>
         <!-- PARTIE MANQUANTE : Sélection du badge à associer -->
         <div class="mt-6">
-          <SpaceDropdown
+          <Dropdown
             id="badgeToAssign"
             v-model="badgeId"
             label="Badge à associer"
@@ -316,14 +304,14 @@
             <option v-for="badge in badges" :key="badge._id" :value="badge._id">
               {{ badge.title }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
           <!-- Prévisualisation du badge sélectionné -->
           <div
             v-if="badgeId"
-            class="mt-4 flex items-center bg-space-bg-light/50 rounded-lg p-3 border border-space-secondary/30"
+            class="mt-4 flex items-center bg-color-bg-light/50 rounded-lg p-3 border border-color-secondary/30"
           >
             <div
-              class="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-space-bg-dark to-space-bg-light p-1 mr-3 border border-space-secondary/40 overflow-hidden"
+              class="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 mr-3 border border-color-secondary/40 overflow-hidden"
             >
               <img
                 :src="badges.find((b) => b._id === badgeId)?.imageUrl"
@@ -332,33 +320,28 @@
                 @error="handleImageError"
               />
             </div>
-            <span class="text-space-text font-nasa">{{
+            <span class="text-color-text font-nasa">{{
               badges.find((b) => b._id === badgeId)?.title
             }}</span>
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <SpaceButton
+          <Button
             type="submit"
             variant="secondary"
             size="lg"
             :disabled="selectedPlayers.length === 0 || !badgeId"
           >
             Associer le badge
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Section badges du joueur avec autocomplete -->
-    <SpaceCard
-      variant="accent"
-      :stars="true"
-      :decorated="true"
-      className="mb-6"
-    >
+    <Card variant="accent" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="accent">
+        <Title size="xl" variant="accent">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -372,13 +355,13 @@
             </svg>
           </template>
           Modifier les badges d'un joueur
-        </SpaceTitle>
+        </Title>
       </template>
 
       <div class="space-y-6">
         <div>
           <label
-            class="flex items-center text-lg text-space-accent-light mb-2 font-nasa"
+            class="flex items-center text-lg text-color-accent-light mb-2 font-nasa"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -401,14 +384,14 @@
               @focus="showPlayerBadgeList = true"
               @blur="hidePlayerBadgeList"
               @input="searchPlayersBadge"
-              class="w-full py-3 px-4 bg-space-bg-light/50 text-space-text border border-space-accent/50 rounded-lg font-nasa shadow-glow-accent-sm transition-all duration-300 focus:outline-none focus:border-space-accent focus:shadow-glow-accent"
+              class="w-full py-3 px-4 bg-color-bg-light/50 text-color-text border border-color-accent/50 rounded-lg font-nasa shadow-glow-accent-sm transition-all duration-300 focus:outline-none focus:border-color-accent focus:shadow-glow-accent"
               placeholder="Nom du joueur..."
             />
 
             <!-- Liste des résultats de recherche -->
             <div
               v-if="showPlayerBadgeList"
-              class="absolute mt-2 bg-black border border-space-accent/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-accent z-[9999]"
+              class="absolute mt-2 bg-black border border-color-accent/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-accent z-[9999]"
               style="width: 100%; top: 100%; left: 0"
             >
               <ul class="py-1">
@@ -416,13 +399,13 @@
                   v-for="player in filteredPlayersBadge"
                   :key="player._id"
                   @mousedown.prevent="selectPlayerForBadges(player)"
-                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-space-accent/20 text-space-text font-nasa text-sm"
+                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-color-accent/20 text-color-text font-nasa text-sm"
                 >
                   {{ player.username }}
                 </li>
                 <li
                   v-if="filteredPlayersBadge.length === 0"
-                  class="px-4 py-3 text-space-text-muted italic text-center text-sm"
+                  class="px-4 py-3 text-color-text-muted italic text-center text-sm"
                 >
                   Aucun joueur trouvé
                 </li>
@@ -434,14 +417,14 @@
         <!-- Affichage du joueur sélectionné -->
         <div
           v-if="selectedPlayerBadge"
-          class="flex items-center justify-between bg-space-bg-light border border-space-accent/40 px-4 py-3 rounded-lg"
+          class="flex items-center justify-between bg-color-bg-light border border-color-accent/40 px-4 py-3 rounded-lg"
         >
           <div class="flex items-center">
-            <span class="text-space-text font-body text-lg">{{
+            <span class="text-color-text font-body text-lg">{{
               selectedPlayerBadge.username
             }}</span>
           </div>
-          <SpaceButton
+          <Button
             @click="clearSelectedPlayerBadge"
             variant="ghost"
             size="sm"
@@ -460,26 +443,26 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </SpaceButton>
+          </Button>
         </div>
         <!-- Badges du joueur sélectionné -->
         <div
           v-if="selectedPlayerId && selectedPlayerBadges.length > 0"
           class="space-y-4"
         >
-          <SpaceTitle size="lg" variant="accent" className="text-center">
+          <Title size="lg" variant="accent" className="text-center">
             Badges associés
-          </SpaceTitle>
+          </Title>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
               v-for="badge in selectedPlayerBadges"
               :key="badge._id"
-              class="bg-space-bg-light rounded-lg p-4 flex items-center justify-between border border-space-accent/40 hover:border-space-accent/70 hover:shadow-lg hover:shadow-space-accent/20 hover:-translate-y-1 transition-all duration-300"
+              class="bg-color-bg-light rounded-lg p-4 flex items-center justify-between border border-color-accent/40 hover:border-color-accent/70 hover:shadow-lg hover:shadow-color-accent/20 hover:-translate-y-1 transition-all duration-300"
             >
               <div class="flex items-center">
                 <div
-                  class="w-14 h-14 rounded-full flex items-center justify-center bg-gradient-to-br from-space-bg-dark to-space-bg-light p-1 mr-4 border-2 border-space-primary/30 overflow-hidden shadow-lg"
+                  class="w-14 h-14 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 mr-4 border-2 border-color-primary/30 overflow-hidden shadow-lg"
                 >
                   <img
                     :src="badge.imageUrl"
@@ -488,9 +471,9 @@
                     @error="handleImageError"
                   />
                 </div>
-                <span class="text-space-text font-body">{{ badge.title }}</span>
+                <span class="text-color-text font-body">{{ badge.title }}</span>
               </div>
-              <SpaceButton
+              <Button
                 @click="badge._id && removeBadge(badge._id)"
                 variant="danger"
                 size="sm"
@@ -509,7 +492,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -517,7 +500,7 @@
         <div v-else-if="selectedPlayerId" class="text-center py-8">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-16 w-16 text-space-accent mx-auto mb-4"
+            class="h-16 w-16 text-color-accent mx-auto mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -529,7 +512,7 @@
               d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
             />
           </svg>
-          <p class="text-space-text font-body">
+          <p class="text-color-text font-body">
             Ce joueur n'a pas de badges pour le moment
           </p>
         </div>
@@ -538,16 +521,16 @@
           v-else-if="playerBadgeSearch && !selectedPlayerBadge"
           class="text-center py-8"
         >
-          <p class="text-space-text font-body">
+          <p class="text-color-text font-body">
             Sélectionnez un joueur pour voir et modifier ses badges
           </p>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Section liste des badges -->
-    <SpaceCard variant="info" :stars="true" :decorated="true" className="mb-6">
+    <Card variant="info" :stars="true" :decorated="true" className="mb-6">
       <template #header>
-        <SpaceTitle size="xl" variant="info">
+        <Title size="xl" variant="info">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -565,7 +548,7 @@
             </svg>
           </template>
           Collection de badges
-        </SpaceTitle>
+        </Title>
       </template>
 
       <div
@@ -575,11 +558,11 @@
         <div
           v-for="badge in badges"
           :key="badge._id"
-          class="bg-space-bg-light rounded-lg p-4 flex flex-col items-center border border-space-info/40 hover:border-space-info/70 hover:shadow-lg hover:shadow-space-info/20 hover:-translate-y-1 transition-all duration-300 group"
+          class="bg-color-bg-light rounded-lg p-4 flex flex-col items-center border border-color-info/40 hover:border-color-info/70 hover:shadow-lg hover:shadow-color-info/20 hover:-translate-y-1 transition-all duration-300 group"
         >
           <div class="flex justify-end w-full mb-2">
             <!-- Boutons d'action -->
-            <SpaceButton
+            <Button
               @click="openEditBadgeModal(badge)"
               variant="info"
               size="sm"
@@ -597,8 +580,8 @@
                   d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
                 />
               </svg>
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="confirmDeleteBadge(badge)"
               variant="danger"
               size="sm"
@@ -617,10 +600,10 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
           </div>
           <div
-            class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-space-bg-dark to-space-bg-light p-1 mb-3 border-2 border-space-primary/30 overflow-hidden shadow-lg group-hover:shadow-space-primary/30 group-hover:border-space-primary/50 transition-all duration-300"
+            class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 mb-3 border-2 border-color-primary/30 overflow-hidden shadow-lg group-hover:shadow-color-primary/30 group-hover:border-color-primary/50 transition-all duration-300"
           >
             <img
               :src="badge.imageUrl"
@@ -629,18 +612,18 @@
               @error="handleImageError"
             />
           </div>
-          <span class="text-space-text font-body text-center line-clamp-2">
+          <span class="text-color-text font-body text-center line-clamp-2">
             {{ badge.title }}
           </span>
           <!-- Description conditionnelle -->
           <p
             v-if="badge.description"
-            class="text-space-text-muted text-xs mt-2 text-center line-clamp-3"
+            class="text-color-text-muted text-xs mt-2 text-center line-clamp-3"
           >
             {{ badge.description }}
           </p>
           <div class="mt-2 flex items-center">
-            <SpaceBadge
+            <Badge
               :variant="badge.categoryType === 'acs' ? 'primary' : 'info'"
               size="sm"
             >
@@ -649,7 +632,7 @@
                   ? "ACS"
                   : getGameName(badge.categoryId)
               }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </div>
       </div>
@@ -660,7 +643,7 @@
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-20 w-20 text-space-info opacity-70 mb-4"
+          class="h-20 w-20 text-color-info opacity-70 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -672,18 +655,18 @@
             d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
           />
         </svg>
-        <p class="text-space-text font-body text-center">
+        <p class="text-color-text font-body text-center">
           Aucun badge n'a été créé pour le moment
         </p>
-        <p class="text-space-text-muted text-sm mt-2 font-body text-center">
+        <p class="text-color-text-muted text-sm mt-2 font-body text-center">
           Commencez par créer un nouveau badge ci-dessus
         </p>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Modal de modification de badge -->
-    <SpaceModal v-model="showEditModal" title="Modifier le badge">
+    <Modal v-model="showEditModal" title="Modifier le badge">
       <form @submit.prevent="updateBadge" class="space-y-6">
-        <SpaceInput
+        <Input
           id="edit-title"
           v-model="editingBadge.title"
           label="Titre"
@@ -692,12 +675,12 @@
           :required="true"
         />
         <div>
-          <label class="block text-lg text-space-info-light mb-2 font-nasa">
+          <label class="block text-lg text-color-info-light mb-2 font-nasa">
             Catégorie
           </label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div
-              class="flex items-center space-x-3 p-3 rounded-lg bg-space-bg-light/50 border border-space-info/30 hover:border-space-info/60 transition-colors duration-300"
+              class="flex items-center space-x-3 p-3 rounded-lg bg-color-bg-light/50 border border-color-info/30 hover:border-color-info/60 transition-colors duration-300"
             >
               <input
                 id="edit-categoryTypeAcs"
@@ -705,17 +688,17 @@
                 type="radio"
                 value="acs"
                 name="editCategoryType"
-                class="h-5 w-5 text-space-info focus:ring-space-info focus:ring-2 border-space-info/50"
+                class="h-5 w-5 text-color-info focus:ring-color-info focus:ring-2 border-color-info/50"
               />
               <label
                 for="edit-categoryTypeAcs"
-                class="text-space-text font-nasa cursor-pointer"
+                class="text-color-text font-nasa cursor-pointer"
               >
                 Badge ACS (général)
               </label>
             </div>
             <div
-              class="flex items-center space-x-3 p-3 rounded-lg bg-space-bg-light/50 border border-space-info/30 hover:border-space-info/60 transition-colors duration-300"
+              class="flex items-center space-x-3 p-3 rounded-lg bg-color-bg-light/50 border border-color-info/30 hover:border-color-info/60 transition-colors duration-300"
             >
               <input
                 id="edit-categoryTypeGame"
@@ -723,11 +706,11 @@
                 type="radio"
                 value="game"
                 name="editCategoryType"
-                class="h-5 w-5 text-space-info focus:ring-space-info focus:ring-2 border-space-info/50"
+                class="h-5 w-5 text-color-info focus:ring-color-info focus:ring-2 border-color-info/50"
               />
               <label
                 for="edit-categoryTypeGame"
-                class="text-space-text font-nasa cursor-pointer"
+                class="text-color-text font-nasa cursor-pointer"
               >
                 Badge spécifique à un jeu
               </label>
@@ -736,7 +719,7 @@
         </div>
 
         <div v-if="editingBadge.categoryType === 'game'">
-          <SpaceDropdown
+          <Dropdown
             id="edit-categoryId"
             v-model="editingBadge.categoryId"
             label="Jeu associé"
@@ -746,11 +729,11 @@
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </SpaceDropdown>
+          </Dropdown>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <SpaceInput
+          <Input
             id="edit-imageUrl"
             v-model="editingBadge.imageUrl"
             label="URL de l'image"
@@ -763,12 +746,12 @@
             v-if="editingBadge.imageUrl"
             class="flex flex-col items-center justify-center"
           >
-            <label class="block text-lg text-space-info-light mb-2 font-nasa">
+            <label class="block text-lg text-color-info-light mb-2 font-nasa">
               Prévisualisation
             </label>
             <div class="badge-preview">
               <div
-                class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-space-bg-dark to-space-bg-light p-1 border-2 border-space-primary/50 overflow-hidden shadow-lg"
+                class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-color-bg-dark to-color-bg-light p-1 border-2 border-color-primary/50 overflow-hidden shadow-lg"
               >
                 <img
                   :src="editingBadge.imageUrl"
@@ -781,7 +764,7 @@
           </div>
         </div>
         <div>
-          <SpaceInput
+          <Input
             id="edit-description"
             v-model="editingBadge.description"
             label="Description (optionnelle)"
@@ -792,17 +775,15 @@
         </div>
 
         <div class="flex justify-end space-x-3 mt-6">
-          <SpaceButton @click="showEditModal = false" variant="ghost" size="lg">
+          <Button @click="showEditModal = false" variant="ghost" size="lg">
             Annuler
-          </SpaceButton>
-          <SpaceButton type="submit" variant="info" size="lg">
-            Enregistrer
-          </SpaceButton>
+          </Button>
+          <Button type="submit" variant="info" size="lg"> Enregistrer </Button>
         </div>
       </form>
-    </SpaceModal>
+    </Modal>
     <!-- Modal de confirmation de suppression -->
-    <SpaceModal v-model="showDeleteModal" title="Confirmer la suppression">
+    <Modal v-model="showDeleteModal" title="Confirmer la suppression">
       <div class="text-center space-y-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -820,38 +801,34 @@
         </svg>
 
         <div class="space-y-2">
-          <p class="text-space-text font-body text-lg">
+          <p class="text-color-text font-body text-lg">
             Êtes-vous sûr de vouloir supprimer le badge
             <strong class="text-space-danger">{{
               badgeToDelete?.title
             }}</strong>
             ?
           </p>
-          <p class="text-space-text-muted text-sm">
+          <p class="text-color-text-muted text-sm">
             Cette action est irréversible et supprimera également ce badge de
             tous les joueurs qui le possèdent.
           </p>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <SpaceButton
-            @click="showDeleteModal = false"
-            variant="ghost"
-            size="lg"
-          >
+          <Button @click="showDeleteModal = false" variant="ghost" size="lg">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deleteBadge" variant="danger" size="lg">
+          </Button>
+          <Button @click="deleteBadge" variant="danger" size="lg">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </div>
-    </SpaceModal>
+    </Modal>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
     <Toast v-if="success" type="success" :message="success" />
-  </SpaceContainer>
+  </Container>
 </template>
 
 <script setup lang="ts">

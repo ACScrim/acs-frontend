@@ -2,31 +2,24 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-2xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         :title="isEditing ? 'Modification d\'un jeu' : 'Création d\'un jeu'"
         titleSize="3xl"
         :showMissionInfo="true"
         mission="GAMES-MGMT"
       >
         <template #badge v-if="games.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
-            games.length
-          }}</SpaceBadge>
+          <Badge variant="primary" size="lg">{{ games.length }}</Badge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Formulaire de création/modification de jeu -->
-      <SpaceCard
-        variant="primary"
-        :stars="true"
-        :decorated="true"
-        className="mb-8"
-      >
+      <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
         <form @submit.prevent="isEditing ? updateGame() : createGame()">
           <div class="mb-6">
             <label
               for="name"
-              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,9 +31,9 @@
                   d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
                 />
               </svg>
-              Nom du jeu <span class="text-space-accent ml-1">*</span>
+              Nom du jeu <span class="text-color-accent ml-1">*</span>
             </label>
-            <SpaceInput
+            <Input
               id="name"
               name="name"
               v-model="game.name"
@@ -49,7 +42,7 @@
               required
               :error="errors.name"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <!-- Résultats de recherche RAWG -->
@@ -57,17 +50,17 @@
             v-if="searchResults.length > 0 && game.name.length >= 3"
             class="mb-6"
           >
-            <div class="text-space-primary-light text-sm mb-2 font-nasa">
+            <div class="text-color-primary-light text-sm mb-2 font-nasa">
               Jeux suggérés par RAWG - Cliquez pour sélectionner
             </div>
             <div
-              class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-space-bg-light/30 rounded-md border border-space-primary/20"
+              class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto p-2 bg-color-bg-light/30 rounded-md border border-color-primary/20"
             >
               <div
                 v-for="result in searchResults"
                 :key="result.id"
                 @click="selectGame(result)"
-                class="cursor-pointer bg-space-bg-light/50 rounded-md overflow-hidden border border-space-primary/30 hover:border-space-primary/60 hover:shadow-md hover:shadow-space-primary/20 transition-all duration-300 group"
+                class="cursor-pointer bg-color-bg-light/50 rounded-md overflow-hidden border border-color-primary/30 hover:border-color-primary/60 hover:shadow-md hover:shadow-color-primary/20 transition-all duration-300 group"
               >
                 <div class="h-28 overflow-hidden relative">
                   <img
@@ -76,14 +69,14 @@
                     class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div
-                    class="absolute inset-0 bg-gradient-to-t from-space-bg/80 to-transparent"
+                    class="absolute inset-0 bg-gradient-to-t from-color-bg/80 to-transparent"
                   ></div>
                 </div>
                 <div class="p-2">
-                  <div class="text-space-primary-light text-sm font-nasa">
+                  <div class="text-color-primary-light text-sm font-nasa">
                     {{ result.name }}
                   </div>
-                  <div class="text-space-text-muted text-xs mt-1">
+                  <div class="text-color-text-muted text-xs mt-1">
                     {{
                       result.released
                         ? formatReleaseDate(result.released)
@@ -98,7 +91,7 @@
           <div class="mb-6">
             <label
               for="description"
-              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +107,7 @@
               </svg>
               Description
             </label>
-            <SpaceInput
+            <Input
               id="description"
               v-model="game.description"
               type="textarea"
@@ -123,13 +116,13 @@
               :error="errors.description"
               maxlength="200"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <div class="mb-6">
             <label
               for="imageUrl"
-              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -145,20 +138,20 @@
               </svg>
               Image URL
             </label>
-            <SpaceInput
+            <Input
               id="imageUrl"
               v-model="game.imageUrl"
               @input="validateImageUrl"
               placeholder="URL de l'image du jeu (optionnel)"
               :error="errors.imageUrl"
             >
-            </SpaceInput>
+            </Input>
           </div>
 
           <!-- Prévisualisation de l'image -->
           <div
             v-if="game.imageUrl"
-            class="mb-6 border border-space-primary/30 rounded-lg overflow-hidden bg-space-bg-light/10"
+            class="mb-6 border border-color-primary/30 rounded-lg overflow-hidden bg-color-bg-light/10"
           >
             <div class="relative">
               <img
@@ -169,7 +162,7 @@
               />
               <div
                 v-if="imagePreviewError"
-                class="absolute inset-0 bg-space-bg/80 flex items-center justify-center text-space-error font-nasa text-center p-4"
+                class="absolute inset-0 bg-color-bg/80 flex items-center justify-center text-color-error font-nasa text-center p-4"
               >
                 <div>
                   <svg
@@ -195,14 +188,14 @@
           <div class="mb-6">
             <label
               for="roles"
-              class="text-lg text-space-primary-light mb-3 font-nasa flex items-center"
+              class="text-lg text-color-primary-light mb-3 font-nasa flex items-center"
             >
               <div
                 class="relative w-8 h-8 mr-3 flex items-center justify-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-space-primary-light z-10"
+                  class="h-5 w-5 text-color-primary-light z-10"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -211,18 +204,14 @@
                   />
                 </svg>
                 <div
-                  class="absolute inset-0 bg-space-primary/20 rounded-full blur-[6px]"
+                  class="absolute inset-0 bg-color-primary/20 rounded-full blur-[6px]"
                 ></div>
               </div>
               <span>Rôles disponibles pour ce jeu</span>
             </label>
 
             <!-- Liste des rôles existants -->
-            <SpaceCard
-              variant="secondary"
-              className="mb-4 p-4"
-              :noPadding="false"
-            >
+            <Card variant="secondary" className="mb-4 p-4" :noPadding="false">
               <div
                 v-if="game.roles && game.roles.length > 0"
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
@@ -230,7 +219,7 @@
                 <div
                   v-for="(role, index) in game.roles"
                   :key="index"
-                  class="bg-space-bg-light/30 rounded-md transition-all duration-300 group relative overflow-hidden min-h-[4rem] flex flex-col justify-between p-3"
+                  class="bg-color-bg-light/30 rounded-md transition-all duration-300 group relative overflow-hidden min-h-[4rem] flex flex-col justify-between p-3"
                   :style="{
                     borderColor: `${role.color}50`,
                     borderWidth: '1px',
@@ -255,14 +244,14 @@
                       }"
                     ></div>
                     <span
-                      class="text-space-text font-medium font-nasa truncate"
+                      class="text-color-text font-medium font-nasa truncate"
                       >{{ role.name }}</span
                     >
                   </div>
 
                   <!-- Boutons d'action -->
                   <div class="flex justify-end space-x-1 z-10">
-                    <SpaceButton
+                    <Button
                       @click.prevent="editRole(index)"
                       variant="secondary"
                       size="xs"
@@ -279,8 +268,8 @@
                           d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
                         />
                       </svg>
-                    </SpaceButton>
-                    <SpaceButton
+                    </Button>
+                    <Button
                       @click.prevent="removeRole(index)"
                       variant="error"
                       size="xs"
@@ -299,26 +288,26 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                    </SpaceButton>
+                    </Button>
                   </div>
                 </div>
               </div>
 
-              <SpaceTerminal
+              <Terminal
                 v-else
                 command="search --game-roles"
                 title="Recherche de rôles"
                 :showCursor="true"
               >
-                <div class="text-space-text-muted">
+                <div class="text-color-text-muted">
                   Aucun rôle défini pour ce jeu. Ajoutez des rôles pour
                   permettre aux joueurs de spécifier leurs positions préférées.
                 </div>
-              </SpaceTerminal>
-            </SpaceCard>
+              </Terminal>
+            </Card>
 
             <!-- Formulaire d'ajout de rôle -->
-            <SpaceCard
+            <Card
               :variant="editingRoleIndex !== null ? 'accent' : 'dark'"
               className="p-4"
               :noPadding="false"
@@ -326,14 +315,14 @@
               <template #header>
                 <div class="flex items-center">
                   <span
-                    class="w-1 h-6 bg-gradient-to-b from-space-primary to-space-accent rounded-full mr-3"
+                    class="w-1 h-6 bg-gradient-to-b from-color-primary to-color-accent rounded-full mr-3"
                   ></span>
-                  <SpaceTitle
+                  <Title
                     size="sm"
                     :className="
                       editingRoleIndex !== null
-                        ? 'text-space-accent-light'
-                        : 'text-space-primary-light'
+                        ? 'text-color-accent-light'
+                        : 'text-color-primary-light'
                     "
                   >
                     {{
@@ -341,17 +330,17 @@
                         ? "Modifier le rôle"
                         : "Ajouter un rôle"
                     }}
-                  </SpaceTitle>
+                  </Title>
                 </div>
               </template>
 
               <div class="flex items-center space-x-3 mb-4 relative z-10">
                 <div class="flex-grow">
-                  <SpaceInput
+                  <Input
                     v-model="newRole.name"
                     placeholder="Nom du rôle (Ex: Support, Tank, DPS)"
                   >
-                  </SpaceInput>
+                  </Input>
                 </div>
                 <div class="relative w-20 h-10 flex-shrink-0">
                   <input
@@ -377,7 +366,7 @@
               </div>
 
               <div class="flex justify-end space-x-3 relative z-10">
-                <SpaceButton
+                <Button
                   v-if="editingRoleIndex !== null"
                   @click.prevent="cancelEditRole"
                   variant="outline"
@@ -398,8 +387,8 @@
                     </svg>
                   </template>
                   Annuler
-                </SpaceButton>
-                <SpaceButton
+                </Button>
+                <Button
                   @click.prevent="addOrUpdateRole"
                   :variant="editingRoleIndex !== null ? 'accent' : 'primary'"
                   size="sm"
@@ -419,27 +408,27 @@
                     </svg>
                   </template>
                   {{ editingRoleIndex !== null ? "Mettre à jour" : "Ajouter" }}
-                </SpaceButton>
+                </Button>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
 
           <div class="flex justify-between">
             <!-- Bouton Annuler (apparaît uniquement en mode édition) -->
-            <SpaceButton
+            <Button
               v-if="isEditing"
               @click="cancelEdit"
               variant="outline"
               size="lg"
             >
               Annuler
-            </SpaceButton>
+            </Button>
 
             <!-- Spacer quand pas en mode édition -->
             <div v-else></div>
 
             <!-- Bouton Créer/Modifier -->
-            <SpaceButton
+            <Button
               type="submit"
               :variant="isEditing ? 'accent' : 'primary'"
               size="lg"
@@ -447,22 +436,22 @@
               :disabled="isLoading"
             >
               {{ isEditing ? "Modifier le jeu" : "Créer le jeu" }}
-            </SpaceButton>
+            </Button>
           </div>
         </form>
-      </SpaceCard>
+      </Card>
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
       <Toast v-if="success" type="success" :message="success" />
 
       <!-- Liste des jeux existants -->
-      <SpaceCard variant="secondary" :stars="true" :decorated="true">
+      <Card variant="secondary" :stars="true" :decorated="true">
         <template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-secondary-light"
+                class="h-6 w-6 mr-2 text-color-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -470,16 +459,16 @@
                   d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
                 />
               </svg>
-              <SpaceTitle size="xl">Jeux disponibles</SpaceTitle>
+              <Title size="xl">Jeux disponibles</Title>
             </div>
-            <SpaceBadge variant="secondary" size="lg" v-if="games.length > 0">{{
+            <Badge variant="secondary" size="lg" v-if="games.length > 0">{{
               games.length
-            }}</SpaceBadge>
+            }}</Badge>
           </div>
         </template>
 
         <div v-if="loadingGames" class="py-12 flex justify-center items-center">
-          <SpaceLoader size="lg" text="Chargement des jeux..." />
+          <Loader size="lg" text="Chargement des jeux..." />
         </div>
 
         <div
@@ -489,15 +478,15 @@
           <div
             v-for="existingGame in games"
             :key="existingGame._id"
-            class="group bg-space-bg-light/30 backdrop-blur-sm rounded-lg p-4 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300 relative overflow-hidden hover:shadow-glow-secondary"
+            class="group bg-color-bg-light/30 backdrop-blur-sm rounded-lg p-4 border border-color-secondary/20 hover:border-color-secondary/50 transition-all duration-300 relative overflow-hidden hover:shadow-glow-secondary"
           >
             <div
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-space-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-color-secondary/10 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none"
             ></div>
 
             <!-- Miniature du jeu -->
             <div
-              class="aspect-video relative mb-3 overflow-hidden rounded bg-space-bg-light/50"
+              class="aspect-video relative mb-3 overflow-hidden rounded bg-color-bg-light/50"
             >
               <img
                 v-if="existingGame.imageUrl"
@@ -508,7 +497,7 @@
               />
               <div
                 v-if="!existingGame.imageUrl"
-                class="absolute inset-0 flex items-center justify-center text-space-primary-light/30"
+                class="absolute inset-0 flex items-center justify-center text-color-primary-light/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -529,14 +518,14 @@
 
             <!-- Nom du jeu -->
             <div
-              class="font-nasa text-lg font-semibold text-space-text mb-2 z-10 relative"
+              class="font-nasa text-lg font-semibold text-color-text mb-2 z-10 relative"
             >
               {{ existingGame.name }}
             </div>
 
             <!-- Actions (édition et suppression) -->
             <div class="flex justify-end gap-2 mt-2 z-10 relative">
-              <SpaceButton
+              <Button
                 @click="editGame(existingGame)"
                 variant="secondary"
                 size="sm"
@@ -557,8 +546,8 @@
                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
-              </SpaceButton>
-              <SpaceButton
+              </Button>
+              <Button
                 @click="confirmDelete(existingGame)"
                 variant="error"
                 size="sm"
@@ -579,49 +568,49 @@
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
         </div>
 
-        <SpaceTerminal
+        <Terminal
           v-else
           command="list --games"
           title="Liste des jeux"
           :showCursor="true"
         >
-          <div class="text-space-text-muted">
+          <div class="text-color-text-muted">
             Aucun jeu disponible pour le moment
           </div>
-        </SpaceTerminal>
-      </SpaceCard>
+        </Terminal>
+      </Card>
     </div>
 
     <!-- Dialogue de confirmation pour la suppression -->
-    <SpaceModal
+    <Modal
       v-model="showDeleteConfirmation"
       title="Confirmation de suppression"
       className="max-w-md"
     >
-      <div class="text-space-text mb-6">
+      <div class="text-color-text mb-6">
         {{ deleteConfirmMessage }}
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton @click="cancelDelete" variant="outline" size="sm">
+          <Button @click="cancelDelete" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteGame"
             variant="error"
             size="sm"
             :loading="isDeleting"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 

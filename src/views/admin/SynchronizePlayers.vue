@@ -1,21 +1,21 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="SYNCHRONISATION DES JOUEURS"
       titleSize="3xl"
       :showMissionInfo="true"
       mission="PLAYER-SYNC"
     >
       <template #badge>
-        <SpaceBadge v-if="players.length > 0" variant="primary" size="lg">
+        <Badge v-if="players.length > 0" variant="primary" size="lg">
           {{ players.length }}
-        </SpaceBadge>
+        </Badge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Instructions -->
-    <SpaceCard
+    <Card
       variant="accent"
       :stars="true"
       :decorated="true"
@@ -24,11 +24,11 @@
       <div class="flex items-start gap-4">
         <div class="flex-shrink-0">
           <div
-            class="w-10 h-10 bg-space-accent/20 rounded-full flex items-center justify-center"
+            class="w-10 h-10 bg-color-accent/20 rounded-full flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-space-accent"
+              class="h-5 w-5 text-color-accent"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -41,34 +41,29 @@
           </div>
         </div>
         <div class="flex-1">
-          <h3 class="text-space-accent-light font-nasa font-semibold mb-2">
+          <h3 class="text-color-accent-light font-nasa font-semibold mb-2">
             Instructions importantes
           </h3>
           <p
-            class="text-space-text font-body text-sm sm:text-base leading-relaxed"
+            class="text-color-text font-body text-sm sm:text-base leading-relaxed"
           >
             Assurez-vous que les noms d'utilisateur de
-            <SpaceBadge variant="primary" className="mx-1">Player</SpaceBadge>
+            <Badge variant="primary" className="mx-1">Player</Badge>
             et de
-            <SpaceBadge variant="secondary" className="mx-1">User</SpaceBadge>
+            <Badge variant="secondary" className="mx-1">User</Badge>
             soient similaires avant de lancer la synchronisation.
           </p>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Barre de recherche -->
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      :decorated="true"
-      className="mb-8"
-    >
+    <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
       <div class="space-y-4">
         <div>
           <label
             for="searchInput"
-            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +80,7 @@
             Rechercher un joueur
           </label>
           <div class="relative">
-            <SpaceInput
+            <Input
               id="searchInput"
               v-model="searchQuery"
               placeholder="Rechercher par nom ou Discord ID..."
@@ -94,7 +89,7 @@
               <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-space-primary"
+                  class="h-5 w-5 text-color-primary"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -109,7 +104,7 @@
                 <button
                   v-if="searchQuery"
                   @click="clearSearch"
-                  class="text-space-text-muted hover:text-space-text"
+                  class="text-color-text-muted hover:text-color-text"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +120,7 @@
                   </svg>
                 </button>
               </template>
-            </SpaceInput>
+            </Input>
           </div>
         </div>
 
@@ -135,48 +130,48 @@
         >
           <!-- Filtre par statut -->
           <div class="flex gap-2 flex-wrap">
-            <SpaceButton
+            <Button
               @click="filterStatus = 'all'"
               :variant="filterStatus === 'all' ? 'primary' : 'outline'"
               size="sm"
             >
               Tous ({{ players.length }})
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="filterStatus = 'synced'"
               :variant="filterStatus === 'synced' ? 'success' : 'outline'"
               size="sm"
             >
               Synchronisés ({{ syncedCount }})
-            </SpaceButton>
-            <SpaceButton
+            </Button>
+            <Button
               @click="filterStatus = 'unsynced'"
               :variant="filterStatus === 'unsynced' ? 'warning' : 'outline'"
               size="sm"
             >
               Non synchronisés ({{ unsyncedCount }})
-            </SpaceButton>
+            </Button>
           </div>
 
           <!-- Tri -->
           <div class="flex items-center gap-2">
-            <span class="text-space-text-muted font-nasa text-sm">Tri:</span>
-            <SpaceDropdown v-model="sortBy" className="w-48">
+            <span class="text-color-text-muted font-nasa text-sm">Tri:</span>
+            <Dropdown v-model="sortBy" className="w-48">
               <option value="username-asc">Nom A→Z</option>
               <option value="username-desc">Nom Z→A</option>
               <option value="status-synced">Synchronisés d'abord</option>
               <option value="status-unsynced">Non synchronisés d'abord</option>
               <option value="discord-asc">Discord ID A→Z</option>
               <option value="discord-desc">Discord ID Z→A</option>
-            </SpaceDropdown>
+            </Dropdown>
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Statistiques rapides -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="false"
         :decorated="true"
@@ -187,13 +182,13 @@
           sortBy = 'username-asc';
         "
       >
-        <div class="text-2xl font-bold text-space-primary-light mb-1">
+        <div class="text-2xl font-bold text-color-primary-light mb-1">
           {{ players.length }}
         </div>
-        <div class="text-xs text-space-text-muted font-nasa">Joueurs</div>
-      </SpaceCard>
+        <div class="text-xs text-color-text-muted font-nasa">Joueurs</div>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="false"
         :decorated="true"
@@ -201,13 +196,13 @@
         :hover="true"
         @click="filterStatus = 'all'"
       >
-        <div class="text-2xl font-bold text-space-secondary-light mb-1">
+        <div class="text-2xl font-bold text-color-secondary-light mb-1">
           {{ users.length }}
         </div>
-        <div class="text-xs text-space-text-muted font-nasa">Utilisateurs</div>
-      </SpaceCard>
+        <div class="text-xs text-color-text-muted font-nasa">Utilisateurs</div>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="success"
         :stars="false"
         :decorated="true"
@@ -215,16 +210,16 @@
         :hover="true"
         @click="showOnlySynced"
         :class="{
-          'ring-2 ring-space-success/50': filterStatus === 'synced',
+          'ring-2 ring-color-success/50': filterStatus === 'synced',
         }"
       >
-        <div class="text-2xl font-bold text-space-success mb-1">
+        <div class="text-2xl font-bold text-color-success mb-1">
           {{ syncedCount }}
         </div>
-        <div class="text-xs text-space-text-muted font-nasa">Synchronisés</div>
-      </SpaceCard>
+        <div class="text-xs text-color-text-muted font-nasa">Synchronisés</div>
+      </Card>
 
-      <SpaceCard
+      <Card
         variant="warning"
         :stars="false"
         :decorated="true"
@@ -232,25 +227,25 @@
         :hover="true"
         @click="showOnlyUnsynced"
         :class="{
-          'ring-2 ring-space-warning/50': filterStatus === 'unsynced',
+          'ring-2 ring-color-warning/50': filterStatus === 'unsynced',
         }"
       >
-        <div class="text-2xl font-bold text-space-warning mb-1">
+        <div class="text-2xl font-bold text-color-warning mb-1">
           {{ unsyncedCount }}
         </div>
-        <div class="text-xs text-space-text-muted font-nasa">En attente</div>
-      </SpaceCard>
+        <div class="text-xs text-color-text-muted font-nasa">En attente</div>
+      </Card>
     </div>
 
     <!-- État de chargement -->
     <div v-if="isLoading" class="flex justify-center items-center py-12">
-      <SpaceLoader size="lg" text="Chargement des données en cours..." />
+      <Loader size="lg" text="Chargement des données en cours..." />
     </div>
 
     <!-- Tables -->
     <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
       <!-- Table des joueurs -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -261,7 +256,7 @@
             <div class="flex items-center gap-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-primary-light"
+                class="h-5 w-5 text-color-primary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -269,11 +264,11 @@
                   d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
                 />
               </svg>
-              <SpaceTitle size="lg">Players</SpaceTitle>
+              <Title size="lg">Players</Title>
             </div>
-            <SpaceBadge variant="primary" size="lg">
+            <Badge variant="primary" size="lg">
               {{ filteredPlayers.length }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 
@@ -282,9 +277,9 @@
             <div
               v-for="player in filteredPlayers"
               :key="player._id"
-              class="group bg-space-bg-light/5 hover:bg-space-bg-light/10 rounded-lg p-4 border border-space-primary/20 hover:border-space-primary/50 transition-all duration-300 cursor-pointer"
+              class="group bg-color-bg-light/5 hover:bg-color-bg-light/10 rounded-lg p-4 border border-color-primary/20 hover:border-color-primary/50 transition-all duration-300 cursor-pointer"
               :class="{
-                'ring-2 ring-space-primary/50 bg-space-primary/10 border-space-primary/50':
+                'ring-2 ring-color-primary/50 bg-color-primary/10 border-color-primary/50':
                   highlightedPlayerId === player._id,
               }"
               @click="highlightPlayerAndUser(player)"
@@ -292,15 +287,15 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 bg-gradient-to-r from-space-primary to-space-primary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-primary"
+                    class="w-10 h-10 bg-gradient-to-r from-color-primary to-color-primary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-primary"
                   >
                     {{ getInitials(player.username) }}
                   </div>
                   <div>
-                    <div class="text-space-text font-nasa font-medium">
+                    <div class="text-color-text font-nasa font-medium">
                       {{ player.username }}
                     </div>
-                    <div class="text-xs text-space-text-muted font-mono">
+                    <div class="text-xs text-color-text-muted font-mono">
                       {{ player.discordId || "Pas de Discord ID" }}
                     </div>
                   </div>
@@ -308,7 +303,7 @@
 
                 <div class="flex items-center gap-2">
                   <!-- Badge de statut -->
-                  <SpaceBadge
+                  <Badge
                     v-if="player.userId"
                     variant="success"
                     className="flex items-center"
@@ -327,8 +322,8 @@
                       />
                     </svg>
                     Sync
-                  </SpaceBadge>
-                  <SpaceBadge
+                  </Badge>
+                  <Badge
                     v-else
                     variant="warning"
                     className="flex items-center"
@@ -347,36 +342,36 @@
                       />
                     </svg>
                     Attente
-                  </SpaceBadge>
+                  </Badge>
 
-                  <SpaceButton
+                  <Button
                     @click.stop="editPlayerUsername(player)"
                     variant="primary"
                     size="sm"
                     className="opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     Modifier
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-if="filteredPlayers.length === 0"
               command="find --players"
               title="Recherche de joueurs"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-color-text-muted">
                 Aucun joueur trouvé avec ces critères.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Table des utilisateurs -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -387,7 +382,7 @@
             <div class="flex items-center gap-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-secondary-light"
+                class="h-5 w-5 text-color-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -395,11 +390,11 @@
                   d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                 />
               </svg>
-              <SpaceTitle size="lg">Users</SpaceTitle>
+              <Title size="lg">Users</Title>
             </div>
-            <SpaceBadge variant="secondary" size="lg">
+            <Badge variant="secondary" size="lg">
               {{ filteredUsers.length }}
-            </SpaceBadge>
+            </Badge>
           </div>
         </template>
 
@@ -408,28 +403,28 @@
             <div
               v-for="user in filteredUsers"
               :key="user._id"
-              class="bg-space-bg-light/5 hover:bg-space-bg-light/10 rounded-lg p-4 border border-space-secondary/20 hover:border-space-secondary/50 transition-all duration-300"
+              class="bg-color-bg-light/5 hover:bg-color-bg-light/10 rounded-lg p-4 border border-color-secondary/20 hover:border-color-secondary/50 transition-all duration-300"
               :class="{
-                'ring-2 ring-space-secondary/50 bg-space-secondary/10 border-space-secondary/50':
+                'ring-2 ring-color-secondary/50 bg-color-secondary/10 border-color-secondary/50':
                   highlightedUserId === user._id,
               }"
             >
               <div class="flex items-center gap-3">
                 <div
-                  class="w-10 h-10 bg-gradient-to-r from-space-secondary to-space-secondary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-secondary"
+                  class="w-10 h-10 bg-gradient-to-r from-color-secondary to-color-secondary-light rounded-full flex items-center justify-center text-white font-bold text-sm shadow-glow-secondary"
                 >
                   {{ getInitials(user.username) }}
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="text-space-text font-nasa font-medium truncate">
+                  <div class="text-color-text font-nasa font-medium truncate">
                     {{ user.username }}
                   </div>
-                  <div class="text-xs text-space-text-muted font-mono truncate">
+                  <div class="text-xs text-color-text-muted font-mono truncate">
                     {{ user.email }}
                   </div>
                   <div
                     v-if="user.discordId"
-                    class="text-xs text-space-secondary-light font-mono"
+                    class="text-xs text-color-secondary-light font-mono"
                   >
                     Discord: {{ user.discordId }}
                   </div>
@@ -437,26 +432,26 @@
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-if="filteredUsers.length === 0"
               command="find --users"
               title="Recherche d'utilisateurs"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-color-text-muted">
                 Aucun utilisateur trouvé avec ces critères.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
     </div>
 
     <!-- Actions -->
     <div
       class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
     >
-      <SpaceButton
+      <Button
         @click="synchronizePlayers"
         :disabled="isLoading"
         variant="accent"
@@ -478,9 +473,9 @@
           </svg>
         </template>
         Synchroniser les joueurs
-      </SpaceButton>
+      </Button>
 
-      <SpaceButton @click="fetchData" variant="outline" size="md" icon>
+      <Button @click="fetchData" variant="outline" size="md" icon>
         <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -496,7 +491,7 @@
           </svg>
         </template>
         Actualiser
-      </SpaceButton>
+      </Button>
     </div>
 
     <!-- Notifications -->

@@ -1,49 +1,24 @@
 <template>
   <footer class="relative mt-16 overflow-hidden">
-    <!-- Grille spatiale avec effet parallaxe -->
+    <!-- Fond Halloween mystique -->
     <div
-      class="space-grid absolute inset-0 opacity-20 pointer-events-none"
+      class="mystical-fog absolute inset-0 opacity-30 pointer-events-none"
     ></div>
 
-    <!-- Étoiles animées en arrière-plan -->
+    <!-- Lune mystique décorative -->
     <div
-      v-for="n in 30"
-      :key="`star-${n}`"
-      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
-      :style="{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 3 + 2}s`,
-        opacity: Math.random() * 0.7 + 0.3,
-      }"
-    ></div>
-
-    <!-- Planète décorative -->
-    <div
-      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-space-accent/5 to-space-accent-dark/10 opacity-30 blur-xl"
+      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-color-accent/10 to-color-secondary/15 opacity-40 blur-xl mystical-transition"
     ></div>
 
     <!-- Nébuleuse décorative -->
     <div
-      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-space-primary/10 to-space-primary-dark/5 opacity-20 blur-xl"
+      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-color-primary/15 to-color-accent/10 opacity-25 blur-xl mystical-transition"
     ></div>
-
-    <!-- Vaisseau spatial qui traverse -->
-    <div class="spaceship">
-      <div class="spaceship-body"></div>
-      <div class="spaceship-engine"></div>
-      <div class="spaceship-trail"></div>
-    </div>
-
-    <!-- Ligne de circuit supérieure -->
-    <div class="space-circuit-line top">
-      <div class="space-circuit-pulse"></div>
-    </div>
 
     <!-- Contenu principal du footer avec effet glassmorphism -->
     <div
-      class="relative z-10 bg-space-bg/60 backdrop-blur-md border-t border-space-primary/30"
+      class="relative z-10 bg-color-bg/70 backdrop-blur-md border-t border-color-accent/40 mystical-transition"
+      style="box-shadow: 0 -4px 20px rgba(var(--color-primary-rgb), 0.1)"
     >
       <div class="container mx-auto px-6 py-8">
         <!-- Contenu supérieur -->
@@ -54,23 +29,23 @@
             <div class="space-logo-container">
               <div class="space-logo-glow"></div>
               <div
-                class="text-space-primary-light font-nasa text-2xl tracking-wider"
+                class="text-color-primary-light font-heading text-2xl tracking-wider"
               >
                 ACS GAMING
               </div>
             </div>
 
             <div
-              class="mt-2 text-space-accent-light font-mono text-xs tracking-widest animate-pulse-slow"
+              class="mt-2 text-color-accent-light font-mono text-xs tracking-widest animate-pulse-slow"
             >
               ALORS ÇA SCRIM
             </div>
 
             <!-- Année -->
             <div
-              class="space-year font-mono text-xs text-space-text-muted mt-1"
+              class="space-year font-mono text-xs text-color-text-muted mt-1"
             >
-              <span class="year-label">STAR DATE:</span>
+              <span class="year-label">CURSED YEAR:</span>
               <span class="year-value">{{ new Date().getFullYear() }}</span>
             </div>
           </div>
@@ -79,9 +54,9 @@
           <div class="flex flex-col items-center justify-center">
             <div class="space-links-container mb-2">
               <div
-                class="space-links-title font-nasa text-xs text-space-text-muted mb-4"
+                class="space-links-title font-heading text-xs text-color-text-muted mb-4"
               >
-                COMMUNICATIONS
+                CONNECTIONS MYSTIQUES
               </div>
 
               <!-- Liens sociaux -->
@@ -105,7 +80,7 @@
                     </svg>
                     <div class="space-social-ring"></div>
                   </div>
-                  <span class="space-social-label font-nasa">Discord</span>
+                  <span class="space-social-label font-heading">Discord</span>
                 </a>
 
                 <!-- Twitch -->
@@ -127,7 +102,7 @@
                     </svg>
                     <div class="space-social-ring"></div>
                   </div>
-                  <span class="space-social-label font-nasa">Twitch</span>
+                  <span class="space-social-label font-heading">Twitch</span>
                 </a>
 
                 <!-- Email -->
@@ -155,7 +130,7 @@
                     </svg>
                     <div class="space-social-ring"></div>
                   </div>
-                  <span class="space-social-label font-nasa">Contact</span>
+                  <span class="space-social-label font-heading">Contact</span>
                 </a>
               </div>
             </div>
@@ -165,9 +140,9 @@
           <div class="flex flex-col items-center md:items-end justify-center">
             <div class="space-version">
               <div
-                class="space-version-label font-mono text-xs text-space-text-muted mb-2"
+                class="space-version-label font-mono text-xs text-color-text-muted mb-2"
               >
-                SYSTEM VERSION
+                CURSED VERSION
               </div>
               <div
                 class="space-version-number font-mono text-sm flex items-center"
@@ -176,7 +151,7 @@
                   <div class="space-version-blip"></div>
                   <span> v{{ appVersion }}</span>
                 </div>
-                <div class="space-version-status text-xs text-space-success">
+                <div class="space-version-status text-xs text-color-success">
                   ONLINE
                 </div>
               </div>
@@ -192,18 +167,13 @@
 
         <!-- Ligne de crédits -->
         <div class="mt-6 text-center">
-          <div class="text-space-text-muted text-xs font-mono">
+          <div class="text-color-text-muted text-xs font-mono">
             MADE WITH
-            <span class="text-space-error animate-pulse">♥</span> IN THE DEEP
-            SPACE
+            <span class="text-color-error animate-pulse">♥</span> IN THE DARK
+            REALM
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Ligne de circuit inférieure -->
-    <div class="space-circuit-line bottom">
-      <div class="space-circuit-pulse reverse"></div>
     </div>
   </footer>
 </template>
@@ -217,91 +187,40 @@ const appVersion = ref(pkg.version || "1.0.0");
 </script>
 
 <style scoped>
-/* Grille spatiale */
-.space-grid {
-  background-image: linear-gradient(
-      rgba(109, 40, 217, 0.1) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
-  background-size: 30px 30px;
-  background-position: center center;
-  transform: perspective(1000px) rotateX(60deg);
-  transform-origin: center top;
-  height: 120%;
-  animation: grid-move 60s linear infinite;
-}
-
-@keyframes grid-move {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 30px;
-  }
-}
-
-/* Ligne de circuit */
-.space-circuit-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
+/* Brouillard mystique Halloween */
+.mystical-fog {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--color-accent-rgb), 0.1) 0%,
+    rgba(var(--color-primary-rgb), 0.05) 30%,
+    rgba(var(--color-secondary-rgb), 0.03) 60%,
+    transparent 100%
   );
-  z-index: 20;
+  animation: mystical-drift 45s ease-in-out infinite;
+  filter: blur(1px);
 }
 
-.space-circuit-line.top {
-  top: 0;
-}
-
-.space-circuit-line.bottom {
-  bottom: 0;
-}
-
-.space-circuit-pulse {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50px;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary),
-    transparent
-  );
-  animation: pulse-move 5s linear infinite;
-}
-
-.space-circuit-pulse.reverse {
-  animation: pulse-move-reverse 5s linear infinite;
-}
-
-@keyframes pulse-move {
-  0% {
-    left: -50px;
-  }
+@keyframes mystical-drift {
+  0%,
   100% {
-    left: 100%;
+    transform: translateX(0) translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px) scale(1.05);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(-5px) translateY(10px) scale(0.95);
+    opacity: 0.25;
+  }
+  75% {
+    transform: translateX(-10px) translateY(-10px) scale(1.02);
+    opacity: 0.35;
   }
 }
 
-@keyframes pulse-move-reverse {
-  0% {
-    left: 100%;
-  }
-  100% {
-    left: -50px;
-  }
-}
-
-/* Logo */
+/* Logo Halloween */
 .space-logo-container {
   position: relative;
   display: inline-block;
@@ -313,22 +232,25 @@ const appVersion = ref(pkg.version || "1.0.0");
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--space-primary);
+  background: var(--color-primary);
   filter: blur(15px);
-  opacity: 0.3;
+  opacity: 0.4;
   z-index: -1;
-  animation: logo-pulse 3s ease-in-out infinite;
+  animation: mystical-glow 4s ease-in-out infinite;
+  box-shadow: var(--shadow-glow-orange);
 }
 
-@keyframes logo-pulse {
+@keyframes mystical-glow {
   0%,
   100% {
-    opacity: 0.2;
+    opacity: 0.3;
     transform: scale(0.95);
+    filter: blur(15px);
   }
   50% {
-    opacity: 0.4;
-    transform: scale(1.05);
+    opacity: 0.6;
+    transform: scale(1.08);
+    filter: blur(20px);
   }
 }
 
@@ -340,7 +262,8 @@ const appVersion = ref(pkg.version || "1.0.0");
 }
 
 .year-label {
-  color: var(--space-primary-light);
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow-orange);
 }
 
 .year-value {
@@ -355,15 +278,10 @@ const appVersion = ref(pkg.version || "1.0.0");
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
-  );
+  background: var(--shadow-glow-orange);
 }
 
-/* Liens sociaux */
+/* Liens sociaux Halloween */
 .space-social-link {
   display: flex;
   flex-direction: column;
@@ -398,7 +316,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  border: 1px solid rgba(var(--space-primary-rgb), 0.4);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.4);
   transition: all 0.3s ease;
 }
 
@@ -406,7 +324,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--space-text-muted);
+  color: var(--color-text-muted);
   transition: all 0.3s ease;
 }
 
@@ -450,21 +368,21 @@ const appVersion = ref(pkg.version || "1.0.0");
 
 /* Email styling */
 .space-social-link.email {
-  color: var(--space-accent);
+  color: var(--color-accent);
 }
 
 .space-social-link.email:hover {
-  color: var(--space-accent-light);
+  color: var(--color-accent-light);
 }
 
 .space-social-link.email .space-social-ring {
-  border-color: rgba(var(--space-accent-rgb), 0.4);
+  border-color: rgba(var(--color-accent-rgb), 0.4);
 }
 
 .space-social-link.email:hover .space-social-ring {
-  border-color: rgba(var(--space-accent-rgb), 0.8);
+  border-color: rgba(var(--color-accent-rgb), 0.8);
   transform: scale(1.2);
-  box-shadow: 0 0 15px rgba(var(--space-accent-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.4);
 }
 
 /* Hover effects for all social links */
@@ -473,20 +391,20 @@ const appVersion = ref(pkg.version || "1.0.0");
 }
 
 .space-social-link:hover .space-social-label {
-  color: var(--space-text);
+  color: var(--color-text);
 }
 
 /* Version styling */
 .space-version-chip {
-  background: rgba(var(--space-bg-light-rgb), 0.5);
-  border: 1px solid var(--space-primary-light);
+  background: rgba(var(--color-bg-light-rgb), 0.5);
+  border: 1px solid var(--color-primary-light);
   border-radius: 12px;
   padding: 2px 8px;
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: var(--space-text);
-  box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.3);
+  color: var(--color-text);
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .space-version-blip {
@@ -496,7 +414,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: var(--space-success);
+  background-color: var(--color-success);
   transform: translate(-50%, -50%);
   animation: blip 2s infinite;
 }
@@ -511,7 +429,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   }
 }
 
-/* Séparateur */
+/* Séparateur Halloween */
 .space-separator {
   position: relative;
   height: 20px;
@@ -522,22 +440,31 @@ const appVersion = ref(pkg.version || "1.0.0");
 
 .space-separator-line {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
-  );
+  background: var(--shadow-glow-orange);
   width: 80%;
+  box-shadow: var(--shadow-glow-orange);
 }
 
 .space-separator-dot {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--space-primary-light);
+  background: var(--color-primary);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-primary);
+  box-shadow: var(--shadow-glow-orange);
+  animation: mystical-pulse 2s ease-in-out infinite;
+}
+
+@keyframes mystical-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 /* Animation pour pulse lent */
@@ -553,85 +480,5 @@ const appVersion = ref(pkg.version || "1.0.0");
 
 .animate-pulse-slow {
   animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Vaisseau spatial */
-.spaceship {
-  position: absolute;
-  top: 20%;
-  left: -100px;
-  width: 40px;
-  height: 10px;
-  z-index: 5;
-  animation: fly-through 15s linear infinite;
-  transform: rotate(15deg);
-}
-
-.spaceship-body {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--space-bg-light),
-    var(--space-primary-dark)
-  );
-  clip-path: polygon(0% 50%, 20% 0%, 100% 40%, 100% 60%, 20% 100%);
-}
-
-.spaceship-engine {
-  position: absolute;
-  right: -5px;
-  top: 3px;
-  width: 6px;
-  height: 4px;
-  background-color: var(--space-accent);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-accent-light);
-  animation: engine-glow 0.5s ease-in-out infinite alternate;
-}
-
-.spaceship-trail {
-  position: absolute;
-  top: 3px;
-  right: -20px;
-  width: 20px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--space-accent), transparent);
-  opacity: 0.7;
-}
-
-@keyframes fly-through {
-  0% {
-    left: -100px;
-    transform: rotate(15deg) translateY(0px);
-  }
-  20% {
-    transform: rotate(5deg) translateY(20px);
-  }
-  40% {
-    transform: rotate(-5deg) translateY(-10px);
-  }
-  60% {
-    transform: rotate(10deg) translateY(5px);
-  }
-  80% {
-    transform: rotate(-10deg) translateY(-5px);
-  }
-  100% {
-    left: calc(100% + 100px);
-    transform: rotate(15deg) translateY(0px);
-  }
-}
-
-@keyframes engine-glow {
-  0% {
-    opacity: 0.7;
-    box-shadow: 0 0 5px var(--space-accent-light);
-  }
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 15px var(--space-accent-light);
-  }
 }
 </style>

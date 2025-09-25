@@ -2,33 +2,26 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-6xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         title="Gestion des Administrateurs"
         titleSize="3xl"
         :showMissionInfo="true"
         mission="ADMIN-MGMT"
       >
         <template #badge v-if="users.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
-            users.length
-          }}</SpaceBadge>
+          <Badge variant="primary" size="lg">{{ users.length }}</Badge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Barre de recherche -->
-      <SpaceCard
-        variant="primary"
-        :stars="true"
-        :decorated="true"
-        className="mb-8"
-      >
+      <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
         <div class="relative">
           <div
             class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-space-primary"
+              class="h-5 w-5 text-color-primary"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -39,17 +32,17 @@
               />
             </svg>
           </div>
-          <SpaceInput
+          <Input
             type="text"
             v-model="searchTerm"
             placeholder="Rechercher un utilisateur..."
             className="pl-10"
           />
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Tableau des utilisateurs -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -60,7 +53,7 @@
             <div class="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-space-secondary-light"
+                class="h-6 w-6 mr-2 text-color-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -68,32 +61,32 @@
                   d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                 />
               </svg>
-              <SpaceTitle size="xl">Liste des administrateurs</SpaceTitle>
+              <Title size="xl">Liste des administrateurs</Title>
             </div>
           </div>
         </template>
 
         <!-- En-tête du tableau -->
         <div
-          class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] bg-space-bg-light/40 p-4 border-b border-space-primary/20 rounded-t-lg"
+          class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] bg-color-bg-light/40 p-4 border-b border-color-primary/20 rounded-t-lg"
         >
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
           >
             Nom d'utilisateur
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
           >
             Email
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2 hidden md:block"
           >
             Rôle
           </div>
           <div
-            class="text-space-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
+            class="text-color-primary-light font-nasa text-xs md:text-sm uppercase tracking-wider font-bold px-2"
           >
             Actions
           </div>
@@ -104,15 +97,15 @@
           <div
             v-for="user in filteredUsers"
             :key="user._id"
-            class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] p-3 border-b border-space-bg-light/30 hover:bg-space-bg-light/20 transition-colors duration-200 relative group"
+            class="grid grid-cols-4 md:grid-cols-[2fr_3fr_1fr_1.5fr] p-3 border-b border-color-bg-light/30 hover:bg-color-bg-light/20 transition-colors duration-200 relative group"
           >
             <!-- Indicateur de rôle (barre colorée) -->
             <div
               class="absolute left-0 top-0 bottom-0 w-1"
               :class="{
-                'bg-space-text-muted/50': user.role === 'user',
-                'bg-space-primary/70': user.role === 'admin',
-                'bg-space-accent/70': user.role === 'superadmin',
+                'bg-color-text-muted/50': user.role === 'user',
+                'bg-color-primary/70': user.role === 'admin',
+                'bg-color-accent/70': user.role === 'superadmin',
               }"
             ></div>
 
@@ -121,11 +114,11 @@
               <div
                 class="w-10 h-10 rounded-full mr-3 overflow-hidden flex items-center justify-center border-2"
                 :class="{
-                  'border-space-text-muted/30 bg-space-bg-light/50':
+                  'border-color-text-muted/30 bg-color-bg-light/50':
                     user.role === 'user',
-                  'border-space-primary/30 bg-space-bg-light/50':
+                  'border-color-primary/30 bg-color-bg-light/50':
                     user.role === 'admin',
-                  'border-space-accent/30 bg-space-bg-light/50':
+                  'border-color-accent/30 bg-color-bg-light/50':
                     user.role === 'superadmin',
                 }"
               >
@@ -136,25 +129,25 @@
                   class="w-full h-full object-cover"
                   @error="handleAvatarError(user)"
                 />
-                <span v-else class="text-space-text font-nasa text-sm">
+                <span v-else class="text-color-text font-nasa text-sm">
                   {{ getUserInitials(user.username) }}
                 </span>
               </div>
-              <span class="text-space-text font-nasa text-sm">
+              <span class="text-color-text font-nasa text-sm">
                 {{ user.username }}
               </span>
             </div>
 
             <!-- Email -->
             <div
-              class="flex items-center px-2 text-space-text-muted font-mono text-sm md:flex"
+              class="flex items-center px-2 text-color-text-muted font-mono text-sm md:flex"
             >
               {{ user.email }}
             </div>
 
             <!-- Badge de rôle -->
             <div class="items-center px-2 hidden md:flex">
-              <SpaceBadge
+              <Badge
                 :variant="
                   user.role === 'superadmin'
                     ? 'accent'
@@ -165,25 +158,25 @@
                 className="capitalize"
               >
                 {{ user.role }}
-              </SpaceBadge>
+              </Badge>
             </div>
 
             <!-- Actions -->
             <div class="flex items-center px-2 gap-2">
               <!-- Sélecteur de rôle -->
               <div class="relative w-full">
-                <SpaceDropdown
+                <Dropdown
                   v-model="user.role"
                   @change="() => updateUserRole(user)"
                 >
                   <option value="user">Utilisateur</option>
                   <option value="admin">Admin</option>
                   <option value="superadmin">Superadmin</option>
-                </SpaceDropdown>
+                </Dropdown>
               </div>
 
               <!-- Bouton de suppression -->
-              <SpaceButton
+              <Button
                 @click="confirmDeleteUser(user)"
                 variant="error"
                 size="sm"
@@ -207,59 +200,59 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
 
           <!-- Message si aucun utilisateur trouvé -->
           <div v-if="filteredUsers.length === 0" class="py-10">
-            <SpaceTerminal
+            <Terminal
               command="search --users"
               title="Recherche d'utilisateurs"
               :showCursor="true"
             >
-              <div class="text-space-text-muted">
+              <div class="text-color-text-muted">
                 Aucun utilisateur ne correspond à votre recherche
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Statistiques -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-color-text font-nasa mb-2">
               {{ users.length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-color-text-muted font-nasa">
               Utilisateurs total
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-color-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "admin").length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-color-text-muted font-nasa">
               Administrateurs
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
-            <div class="text-3xl text-space-text font-nasa mb-2">
+            <div class="text-3xl text-color-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "superadmin").length }}
             </div>
-            <div class="text-sm text-space-text-muted font-nasa">
+            <div class="text-sm text-color-text-muted font-nasa">
               Superadmins
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
@@ -267,30 +260,30 @@
     </div>
 
     <!-- Dialogue de confirmation pour la suppression -->
-    <SpaceModal
+    <Modal
       v-model="showDeleteDialog"
       title="Confirmation de suppression"
       className="max-w-md"
     >
-      <div class="text-space-text mb-6">
+      <div class="text-color-text mb-6">
         {{ deleteConfirmMessage }}
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton @click="cancelDelete" variant="outline" size="sm">
+          <Button @click="cancelDelete" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteUser"
             variant="error"
             size="sm"
             :loading="isDeleting"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceModal>
+    </Modal>
   </div>
 </template>
 
@@ -531,7 +524,7 @@ onMounted(() => {
 /* Scrollbar personnalisée */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--space-primary-light) var(--space-bg);
+  scrollbar-color: var(--color-primary-light) var(--color-bg);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -539,13 +532,13 @@ onMounted(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--space-bg-light);
+  background: var(--color-bg-light);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--space-primary-light);
+  background-color: var(--color-primary-light);
   border-radius: 4px;
-  border: 2px solid var(--space-bg);
+  border: 2px solid var(--color-bg);
 }
 </style>

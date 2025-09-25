@@ -1,32 +1,43 @@
+<!--
+  🎃 HORROR LOADER COMPONENT - Documentation d'utilisation
+  
+  Composant de chargement avec thème Halloween terrifiant.
+  
+  📋 PROPS :
+  • size : "sm" | "md" | "lg" - Taille du loader (défaut: "md")
+  • text : string - Texte affiché sous le loader (défaut: "Chargement...")
+  • showText : boolean - Affiche/cache le texte (défaut: true)
+  
+  💡 EXEMPLES :
+  <Loader size="lg" text="Invocation en cours..." />
+  <Loader :showText="false" />
+  <Loader size="sm" text="Rituel mystique..." />
+-->
 <template>
-  <div :class="['space-loader-container', sizeClass]">
-    <div class="space-loader">
-      <!-- Cercle orbital principal -->
-      <div class="space-loader-orbit">
-        <div class="space-loader-planet"></div>
+  <div :class="['loader-container', sizeClass]">
+    <div class="loader">
+      <!-- Cercle principal tournant -->
+      <div class="loader-ring"></div>
+
+      <!-- Cercle intérieur avec pulsation -->
+      <div class="loader-inner">
+        <div class="loader-core"></div>
       </div>
 
-      <!-- Cercle orbital secondaire -->
-      <div class="space-loader-orbit secondary">
-        <div class="space-loader-moon"></div>
-      </div>
-
-      <!-- Étoiles en arrière-plan -->
+      <!-- Particules mystiques -->
       <div
-        v-for="n in 8"
-        :key="`star-${n}`"
-        class="space-loader-star"
+        v-for="n in 6"
+        :key="`particle-${n}`"
+        class="loader-particle"
         :style="{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
+          top: `${25 + Math.random() * 50}%`,
+          left: `${25 + Math.random() * 50}%`,
           animationDelay: `${Math.random() * 2}s`,
-          width: `${Math.random() * 2 + 1}px`,
-          height: `${Math.random() * 2 + 1}px`,
         }"
       ></div>
 
       <!-- Texte de chargement -->
-      <div v-if="showText" class="space-loader-text">
+      <div v-if="showText" class="loader-text">
         {{ text }}
       </div>
     </div>
@@ -51,9 +62,9 @@ const props = withDefaults(defineProps<Props>(), {
 const sizeClass = computed(() => {
   switch (props.size) {
     case "sm":
-      return "space-loader--small";
+      return "loader--small";
     case "lg":
-      return "space-loader--large";
+      return "loader--large";
     default:
       return "";
   }
@@ -61,7 +72,7 @@ const sizeClass = computed(() => {
 </script>
 
 <style scoped>
-.space-loader-container {
+.loader-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,92 +80,92 @@ const sizeClass = computed(() => {
   width: 100%;
 }
 
-.space-loader {
+.loader {
   position: relative;
   width: 80px;
   height: 80px;
 }
 
-.space-loader--small .space-loader {
+.loader--small .loader {
   width: 50px;
   height: 50px;
 }
 
-.space-loader--large .space-loader {
+.loader--large .loader {
   width: 120px;
   height: 120px;
 }
 
-.space-loader-orbit {
+/* Anneau principal tournant avec couleurs Halloween */
+.loader-ring {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 3px solid transparent;
+  border-top: 3px solid var(--color-primary);
+  border-right: 3px solid var(--color-secondary);
   border-radius: 50%;
-  animation: spin 6s linear infinite;
+  animation: rotate 2s linear infinite;
+  box-shadow: var(--shadow-glow-primary);
 }
 
-.space-loader-orbit.secondary {
-  width: 60%;
-  height: 60%;
+/* Cercle intérieur */
+.loader-inner {
+  position: absolute;
   top: 20%;
   left: 20%;
-  border-color: rgba(56, 189, 248, 0.3);
-  animation: spin 4s linear infinite reverse;
-}
-
-.space-loader-planet {
-  position: absolute;
-  top: -6px;
-  left: calc(50% - 6px);
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(
-    135deg,
-    var(--space-primary),
-    var(--space-primary-light)
-  );
+  width: 60%;
+  height: 60%;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--color-accent);
+  border-left: 2px solid var(--color-secondary-light);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
+  animation: rotate 1.5s linear infinite reverse;
 }
 
-.space-loader-moon {
+/* Cœur central pulsant */
+.loader-core {
   position: absolute;
-  top: -4px;
-  left: calc(50% - 4px);
+  top: 50%;
+  left: 50%;
   width: 8px;
   height: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--space-secondary),
-    var(--space-secondary-light)
-  );
+  background: var(--color-primary);
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(2, 132, 199, 0.7);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+  animation: pulse 1s ease-in-out infinite;
 }
 
-.space-loader-star {
+/* Particules mystiques */
+.loader-particle {
   position: absolute;
-  background-color: white;
+  width: 3px;
+  height: 3px;
+  background-color: var(--color-accent-light);
   border-radius: 50%;
-  opacity: 0.7;
-  animation: twinkle 3s ease-in-out infinite;
+  opacity: 0.8;
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--color-accent-light);
 }
 
-.space-loader-text {
+/* Texte de chargement */
+.loader-text {
   position: absolute;
   width: 100%;
   text-align: center;
   bottom: -30px;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--space-text);
-  animation: pulse 2s infinite;
+  color: var(--color-text);
+  animation: fade 2s infinite;
+  text-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
 }
 
-@keyframes spin {
+/* Animations Halloween */
+@keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
@@ -163,19 +174,35 @@ const sizeClass = computed(() => {
   }
 }
 
-@keyframes twinkle {
+@keyframes pulse {
   0%,
   100% {
-    opacity: 0.7;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
   50% {
-    opacity: 0.3;
-    transform: scale(0.8);
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.7;
   }
 }
 
-@keyframes pulse {
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  33% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translateY(5px) scale(0.8);
+    opacity: 0.9;
+  }
+}
+
+@keyframes fade {
   0%,
   100% {
     opacity: 0.7;
@@ -187,11 +214,11 @@ const sizeClass = computed(() => {
 
 /* Responsive */
 @media (max-width: 640px) {
-  .space-loader-container {
+  .loader-container {
     padding: 1rem;
   }
 
-  .space-loader--large .space-loader {
+  .loader--large .loader {
     width: 100px;
     height: 100px;
   }

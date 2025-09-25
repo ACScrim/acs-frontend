@@ -2,31 +2,26 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-8xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         title="Gestion des Tournois"
         titleSize="3xl"
         :showMissionInfo="true"
         mission="TOURNAMENT-MGMT"
       >
         <template #badge v-if="activeTournaments.length > 0">
-          <SpaceBadge variant="primary" size="lg">{{
+          <Badge variant="primary" size="lg">{{
             activeTournaments.length
-          }}</SpaceBadge>
+          }}</Badge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Sélection commune du jeu et du tournoi -->
-      <SpaceCard
-        variant="primary"
-        :stars="true"
-        :decorated="true"
-        className="mb-8"
-      >
+      <Card variant="primary" :stars="true" :decorated="true" className="mb-8">
         <template #header>
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 mr-2 text-space-primary-light"
+              class="h-6 w-6 mr-2 text-color-primary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -34,14 +29,14 @@
                 d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
               />
             </svg>
-            <SpaceTitle size="lg">Sélection du tournoi</SpaceTitle>
+            <Title size="lg">Sélection du tournoi</Title>
           </div>
         </template>
 
         <div class="grid grid-cols-1 gap-6">
           <!-- Bouton pour afficher/masquer les tournois terminés -->
           <div class="flex justify-end mb-2">
-            <SpaceToggle
+            <Toggle
               v-model="showFinishedTournaments"
               label="Afficher les tournois terminés"
               tooltip="Basculer pour voir les tournois terminés"
@@ -52,7 +47,7 @@
           <div v-if="!showFinishedTournaments" class="w-full">
             <!-- Version alternative avec select natif -->
             <div class="relative">
-              <SpaceDropdown
+              <Dropdown
                 v-model="selectedTournament"
                 @change="handleTournamentChange"
                 id="activeTournamentSelect"
@@ -80,9 +75,9 @@
                 >
                   {{ tournament.name }}
                 </option>
-              </SpaceDropdown>
+              </Dropdown>
               <div
-                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -100,13 +95,13 @@
             </div>
 
             <!-- Message si aucun tournoi actif disponible -->
-            <SpaceAlert
+            <Alert
               v-if="activeTournaments.length === 0"
               variant="info"
               className="mt-4"
             >
               Aucun tournoi actif disponible actuellement.
-            </SpaceAlert>
+            </Alert>
           </div>
 
           <!-- Sélection pour les tournois terminés -->
@@ -114,7 +109,7 @@
             <!-- Sélection du jeu pour les tournois terminés -->
             <div class="w-full">
               <div class="relative">
-                <SpaceDropdown
+                <Dropdown
                   v-model="selectedGame"
                   @change="handleGameChange"
                   id="globalGameSelect"
@@ -140,9 +135,9 @@
                   >
                     {{ game.name }}
                   </option>
-                </SpaceDropdown>
+                </Dropdown>
                 <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +159,7 @@
             <div class="w-full" v-if="finishedTournaments.length > 0">
               <!-- Version alternative avec select natif -->
               <div class="relative">
-                <SpaceDropdown
+                <Dropdown
                   v-model="selectedTournament"
                   @change="handleTournamentChange"
                   id="finishedTournamentSelect"
@@ -192,9 +187,9 @@
                   >
                     {{ tournament.name }}
                   </option>
-                </SpaceDropdown>
+                </Dropdown>
                 <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -213,18 +208,18 @@
             </div>
 
             <!-- Message si aucun tournoi terminé disponible -->
-            <SpaceAlert
+            <Alert
               v-else-if="selectedGame && finishedTournaments.length === 0"
               variant="warning"
             >
               Aucun tournoi terminé disponible pour ce jeu.
-            </SpaceAlert>
+            </Alert>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Onglets -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -233,7 +228,7 @@
         <div
           class="flex flex-col md:flex-row justify-around gap-4 z-10 relative"
         >
-          <SpaceButton
+          <Button
             @click="handleTabChange('creation')"
             :variant="activeTab === 'creation' ? 'accent' : 'outline'"
             size="md"
@@ -254,9 +249,9 @@
               </svg>
             </template>
             Gestion des tournois
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('teams')"
             :variant="activeTab === 'teams' ? 'accent' : 'outline'"
             size="md"
@@ -275,9 +270,9 @@
               </svg>
             </template>
             Gestion des Équipes
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('checkin')"
             :variant="activeTab === 'checkin' ? 'accent' : 'outline'"
             size="md"
@@ -298,9 +293,9 @@
               </svg>
             </template>
             Voir les Check-in
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('end')"
             :variant="activeTab === 'end' ? 'accent' : 'outline'"
             size="md"
@@ -321,22 +316,22 @@
               </svg>
             </template>
             Terminer un tournoi
-          </SpaceButton>
+          </Button>
         </div>
 
         <!-- Indicateur d'onglet actif -->
         <div
-          class="relative h-1 mt-6 bg-space-bg-light/40 rounded hidden md:block"
+          class="relative h-1 mt-6 bg-color-bg-light/40 rounded hidden md:block"
         >
           <div
-            class="absolute h-full bg-space-accent rounded shadow-glow-accent transition-all duration-300 ease-in-out"
+            class="absolute h-full bg-color-accent rounded shadow-glow-accent transition-all duration-300 ease-in-out"
             :style="tabIndicatorStyle"
           ></div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Contenu des onglets -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -363,7 +358,7 @@
             :selectedTournament="selectedTournament"
           />
         </div>
-      </SpaceCard>
+      </Card>
     </div>
   </div>
 </template>

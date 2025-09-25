@@ -1,27 +1,8 @@
 <!-- filepath: d:\Dev\ACS\acs-frontend\src\components\Navbar.vue -->
 <template>
   <nav class="navbar fixed top-0 w-full z-50">
-    <!-- Fond d'étoiles et effet vitré spatial -->
+    <!-- Fond Halloween mystique -->
     <div class="navbar-bg absolute inset-0"></div>
-
-    <!-- Étoiles animées en arrière-plan -->
-    <div
-      v-for="n in 10"
-      :key="`star-${n}`"
-      class="absolute h-1 w-1 rounded-full bg-white animate-pulse pointer-events-none"
-      :style="{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 3 + 2}s`,
-        opacity: Math.random() * 0.7 + 0.3,
-      }"
-    ></div>
-
-    <!-- Ligne de circuit supérieure -->
-    <div class="space-circuit-line top">
-      <div class="space-circuit-pulse"></div>
-    </div>
 
     <div
       class="container mx-auto flex justify-between items-center py-3 px-4 relative z-10"
@@ -36,7 +17,7 @@
           <div class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-7 w-7 text-space-primary-light group-hover:text-space-secondary-light transition-colors"
+              class="h-7 w-7 text-color-primary-light group-hover:text-color-secondary-light transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -49,10 +30,10 @@
               />
             </svg>
             <div
-              class="absolute inset-0 bg-space-primary/20 rounded-full blur-sm animate-pulse-slow"
+              class="absolute inset-0 bg-color-primary/20 rounded-full blur-sm animate-pulse-slow"
             ></div>
           </div>
-          <div class="tooltip-text font-nasa">Menu Admin</div>
+          <div class="tooltip-text font-body">Menu Admin</div>
         </button>
 
         <router-link to="/" class="logo-container">
@@ -69,14 +50,14 @@
       <div class="hidden md:flex flex-grow justify-center space-x-12">
         <router-link
           to="/classement"
-          class="nav-link font-nasa"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/classement') }"
         >
           Classement
         </router-link>
         <router-link
           to="/tournois-a-venir"
-          class="nav-link font-nasa"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/tournois-a-venir') }"
         >
           Tournois
@@ -84,7 +65,7 @@
         <router-link
           v-if="user"
           to="/membres"
-          class="nav-link font-nasa"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/membres') }"
         >
           Membres
@@ -92,7 +73,7 @@
         <router-link
           v-if="user"
           to="/propositions-jeux"
-          class="nav-link font-nasa"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/propositions-jeux') }"
         >
           Propositions
@@ -100,20 +81,31 @@
         <router-link
           v-if="user"
           to="/badges"
-          class="nav-link font-nasa"
+          class="nav-link font-body"
           :class="{ 'nav-link-active': isActive('/badges') }"
         >
           Badges
         </router-link>
       </div>
       <!-- Toggle mode allégé -->
-      <SpaceToggle
+      <Toggle
         v-model="isLightMode"
         @update:modelValue="toggleLightMode"
         label="Mode allégé"
         tooltip="Activer/désactiver le fond vidéo"
         containerClassName="hidden sm:flex items-center mr-6"
       />
+
+      <!-- Bouton Halloween Screamer -->
+      <button
+        @click="triggerScreamer"
+        class="halloween-button group relative mr-4 hidden sm:flex items-center"
+        title="Tu es prévenu... 👻"
+      >
+        <span class="halloween-text">Ne clique pas</span>
+        <div class="halloween-glow"></div>
+        <div class="tooltip-text font-body">Tu es prévenu... 👻</div>
+      </button>
 
       <!-- Centre de notifications -->
       <div class="notification-center flex items-center mr-4">
@@ -134,16 +126,16 @@
                 'https://cdn.discordapp.com/embed/avatars/0.png'
               "
               alt="Avatar"
-              class="w-8 h-8 rounded-full border border-space-primary/50 object-cover"
+              class="w-8 h-8 rounded-full border border-color-primary/50 object-cover"
             />
             <div class="avatar-glow"></div>
           </div>
-          <span class="user-name ml-2 hidden sm:inline font-nasa capitalize">
+          <span class="user-name ml-2 hidden sm:inline font-body capitalize">
             {{ user.username }}
           </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 ml-1 text-space-primary-light transition-transform duration-300"
+            class="h-4 w-4 ml-1 text-color-primary-light transition-transform duration-300"
             :class="{ 'rotate-180': menuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -162,7 +154,7 @@
         <button
           v-else
           @click="loginWithDiscord"
-          class="discord-login-btn font-nasa"
+          class="discord-login-btn font-body"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -178,12 +170,12 @@
         </button>
 
         <!-- Menu dropdown utilisateur -->
-        <transition name="space-fade">
+        <transition name="mystical-fade">
           <div
             v-if="menuOpen"
             class="user-dropdown absolute top-full right-0 mt-2 w-56 z-50"
           >
-            <div class="dropdown-header font-nasa">
+            <div class="dropdown-header font-body">
               <div class="dropdown-title">PANNEAU DE CONTRÔLE</div>
               <div class="dropdown-subtitle">STATION UTILISATEUR</div>
             </div>
@@ -196,7 +188,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -216,7 +208,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -234,7 +226,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -252,7 +244,7 @@
               <button @click="logout" class="dropdown-item logout-item">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-error"
+                  class="h-5 w-5 mr-2 text-color-error"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -285,7 +277,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-primary-light"
+            class="h-8 w-8 text-color-primary-light"
             :class="{ hidden: mobileMenuOpen, block: !mobileMenuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -300,7 +292,7 @@
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-error-light"
+            class="h-8 w-8 text-color-error-light"
             :class="{ block: mobileMenuOpen, hidden: !mobileMenuOpen }"
             fill="none"
             viewBox="0 0 24 24"
@@ -316,12 +308,12 @@
         </button>
 
         <!-- Menu déroulant mobile -->
-        <transition name="space-slide">
+        <transition name="mystical-slide">
           <div
             v-if="mobileMenuOpen"
             class="mobile-dropdown absolute top-full right-0 left-0 mt-2 z-50 mx-4"
           >
-            <div class="dropdown-header font-nasa">
+            <div class="dropdown-header font-body">
               <div class="dropdown-title">NAVIGATION</div>
               <div class="dropdown-subtitle">SYSTÈME PRINCIPAL</div>
             </div>
@@ -329,7 +321,7 @@
             <!-- Section utilisateur mobile -->
             <div
               v-if="user"
-              class="dropdown-items border-b border-space-primary/20 pb-2 mb-2"
+              class="dropdown-items border-b border-color-primary/20 pb-2 mb-2"
             >
               <div class="dropdown-item">
                 <div class="flex items-center w-full">
@@ -340,17 +332,17 @@
                         'https://cdn.discordapp.com/embed/avatars/0.png'
                       "
                       alt="Avatar"
-                      class="w-8 h-8 rounded-full border border-space-primary/50 object-cover"
+                      class="w-8 h-8 rounded-full border border-color-primary/50 object-cover"
                     />
                     <div class="avatar-glow"></div>
                   </div>
                   <div class="flex-1">
                     <div
-                      class="text-space-primary-light font-nasa capitalize text-sm"
+                      class="text-color-primary-light font-body capitalize text-sm"
                     >
                       {{ user.username }}
                     </div>
-                    <div class="text-space-text-muted text-xs">Connecté</div>
+                    <div class="text-color-text-muted text-xs">Connecté</div>
                   </div>
                 </div>
               </div>
@@ -362,7 +354,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -382,7 +374,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -400,7 +392,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-primary-light"
+                  class="h-5 w-5 mr-2 text-color-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -526,7 +518,7 @@
                 <div class="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 mr-2 text-space-accent-light"
+                    class="h-5 w-5 mr-2 text-color-accent-light"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -536,17 +528,28 @@
                   </svg>
                   <span>Mode allégé</span>
                 </div>
-                <SpaceToggle
+                <Toggle
                   v-model="isLightMode"
                   @update:modelValue="toggleLightMode"
                   size="sm"
                 />
               </div>
+
+              <!-- Bouton Halloween Screamer mobile -->
+              <button
+                @click="triggerScreamer"
+                class="dropdown-item halloween-mobile-button w-full text-left"
+              >
+                <div class="flex items-center">
+                  <span class="mr-2">👻</span>
+                  <span>Ne clique pas</span>
+                </div>
+              </button>
             </div>
 
             <!-- Section connexion/déconnexion -->
             <div
-              class="dropdown-items border-t border-space-primary/20 pt-2 mt-2"
+              class="dropdown-items border-t border-color-primary/20 pt-2 mt-2"
             >
               <button
                 v-if="user"
@@ -555,7 +558,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 text-space-error"
+                  class="h-5 w-5 mr-2 text-color-error"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -600,12 +603,12 @@
     </div>
 
     <!-- Menu admin -->
-    <transition name="space-slide">
+    <transition name="mystical-slide">
       <div
         v-if="adminMenuOpen"
         class="admin-dropdown absolute left-0 top-full z-40"
       >
-        <div class="dropdown-header font-nasa">
+        <div class="dropdown-header font-body">
           <div class="dropdown-title">PANNEAU ADMIN</div>
           <div class="dropdown-subtitle">ACCÈS RESTREINT</div>
         </div>
@@ -619,7 +622,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -638,7 +641,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -657,7 +660,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -678,7 +681,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -697,7 +700,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -716,7 +719,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -739,7 +742,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -763,7 +766,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -786,7 +789,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -795,7 +798,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                fill="var(--space-secondary-light)"
+                fill="var(--color-secondary-light)"
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
               />
             </svg>
@@ -811,7 +814,7 @@
             }"
           >
             <svg
-              class="h-5 w-5 mr-2 text-space-secondary-light"
+              class="h-5 w-5 mr-2 text-color-secondary-light"
               viewBox="0 0 71 55"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -833,11 +836,6 @@
         </div>
       </div>
     </transition>
-
-    <!-- Ligne de circuit inférieure -->
-    <div class="space-circuit-line bottom">
-      <div class="space-circuit-pulse reverse"></div>
-    </div>
   </nav>
 </template>
 
@@ -874,6 +872,11 @@ const adminMenuOpen = ref(false);
 const mobileMenuOpen = ref(false);
 const router = useRouter();
 const route = useRoute();
+
+// Émettre des événements vers le parent
+const emit = defineEmits<{
+  triggerScreamer: [];
+}>();
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
@@ -934,6 +937,11 @@ const loginWithDiscord = () => {
   )}&scope=identify+guilds+email`;
 };
 
+const triggerScreamer = () => {
+  emit("triggerScreamer");
+  closeAllMenus(); // Fermer les menus ouverts
+};
+
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
   userStore.fetchUser();
@@ -945,70 +953,33 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Fond et grille */
+/* Fond Halloween mystique */
 .navbar-bg {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.1);
-}
-
-/* Lignes de circuit */
-.space-circuit-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
   background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(var(--color-secondary-rgb), 0.2) 25%,
+    /* Sang */ rgba(var(--color-primary-rgb), 0.15) 50%,
+    /* Citrouille */ rgba(var(--color-accent-rgb), 0.2) 75%,
+    /* Violet mystique */ rgba(0, 0, 0, 0.9) 100%
   );
-  z-index: 20;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-secondary); /* Rouge sang */
+  box-shadow: 0 6px 25px rgba(var(--color-secondary-rgb), 0.3),
+    inset 0 -2px 8px rgba(var(--color-primary-rgb), 0.2);
+  animation: spooky-flicker 6s infinite alternate;
 }
 
-.space-circuit-line.top {
-  top: 0;
-}
-
-.space-circuit-line.bottom {
-  bottom: 0;
-}
-
-.space-circuit-pulse {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50px;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary),
-    transparent
-  );
-  animation: pulse-move 8s linear infinite;
-}
-
-.space-circuit-pulse.reverse {
-  animation: pulse-move-reverse 8s linear infinite;
-}
-
-@keyframes pulse-move {
-  0% {
-    left: -50px;
-  }
+/* Effet de lueur/flicker pour un rendu vivant */
+@keyframes spooky-flicker {
+  0%,
   100% {
-    left: 100%;
+    box-shadow: 0 6px 25px rgba(var(--color-secondary-rgb), 0.3),
+      inset 0 -2px 8px rgba(var(--color-primary-rgb), 0.2);
   }
-}
-
-@keyframes pulse-move-reverse {
-  0% {
-    left: 100%;
-  }
-  100% {
-    left: -50px;
+  50% {
+    box-shadow: 0 8px 35px rgba(var(--color-accent-rgb), 0.4),
+      inset 0 -3px 10px rgba(var(--color-secondary-rgb), 0.3);
   }
 }
 
@@ -1027,51 +998,84 @@ onBeforeUnmount(() => {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Logo */
+/* Animations pour le logo au hover */
+@keyframes logo-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: scale(1.1) rotate(5deg) translateY(0px);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg) translateY(-3px);
+  }
+}
+
+/* Logo Halloween */
 .logo-container {
   position: relative;
   display: inline-flex;
   align-items: center;
   transition: all 0.3s ease;
-}
-
-.logo-glow {
-  position: absolute;
-  inset: -5px;
-  background: var(--space-primary);
-  border-radius: 50%;
-  filter: blur(10px);
-  opacity: 0.15;
-  z-index: -1;
-  transition: all 0.3s ease;
+  outline: none;
+  text-decoration: none;
 }
 
 .logo-container:hover .logo-glow {
-  opacity: 0.25;
+  /* Effet de lueur amélioré au hover */
+  opacity: 0.3;
   filter: blur(15px);
+  animation: logo-pulse 2s ease-in-out infinite;
 }
 
 .navbar-logo {
   height: 40px;
-  filter: drop-shadow(0 0 5px var(--space-primary-light));
-  transition: all 0.3s ease;
+  filter: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  outline: none;
+  border: none;
 }
 
 .logo-container:hover .navbar-logo {
-  filter: drop-shadow(0 0 8px var(--space-primary-light));
-  transform: scale(1.05);
+  /* Effet combiné au hover : scale, rotation et ombre */
+  filter: drop-shadow(0 0 8px rgba(var(--color-primary-rgb), 0.6));
+  transform: scale(1.1) rotate(5deg);
+  animation: logo-float 3s ease-in-out infinite;
 }
 
-/* Navigation links */
+/* Remove any default outline on hover while keeping accessible focus ring */
+.logo-container:hover,
+.logo-container:focus {
+  outline: none;
+}
+
+.logo-container:focus-visible {
+  outline: 2px solid rgba(var(--color-primary-rgb), 0.6);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* Navigation links Halloween */
 .nav-link {
   position: relative;
-  color: var(--space-text);
-  font-weight: 500;
+  color: var(--color-text);
+  font-weight: 600;
   letter-spacing: 1px;
-  padding: 0.25rem 0.5rem;
+  padding: 8px 16px;
   transition: all 0.3s ease;
   text-transform: uppercase;
   font-size: 0.9rem;
+  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -1082,19 +1086,15 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
-  );
+  background: var(--shadow-glow-orange);
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
 
 .nav-link:hover {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow-orange);
+  background: rgba(var(--color-primary-rgb), 0.1);
 }
 
 .nav-link:hover::before {
@@ -1102,8 +1102,9 @@ onBeforeUnmount(() => {
 }
 
 .nav-link-active {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow-orange);
+  background: rgba(var(--color-primary-rgb), 0.15);
 }
 
 .nav-link-active::before {
@@ -1113,12 +1114,7 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--space-primary-light),
-    transparent
-  );
+  background: var(--shadow-glow-orange);
   transform: translateX(0);
 }
 
@@ -1133,7 +1129,7 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: -2px;
   border-radius: 50%;
-  background: var(--space-primary);
+  background: var(--color-primary);
   filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -1144,41 +1140,48 @@ onBeforeUnmount(() => {
 }
 
 .user-name {
-  color: var(--space-text);
+  color: var(--color-text);
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
 .user-profile-button:hover .user-name {
-  color: var(--space-primary-light);
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow-orange);
 }
 
-/* Dropdowns */
+/* Centre de notifications responsive */
+.notification-center {
+  position: relative;
+}
+
+/* Dropdowns Halloween */
 .user-dropdown,
 .admin-dropdown,
 .mobile-dropdown {
-  background: rgba(var(--space-bg-rgb), 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
-  border-radius: 8px;
+  background: rgba(var(--color-bg-rgb), 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--color-accent);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(var(--space-primary-rgb), 0.2);
+  box-shadow: var(--shadow-glow-purple), 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 .dropdown-header {
-  padding: 10px 15px;
-  background: rgba(var(--space-primary-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.2);
+  padding: 12px 18px;
+  background: rgba(var(--color-accent-rgb), 0.2);
+  border-bottom: 1px solid var(--color-accent);
 }
 
 .dropdown-title {
-  color: var(--space-primary-light);
+  color: var(--color-primary);
   font-size: 0.8rem;
   letter-spacing: 1px;
+  text-shadow: var(--shadow-glow-orange);
 }
 
 .dropdown-subtitle {
-  color: var(--space-text-muted);
+  color: var(--color-text-muted);
   font-size: 0.65rem;
   letter-spacing: 1px;
 }
@@ -1191,7 +1194,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  color: var(--space-text);
+  color: var(--color-text);
   font-size: 0.9rem;
   transition: all 0.2s ease;
   position: relative;
@@ -1201,45 +1204,45 @@ onBeforeUnmount(() => {
 }
 
 .dropdown-item:hover {
-  background: rgba(var(--space-primary-rgb), 0.1);
-  color: var(--space-primary-light);
-  border-left: 2px solid var(--space-primary-light);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary-light);
+  border-left: 2px solid var(--color-primary-light);
 }
 
 .dropdown-item:hover svg {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 .dropdown-item-active {
-  background: rgba(var(--space-primary-rgb), 0.15);
-  color: var(--space-primary-light);
-  border-left: 2px solid var(--space-primary-light);
+  background: rgba(var(--color-primary-rgb), 0.15);
+  color: var(--color-primary-light);
+  border-left: 2px solid var(--color-primary-light);
 }
 
 .admin-item:hover {
-  background: rgba(var(--space-secondary-rgb), 0.1);
-  color: var(--space-secondary-light);
-  border-left: 2px solid var(--space-secondary-light);
+  background: rgba(var(--color-secondary-rgb), 0.1);
+  color: var(--color-secondary-light);
+  border-left: 2px solid var(--color-secondary-light);
 }
 
 .admin-item:hover svg {
-  color: var(--space-secondary-light);
+  color: var(--color-secondary-light);
 }
 
 .dropdown-item-active.admin-item {
-  background: rgba(var(--space-secondary-rgb), 0.15);
-  color: var(--space-secondary-light);
-  border-left: 2px solid var(--space-secondary-light);
+  background: rgba(var(--color-secondary-rgb), 0.15);
+  color: var(--color-secondary-light);
+  border-left: 2px solid var(--color-secondary-light);
 }
 
 .logout-item:hover {
-  background: rgba(var(--space-error-rgb), 0.1);
-  color: var(--space-error-light);
-  border-left: 2px solid var(--space-error-light);
+  background: rgba(var(--color-error-rgb), 0.1);
+  color: var(--color-error-light);
+  border-left: 2px solid var(--color-error-light);
 }
 
 .logout-item:hover svg {
-  color: var(--space-error-light);
+  color: var(--color-error-light);
 }
 
 .dropdown-divider {
@@ -1248,7 +1251,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(var(--space-primary-rgb), 0.2),
+    rgba(var(--color-primary-rgb), 0.2),
     transparent
   );
 }
@@ -1257,7 +1260,7 @@ onBeforeUnmount(() => {
   padding: 8px 0;
   display: flex;
   justify-content: center;
-  border-top: 1px solid rgba(var(--space-primary-rgb), 0.1);
+  border-top: 1px solid rgba(var(--color-primary-rgb), 0.1);
 }
 
 .circuit-dots {
@@ -1269,7 +1272,7 @@ onBeforeUnmount(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--space-primary-light);
+  background-color: var(--color-primary-light);
   opacity: 0.5;
   animation: dot-pulse 2s infinite;
 }
@@ -1353,8 +1356,8 @@ onBeforeUnmount(() => {
 .toggle-track {
   width: 42px;
   height: 22px;
-  background: rgba(var(--space-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: rgba(var(--color-bg-light-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -1367,9 +1370,9 @@ onBeforeUnmount(() => {
 .toggle-thumb {
   width: 16px;
   height: 16px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--space-primary);
+  box-shadow: 0 0 5px var(--color-primary);
   transition: transform 0.3s ease, background 0.3s;
   position: relative;
   z-index: 2;
@@ -1399,32 +1402,32 @@ onBeforeUnmount(() => {
 }
 
 input:checked + .toggle-track {
-  background: rgba(var(--space-accent-rgb), 0.3);
-  border-color: rgba(var(--space-accent-rgb), 0.5);
+  background: rgba(var(--color-accent-rgb), 0.3);
+  border-color: rgba(var(--color-accent-rgb), 0.5);
 }
 
 input:checked + .toggle-track .toggle-thumb {
   transform: translateX(20px);
-  background: var(--space-accent-light);
-  box-shadow: 0 0 5px var(--space-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 0 5px var(--color-accent);
 }
 
 .toggle-track:hover {
-  border-color: rgba(var(--space-primary-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-primary-rgb), 0.2);
+  border-color: rgba(var(--color-primary-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
 }
 
 input:checked + .toggle-track:hover {
-  border-color: rgba(var(--space-accent-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-accent-rgb), 0.2);
+  border-color: rgba(var(--color-accent-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.2);
 }
 
 /* Toggle pour mobile */
 .toggle-track-mobile {
   width: 36px;
   height: 20px;
-  background: rgba(var(--space-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: rgba(var(--color-bg-light-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -1435,21 +1438,21 @@ input:checked + .toggle-track:hover {
 .toggle-thumb-mobile {
   width: 14px;
   height: 14px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--space-primary);
+  box-shadow: 0 0 5px var(--color-primary);
   transition: transform 0.3s ease, background 0.3s;
 }
 
 input:checked + .toggle-track-mobile {
-  background: rgba(var(--space-accent-rgb), 0.3);
-  border-color: rgba(var(--space-accent-rgb), 0.5);
+  background: rgba(var(--color-accent-rgb), 0.3);
+  border-color: rgba(var(--color-accent-rgb), 0.5);
 }
 
 input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   transform: translateX(16px);
-  background: var(--space-accent-light);
-  box-shadow: 0 0 5px var(--space-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 0 5px var(--color-accent);
 }
 
 /* Tooltips */
@@ -1458,12 +1461,12 @@ input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(var(--space-bg-rgb), 0.8);
-  color: var(--space-primary-light);
+  background: rgba(var(--color-bg-rgb), 0.8);
+  color: var(--color-primary-light);
   font-size: 0.7rem;
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -1477,25 +1480,25 @@ input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   opacity: 1;
 }
 
-/* Animation transitions */
-.space-fade-enter-active,
-.space-fade-leave-active {
+/* Animation transitions Halloween */
+.mystical-fade-enter-active,
+.mystical-fade-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.space-fade-enter-from,
-.space-fade-leave-to {
+.mystical-fade-enter-from,
+.mystical-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }
 
-.space-slide-enter-active,
-.space-slide-leave-active {
+.mystical-slide-enter-active,
+.mystical-slide-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.space-slide-enter-from,
-.space-slide-leave-to {
+.mystical-slide-enter-from,
+.mystical-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }
@@ -1505,5 +1508,90 @@ input:checked + .toggle-track-mobile .toggle-thumb-mobile {
   .navbar-logo {
     height: 36px;
   }
+}
+
+/* Bouton Halloween "Ne clique pas" */
+.halloween-button {
+  position: relative;
+  background: rgba(139, 69, 19, 0.2);
+  border: 1px solid rgba(255, 69, 0, 0.4);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.halloween-text {
+  color: #ff4500;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+}
+
+.halloween-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 69, 0, 0.3),
+    rgba(139, 69, 19, 0.3),
+    rgba(255, 140, 0, 0.3)
+  );
+  border-radius: 8px;
+  filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.halloween-button:hover {
+  background: rgba(139, 69, 19, 0.4);
+  border-color: rgba(255, 69, 0, 0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+}
+
+.halloween-button:hover .halloween-glow {
+  opacity: 0.6;
+  animation: spooky-pulse 1.5s ease-in-out infinite;
+}
+
+.halloween-button:hover .halloween-text {
+  color: #ffa500;
+  text-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+}
+
+.halloween-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.4);
+}
+
+@keyframes spooky-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(6px);
+  }
+}
+
+/* Version mobile du bouton Halloween */
+.halloween-mobile-button {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.halloween-mobile-button:hover {
+  background: rgba(255, 69, 0, 0.1) !important;
+  color: #ff4500 !important;
+  border-left: 2px solid #ff4500 !important;
 }
 </style>

@@ -1,6 +1,27 @@
+<!--
+  TOGGLE COMPONENT - Composant d'interrupteur on/off avec thème Halloween
+  
+  Ce composant affiche un toggle switch stylisé avec une esthétique Halloween.
+  Il supporte deux tailles (default/sm), des labels, des tooltips et peut être désactivé.
+  
+  Props:
+  - modelValue (Boolean): État du toggle (true/false)
+  - label (String): Texte à afficher à côté du toggle
+  - tooltip (String): Texte d'aide affiché au survol
+  - disabled (Boolean): Désactive le toggle
+  - size (String): Taille du toggle ('default' ou 'sm')
+  - className (String): Classes CSS additionnelles pour le track
+  - containerClassName (String): Classes CSS additionnelles pour le conteneur
+  
+  Émissions:
+  - update:modelValue: Émis quand l'état du toggle change
+  
+  Exemple d'utilisation:
+  <Toggle v-model="isActive" label="Mode sombre" tooltip="Active le mode sombre" />
+-->
 <template>
   <div class="relative group" :class="containerClassName">
-    <label class="space-toggle flex items-center cursor-pointer">
+    <label class="toggle-container flex items-center cursor-pointer">
       <input
         type="checkbox"
         :checked="modelValue"
@@ -16,36 +37,34 @@
       <div
         :class="[
           'toggle-track relative',
-          size === 'sm' ? 'toggle-track-mobile' : '',
+          size === 'sm' ? 'toggle-track-small' : '',
           className,
         ]"
       >
         <div
-          :class="['toggle-thumb', size === 'sm' ? 'toggle-thumb-mobile' : '']"
+          :class="['toggle-thumb', size === 'sm' ? 'toggle-thumb-small' : '']"
         ></div>
-        <div class="toggle-stars">
+        <div class="toggle-effects">
           <div
-            v-for="i in 5"
-            :key="`toggle-star-${i}`"
-            class="toggle-star"
+            v-for="i in 4"
+            :key="`toggle-spark-${i}`"
+            class="toggle-spark"
             :style="{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2 + 1}px`,
-              height: `${Math.random() * 2 + 1}px`,
               animationDelay: `${Math.random() * 2}s`,
             }"
           ></div>
         </div>
       </div>
 
-      <span v-if="label" class="ml-2 text-xs text-space-text-muted font-nasa">{{
+      <span v-if="label" class="ml-2 text-xs text-color-text-muted font-body">{{
         label
       }}</span>
       <slot></slot>
     </label>
 
-    <div v-if="tooltip" class="tooltip-text">{{ tooltip }}</div>
+    <div v-if="tooltip" class="tooltip-content">{{ tooltip }}</div>
   </div>
 </template>
 
@@ -86,122 +105,217 @@ defineEmits(["update:modelValue"]);
 </script>
 
 <style scoped>
-.space-toggle {
+/* Toggle Container */
+.toggle-container {
   position: relative;
+  font-family: var(--font-body);
 }
 
+/* Toggle Track - Rail principal du toggle */
 .toggle-track {
   width: 42px;
   height: 22px;
-  background: rgba(var(--space-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-primary-dark);
   border-radius: 12px;
   display: flex;
   align-items: center;
   padding: 2px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Toggle Thumb - Bouton mobile du toggle */
 .toggle-thumb {
   width: 16px;
   height: 16px;
-  background: var(--space-primary-light);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--space-primary);
-  transition: transform 0.3s ease, background 0.3s;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(var(--color-primary-rgb), 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   z-index: 2;
+  border: 1px solid var(--color-primary-dark);
 }
 
-.toggle-stars {
+/* Effets visuels Halloween */
+.toggle-effects {
   position: absolute;
   inset: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
-.toggle-star {
+.toggle-spark {
   position: absolute;
-  background-color: white;
+  width: 2px;
+  height: 2px;
+  background-color: var(--color-primary-light);
   border-radius: 50%;
-  animation: star-twinkle 3s infinite;
+  animation: halloween-sparkle 3s infinite ease-in-out;
+  box-shadow: 0 0 4px var(--color-primary);
 }
 
-@keyframes star-twinkle {
-  0%,
-  100% {
-    opacity: 0.1;
+/* Animations Halloween */
+@keyframes halloween-sparkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.8;
+    transform: scale(1.2);
   }
 }
 
+@keyframes halloween-glow {
+  0%, 100% {
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 8px rgba(var(--color-primary-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 12px rgba(var(--color-primary-rgb), 0.5);
+  }
+}
+
+/* États du toggle */
 input:checked + .toggle-track {
-  background: rgba(var(--space-accent-rgb), 0.3);
-  border-color: rgba(var(--space-accent-rgb), 0.5);
+  background: var(--color-bg-light);
+  border-color: var(--color-accent);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(var(--color-accent-rgb), 0.2);
 }
 
 input:checked + .toggle-track .toggle-thumb {
   transform: translateX(20px);
-  background: var(--space-accent-light);
-  box-shadow: 0 0 5px var(--space-accent);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(var(--color-accent-rgb), 0.4);
+  border-color: var(--color-accent-dark);
+  animation: halloween-glow 2s infinite ease-in-out;
 }
 
+input:checked + .toggle-track .toggle-spark {
+  background-color: var(--color-accent-light);
+  box-shadow: 0 0 4px var(--color-accent);
+}
+
+/* Hover states */
 .toggle-track:hover {
-  border-color: rgba(var(--space-primary-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-primary-rgb), 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(var(--color-primary-rgb), 0.3);
 }
 
 input:checked + .toggle-track:hover {
-  border-color: rgba(var(--space-accent-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--space-accent-rgb), 0.2);
+  border-color: var(--color-accent-light);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(var(--color-accent-rgb), 0.4);
 }
 
-/* Style pour la version mobile/small */
-.toggle-track-mobile {
+/* Taille small pour mobile */
+.toggle-track-small {
   width: 36px;
   height: 20px;
   border-radius: 10px;
 }
 
-.toggle-thumb-mobile {
+.toggle-thumb-small {
   width: 14px;
   height: 14px;
 }
 
-input:checked + .toggle-track-mobile .toggle-thumb {
+input:checked + .toggle-track-small .toggle-thumb {
   transform: translateX(16px);
 }
 
-/* Style pour le tooltip */
-.tooltip-text {
+/* Tooltip Halloween */
+.tooltip-content {
   position: absolute;
-  bottom: -25px;
+  bottom: -32px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(var(--space-bg-rgb), 0.8);
-  color: var(--space-primary-light);
-  font-size: 0.7rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-primary-dark);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   white-space: nowrap;
   z-index: 100;
-  backdrop-filter: blur(5px);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(var(--color-primary-rgb), 0.2);
 }
 
-.group:hover .tooltip-text {
+.tooltip-content::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid var(--color-primary-dark);
+}
+
+.group:hover .tooltip-content {
   opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
 }
 
-/* Style pour le toggle désactivé */
+/* État désactivé */
 input:disabled + .toggle-track {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  background: var(--color-bg-dark);
+  border-color: var(--color-text-dark);
 }
+
+input:disabled + .toggle-track .toggle-thumb {
+  background: var(--color-text-dark);
+  box-shadow: none;
+}
+
+input:disabled + .toggle-track .toggle-spark {
+  display: none;
+}
+
+.toggle-container:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Focus states pour l'accessibilité */
+input:focus + .toggle-track {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input:checked:focus + .toggle-track {
+  outline-color: var(--color-accent);
+}
+
+/* Animation d'entrée pour les effets */
+.toggle-effects .toggle-spark:nth-child(1) { animation-delay: 0s; }
+.toggle-effects .toggle-spark:nth-child(2) { animation-delay: 0.5s; }
+.toggle-effects .toggle-spark:nth-child(3) { animation-delay: 1s; }
+.toggle-effects .toggle-spark:nth-child(4) { animation-delay: 1.5s; }
 </style>

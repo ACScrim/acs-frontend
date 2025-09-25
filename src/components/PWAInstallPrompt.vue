@@ -1,15 +1,11 @@
 <template>
   <div v-if="showInstallPrompt" class="fixed bottom-4 right-4 z-50">
-    <SpaceCard
-      variant="primary"
-      :stars="true"
-      className="p-4 max-w-sm shadow-2xl"
-    >
+    <Card variant="primary" :stars="true" className="p-4 max-w-sm shadow-2xl">
       <div class="flex items-start space-x-3">
         <div class="flex-shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-space-primary"
+            class="h-8 w-8 text-color-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -24,31 +20,31 @@
         </div>
 
         <div class="flex-1">
-          <h3 class="text-space-text font-nasa text-sm font-bold mb-1">
+          <h3 class="text-color-text font-nasa text-sm font-bold mb-1">
             Installer l'app ACS Gaming
           </h3>
-          <p class="text-space-text-muted text-xs mb-3">
+          <p class="text-color-text-muted text-xs mb-3">
             Accédez rapidement aux tournois depuis votre écran d'accueil
           </p>
 
           <div class="flex space-x-2">
-            <SpaceButton
+            <Button
               @click="installApp"
               size="sm"
               variant="primary"
               :loading="installing"
             >
               Installer
-            </SpaceButton>
-            <SpaceButton @click="dismissPrompt" size="sm" variant="secondary">
+            </Button>
+            <Button @click="dismissPrompt" size="sm" variant="secondary">
               Plus tard
-            </SpaceButton>
+            </Button>
           </div>
         </div>
 
         <button
           @click="dismissPrompt"
-          class="flex-shrink-0 text-space-text-muted hover:text-space-text transition-colors"
+          class="flex-shrink-0 text-color-text-muted hover:text-color-text transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +62,7 @@
           </svg>
         </button>
       </div>
-    </SpaceCard>
+    </Card>
   </div>
 </template>
 
