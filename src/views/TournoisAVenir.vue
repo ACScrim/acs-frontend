@@ -789,11 +789,14 @@ const confirmAction = async () => {
 const registerWithoutLevel = async () => {
   if (!user.value || !levelPromptTournamentId.value) return;
 
+  // Stocker l'ID du tournoi avant de fermer la modale
+  const tournamentId = levelPromptTournamentId.value;
+
   try {
     closeLevelPrompt();
 
     await tournamentService.registerPlayer(
-      levelPromptTournamentId.value,
+      tournamentId,
       user.value._id
     );
 
