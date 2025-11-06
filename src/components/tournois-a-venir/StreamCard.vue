@@ -43,8 +43,10 @@
     </div>
 
     <!-- Informations du stream -->
-    <div class="p-4">
-      <h5 class="font-semibold text-white truncate flex items-center">
+    <div class="stream-info p-4">
+      <h5
+        class="stream-title font-semibold text-color-text truncate flex items-center font-heading"
+      >
         {{ user.username }}
         <!-- Icône participant -->
         <svg
