@@ -664,8 +664,11 @@
     <Toast v-if="message" :type="messageType" :message="message" />
 
     <!-- Modal de confirmation pour modifications non sauvegardées -->
-    <SpaceModal v-if="showUnsavedChangesDialog" v-model="showUnsavedChangesDialog"
-      title="MODIFICATIONS NON SAUVEGARDÉES">
+    <SpaceModal
+      v-if="showUnsavedChangesDialog"
+      v-model="showUnsavedChangesDialog"
+      title="MODIFICATIONS NON SAUVEGARDÉES"
+    >
       <div class="text-center mb-6 space-y-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-warning mx-auto" fill="none"
           viewBox="0 0 24 24" stroke="currentColor">
@@ -692,7 +695,11 @@
     </SpaceModal>
 
     <!-- Modal de confirmation pour réinitialisation -->
-    <SpaceModal v-if="showResetDialog" v-model="showResetDialog" title="RÉINITIALISER LES MODIFICATIONS">
+    <SpaceModal
+      v-if="showResetDialog"
+      v-model="showResetDialog"
+      title="RÉINITIALISER LES MODIFICATIONS"
+    >
       <div class="text-center mb-6 space-y-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-secondary mx-auto" fill="none"
           viewBox="0 0 24 24" stroke="currentColor">

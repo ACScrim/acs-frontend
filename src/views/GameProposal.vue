@@ -30,7 +30,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-primary-light"
+            <label class="block mb-2 font-nasa text-color-primary-light"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
@@ -51,7 +51,7 @@
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-secondary-light"
+            <label class="block mb-2 font-nasa text-color-secondary-light"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
@@ -84,7 +84,7 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-nasa text-space-accent-light"
+              <label class="block mb-2 font-nasa text-color-accent-light"
                 >Rechercher un jeu</label
               >
               <SpaceInput
@@ -218,7 +218,7 @@
       <div class="space-y-6">
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Rechercher un jeu
           </label>
@@ -273,7 +273,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Nom du jeu
           </label>
@@ -282,7 +282,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
           >
             Description (optionnelle)
           </label>
@@ -327,7 +327,7 @@
       v-model="deleteDialogVisible"
       title="SUPPRIMER CETTE PROPOSITION"
     >
-      <p class="text-space-text">
+      <p class="text-color-text">
         Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
         jeu ? Cette action est irréversible.
       </p>
@@ -1147,7 +1147,7 @@ onMounted(() => {
 }
 
 .proposal-pending {
-  border-left: 3px solid var(--space-secondary);
+  border-left: 3px solid var(--color-secondary);
 }
 
 /* Amélioration des transitions */

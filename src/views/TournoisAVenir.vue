@@ -1,5 +1,5 @@
 <template>
-  <SpaceContainer>
+  <Container>
     <!-- En-tête de la page avec style NASA -->
     <SpaceHeader
       title="TOURNOIS À VENIR"
@@ -328,7 +328,7 @@
         </div>
       </template>
     </SpaceModal>
-  </SpaceContainer>
+  </Container>
 </template>
 
 <script setup lang="ts">

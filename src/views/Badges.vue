@@ -529,7 +529,7 @@
   </SpaceContainer>
 
   <!-- Modal détail badge -->
-  <!-- La modale est déplacée en dehors du SpaceContainer pour un positionnement correct -->
+  <!-- La modale est déplacée en dehors du Container pour un positionnement correct -->
   <SpaceModal
     v-model="showModal"
     :title="selectedBadge ? selectedBadge.title : ''"

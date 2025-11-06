@@ -1042,10 +1042,16 @@
     <Toast v-if="success" type="success" :message="success" />
 
     <!-- Modales -->
-    <SpaceModal v-model="showPopup" :title="`CONFIRMATION D'${actionType === 'register' || actionType === 'waitlist' || actionType === 'caster'
-      ? 'INSCRIPTION'
-      : 'ANNULATION'
-      }`">
+    <SpaceModal
+      v-model="showPopup"
+      :title="`CONFIRMATION D'${
+        actionType === 'register' ||
+        actionType === 'waitlist' ||
+        actionType === 'caster'
+          ? 'INSCRIPTION'
+          : 'ANNULATION'
+      }`"
+    >
       <div class="space-y-3 sm:space-y-4">
         <p class="text-space-text text-sm sm:text-base">
           Voulez-vous

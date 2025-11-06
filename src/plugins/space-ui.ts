@@ -33,15 +33,15 @@ const components = {
   SpaceDropdown: Dropdown, // Ajout du composant Toggle
 
   // Molecules
-  SpaceCard: Card,
+  Card: Card,
   SpaceAlert: Alert,
   SpaceModal: Modal,
-  SpaceHeader: Header,
-  SpaceMemberCard: MemberCard,
+  Header: Header,
+  MemberCard: MemberCard,
 
   // Organisms
   SpacePagination: Pagination,
-  SpaceTerminal: Terminal,
+  Terminal: Terminal,
 
   // Layout
   SpaceContainer: Container,
