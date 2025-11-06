@@ -177,9 +177,15 @@
                   </div>
 
                   <!-- Toggle -->
-                  <SpaceToggle :model-value="notificationPreferences.tournaments"
-                    @update:model-value="updateNotificationPreference('tournaments', $event)" size="sm"
-                    className="bg-yellow-500/20" :disabled="notificationStatus.tournaments === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.tournaments"
+                    @update:model-value="
+                      updateNotificationPreference('tournaments', $event)
+                    "
+                    size="sm"
+                    className="bg-yellow-500/20"
+                    :disabled="notificationStatus.tournaments === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
@@ -254,9 +260,15 @@
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.badges"
-                    @update:model-value="updateNotificationPreference('badges', $event)" size="sm"
-                    className="bg-purple-500/20" :disabled="notificationStatus.badges === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.badges"
+                    @update:model-value="
+                      updateNotificationPreference('badges', $event)
+                    "
+                    size="sm"
+                    className="bg-purple-500/20"
+                    :disabled="notificationStatus.badges === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
@@ -331,9 +343,15 @@
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.reminders"
-                    @update:model-value="updateNotificationPreference('reminders', $event)" size="sm"
-                    className="bg-blue-500/20" :disabled="notificationStatus.reminders === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.reminders"
+                    @update:model-value="
+                      updateNotificationPreference('reminders', $event)
+                    "
+                    size="sm"
+                    className="bg-blue-500/20"
+                    :disabled="notificationStatus.reminders === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
@@ -408,9 +426,15 @@
                     </div>
                   </div>
 
-                  <SpaceToggle :model-value="notificationPreferences.system"
-                    @update:model-value="updateNotificationPreference('system', $event)" size="sm"
-                    className="bg-green-500/20" :disabled="notificationStatus.system === 'saving'" />
+                  <SpaceToggle
+                    :model-value="notificationPreferences.system"
+                    @update:model-value="
+                      updateNotificationPreference('system', $event)
+                    "
+                    size="sm"
+                    className="bg-green-500/20"
+                    :disabled="notificationStatus.system === 'saving'"
+                  />
                 </div>
               </div>
             </SpaceCard>
@@ -593,9 +617,13 @@
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <SpaceToggle :model-value="isGameRoleEnabled(game._id || '')"
-                  @update:model-value="toggleGameRole(game._id || '', $event)" size="sm"
-                  className="bg-space-secondary/20" :disabled="gameRoleStatus[game._id || ''] === 'syncing'" />
+                <SpaceToggle
+                  :model-value="isGameRoleEnabled(game._id || '')"
+                  @update:model-value="toggleGameRole(game._id || '', $event)"
+                  size="sm"
+                  className="bg-color-secondary/20"
+                  :disabled="gameRoleStatus[game._id || ''] === 'syncing'"
+                />
               </div>
             </SpaceCard>
           </div>

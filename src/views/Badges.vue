@@ -15,7 +15,7 @@
 
     <!-- Loader spatial -->
     <div v-if="loading" class="flex justify-center my-12">
-      <SpaceLoader text="Analyse des insignes spatiaux..." />
+      <Loader text="Analyse des insignes spatiaux..." />
     </div>
 
     <div v-else class="flex flex-col gap-6 mt-6">
@@ -44,7 +44,7 @@
         <div>
           <label for="gameFilter" class="mb-3 flex items-center gap-2">
             <div
-              class="font-heading text-color-primary-light flex items-center gap-2"
+              class="font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +146,7 @@
                           ></div>
                         </div>
                         <div class="flex-1">
-                          <h3 class="text-color-text text-lg font-body">
+                          <h3 class="text-color-text text-lg font-heading">
                             {{ badge.title }}
                           </h3>
                           <SpaceBadge
@@ -1136,45 +1136,5 @@ onMounted(() => {
     transform: scale(1) rotate(360deg);
     filter: hue-rotate(360deg);
   }
-}
-
-/* Animations Halloween */
-@keyframes mystical-glow {
-  0% {
-    box-shadow: 0 0 20px var(--halloween-orange),
-      0 0 30px var(--halloween-orange), 0 0 40px var(--halloween-orange);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--halloween-rouge), 0 0 25px var(--halloween-rouge),
-      0 0 35px var(--halloween-rouge);
-  }
-  100% {
-    box-shadow: 0 0 20px var(--halloween-violet),
-      0 0 30px var(--halloween-violet), 0 0 40px var(--halloween-violet);
-  }
-}
-
-@keyframes pumpkin-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    transform: scale(1.02) rotate(180deg);
-    filter: hue-rotate(180deg);
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-}
-
-.badge-card:hover {
-  animation: pumpkin-pulse 2s ease-in-out infinite;
-}
-
-.special-badge-legendary {
-  animation: mystical-glow 3s ease-in-out infinite;
 }
 </style>
