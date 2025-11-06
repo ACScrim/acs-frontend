@@ -303,7 +303,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
-import Container from "@/components/ui/layout/Container.vue";
 
 // Utilisation du store
 const memberStore = useMemberStore();
