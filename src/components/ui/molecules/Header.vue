@@ -64,9 +64,19 @@ const formatStarDate = () => {
 <style scoped>
 .space-header {
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid rgba(220, 38, 38, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 15, 15, 0.95) 0%,
+    rgba(124, 45, 18, 0.08) 50%,
+    rgba(15, 15, 15, 0.95) 100%
+  );
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.15);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .space-header-content {

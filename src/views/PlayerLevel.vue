@@ -606,7 +606,7 @@
               <span class="text-space-error ml-1">*</span>
             </span>
             <div class="flex items-center gap-3">
-              <SpaceButton
+              <Button
                 @click="selectAllRoles"
                 type="button"
                 variant="ghost"
@@ -629,11 +629,11 @@
                   </svg>
                 </template>
                 Tout sélectionner
-              </SpaceButton>
-              <SpaceBadge variant="primary" size="sm">
+              </Button>
+              <Badge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
                 {{ selectedGame?.roles?.length || 0 }}
-              </SpaceBadge>
+              </Badge>
             </div>
           </label>
 
@@ -705,10 +705,10 @@
             rows="3"
             placeholder="Informations complémentaires, rôle préféré, etc."
             maxlength="150"
-            class="w-full p-3 bg-space-bg-light border border-space-bg-light rounded-md text-space-text focus:border-space-primary focus:outline-none focus:ring-1 focus:ring-space-primary/30 font-mono resize-none"
+            class="w-full p-3 bg-color-bg-light border border-color-bg-light rounded-md text-color-text focus:border-color-primary focus:outline-none focus:ring-1 focus:ring-color-primary/30 font-mono resize-none"
           ></textarea>
           <div class="flex justify-end mt-1">
-            <p class="text-xs text-space-text-muted">
+            <p class="text-xs text-color-text-muted">
               {{ comment.length }}/150
             </p>
           </div>

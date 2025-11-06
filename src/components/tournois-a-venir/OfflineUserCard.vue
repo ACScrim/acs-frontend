@@ -56,10 +56,14 @@
         <span class="truncate">{{ user.twitchUsername }}</span>
       </div>
 
-      <!-- Statut offline -->
-      <div class="flex items-center justify-center text-xs text-gray-500">
-        <div class="w-2 h-2 bg-gray-500 rounded-full mr-1.5 opacity-75"></div>
-        <span class="font-orbitron">Hors ligne</span>
+      <!-- Statut offline mystique -->
+      <div
+        class="offline-status flex items-center justify-center text-xs text-color-text-dark"
+      >
+        <div
+          class="offline-indicator w-2 h-2 bg-color-secondary rounded-full mr-1.5 opacity-75"
+        ></div>
+        <span class="font-body">Dans les ombres</span>
       </div>
 
       <!-- Badge participant textuel -->

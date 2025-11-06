@@ -1,11 +1,25 @@
 <template>
-  <div class="container mx-auto p-3 sm:p-4 lg:p-6 pt-20 sm:pt-24 relative max-w-7xl">
-    <div class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+  <div
+    class="container mx-auto p-3 sm:p-4 lg:p-6 pt-20 sm:pt-24 relative max-w-7xl"
+  >
+    <div
+      class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
+    >
       <!-- Bouton retour -->
-      <SpaceButton @click="goBackToTournaments" variant="secondary" size="sm"
-        className="flex items-center justify-center sm:justify-start w-full sm:w-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd"
+      <SpaceButton
+        @click="goBackToTournaments"
+        variant="secondary"
+        size="sm"
+        className="flex items-center justify-center sm:justify-start w-full sm:w-auto"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
             d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
             clip-rule="evenodd" />
         </svg>
@@ -140,7 +154,9 @@
       <!-- En-tête avec les informations principales -->
       <SpaceCard variant="primary" :stars="true" :decorated="true" className="overflow-hidden">
         <!-- Image de bannière du jeu -->
-        <div class="relative h-32 sm:h-40 md:h-56 lg:h-64 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-4 sm:mb-6 overflow-hidden">
+        <div
+          class="relative h-32 sm:h-40 md:h-56 lg:h-64 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-4 sm:mb-6 overflow-hidden"
+        >
           <!-- Image du jeu si elle existe -->
           <template v-if="tournament.game.imageUrl && !imageError">
             <img :src="tournament.game.imageUrl" :alt="tournament.game.name" class="w-full h-full object-cover"
@@ -647,10 +663,16 @@
                   {{ team.name }}
                 </h4>
                 <ul class="space-y-1">
-                  <li v-for="teamPlayer in team.players" :key="teamPlayer._id"
-                    class="flex items-center justify-between p-2 bg-space-bg-light/10 rounded-md border-l-2 border-space-secondary/50 text-sm sm:text-base">
-                    <router-link v-if="teamPlayer._id" :to="{ name: 'Profil', params: { id: teamPlayer._id } }"
-                      class="text-space-text hover:text-space-secondary-light transition-colors truncate min-w-0 flex-1">
+                  <li
+                    v-for="teamPlayer in team.players"
+                    :key="teamPlayer._id"
+                    class="flex items-center justify-between p-2 bg-color-bg-light/10 rounded-md border-l-2 border-color-secondary/50 text-sm sm:text-base"
+                  >
+                    <router-link
+                      v-if="teamPlayer._id"
+                      :to="{ name: 'Profil', params: { id: teamPlayer._id } }"
+                      class="text-color-text hover:text-color-secondary-light transition-colors truncate min-w-0 flex-1"
+                    >
                       {{ teamPlayer.username }}
                     </router-link>
                     <span v-else class="text-space-text truncate min-w-0 flex-1">
@@ -690,20 +712,30 @@
             </div>
 
             <!-- Liste des joueurs individuels -->
-            <div v-else-if="
-              tournament.players &&
-              tournament.players.length > 0 &&
-              !(
-                tournament.teamsPublished &&
-                tournament.teams &&
-                tournament.teams.length > 0
-              )
-            ">
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                <div v-for="player in tournament.players" :key="player._id"
-                  class="flex items-center justify-between p-2 sm:p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0">
-                  <router-link v-if="player._id" :to="{ name: 'Profil', params: { id: player._id } }"
-                    class="text-space-text hover:text-space-primary-light transition-colors truncate min-w-0 flex-1">
+            <div
+              v-else-if="
+                tournament.players &&
+                tournament.players.length > 0 &&
+                !(
+                  tournament.teamsPublished &&
+                  tournament.teams &&
+                  tournament.teams.length > 0
+                )
+              "
+            >
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              >
+                <div
+                  v-for="player in tournament.players"
+                  :key="player._id"
+                  class="flex items-center justify-between p-2 sm:p-3 bg-color-bg-light/10 rounded-lg border-l-2 border-color-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0"
+                >
+                  <router-link
+                    v-if="player._id"
+                    :to="{ name: 'Profil', params: { id: player._id } }"
+                    class="text-color-text hover:text-color-primary-light transition-colors truncate min-w-0 flex-1"
+                  >
                     {{ player.username }}
                   </router-link>
                   <span v-else class="text-space-text truncate min-w-0 flex-1">
@@ -787,8 +819,11 @@
                     <div>
                       <span class="sm:hidden text-xs text-space-text-muted">Joueur:
                       </span>
-                      <router-link v-if="player._id" :to="{ name: 'Profil', params: { id: player._id } }"
-                        class="text-space-text hover:text-space-primary-light transition-colors">
+                      <router-link
+                        v-if="player._id"
+                        :to="{ name: 'Profil', params: { id: player._id } }"
+                        class="text-color-text hover:text-color-primary-light transition-colors"
+                      >
                         {{ player.username }}
                       </router-link>
                       <span v-else>{{
@@ -816,56 +851,75 @@
             </div>
           </div>
 
-
-
           <!-- Affichage des casters -->
-          <div v-if="
-              tournament.casters &&
-              tournament.casters.length > 0
-            " class="pt-10">
-              <h3 class="text-base sm:text-lg text-space-text font-heading mb-3 sm:mb-4 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-space-primary"
-                  viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                </svg>
-                Liste des casters
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                <div v-for="caster in tournament.casters" :key="caster._id"
-                  class="flex items-center justify-between p-2 sm:p-3 bg-space-bg-light/10 rounded-lg border-l-2 border-space-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0">
-                  <router-link v-if="caster._id" :to="{ name: 'Profil', params: { id: caster._id } }"
-                    class="text-space-text hover:text-space-primary-light transition-colors truncate min-w-0 flex-1">
-                    {{ caster.username }}
-                  </router-link>
-                  <span v-else class="text-space-text truncate min-w-0 flex-1">
-                    {{ caster.username || "Joueur inconnu" }}
-                  </span>
+          <div
+            v-if="tournament.casters && tournament.casters.length > 0"
+            class="pt-10"
+          >
+            <h3
+              class="text-base sm:text-lg text-color-text font-heading mb-3 sm:mb-4 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-color-primary"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+                />
+              </svg>
+              Liste des casters
+            </h3>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+            >
+              <div
+                v-for="caster in tournament.casters"
+                :key="caster._id"
+                class="flex items-center justify-between p-2 sm:p-3 bg-color-bg-light/10 rounded-lg border-l-2 border-color-primary/50 font-nasa text-sm sm:text-base lg:text-xl min-w-0"
+              >
+                <router-link
+                  v-if="caster._id"
+                  :to="{ name: 'Profil', params: { id: caster._id } }"
+                  class="text-color-text hover:text-color-primary-light transition-colors truncate min-w-0 flex-1"
+                >
+                  {{ caster.username }}
+                </router-link>
+                <span v-else class="text-color-text truncate min-w-0 flex-1">
+                  {{ caster.username || "Joueur inconnu" }}
+                </span>
 
-                  <div class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
-                    <!-- Badge pour les streams live -->
-                    <a v-if="getPlayerLiveStatus(caster)" :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                <div
+                  class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
+                >
+                  <!-- Badge pour les streams live -->
+                  <a
+                    v-if="getPlayerLiveStatus(caster)"
+                    :href="`https://twitch.tv/${getPlayerTwitchUsername(
                       caster
-                    )}`" target="_blank" rel="noopener noreferrer">
-                      <SpaceBadge variant="accent" size="xs" className="animate-pulse">
-                        LIVE
-                      </SpaceBadge>
-                    </a>
+                    )}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Badge variant="accent" size="xs" className="animate-pulse">
+                      LIVE
+                    </Badge>
+                  </a>
 
-                    <!-- Badge check-in -->
-                    <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
-                      <SpaceBadge variant="success" size="xs">
-                        <span class="hidden sm:inline">Check-in</span>
-                        <span class="sm:hidden">✓</span>
-                      </SpaceBadge>
-                    </span>
-                    <span v-else-if="isCheckInAvailable">
-                      <SpaceBadge variant="error" size="xs">
-                        <span class="hidden sm:inline">En attente</span>
-                        <span class="sm:hidden">⏳</span>
-                      </SpaceBadge>
-                    </span>
-                  </div>
+                  <!-- Badge check-in -->
+                  <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
+                    <Badge variant="success" size="xs">
+                      <span class="hidden sm:inline">Check-in</span>
+                      <span class="sm:hidden">✓</span>
+                    </Badge>
+                  </span>
+                  <span v-else-if="isCheckInAvailable">
+                    <Badge variant="error" size="xs">
+                      <span class="hidden sm:inline">En attente</span>
+                      <span class="sm:hidden">⏳</span>
+                    </Badge>
+                  </span>
                 </div>
               </div>
             </div>
@@ -2114,11 +2168,11 @@ watch(activeTab, (newTab) => {
   }
 
   /* Espacement réduit sur mobile */
-  .space-y-3>*+* {
+  .space-y-3 > * + * {
     margin-top: 0.75rem;
   }
 
-  .space-y-4>*+* {
+  .space-y-4 > * + * {
     margin-top: 1rem;
   }
 
@@ -2155,8 +2209,8 @@ watch(activeTab, (newTab) => {
     transition: transform 0.2s ease;
   }
 
-  .hover\:bg-space-bg-light\/10:hover {
-    background-color: rgba(var(--space-bg-light-rgb), 0.15);
+  .hover\:bg-color-bg-light\/10:hover {
+    background-color: rgba(var(--color-bg-light-rgb), 0.15);
   }
 }
 
