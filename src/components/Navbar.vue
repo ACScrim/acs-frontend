@@ -55,7 +55,7 @@
           <div class="tooltip-text font-nasa">Menu Admin</div>
         </button>
 
-        <router-link to="/" class="logo-container">
+        <router-link to="/" class="logo-container mystical-transition">
           <div class="logo-glow"></div>
           <img
             src="../assets/sanslueur.png"
@@ -1038,36 +1038,33 @@ onBeforeUnmount(() => {
 .logo-glow {
   position: absolute;
   inset: -5px;
-  background: var(--space-primary);
+  background: var(--color-primary);
   border-radius: 50%;
   filter: blur(10px);
-  opacity: 0.15;
+  opacity: 0.2;
   z-index: -1;
   transition: all 0.3s ease;
 }
 
 .logo-container:hover .logo-glow {
-  /* Ne pas accentuer le glow au hover pour éviter l'effet de cadre */
-  opacity: 0.15;
-  filter: blur(10px);
+  opacity: 0.4;
+  filter: blur(15px);
+  box-shadow: var(--shadow-glow-orange);
 }
 
 .navbar-logo {
   height: 40px;
-  /* Désactiver le drop-shadow par défaut pour éviter l'effet de bord */
-  filter: none;
+  filter: drop-shadow(var(--shadow-glow-orange));
   transition: all 0.3s ease;
-  outline: none;
-  border: none;
 }
 
 .logo-container:hover .navbar-logo {
-  /* Pas de drop-shadow supplémentaire au hover */
-  filter: none;
+  filter: drop-shadow(var(--shadow-glow-orange))
+    drop-shadow(0 0 10px var(--color-primary));
   transform: scale(1.05);
 }
 
-/* Navigation links */
+/* Navigation links Halloween */
 .nav-link {
   position: relative;
   color: var(--space-text);
