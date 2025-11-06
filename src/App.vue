@@ -33,7 +33,7 @@
         playsinline
         preload="auto"
       >
-        <source src="https://acscrim.fr/badge/space.mp4" type="video/mp4" />
+        <source src="https://acscrim.fr/videos/space.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
