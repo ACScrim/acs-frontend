@@ -1,7 +1,7 @@
 <template>
   <SpaceContainer>
-    <!-- En-tête de la page avec notre nouveau composant SpaceHeader -->
-    <SpaceHeader
+    <!-- En-tête de la page avec notre nouveau composant Header -->
+    <Header
       title="MEMBRES DE L'ÉQUIPAGE"
       :showMissionInfo="true"
       mission="CREWMATES-2025"
@@ -24,25 +24,25 @@
           </SpaceBadge>
         </div>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Statistiques rapides -->
-    <SpaceCard variant="primary" className="mb-6 mt-6">
+    <Card variant="primary" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-3xl font-bold text-space-primary-light font-nasa">
+          <div class="text-3xl font-bold text-color-primary-light font-nasa">
             {{ memberStore.members.length }}
           </div>
           <div class="text-space-text-muted">Total membres</div>
         </div>
         <div class="text-center">
-          <div class="text-3xl font-bold text-space-secondary-light font-nasa">
+          <div class="text-3xl font-bold text-color-secondary-light font-nasa">
             {{ memberStats.admins }}
           </div>
           <div class="text-space-text-muted">Administrateurs</div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Recherche et filtres -->
     <SpaceCard variant="dark" className="mb-6 mt-6">
@@ -51,7 +51,7 @@
         <div>
           <label for="member-search" class="mb-3 flex items-center gap-2">
             <div
-              class="font-body text-color-primary-light flex items-center gap-2"
+              class="font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,18 +68,19 @@
               Rechercher un membre
             </div>
           </label>
-          <Input
+          <SpaceInput
             id="member-search"
             v-model="searchTerm"
             placeholder="Nom, rôle..."
             variant="primary"
+            :stars="true"
           />
         </div>
 
         <!-- Filtre par rôle -->
         <div>
           <label for="role-filter" class="mb-3 flex items-center gap-2">
-            <div class="font-body text-color-accent flex items-center gap-2">
+            <div class="font-nasa text-color-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -131,7 +132,7 @@
         <div>
           <label for="sort-select" class="mb-3 flex items-center gap-2">
             <div
-              class="font-body text-color-secondary-light flex items-center gap-2"
+              class="font-nasa text-color-secondary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +214,7 @@
 
     <!-- État de chargement -->
     <div v-if="memberStore.loading" class="flex justify-center py-12">
-      <SpaceLoader text="Scan des données biométriques en cours..." />
+      <Loader text="Scan des données biométriques en cours..." />
     </div>
 
     <!-- État d'erreur -->
@@ -302,7 +303,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
-import SpaceContainer from "@/components/ui/layout/Container.vue";
+import Container from "@/components/ui/layout/Container.vue";
 
 // Utilisation du store
 const memberStore = useMemberStore();
@@ -473,43 +474,35 @@ watch(currentSort, () => {
   margin-bottom: 1.5rem;
 }
 
-/* Styles pour les filtres Halloween */
+/* Style pour les filtres - optimisé */
 select {
-  background: var(--color-bg-dark);
-  border: 1px solid var(--color-primary-dark);
+  background-color: rgba(30, 30, 45, 0.8);
+  border: 1px solid rgba(109, 40, 217, 0.3);
   color: var(--color-text);
-  transition: all 0.3s ease;
-  font-family: var(--font-body);
+  transition: border-color 0.15s ease;
 }
 
 select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 0 0 10px rgba(217, 119, 6, 0.2);
-  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
 }
 
-select:hover {
-  border-color: var(--color-primary-light);
-  background: var(--color-bg-light);
+/* Suppression des animations coûteuses */
+.grid > * {
+  transition: none;
 }
 
-/* Grid responsive avec animations subtiles */
-.members-grid-container .grid > * {
-  transition: transform 0.2s ease, opacity 0.2s ease;
+/* Optimisation performance - désactivation des animations */
+.members-grid-container *,
+.members-grid-container *::before,
+.members-grid-container *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
 }
 
-.members-grid-container .grid > *:hover {
-  transform: translateY(-2px);
-}
-
-/* Options styling */
-option {
-  background: var(--color-bg-dark);
-  color: var(--color-text);
-  font-family: var(--font-body);
-}
-
-/* Responsive design */
+/* Responsive design simplifié */
 @media (max-width: 640px) {
   .members-grid-container {
     margin-top: 1rem;
@@ -517,23 +510,14 @@ option {
   }
 }
 
-/* Accessibilité améliorée */
+/* Amélioration de l'accessibilité sans animations */
 select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Amélioration des performances selon les préférences utilisateur */
-@media (prefers-reduced-motion: reduce) {
-  .members-grid-container .grid > *,
-  select {
-    transition: none;
-  }
-}
-
-/* Styles Halloween spéciaux pour les labels */
-label {
-  font-family: var(--font-heading);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+/* Performance optimisée */
+.grid {
+  contain: layout style;
 }
 </style>

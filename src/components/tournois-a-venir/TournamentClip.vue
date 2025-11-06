@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import tournamentService from '../../services/tournamentService';
-import type { Clip, Tournament } from '../../types';
-import SpaceInput from '../ui/atoms/Input.vue';
-import { useUserStore } from '../../stores/userStore';
-import Toast from '../../shared/Toast.vue';
+import { computed, ref, watch } from "vue";
+import tournamentService from "../../services/tournamentService";
+import type { Clip, Tournament } from "../../types";
+import SpaceInput from "../ui/atoms/Input.vue";
+import { useUserStore } from "../../stores/userStore";
+import Toast from "../../shared/Toast.vue";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);

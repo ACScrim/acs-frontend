@@ -58,8 +58,13 @@
         <div class="hidden md:grid grid-cols-3 gap-4 col-span-3">
           <!-- 2ème place équipes -->
           <div>
-            <h4 v-if="getTeamsByRank(2).length > 0" class="text-base font-heading text-space-silver mb-2 text-center">
-              <SpaceBadge variant="silver" size="md" className="mr-2">🥈</SpaceBadge>
+            <h4
+              v-if="getTeamsByRank(2).length > 0"
+              class="text-base font-heading text-color-silver mb-2 text-center"
+            >
+              <SpaceBadge variant="silver" size="md" className="mr-2"
+                >🥈</SpaceBadge
+              >
               {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
             </h4>
             <div class="space-y-2">
@@ -85,8 +90,13 @@
 
           <!-- 1ère place équipes -->
           <div>
-            <h4 v-if="getTeamsByRank(1).length > 0" class="text-lg font-heading text-space-gold mb-2 text-center">
-              <SpaceBadge variant="gold" size="md" className="mr-2">🏆</SpaceBadge>
+            <h4
+              v-if="getTeamsByRank(1).length > 0"
+              class="text-lg font-heading text-color-gold mb-2 text-center"
+            >
+              <SpaceBadge variant="gold" size="md" className="mr-2"
+                >🏆</SpaceBadge
+              >
               {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
             </h4>
             <div class="space-y-2">
@@ -112,8 +122,13 @@
 
           <!-- 3ème place équipes -->
           <div>
-            <h4 v-if="getTeamsByRank(3).length > 0" class="text-base font-heading text-space-bronze mb-2 text-center">
-              <SpaceBadge variant="bronze" size="md" className="mr-2">🥉</SpaceBadge>
+            <h4
+              v-if="getTeamsByRank(3).length > 0"
+              class="text-base font-heading text-color-bronze mb-2 text-center"
+            >
+              <SpaceBadge variant="bronze" size="md" className="mr-2"
+                >🥉</SpaceBadge
+              >
               {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
             </h4>
             <div class="space-y-2">
@@ -140,8 +155,10 @@
 
         <!-- Version mobile du podium (cartes en liste) -->
         <div class="block md:hidden col-span-3 mt-4">
-          <h4 class="text-center text-lg font-heading text-space-gold mb-4">
-            <SpaceBadge variant="gold" size="md" className="mr-2">🏆</SpaceBadge>
+          <h4 class="text-center text-lg font-heading text-color-gold mb-4">
+            <SpaceBadge variant="gold" size="md" className="mr-2"
+              >🏆</SpaceBadge
+            >
             Podium
           </h4>
 
@@ -255,7 +272,7 @@
               d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
               clip-rule="evenodd" />
           </svg>
-          <SpaceTitle size="lg" :decorated="false">
+          <Title size="lg" :decorated="false">
             Autres classements
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{
@@ -265,7 +282,7 @@
               }}
               équipes
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" :class="[
           isOtherRankingsExpanded ? 'transform rotate-180' : '',
@@ -302,7 +319,11 @@
                 'hover:bg-space-bg-light/20': true,
               }" class="transition-colors border-b border-space-bg-light/10">
                 <td class="py-3 px-4 text-center font-mono">
-                  <SpaceBadge variant="primary" size="sm" :className="team.ranking > 0 ? '' : 'opacity-50'">
+                  <SpaceBadge
+                    variant="primary"
+                    size="sm"
+                    :className="team.ranking > 0 ? '' : 'opacity-50'"
+                  >
                     {{ team.ranking > 0 ? `${team.ranking}e` : "NC" }}
                   </SpaceBadge>
                 </td>
@@ -332,7 +353,11 @@
                 'hover:bg-space-bg-light/15': true,
               }" class="transition-colors border-b border-space-bg-light/10 text-space-text-muted">
                 <td class="py-3 px-4 text-center font-mono">
-                  <SpaceBadge variant="secondary" size="sm" className="opacity-50">
+                  <SpaceBadge
+                    variant="secondary"
+                    size="sm"
+                    className="opacity-50"
+                  >
                     NC
                   </SpaceBadge>
                 </td>

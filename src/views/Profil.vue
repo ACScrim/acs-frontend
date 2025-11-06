@@ -180,7 +180,7 @@
         </div>
       </SpaceCard>
       <!-- Section Palmarès avec podium -->
-      <SpaceCard
+      <Card
         id="palmares"
         variant="accent"
         section="medals"
@@ -838,12 +838,12 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="2xl">
+          <Title size="2xl">
             Badges
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ badgeCount }}
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
 
         <div
@@ -1152,12 +1152,12 @@
             <path d="M8 12v5h6" />
             <path d="M8 17h3v5H8z" />
           </svg>
-          <SpaceTitle size="2xl">
+          <Title size="2xl">
             Tournois
             <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ tournamentCount }}
             </SpaceBadge>
-          </SpaceTitle>
+          </Title>
         </div>
 
         <!-- Options de tri pour les tournois -->

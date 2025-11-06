@@ -630,10 +630,10 @@
                 </template>
                 Tout sélectionner
               </Button>
-              <Badge variant="primary" size="sm">
+              <SpaceBadge variant="primary" size="sm">
                 {{ selectedRoles.length }} /
                 {{ selectedGame?.roles?.length || 0 }}
-              </Badge>
+              </SpaceBadge>
             </div>
           </label>
 

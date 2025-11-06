@@ -51,13 +51,22 @@
                 TOURNOI
               </div>
               <div class="flex items-center space-x-1 sm:space-x-2">
-                <SpaceBadge variant="primary" size="md"
-                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg">
+                <SpaceBadge
+                  variant="primary"
+                  size="md"
+                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
+                >
                   {{ currentTournamentIndex + 1 }}
                 </SpaceBadge>
-                <span class="text-space-text-muted font-mono text-sm sm:text-base">/</span>
-                <SpaceBadge variant="secondary" size="md"
-                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg">
+                <span
+                  class="text-color-text-muted font-mono text-sm sm:text-base"
+                  >/</span
+                >
+                <SpaceBadge
+                  variant="secondary"
+                  size="md"
+                  className="px-2 sm:px-3 py-1 font-mono font-bold text-base sm:text-lg"
+                >
                   {{ allTournaments.length }}
                 </SpaceBadge>
               </div>
@@ -182,11 +191,20 @@
 
           <!-- Badge "Terminé" -->
           <div class="absolute top-2 sm:top-4 right-2 sm:right-4">
-            <SpaceBadge v-if="tournament.finished" variant="success" size="md"
-              className="flex items-center gap-1 text-xs sm:text-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd"
+            <SpaceBadge
+              v-if="tournament.finished"
+              variant="success"
+              size="md"
+              className="flex items-center gap-1 text-xs sm:text-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 sm:h-5 sm:w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                   clip-rule="evenodd" />
               </svg>
@@ -684,20 +702,33 @@
                     </span>
 
                     <!-- Badge pour les streams live -->
-                    <div class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
-                      <a v-if="getPlayerLiveStatus(teamPlayer)" :href="`https://twitch.tv/${getPlayerTwitchUsername(
-                        teamPlayer
-                      )}`" target="_blank" rel="noopener noreferrer">
-                        <SpaceBadge variant="accent" size="xs" className="animate-pulse">
+                    <div
+                      class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0"
+                    >
+                      <a
+                        v-if="getPlayerLiveStatus(teamPlayer)"
+                        :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                          teamPlayer
+                        )}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <SpaceBadge
+                          variant="accent"
+                          size="xs"
+                          className="animate-pulse"
+                        >
                           LIVE
                         </SpaceBadge>
                       </a>
 
                       <!-- Badge check-in -->
-                      <span v-if="
-                        teamPlayer._id &&
-                        tournament?.checkIns?.[teamPlayer._id]
-                      ">
+                      <span
+                        v-if="
+                          teamPlayer._id &&
+                          tournament?.checkIns?.[teamPlayer._id]
+                        "
+                      >
                         <SpaceBadge variant="success" size="xs">
                           <span class="hidden sm:inline">Check-in</span>
                           <span class="sm:hidden">✓</span>
@@ -748,16 +779,27 @@
 
                   <div class="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
                     <!-- Badge pour les streams live -->
-                    <a v-if="getPlayerLiveStatus(player)" :href="`https://twitch.tv/${getPlayerTwitchUsername(
-                      player
-                    )}`" target="_blank" rel="noopener noreferrer">
-                      <SpaceBadge variant="accent" size="xs" className="animate-pulse">
+                    <a
+                      v-if="getPlayerLiveStatus(player)"
+                      :href="`https://twitch.tv/${getPlayerTwitchUsername(
+                        player
+                      )}`"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <SpaceBadge
+                        variant="accent"
+                        size="xs"
+                        className="animate-pulse"
+                      >
                         LIVE
                       </SpaceBadge>
                     </a>
 
                     <!-- Badge check-in -->
-                    <span v-if="player._id && tournament?.checkIns?.[player._id]">
+                    <span
+                      v-if="player._id && tournament?.checkIns?.[player._id]"
+                    >
                       <SpaceBadge variant="success" size="xs">
                         <span class="hidden sm:inline">Check-in</span>
                         <span class="sm:hidden">✓</span>
@@ -910,23 +952,27 @@
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Badge variant="accent" size="xs" className="animate-pulse">
+                    <SpaceBadge
+                      variant="accent"
+                      size="xs"
+                      className="animate-pulse"
+                    >
                       LIVE
-                    </Badge>
+                    </SpaceBadge>
                   </a>
 
                   <!-- Badge check-in -->
                   <span v-if="caster._id && tournament?.checkIns?.[caster._id]">
-                    <Badge variant="success" size="xs">
+                    <SpaceBadge variant="success" size="xs">
                       <span class="hidden sm:inline">Check-in</span>
                       <span class="sm:hidden">✓</span>
-                    </Badge>
+                    </SpaceBadge>
                   </span>
                   <span v-else-if="isCheckInAvailable">
-                    <Badge variant="error" size="xs">
+                    <SpaceBadge variant="error" size="xs">
                       <span class="hidden sm:inline">En attente</span>
                       <span class="sm:hidden">⏳</span>
-                    </Badge>
+                    </SpaceBadge>
                   </span>
                 </div>
               </div>
@@ -957,10 +1003,18 @@
           </h3>
 
           <div class="flex flex-wrap items-center gap-2">
-            <SpaceBadge variant="primary" size="sm" className="text-xs sm:text-sm">
+            <SpaceBadge
+              variant="primary"
+              size="sm"
+              className="text-xs sm:text-sm"
+            >
               {{ formatLocalDate(lastFinishedTournament.date) }}
             </SpaceBadge>
-            <SpaceBadge variant="secondary" size="sm" className="text-xs sm:text-sm break-words">
+            <SpaceBadge
+              variant="secondary"
+              size="sm"
+              className="text-xs sm:text-sm break-words"
+            >
               {{ lastFinishedTournament.name }}
             </SpaceBadge>
           </div>
@@ -976,10 +1030,16 @@
             <!-- En-tête de l'équipe -->
             <div class="p-3 bg-space-success/20 flex items-center justify-between">
               <div class="flex items-center min-w-0 flex-1">
-                <SpaceBadge variant="accent" size="sm" className="mr-2 sm:mr-3 flex-shrink-0">
+                <SpaceBadge
+                  variant="accent"
+                  size="sm"
+                  className="mr-2 sm:mr-3 flex-shrink-0"
+                >
                   1
                 </SpaceBadge>
-                <h5 class="text-space-text font-heading text-sm sm:text-base truncate">
+                <h5
+                  class="text-color-text font-heading text-sm sm:text-base truncate"
+                >
                   {{ team.name }}
                 </h5>
               </div>

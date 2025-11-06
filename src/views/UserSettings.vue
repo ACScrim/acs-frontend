@@ -39,7 +39,11 @@
               </label>
               <div class="flex gap-3">
                 <div class="flex-1 relative">
-                  <SpaceInput v-model="formData.twitchUsername" placeholder="votre_nom_twitch" :disabled="isSaving">
+                  <SpaceInput
+                    v-model="formData.twitchUsername"
+                    placeholder="votre_nom_twitch"
+                    :disabled="isSaving"
+                  >
                     <template #prepend>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-space-primary-light"
                         fill="currentColor" viewBox="0 0 24 24">

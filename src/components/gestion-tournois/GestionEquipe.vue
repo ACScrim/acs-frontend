@@ -121,7 +121,7 @@
 
       <div class="flex flex-col md:flex-row items-start gap-6">
         <div class="w-full md:w-1/2">
-          <SpaceTitle size="md" className="text-space-text-muted mb-3">
+          <Title size="md" className="text-space-text-muted mb-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2 inline"
@@ -135,7 +135,7 @@
               />
             </svg>
             Nombre d'équipes
-          </SpaceTitle>
+          </Title>
           <SpaceInput
             v-model="numTeams"
             type="number"
@@ -352,9 +352,9 @@
             <template #header>
               <div class="flex justify-between items-center">
                 <div class="flex flex-col gap-1">
-                  <SpaceTitle size="lg" className="text-space-secondary-light">
+                  <Title size="lg" className="text-space-secondary-light">
                     {{ team.name || `Équipe ${index + 1}` }}
-                  </SpaceTitle>
+                  </Title>
                   <SpaceBadge :variant="getTeamBalanceVariant(team)" size="sm">
                     {{ team.players.length }} joueur{{
                       team.players.length > 1 ? "s" : ""
@@ -512,7 +512,7 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <span class="text-space-text text-sm">Nom de l'équipe:</span>
+                  <span class="text-color-text text-sm">Nom de l'équipe:</span>
                   <SpaceInput
                     v-model="teams[activeTeamTab].name"
                     type="text"
@@ -655,9 +655,9 @@
                 d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
               />
             </svg>
-            <SpaceTitle size="xl" className="text-space-danger-light">
+            <Title size="xl" className="text-space-danger-light">
               Joueurs non assignés
-            </SpaceTitle>
+            </Title>
             <SpaceBadge variant="danger" size="md">
               {{ unassignedPlayers.length }}
             </SpaceBadge>

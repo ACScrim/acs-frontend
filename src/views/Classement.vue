@@ -1,5 +1,5 @@
 <template>
-  <Container>
+  <SpaceContainer>
     <!-- En-tête de la page avec style NASA -->
     <Header title="CLASSEMENT" mission="RANKING" />
     <div class="flex flex-col gap-6">
@@ -28,7 +28,7 @@
             </svg>
           </template>
           CSV
-        </SpaceButton>
+        </Button>
       </div>
 
       <!-- Filtres -->
@@ -156,7 +156,7 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- État de chargement -->
       <div v-if="isLoading" class="flex justify-center py-12">
@@ -179,7 +179,7 @@
         <div class="text-space-text-muted mt-2">
           Essayez de modifier vos critères de recherche.
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Tableau de classement -->
       <Card v-else variant="dark" :stars="true" className="overflow-hidden ">
@@ -301,7 +301,7 @@
                     >
                       {{ calculateGlobalRank(index) }}
                     </SpaceBadge>
-                    <span v-else class="text-space-text-muted">{{
+                    <span v-else class="text-color-text-muted">{{
                       calculateGlobalRank(index)
                     }}</span>
                   </div>
@@ -405,7 +405,7 @@
                   >
                     {{ calculateGlobalRank(index) }}
                   </SpaceBadge>
-                  <span v-else class="text-space-text-muted">{{
+                  <span v-else class="text-color-text-muted">{{
                     calculateGlobalRank(index)
                   }}</span>
                 </div>
@@ -450,7 +450,7 @@
             @page-select="currentPage = $event"
           />
         </div>
-      </SpaceCard>
+      </Card>
     </div>
   </SpaceContainer>
 </template>

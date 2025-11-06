@@ -93,6 +93,20 @@
         <div class="planet planet-3"></div>
       </div>
     </div>
+
+    <!-- Effet de particules d'étoiles -->
+    <div v-if="stars" class="card-stars pointer-events-none">
+      <div
+        v-for="n in 5"
+        :key="n"
+        class="card-star"
+        :style="{
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 4}s`,
+        }"
+      ></div>
+    </div>
   </div>
 </template>
 

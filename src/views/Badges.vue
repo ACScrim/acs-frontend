@@ -561,9 +561,12 @@
                 ? "ACS"
                 : getGameName(selectedBadge.categoryId)
             }}
-          </SpaceBadge>          <!-- Badge de rareté si applicable -->
+          </SpaceBadge>
+          <!-- Badge de rareté si applicable -->
           <SpaceBadge
-            v-if="getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'"
+            v-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-legendary'
+            "
             variant="gold"
             size="lg"
             className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 text-white border-0"
@@ -571,7 +574,9 @@
             LÉGENDAIRE
           </SpaceBadge>
           <SpaceBadge
-            v-else-if="getBadgeRarityClass(selectedBadge) === 'special-badge-gold'"
+            v-else-if="
+              getBadgeRarityClass(selectedBadge) === 'special-badge-gold'
+            "
             variant="gold"
             size="lg"
           >
