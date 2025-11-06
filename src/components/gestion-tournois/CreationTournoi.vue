@@ -2,7 +2,7 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <Header
+    <SpaceHeader
       title="CRÉATION DE TOURNOI"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -10,13 +10,18 @@
     />
 
     <!-- Formulaire principal -->
-    <Card variant="primary" :stars="true" :decorated="true" className="mt-6">
+    <SpaceCard
+      variant="primary"
+      :stars="true"
+      :decorated="true"
+      className="mt-6"
+    >
       <form @submit.prevent="createTournament" class="space-y-6">
         <!-- Nom du Tournoi -->
         <div>
           <label
             for="name"
-            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -30,9 +35,9 @@
                 clip-rule="evenodd"
               />
             </svg>
-            Nom du Tournoi <span class="text-color-accent ml-1">*</span>
+            Nom du Tournoi <span class="text-space-accent ml-1">*</span>
           </label>
-          <Input
+          <SpaceInput
             id="name"
             v-model="name"
             placeholder="Ex: Tournoi Mario Kart 8"
@@ -44,7 +49,7 @@
         <div>
           <label
             for="game"
-            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,14 +61,14 @@
                 d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
               />
             </svg>
-            Jeu <span class="text-color-accent ml-1">*</span>
+            Jeu <span class="text-space-accent ml-1">*</span>
           </label>
-          <Dropdown id="game" v-model="game" required>
+          <SpaceDropdown id="game" v-model="game" required>
             <option value="" disabled selected>Sélectionnez un jeu</option>
             <option v-for="game in games" :key="game._id" :value="game._id">
               {{ game.name }}
             </option>
-          </Dropdown>
+          </SpaceDropdown>
         </div>
 
         <!-- Deux champs par ligne sur grand écran -->
@@ -72,7 +77,7 @@
           <div>
             <label
               for="date"
-              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,16 +91,21 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              Date <span class="text-color-accent ml-1">*</span>
+              Date <span class="text-space-accent ml-1">*</span>
             </label>
-            <Input id="date" v-model="date" type="datetime-local" required />
+            <SpaceInput
+              id="date"
+              v-model="date"
+              type="datetime-local"
+              required
+            />
           </div>
 
           <!-- Nom du channel Discord -->
           <div>
             <label
               for="discordChannelName"
-              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -110,11 +120,11 @@
                 />
               </svg>
               Nom du Channel Discord
-              <span class="text-color-accent ml-1">*</span>
+              <span class="text-space-accent ml-1">*</span>
               <div class="relative group ml-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-color-primary-light cursor-help"
+                  class="h-4 w-4 text-space-primary-light cursor-help"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -127,13 +137,13 @@
                   />
                 </svg>
                 <div
-                  class="absolute z-50 w-64 p-2 bg-color-bg text-color-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-color-primary/30"
+                  class="absolute z-50 w-64 p-2 bg-space-bg text-space-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-space-primary/30"
                 >
                   Ne pas inclure le symbole "#" dans le nom du canal
                 </div>
               </div>
             </label>
-            <Input
+            <SpaceInput
               id="discordChannelName"
               v-model="discordChannelName"
               placeholder="Ex: tournoi-mario-kart"
@@ -147,7 +157,7 @@
           <div>
             <label
               for="discordReminderDate"
-              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +175,7 @@
               <div class="relative group ml-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-color-primary-light cursor-help"
+                  class="h-4 w-4 text-space-primary-light cursor-help"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -178,14 +188,14 @@
                   />
                 </svg>
                 <div
-                  class="absolute z-50 w-64 p-2 bg-color-bg text-color-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-color-primary/30"
+                  class="absolute z-50 w-64 p-2 bg-space-bg text-space-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-space-primary/30"
                 >
                   Date à laquelle un rappel sera envoyé sur le canal Discord.
                   Par défaut 2 jours avant le tournoi à 12h.
                 </div>
               </div>
             </label>
-            <Input
+            <SpaceInput
               id="discordReminderDate"
               v-model="discordReminderDate"
               type="datetime-local"
@@ -196,7 +206,7 @@
           <div>
             <label
               for="privateReminderDate"
-              class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+              class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -215,7 +225,7 @@
               <div class="relative group ml-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-color-primary-light cursor-help"
+                  class="h-4 w-4 text-space-primary-light cursor-help"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -228,14 +238,14 @@
                   />
                 </svg>
                 <div
-                  class="absolute z-50 w-64 p-2 bg-color-bg text-color-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-color-primary/30"
+                  class="absolute z-50 w-64 p-2 bg-space-bg text-space-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-space-primary/30"
                 >
                   Date à laquelle un rappel sera envoyé en message privé à
                   chaque joueur. Par défaut 1 jour avant le tournoi à 12h.
                 </div>
               </div>
             </label>
-            <Input
+            <SpaceInput
               id="privateReminderDate"
               v-model="privateReminderDate"
               type="datetime-local"
@@ -247,7 +257,7 @@
         <div>
           <label
             for="playerCap"
-            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -265,7 +275,7 @@
             <div class="relative group ml-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 text-color-primary-light cursor-help"
+                class="h-4 w-4 text-space-primary-light cursor-help"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -278,13 +288,13 @@
                 />
               </svg>
               <div
-                class="absolute z-50 w-64 p-2 bg-color-bg text-color-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-color-primary/30"
+                class="absolute z-50 w-64 p-2 bg-space-bg text-space-primary-light text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 -mt-1 left-0 transform -translate-y-full transition-opacity duration-300 border border-space-primary/30"
               >
                 0 = Pas de limite | Sinon, nombre maximum de joueurs
               </div>
             </div>
           </label>
-          <Input
+          <SpaceInput
             id="playerCap"
             v-model="playerCap"
             type="number"
@@ -297,7 +307,7 @@
         <div>
           <label
             for="description"
-            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -311,9 +321,9 @@
                 clip-rule="evenodd"
               />
             </svg>
-            Description <span class="text-color-accent ml-1">*</span>
+            Description <span class="text-space-accent ml-1">*</span>
           </label>
-          <Input
+          <SpaceInput
             id="description"
             v-model="description"
             type="textarea"
@@ -327,7 +337,7 @@
         <div>
           <label
             for="players"
-            class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+            class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -350,14 +360,14 @@
               @focus="showPlayerList = true"
               @blur="hidePlayerList"
               @input="searchPlayers"
-              class="w-full py-3 px-4 bg-color-bg-light/50 text-color-text border border-color-primary/50 rounded-lg font-nasa shadow-glow-primary-sm transition-all duration-300 focus:outline-none focus:border-color-primary focus:shadow-glow-primary"
+              class="w-full py-3 px-4 bg-space-bg-light/50 text-space-text border border-space-primary/50 rounded-lg font-nasa shadow-glow-primary-sm transition-all duration-300 focus:outline-none focus:border-space-primary focus:shadow-glow-primary"
               placeholder="Rechercher un joueur..."
             />
 
             <!-- Liste des résultats de recherche - POSITIONNEMENT AMÉLIORÉ -->
             <div
               v-if="showPlayerList"
-              class="absolute mt-2 bg-black border border-color-accent/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-accent z-[9999]"
+              class="absolute mt-2 bg-black border border-space-accent/30 rounded-lg max-h-[200px] overflow-y-auto shadow-glow-accent z-[9999]"
               style="width: 100%; top: 100%; left: 0"
             >
               <ul class="py-1">
@@ -365,13 +375,13 @@
                   v-for="player in filteredPlayers"
                   :key="player._id"
                   @mousedown.prevent="addPlayer(player)"
-                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-color-accent/20 text-color-text font-nasa text-sm"
+                  class="px-4 py-3 cursor-pointer transition-colors hover:bg-space-accent/20 text-space-text font-nasa text-sm"
                 >
                   {{ player.username }}
                 </li>
                 <li
                   v-if="filteredPlayers.length === 0"
-                  class="px-4 py-3 text-color-text-muted italic text-center text-sm"
+                  class="px-4 py-3 text-space-text-muted italic text-center text-sm"
                 >
                   Aucun joueur trouvé
                 </li>
@@ -384,12 +394,12 @@
             <div
               v-for="player in selectedPlayers"
               :key="player._id"
-              class="flex items-center bg-color-accent/20 text-color-text px-3 py-2 rounded-full text-sm border border-color-accent/50 transition-all hover:bg-color-accent/30 hover:border-color-accent/70 hover:shadow-glow-accent font-nasa"
+              class="flex items-center bg-space-accent/20 text-space-text px-3 py-2 rounded-full text-sm border border-space-accent/50 transition-all hover:bg-space-accent/30 hover:border-space-accent/70 hover:shadow-glow-accent font-nasa"
             >
               {{ player.username }}
               <button
                 @click.prevent="removePlayer(player)"
-                class="ml-2 text-color-text/70 hover:text-color-error transition-colors"
+                class="ml-2 text-space-text/70 hover:text-space-error transition-colors"
                 aria-label="Retirer le joueur"
               >
                 <svg
@@ -411,7 +421,7 @@
 
         <!-- Bouton de soumission -->
         <div class="flex justify-center mt-8">
-          <Button
+          <SpaceButton
             type="submit"
             variant="accent"
             size="lg"
@@ -433,10 +443,10 @@
               </svg>
             </template>
             Créer le Tournoi
-          </Button>
+          </SpaceButton>
         </div>
       </form>
-    </Card>
+    </SpaceCard>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
@@ -600,7 +610,7 @@ const createTournament = async () => {
       mvpVoteOpen: true,
       mvps: [],
       casters: [],
-      clips: [],
+      clips: []
     };
 
     await tournamentService.createTournament(tournament);

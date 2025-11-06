@@ -5,8 +5,8 @@
     <div
       class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block"
     >
-      <Card variant="dark" className="p-3 space-y-1">
-        <div class="text-xs text-color-primary font-nasa mb-2 px-2 text-center">
+      <SpaceCard variant="dark" className="p-3 space-y-1">
+        <div class="text-xs text-space-primary font-nasa mb-2 px-2 text-center">
           NAVIGATION
         </div>
 
@@ -17,8 +17,8 @@
           :class="[
             'w-full text-left px-3 py-2 text-xs font-nasa rounded transition-all duration-200 flex items-center space-x-2',
             activeSection === section.id
-              ? 'bg-color-primary/20 text-color-primary-light border-l-2 border-color-primary'
-              : 'text-color-text-muted hover:text-color-primary hover:bg-color-primary/10',
+              ? 'bg-space-primary/20 text-space-primary-light border-l-2 border-space-primary'
+              : 'text-space-text-muted hover:text-space-primary hover:bg-space-primary/10',
           ]"
           :title="section.label"
         >
@@ -31,11 +31,11 @@
           ></svg>
           <span class="truncate">{{ section.shortLabel }}</span>
         </button>
-      </Card>
+      </SpaceCard>
     </div>
 
     <!-- État d'erreur -->
-    <Terminal
+    <SpaceTerminal
       v-if="error"
       command="get_player_profile --id=${route.params.id}"
       :message="error"
@@ -46,7 +46,7 @@
     <!-- Profil du joueur -->
     <div v-else-if="player" class="max-w-4xl mx-auto">
       <!-- En-tête du profil -->
-      <Card
+      <SpaceCard
         id="profil"
         variant="primary"
         section="profile"
@@ -62,22 +62,22 @@
               v-if="user && user.avatarUrl"
               :src="user.avatarUrl"
               alt="Avatar"
-              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
               loading="lazy"
               @error="handleImageError"
             />
             <div
               v-else
-              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto"
             >
-              <span class="text-color-primary text-2xl sm:text-3xl font-bold">
+              <span class="text-space-primary text-2xl sm:text-3xl font-bold">
                 {{ getInitials(player.username) }}
               </span>
             </div>
           </div>
 
           <!-- Nom centré -->
-          <Title
+          <SpaceTitle
             size="4xl"
             :glitch="true"
             :decorated="true"
@@ -91,17 +91,17 @@
             ]"
           >
             {{ player.username }}
-          </Title>
+          </SpaceTitle>
 
           <!-- Barre parfaitement centrée sous le nom -->
           <div
-            class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
+            class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"
           ></div>
 
           <!-- Titres de Champion de Saisons -->
           <div v-if="seasonChampionships.length > 0" class="mt-6">
             <div class="flex flex-wrap justify-center gap-2">
-              <Badge
+              <SpaceBadge
                 v-for="championship in seasonChampionships"
                 :key="championship.seasonId"
                 variant="gold"
@@ -120,11 +120,11 @@
                     }}
                   </span>
                 </div>
-              </Badge>
+              </SpaceBadge>
             </div>
             <div class="text-center mt-2">
               <span
-                class="text-xs text-color-gold font-nasa uppercase tracking-wide"
+                class="text-xs text-space-gold font-nasa uppercase tracking-wide"
               >
                 {{
                   seasonChampionships.length === 1
@@ -135,9 +135,9 @@
             </div>
           </div>
         </div>
-      </Card>
+      </SpaceCard>
       <!-- Section des statistiques - Version simplifiée -->
-      <Card
+      <SpaceCard
         id="statistiques"
         variant="secondary"
         section="statistics"
@@ -148,7 +148,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-secondary"
+            class="h-8 w-8 mr-3 text-space-secondary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -156,31 +156,31 @@
               d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"
             />
           </svg>
-          <Title size="2xl">Statistiques</Title>
+          <SpaceTitle size="2xl">Statistiques</SpaceTitle>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Card
+          <SpaceCard
             variant="dark"
-            className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
+            className="text-center transform transition-all hover:scale-105 hover:bg-space-bg-light/90 duration-300"
           >
-            <div class="text-3xl font-bold text-color-accent mb-1">
+            <div class="text-3xl font-bold text-space-accent mb-1">
               {{ playerRanking?.totalVictories || 0 }}
             </div>
-            <div class="text-color-text-muted text-sm">Victoires</div>
-          </Card>
-          <Card
+            <div class="text-space-text-muted text-sm">Victoires</div>
+          </SpaceCard>
+          <SpaceCard
             variant="dark"
-            className="text-center transform transition-all hover:scale-105 hover:bg-color-bg-light/90 duration-300"
+            className="text-center transform transition-all hover:scale-105 hover:bg-space-bg-light/90 duration-300"
           >
-            <div class="text-3xl font-bold text-color-secondary mb-1">
+            <div class="text-3xl font-bold text-space-secondary mb-1">
               {{ playerRanking?.totalTournaments || 0 }}
             </div>
-            <div class="text-color-text-muted text-sm">Tournois</div>
-          </Card>
+            <div class="text-space-text-muted text-sm">Tournois</div>
+          </SpaceCard>
         </div>
-      </Card>
+      </SpaceCard>
       <!-- Section Palmarès avec podium -->
-      <Card
+      <SpaceCard
         id="palmares"
         variant="accent"
         section="medals"
@@ -191,7 +191,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-accent"
+            class="h-8 w-8 mr-3 text-space-accent"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -201,7 +201,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="2xl">Palmarès</Title>
+          <SpaceTitle size="2xl">Palmarès</SpaceTitle>
         </div>
 
         <!-- Visualisation du podium -->
@@ -217,25 +217,25 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-12 h-12 rounded-full object-cover border-2 border-color-silver shadow-glow"
+                  class="w-12 h-12 rounded-full object-cover border-2 border-space-silver shadow-glow"
                 />
-                <Badge
+                <SpaceBadge
                   variant="silver"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   2
-                </Badge>
+                </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-color-silver to-color-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-color-silver shadow-inner relative overflow-hidden podium-column podium-silver"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-silver to-space-secondary rounded-t-md flex items-center justify-center h-24 border-t border-l border-r border-space-silver shadow-inner relative overflow-hidden podium-column podium-silver"
               >
                 <div
-                  class="absolute inset-0 bg-color-secondary/50 scanline"
+                  class="absolute inset-0 bg-space-secondary/50 scanline"
                 ></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
                   >{{ medalCount.silver }}</span
                 >
               </div>
@@ -250,23 +250,23 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-14 h-14 rounded-full object-cover border-2 border-color-gold shadow-glow"
+                  class="w-14 h-14 rounded-full object-cover border-2 border-space-gold shadow-glow"
                 />
-                <Badge
+                <SpaceBadge
                   variant="gold"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center animate-pulse font-bold"
                 >
                   1
-                </Badge>
+                </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-color-gold to-color-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-color-gold shadow-inner shadow-color-gold/20 relative overflow-hidden podium-column podium-gold"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-gold to-space-accent rounded-t-md flex items-center justify-center h-32 border-t border-l border-r border-space-gold shadow-inner shadow-space-gold/20 relative overflow-hidden podium-column podium-gold"
               >
-                <div class="absolute inset-0 bg-color-accent/50 scanline"></div>
+                <div class="absolute inset-0 bg-space-accent/50 scanline"></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
                   >{{ medalCount.gold }}</span
                 >
               </div>
@@ -281,25 +281,25 @@
                     'https://cdn.discordapp.com/embed/avatars/0.png'
                   "
                   alt="Avatar"
-                  class="w-10 h-10 rounded-full object-cover border-2 border-color-bronze shadow-glow"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-space-bronze shadow-glow"
                 />
-                <Badge
+                <SpaceBadge
                   variant="bronze"
                   size="sm"
                   :filled="true"
                   className="absolute -bottom-1 -right-1 flex items-center justify-center font-bold"
                 >
                   3
-                </Badge>
+                </SpaceBadge>
               </div>
               <div
-                class="w-16 sm:w-24 bg-gradient-to-t from-color-bronze to-color-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-color-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
+                class="w-16 sm:w-24 bg-gradient-to-t from-space-bronze to-space-primary rounded-t-md flex items-center justify-center h-16 border-t border-l border-r border-space-bronze shadow-inner relative overflow-hidden podium-column podium-bronze"
               >
                 <div
-                  class="absolute inset-0 bg-color-primary/50 scanline"
+                  class="absolute inset-0 bg-space-primary/50 scanline"
                 ></div>
                 <span
-                  class="text-xl sm:text-2xl font-bold font-nasa text-color-bg z-10"
+                  class="text-xl sm:text-2xl font-bold font-nasa text-space-bg z-10"
                   >{{ medalCount.bronze }}</span
                 >
               </div>
@@ -307,72 +307,57 @@
           </div>
           <!-- Base du podium -->
           <div
-            class="absolute bottom-0 bg-gradient-to-r from-color-primary/30 via-color-accent/40 to-color-secondary/30 h-4 w-full max-w-md rounded-md border-t border-color-primary/50 podium-base"
+            class="absolute bottom-0 bg-gradient-to-r from-space-primary/30 via-space-accent/40 to-space-secondary/30 h-4 w-full max-w-md rounded-md border-t border-space-primary/50 podium-base"
           ></div>
         </div>
 
         <!-- Statistiques des médailles -->
         <div class="flex flex-wrap justify-center gap-4 mb-4">
           <!-- Argent -->
-          <Card
+          <SpaceCard
             variant="silver"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-color-silver text-lg font-nasa mb-1">
+            <div class="text-space-silver text-lg font-nasa mb-1">
               🥈 Argent
             </div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.silver }}
             </div>
-            <div class="text-xs text-color-text-muted">2e places</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">2e places</div>
+          </SpaceCard>
           <!-- Or -->
-          <Card
+          <SpaceCard
             variant="gold"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-color-gold text-lg font-nasa mb-1">🥇 Or</div>
+            <div class="text-space-gold text-lg font-nasa mb-1">🥇 Or</div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.gold }}
             </div>
-            <div class="text-xs text-color-text-muted">victoires</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">victoires</div>
+          </SpaceCard>
 
           <!-- Bronze -->
-          <Card
+          <SpaceCard
             variant="bronze"
             :stars="true"
             className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] flex-1 max-w-[250px]"
           >
-            <div class="text-color-bronze text-lg font-nasa mb-1">
+            <div class="text-space-bronze text-lg font-nasa mb-1">
               🥉 Bronze
             </div>
             <div class="text-2xl font-bold text-white">
               {{ medalCount.bronze }}
             </div>
-            <div class="text-xs text-color-text-muted">3e places</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">3e places</div>
+          </SpaceCard>
         </div>
-
-        <!-- Statistique MVP -->
-        <div class="flex justify-center mt-4">
-          <Card
-            variant="accent"
-            :stars="true"
-            className="text-center transform transition-all hover:scale-105 duration-300 min-w-[200px] max-w-[250px]"
-          >
-            <div class="text-color-accent text-lg font-nasa mb-1">🏆 MVP</div>
-            <div class="text-2xl font-bold text-white">
-              {{ mvpCount }}
-            </div>
-            <div class="text-xs text-color-text-muted">fois élu MVP</div>
-          </Card>
-        </div>
-      </Card>
+      </SpaceCard>
       <!-- Section Activité et engagement -->
-      <Card
+      <SpaceCard
         id="activite"
         variant="secondary"
         section="activity"
@@ -383,7 +368,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-secondary"
+            class="h-8 w-8 mr-3 text-space-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -395,55 +380,55 @@
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <Title size="2xl">Activité</Title>
+          <SpaceTitle size="2xl">Activité</SpaceTitle>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <!-- Membre depuis -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-primary-light text-lg font-nasa mb-1">
+            <div class="text-space-primary-light text-lg font-nasa mb-1">
               📅 Membre
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ memberSince }}
             </div>
-            <div class="text-xs text-color-text-muted">depuis</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">depuis</div>
+          </SpaceCard>
 
           <!-- Dernière activité -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-secondary-light text-lg font-nasa mb-1">
+            <div class="text-space-secondary-light text-lg font-nasa mb-1">
               ⚡ Activité
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ lastSeen }}
             </div>
-            <div class="text-xs text-color-text-muted">dernière fois</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">dernière fois</div>
+          </SpaceCard>
 
           <!-- Participation totale -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-accent-light text-lg font-nasa mb-1">
+            <div class="text-space-accent-light text-lg font-nasa mb-1">
               🎯 Participation
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ participationStreak }}
             </div>
-            <div class="text-xs text-color-text-muted">tournois joués</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">tournois joués</div>
+          </SpaceCard>
         </div>
-      </Card>
+      </SpaceCard>
       <!-- Section Performance par jeu -->
-      <Card
+      <SpaceCard
         id="performance"
         variant="primary"
         section="performance"
@@ -458,7 +443,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-color-primary flex-shrink-0"
+              class="h-8 w-8 mr-3 text-space-primary flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -470,10 +455,10 @@
                 d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
               />
             </svg>
-            <Title size="2xl">Performance par jeu</Title>
+            <SpaceTitle size="2xl">Performance par jeu</SpaceTitle>
           </div>
 
-          <Button
+          <SpaceButton
             v-if="gameStats.length > 3"
             @click="expandedGameStats = !expandedGameStats"
             :variant="expandedGameStats ? 'secondary' : 'primary'"
@@ -482,15 +467,15 @@
             {{
               expandedGameStats ? "RÉDUIRE" : `TOUT VOIR (${gameStats.length})`
             }}
-          </Button>
+          </SpaceButton>
         </div>
 
         <div v-if="gameStats.length > 0" class="space-y-4">
-          <Card
+          <SpaceCard
             v-for="gameStat in displayedGameStats"
             :key="gameStat.gameId"
             variant="dark"
-            className="transform transition-all hover:scale-[1.02] duration-300 border-l-4 border-l-color-primary"
+            className="transform transition-all hover:scale-[1.02] duration-300 border-l-4 border-l-space-primary"
           >
             <!-- Structure responsive avec flex-col sur mobile -->
             <div
@@ -503,16 +488,16 @@
                     v-if="gameStat.gameImage"
                     :src="gameStat.gameImage"
                     :alt="gameStat.gameName"
-                    class="w-12 h-12 rounded-lg object-cover border-2 border-color-primary/50"
+                    class="w-12 h-12 rounded-lg object-cover border-2 border-space-primary/50"
                     @error="handleImageError"
                   />
                   <div
                     v-else
-                    class="w-12 h-12 rounded-lg bg-color-bg-light flex items-center justify-center border-2 border-color-primary/50"
+                    class="w-12 h-12 rounded-lg bg-space-bg-light flex items-center justify-center border-2 border-space-primary/50"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6 text-color-primary"
+                      class="h-6 w-6 text-space-primary"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -532,13 +517,13 @@
                     {{ gameStat.gameName }}
                   </h5>
                   <div class="flex items-center space-x-3 mt-1 flex-wrap">
-                    <span class="text-color-primary-light font-mono text-sm"
+                    <span class="text-space-primary-light font-mono text-sm"
                       >{{ gameStat.wins }}V</span
                     >
-                    <span class="text-color-error font-mono text-sm"
+                    <span class="text-space-error font-mono text-sm"
                       >{{ gameStat.losses }}D</span
                     >
-                    <span class="text-color-text-muted text-sm"
+                    <span class="text-space-text-muted text-sm"
                       >{{ gameStat.totalPlayed }} parties</span
                     >
                   </div>
@@ -551,12 +536,12 @@
                 <!-- Taux de victoire -->
                 <div class="flex items-center sm:text-right sm:mb-2">
                   <div
-                    class="text-2xl font-bold text-color-primary-light font-mono mr-2 sm:mr-0"
+                    class="text-2xl font-bold text-space-primary-light font-mono mr-2 sm:mr-0"
                   >
                     {{ gameStat.winRate }}
                   </div>
                   <div
-                    class="text-xs text-color-text-muted sm:text-center ml-2"
+                    class="text-xs text-space-text-muted sm:text-center ml-2"
                   >
                     % taux de victoire
                   </div>
@@ -564,31 +549,31 @@
 
                 <!-- Barre de progression -->
                 <div
-                  class="w-16 sm:w-32 h-2 bg-[var(--color-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 mt-2"
+                  class="w-16 sm:w-32 h-2 bg-[var(--space-bg-light)] rounded-full overflow-hidden ml-4 sm:ml-0 mt-2"
                 >
                   <div
-                    class="h-full bg-[var(--color-primary)] rounded-full"
+                    class="h-full bg-[var(--space-primary)] rounded-full"
                     :style="`width: ${gameStat.winRate}%`"
                   ></div>
                 </div>
               </div>
             </div>
-          </Card>
+          </SpaceCard>
         </div>
 
-        <Terminal
+        <SpaceTerminal
           v-else
           command="search --stats --games"
           title="Recherche de statistiques"
           :showCursor="true"
         >
-          <div class="text-color-text-muted">
+          <div class="text-space-text-muted">
             Aucune donnée de performance disponible
           </div>
-        </Terminal>
-      </Card>
+        </SpaceTerminal>
+      </SpaceCard>
       <!-- Section Statistiques sociales -->
-      <Card
+      <SpaceCard
         id="collaborations"
         variant="secondary"
         section="collaborations"
@@ -603,7 +588,7 @@
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 mr-3 text-color-secondary flex-shrink-0"
+              class="h-8 w-8 mr-3 text-space-secondary flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -615,10 +600,10 @@
                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 01-5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <Title size="2xl">Collaborations</Title>
+            <SpaceTitle size="2xl">Collaborations</SpaceTitle>
           </div>
 
-          <Button
+          <SpaceButton
             v-if="totalCollaborators > 5"
             @click="expandedCollaborations = !expandedCollaborations"
             :variant="expandedCollaborations ? 'primary' : 'secondary'"
@@ -629,14 +614,14 @@
                 ? "RÉDUIRE"
                 : `TOUT VOIR (${totalCollaborators})`
             }}
-          </Button>
+          </SpaceButton>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Coéquipiers fréquents -->
           <div>
             <h3
-              class="text-xl font-nasa text-color-secondary-light mb-4 flex items-center justify-between"
+              class="text-xl font-nasa text-space-secondary-light mb-4 flex items-center justify-between"
             >
               <div class="flex items-center">
                 <svg
@@ -657,27 +642,27 @@
               </div>
 
               <!-- Compteur pour cette section -->
-              <Badge variant="secondary" size="sm">
+              <SpaceBadge variant="secondary" size="sm">
                 {{ socialStats.frequentTeammates.length }}
-              </Badge>
+              </SpaceBadge>
             </h3>
 
             <div
               v-if="socialStats.frequentTeammates.length > 0"
               class="space-y-3"
             >
-              <Card
+              <SpaceCard
                 v-for="teammate in displayedFrequentTeammates"
                 :key="teammate.playerId"
                 variant="dark"
-                className="transform transition-all hover:scale-[1.02] duration-300 p-3 border-l-4 border-l-color-secondary"
+                className="transform transition-all hover:scale-[1.02] duration-300 p-3 border-l-4 border-l-space-secondary"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="w-10 h-10 rounded-full bg-color-bg-light border-2 border-color-secondary/50 flex items-center justify-center mr-3 flex-shrink-0"
+                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-secondary/50 flex items-center justify-center mr-3 flex-shrink-0"
                     >
-                      <span class="text-color-secondary-light font-bold">
+                      <span class="text-space-secondary-light font-bold">
                         {{ teammate.username.charAt(0).toUpperCase() }}
                       </span>
                     </div>
@@ -687,25 +672,25 @@
                         name: 'Profil',
                         params: { id: teammate.playerId },
                       }"
-                      class="text-color-text hover:text-color-secondary-light transition-colors truncate"
+                      class="text-space-text hover:text-space-secondary-light transition-colors truncate"
                     >
                       {{ teammate.username }}
                     </router-link>
                   </div>
                   <div class="text-right flex items-center ml-3">
                     <div
-                      class="text-lg font-bold text-color-secondary-light font-mono"
+                      class="text-lg font-bold text-space-secondary-light font-mono"
                     >
                       {{ teammate.count }}
                     </div>
                     <div
-                      class="text-xs text-color-text-muted ml-2 whitespace-nowrap"
+                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap"
                     >
                       équipes
                     </div>
                   </div>
                 </div>
-              </Card>
+              </SpaceCard>
 
               <!-- Indicateur s'il y a plus d'éléments cachés -->
               <div
@@ -715,29 +700,29 @@
                 "
                 class="text-center py-2"
               >
-                <span class="text-xs text-color-text-muted font-mono">
+                <span class="text-xs text-space-text-muted font-mono">
                   ... et {{ socialStats.frequentTeammates.length - 5 }} autres
                   coéquipiers
                 </span>
               </div>
             </div>
 
-            <Terminal
+            <SpaceTerminal
               v-else
               command="search --teammates"
               title="Recherche de coéquipiers"
               :showCursor="true"
             >
-              <div class="text-color-text-muted">
+              <div class="text-space-text-muted">
                 Aucune collaboration répétée
               </div>
-            </Terminal>
+            </SpaceTerminal>
           </div>
 
           <!-- Partenaires de victoire -->
           <div>
             <h3
-              class="text-xl font-nasa text-color-accent-light mb-4 flex items-center justify-between"
+              class="text-xl font-nasa text-space-accent-light mb-4 flex items-center justify-between"
             >
               <div class="flex items-center">
                 <svg
@@ -758,52 +743,52 @@
               </div>
 
               <!-- Compteur pour cette section -->
-              <Badge variant="accent" size="sm">
+              <SpaceBadge variant="accent" size="sm">
                 {{ socialStats.winningPartners.length }}
-              </Badge>
+              </SpaceBadge>
             </h3>
 
             <div
               v-if="socialStats.winningPartners.length > 0"
               class="space-y-3"
             >
-              <Card
+              <SpaceCard
                 v-for="partner in displayedWinningPartners"
                 :key="partner.playerId"
                 variant="dark"
-                className="transform transition-all hover:scale-105 duration-300 p-3 border-l-4 border-l-color-accent"
+                className="transform transition-all hover:scale-105 duration-300 p-3 border-l-4 border-l-space-accent"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="w-10 h-10 rounded-full bg-color-bg-light border-2 border-color-accent/50 flex items-center justify-center mr-3 flex-shrink-0"
+                      class="w-10 h-10 rounded-full bg-space-bg-light border-2 border-space-accent/50 flex items-center justify-center mr-3 flex-shrink-0"
                     >
-                      <span class="text-color-accent-light font-bold">
+                      <span class="text-space-accent-light font-bold">
                         {{ partner.username.charAt(0).toUpperCase() }}
                       </span>
                     </div>
 
                     <router-link
                       :to="{ name: 'Profil', params: { id: partner.playerId } }"
-                      class="text-color-text hover:text-color-accent-light transition-colors truncate"
+                      class="text-space-text hover:text-space-accent-light transition-colors truncate"
                     >
                       {{ partner.username }}
                     </router-link>
                   </div>
                   <div class="text-right flex items-center ml-3">
                     <div
-                      class="text-lg font-bold text-color-accent-light font-mono flex items-center"
+                      class="text-lg font-bold text-space-accent-light font-mono flex items-center"
                     >
                       {{ partner.wins }}
                     </div>
                     <div
-                      class="text-xs text-color-text-muted ml-2 whitespace-nowrap flex items-center"
+                      class="text-xs text-space-text-muted ml-2 whitespace-nowrap flex items-center"
                     >
                       <span class="mr-1">victoires</span> 🏆
                     </div>
                   </div>
                 </div>
-              </Card>
+              </SpaceCard>
 
               <!-- Indicateur s'il y a plus d'éléments cachés -->
               <div
@@ -813,26 +798,26 @@
                 "
                 class="text-center py-2"
               >
-                <span class="text-xs text-color-text-muted font-mono">
+                <span class="text-xs text-space-text-muted font-mono">
                   ... et {{ socialStats.winningPartners.length - 5 }} autres
                   partenaires
                 </span>
               </div>
             </div>
 
-            <Terminal
+            <SpaceTerminal
               v-else
               command="search --partners --wins"
               title="Recherche de partenaires"
               :showCursor="true"
             >
-              <div class="text-color-text-muted">Aucune victoire en équipe</div>
-            </Terminal>
+              <div class="text-space-text-muted">Aucune victoire en équipe</div>
+            </SpaceTerminal>
           </div>
         </div>
-      </Card>
+      </SpaceCard>
       <!-- Section des badges -->
-      <Card
+      <SpaceCard
         id="badges"
         variant="primary"
         section="badges"
@@ -843,7 +828,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-primary"
+            class="h-8 w-8 mr-3 text-space-primary"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -853,19 +838,19 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="2xl">
+          <SpaceTitle size="2xl">
             Badges
-            <Badge variant="primary" size="sm" className="ml-2">
+            <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ badgeCount }}
-            </Badge>
-          </Title>
+            </SpaceBadge>
+          </SpaceTitle>
         </div>
 
         <div
           v-if="hasBadges"
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          <Card
+          <SpaceCard
             v-for="badge in player.badges"
             :key="badge._id"
             variant="dark"
@@ -876,32 +861,32 @@
               <img
                 :src="badge.imageUrl"
                 :alt="badge.title"
-                class="h-16 w-16 mb-3 rounded-full border-2 border-color-primary object-cover"
+                class="h-16 w-16 mb-3 rounded-full border-2 border-space-primary object-cover"
                 loading="lazy"
                 @error="handleImageError"
               />
               <span
-                class="text-color-text text-center font-nasa text-sm line-clamp-2"
+                class="text-space-text text-center font-nasa text-sm line-clamp-2"
               >
                 {{ badge.title }}
               </span>
             </div>
-          </Card>
+          </SpaceCard>
         </div>
 
-        <Terminal
+        <SpaceTerminal
           v-else
           command="search --badges"
           title="Recherche de badges"
           :showCursor="true"
         >
-          <div class="text-color-text-muted">
+          <div class="text-space-text-muted">
             Aucun badge obtenu pour le moment
           </div>
-        </Terminal>
-      </Card>
+        </SpaceTerminal>
+      </SpaceCard>
       <!-- Section Réalisations et progression -->
-      <Card
+      <SpaceCard
         id="records"
         variant="accent"
         section="records"
@@ -912,7 +897,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-accent"
+            class="h-8 w-8 mr-3 text-space-accent"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -924,46 +909,46 @@
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <Title size="2xl">Records personnels</Title>
+          <SpaceTitle size="2xl">Records personnels</SpaceTitle>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <!-- Plus longue série de victoires -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-primary-light text-lg font-nasa mb-1">
+            <div class="text-space-primary-light text-lg font-nasa mb-1">
               🔥 Série
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ records.longestWinStreak }}
             </div>
-            <div class="text-xs text-color-text-muted">
+            <div class="text-xs text-space-text-muted">
               victoires consécutives
             </div>
-          </Card>
+          </SpaceCard>
 
           <!-- Taux de top 25% -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-secondary-light text-lg font-nasa mb-1">
+            <div class="text-space-secondary-light text-lg font-nasa mb-1">
               🎯 Top 25%
             </div>
             <div class="text-2xl font-bold text-white font-mono">
               {{ top25PercentRate }}%
             </div>
-            <div class="text-xs text-color-text-muted">des tournois</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">des tournois</div>
+          </SpaceCard>
 
           <!-- Taux de victoire -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-primary-light text-lg font-nasa mb-1">
+            <div class="text-space-primary-light text-lg font-nasa mb-1">
               📊 Taux
             </div>
             <div class="text-2xl font-bold text-white font-mono">
@@ -977,15 +962,15 @@
                   : 0
               }}%
             </div>
-            <div class="text-xs text-color-text-muted">de victoire</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">de victoire</div>
+          </SpaceCard>
 
           <!-- Taux de podium -->
-          <Card
+          <SpaceCard
             variant="dark"
             className="text-center transform transition-all hover:scale-105 duration-300"
           >
-            <div class="text-color-accent-light text-lg font-nasa mb-1">
+            <div class="text-space-accent-light text-lg font-nasa mb-1">
               🏆 Podium
             </div>
             <div class="text-2xl font-bold text-white font-mono">
@@ -1001,14 +986,14 @@
                   : 0
               }}%
             </div>
-            <div class="text-xs text-color-text-muted">de podiums</div>
-          </Card>
+            <div class="text-xs text-space-text-muted">de podiums</div>
+          </SpaceCard>
         </div>
 
         <!-- Graphique de progression intégré -->
-        <Card variant="dark" className="border border-color-accent/20">
+        <SpaceCard variant="dark" className="border border-space-accent/20">
           <h3
-            class="text-lg font-nasa text-color-accent-light mb-4 flex items-center"
+            class="text-lg font-nasa text-space-accent-light mb-4 flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1029,7 +1014,7 @@
 
           <!-- Graphique simple en CSS basé sur les données réelles -->
           <div
-            class="h-48 bg-color-bg rounded-lg p-4 border border-color-bg-light/20"
+            class="h-48 bg-space-bg rounded-lg p-4 border border-space-bg-light/20"
           >
             <div v-if="tournamentProgression.length > 0" class="h-full">
               <div class="flex justify-between items-end h-full relative">
@@ -1045,7 +1030,7 @@
                     <!-- Barre victoires (primary) -->
                     <div
                       v-if="month.victories > 0"
-                      class="bg-gradient-to-t from-[var(--color-primary-dark)] to-[var(--color-primary-light)] rounded-t w-2/5"
+                      class="bg-gradient-to-t from-[var(--space-primary-dark)] to-[var(--space-primary-light)] rounded-t w-2/5"
                       :style="`height: ${Math.max(
                         (month.victories / maxOverallValue) * 100,
                         8
@@ -1076,7 +1061,7 @@
 
                   <!-- Label du mois -->
                   <div
-                    class="text-xs text-color-text-muted mt-2 font-mono text-center"
+                    class="text-xs text-space-text-muted mt-2 font-mono text-center"
                   >
                     {{ month.name }}
                   </div>
@@ -1087,19 +1072,19 @@
                   >
                     <span
                       v-if="month.victories > 0"
-                      class="text-color-primary-light"
+                      class="text-space-primary-light"
                     >
                       {{ month.victories }}V
                     </span>
                     <span
                       v-if="month.podiums > month.victories"
-                      class="text-color-accent-light"
+                      class="text-space-accent-light"
                     >
                       {{ month.podiums - month.victories }}P
                     </span>
                     <span
                       v-if="month.podiums === 0 && month.victories === 0"
-                      class="text-color-text-muted"
+                      class="text-space-text-muted"
                     >
                       -
                     </span>
@@ -1110,14 +1095,14 @@
               <!-- Légende -->
               <div class="flex justify-center mt-4 space-x-6">
                 <div class="flex items-center space-x-2">
-                  <div class="w-3 h-3 bg-color-primary-light rounded"></div>
-                  <span class="text-xs text-color-text-muted font-mono"
+                  <div class="w-3 h-3 bg-space-primary-light rounded"></div>
+                  <span class="text-xs text-space-text-muted font-mono"
                     >Victoires</span
                   >
                 </div>
                 <div class="flex items-center space-x-2">
-                  <div class="w-3 h-3 bg-color-accent-light rounded"></div>
-                  <span class="text-xs text-color-text-muted font-mono"
+                  <div class="w-3 h-3 bg-space-accent-light rounded"></div>
+                  <span class="text-xs text-space-text-muted font-mono"
                     >Autres podiums</span
                   >
                 </div>
@@ -1125,23 +1110,23 @@
             </div>
 
             <!-- État vide si pas de données -->
-            <Terminal
+            <SpaceTerminal
               v-else
               command="analyze --performance-data"
               title="Analyse des performances"
               :showCursor="true"
             >
-              <div class="text-color-text-muted">
+              <div class="text-space-text-muted">
                 Pas assez de données
                 <p class="text-xs mt-1">Participez à plus de tournois</p>
               </div>
-            </Terminal>
+            </SpaceTerminal>
           </div>
-        </Card>
-      </Card>
+        </SpaceCard>
+      </SpaceCard>
 
       <!-- Section des tournois -->
-      <Card
+      <SpaceCard
         id="tournois"
         variant="primary"
         :stars="true"
@@ -1151,7 +1136,7 @@
         <div class="flex items-center mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 mr-3 text-color-primary"
+            class="h-8 w-8 mr-3 text-space-primary"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -1167,12 +1152,12 @@
             <path d="M8 12v5h6" />
             <path d="M8 17h3v5H8z" />
           </svg>
-          <Title size="2xl">
+          <SpaceTitle size="2xl">
             Tournois
-            <Badge variant="primary" size="sm" className="ml-2">
+            <SpaceBadge variant="primary" size="sm" className="ml-2">
               {{ tournamentCount }}
-            </Badge>
-          </Title>
+            </SpaceBadge>
+          </SpaceTitle>
         </div>
 
         <!-- Options de tri pour les tournois -->
@@ -1180,7 +1165,7 @@
           <div class="relative">
             <select
               v-model="tournamentSort"
-              class="appearance-none bg-color-bg border border-color-primary/50 text-color-primary-light text-sm font-mono px-3 py-1 pr-8 rounded-lg focus:outline-none focus:border-color-primary-light"
+              class="appearance-none bg-space-bg border border-space-primary/50 text-space-primary-light text-sm font-mono px-3 py-1 pr-8 rounded-lg focus:outline-none focus:border-space-primary-light"
               aria-label="Trier les tournois"
             >
               <option value="date-desc">Plus récents d'abord</option>
@@ -1188,7 +1173,7 @@
               <option value="rank-asc">Meilleurs classements</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-color-primary-light"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-space-primary-light"
             >
               <svg
                 class="fill-current h-4 w-4"
@@ -1211,18 +1196,18 @@
               :key="tournament._id"
               class="flex flex-col sm:flex-row items-start sm:items-center justify-between"
             >
-              <Card variant="dark" className="w-full">
+              <SpaceCard variant="dark" className="w-full">
                 <div
                   class="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-3"
                 >
                   <!-- Partie gauche : icône + nom du tournoi -->
                   <div class="flex items-center flex-1 min-w-0">
                     <div
-                      class="h-8 w-8 rounded-full bg-color-primary/20 flex items-center justify-center mr-3 border border-color-primary/50 flex-shrink-0"
+                      class="h-8 w-8 rounded-full bg-space-primary/20 flex items-center justify-center mr-3 border border-space-primary/50 flex-shrink-0"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-color-primary-light"
+                        class="h-5 w-5 text-space-primary-light"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -1233,7 +1218,7 @@
                         />
                       </svg>
                     </div>
-                    <span class="text-color-text font-nasa truncate">{{
+                    <span class="text-space-text font-nasa truncate">{{
                       tournament.name
                     }}</span>
                   </div>
@@ -1244,12 +1229,12 @@
                   >
                     <!-- Date -->
                     <span
-                      class="text-color-text-muted text-sm font-mono order-1 sm:order-none"
+                      class="text-space-text-muted text-sm font-mono order-1 sm:order-none"
                       >{{ formatDate(tournament.date) }}</span
                     >
 
                     <!-- Badge de placement -->
-                    <Badge
+                    <SpaceBadge
                       v-if="tournament && 'rank' in tournament"
                       :variant="getRankingBadgeVariant(tournament.rank ?? 0)"
                       size="sm"
@@ -1259,16 +1244,18 @@
                         {{ getRankingLabel(tournament.rank ?? 0) }} /
                         {{ tournament.numberOfTeams }}
                       </span>
-                    </Badge>
+                    </SpaceBadge>
 
-                    <Badge v-if="tournament.isMvp" variant="gold"> MVP </Badge>
+                    <SpaceBadge v-if="tournament.isMvp" variant="gold">
+                      MVP
+                    </SpaceBadge>
 
                     <!-- Bouton détails -->
                     <router-link
                       :to="`/tournois/${tournament._id}`"
                       class="order-3 sm:order-none"
                     >
-                      <Button variant="primary" size="xs" icon>
+                      <SpaceButton variant="primary" size="xs" icon>
                         <template #icon>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -1284,17 +1271,17 @@
                           </svg>
                         </template>
                         Détails
-                      </Button>
+                      </SpaceButton>
                     </router-link>
                   </div>
                 </div>
-              </Card>
+              </SpaceCard>
             </li>
           </ul>
 
           <!-- Pagination pour les tournois -->
           <div v-if="totalTournamentPages > 1" class="mt-6">
-            <Pagination
+            <SpacePagination
               :current-page="currentTournamentPage"
               :total-pages="totalTournamentPages"
               @prev-page="prevTournamentPage"
@@ -1304,20 +1291,20 @@
           </div>
         </div>
 
-        <Terminal
+        <SpaceTerminal
           v-else
           command="search --tournaments"
           title="Recherche de tournois"
           :showCursor="true"
         >
-          <div class="text-color-text-muted">Aucun tournoi pour le moment</div>
-        </Terminal>
-      </Card>
+          <div class="text-space-text-muted">Aucun tournoi pour le moment</div>
+        </SpaceTerminal>
+      </SpaceCard>
     </div>
 
     <!-- filepath: d:\Dev\ACS\acs-frontend\src\views\Profil.vue -->
     <!-- Remplacer la div avec selectedBadge par ce code -->
-    <Modal
+    <SpaceModal
       v-model="selectedBadge"
       title="DÉTAILS DU BADGE"
       v-if="selectedBadge"
@@ -1329,36 +1316,36 @@
           <img
             :src="selectedBadge.imageUrl"
             :alt="selectedBadge.title"
-            class="h-48 w-48 rounded-full border-4 border-color-primary object-cover group-hover:scale-105 transition-transform duration-500"
+            class="h-48 w-48 rounded-full border-4 border-space-primary object-cover group-hover:scale-105 transition-transform duration-500"
             @error="handleImageError"
           />
           <div class="absolute inset-0 rounded-full shadow-glow-primary"></div>
         </div>
 
         <!-- Badge title with enhanced styling -->
-        <Title size="xl" :glitch="true" className="mb-2 text-center">
+        <SpaceTitle size="xl" :glitch="true" className="mb-2 text-center">
           {{ selectedBadge.title }}
-        </Title>
+        </SpaceTitle>
 
         <!-- Badge description with background -->
-        <Card variant="dark" className="w-full mt-2">
-          <p class="text-color-text text-sm text-center">
+        <SpaceCard variant="dark" className="w-full mt-2">
+          <p class="text-space-text text-sm text-center">
             {{
               selectedBadge.description ||
               "Ce badge est une récompense mystérieuse. Aucune description disponible."
             }}
           </p>
-        </Card>
+        </SpaceCard>
       </div>
 
       <template #footer>
         <div class="flex justify-center">
-          <Button @click="selectedBadge = null" variant="primary">
+          <SpaceButton @click="selectedBadge = null" variant="primary">
             Fermer
-          </Button>
+          </SpaceButton>
         </div>
       </template>
-    </Modal>
+    </SpaceModal>
   </div>
 </template>
 
@@ -1611,15 +1598,6 @@ const medalCount = computed(() => {
   });
 
   return counts;
-});
-
-// Compte des MVP
-const mvpCount = computed(() => {
-  if (!playerRanking.value?.tournamentsParticipated) return 0;
-
-  return playerRanking.value.tournamentsParticipated.filter(
-    (tournament) => tournament.isMvp
-  ).length;
 });
 
 // Données pour le graphique de progression
@@ -1974,37 +1952,37 @@ onMounted(() => {
 }
 
 .podium-gold {
-  box-shadow: 0 0 20px rgba(var(--color-gold-rgb), 0.4);
+  box-shadow: 0 0 20px rgba(var(--space-gold-rgb), 0.4);
 }
 
 .podium-gold::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--color-gold-rgb), 0.7) 0%,
+    rgba(var(--space-gold-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-silver {
-  box-shadow: 0 0 15px rgba(var(--color-silver-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--space-silver-rgb), 0.4);
 }
 
 .podium-silver::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--color-silver-rgb), 0.7) 0%,
+    rgba(var(--space-silver-rgb), 0.7) 0%,
     transparent 70%
   );
 }
 
 .podium-bronze {
-  box-shadow: 0 0 15px rgba(var(--color-bronze-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--space-bronze-rgb), 0.4);
 }
 
 .podium-bronze::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(var(--color-bronze-rgb), 0.7) 0%,
+    rgba(var(--space-bronze-rgb), 0.7) 0%,
     transparent 70%
   );
 }

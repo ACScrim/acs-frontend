@@ -27,16 +27,16 @@
       style="top: -15%; right: -15%; width: 50%; height: 50%"
     >
       <div
-        class="w-full h-full rounded-full bg-color-error-dark/30 blur-2xl relative"
+        class="w-full h-full rounded-full bg-space-error-dark/30 blur-2xl relative"
       >
         <div
-          class="absolute inset-0 rounded-full bg-gradient-to-br from-color-error/30 to-transparent"
+          class="absolute inset-0 rounded-full bg-gradient-to-br from-space-error/30 to-transparent"
         ></div>
       </div>
     </div>
 
     <!-- Contenu principal -->
-    <Card
+    <SpaceCard
       variant="error"
       :stars="true"
       :decorated="true"
@@ -46,14 +46,14 @@
         <!-- Icône d'erreur avec effet de pulsation -->
         <div class="relative inline-block mb-6">
           <div
-            class="absolute inset-0 bg-color-error/20 rounded-full blur-xl animate-pulse-slow"
+            class="absolute inset-0 bg-space-error/20 rounded-full blur-xl animate-pulse-slow"
           ></div>
           <div
-            class="relative z-10 p-4 rounded-full bg-color-bg border border-color-error/50 inline-block"
+            class="relative z-10 p-4 rounded-full bg-space-bg border border-space-error/50 inline-block"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-12 w-12 text-color-error"
+              class="h-12 w-12 text-space-error"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -69,30 +69,30 @@
         </div>
 
         <!-- Titre de l'erreur -->
-        <Title size="2xl" :glitch="true" className="mb-4 text-color-error">
+        <SpaceTitle size="2xl" :glitch="true" className="mb-4 text-space-error">
           {{ title }}
-        </Title>
+        </SpaceTitle>
 
         <!-- Message d'erreur -->
-        <p class="text-color-text mb-8">{{ message }}</p>
+        <p class="text-space-text mb-8">{{ message }}</p>
 
         <!-- Affichage spécifique pour l'erreur de serveur Discord -->
         <div v-if="errorType === 'guild_required'" class="space-y-6 mb-6">
-          <Terminal
+          <SpaceTerminal
             command="check_discord_membership"
             title="AUTHENTIFICATION · DISCORD"
             className="text-left mb-6"
           >
-            <div class="text-color-error">
+            <div class="text-space-error">
               Erreur: Vous n'êtes pas membre du serveur Discord ACS.
             </div>
-            <div class="text-color-text-muted mt-2">
+            <div class="text-space-text-muted mt-2">
               Pour accéder à la plateforme, vous devez d'abord rejoindre notre
               serveur Discord.
             </div>
-          </Terminal>
+          </SpaceTerminal>
 
-          <Button
+          <SpaceButton
             tag="a"
             :href="inviteLink"
             target="_blank"
@@ -114,37 +114,37 @@
               </svg>
             </template>
             REJOINDRE LE SERVEUR DISCORD
-          </Button>
+          </SpaceButton>
 
-          <p class="text-color-text-muted">
+          <p class="text-space-text-muted">
             Après avoir rejoint le serveur Discord,
-            <Button
+            <SpaceButton
               @click="retryAuth"
               variant="ghost"
               size="sm"
               className="ml-1"
             >
               reconnectez-vous
-            </Button>
+            </SpaceButton>
           </p>
         </div>
 
         <div v-else class="mb-6">
-          <Terminal
+          <SpaceTerminal
             command="authentication_error"
             title="AUTHENTIFICATION · SYSTÈME"
             className="text-left mb-6"
           >
-            <div class="text-color-error">
+            <div class="text-space-error">
               Une erreur est survenue lors de l'authentification.
             </div>
-            <div class="text-color-text-muted mt-2">
+            <div class="text-space-text-muted mt-2">
               Veuillez réessayer ou contacter un administrateur si le problème
               persiste.
             </div>
-          </Terminal>
+          </SpaceTerminal>
 
-          <Button
+          <SpaceButton
             @click="retryAuth"
             variant="primary"
             size="lg"
@@ -165,10 +165,10 @@
               </svg>
             </template>
             RÉESSAYER LA CONNEXION
-          </Button>
+          </SpaceButton>
         </div>
 
-        <Button @click="goHome" variant="ghost" size="md">
+        <SpaceButton @click="goHome" variant="ghost" size="md">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -182,9 +182,9 @@
             </svg>
           </template>
           RETOUR À L'ACCUEIL
-        </Button>
+        </SpaceButton>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- Élément décoratif - ligne de circuit -->
     <div

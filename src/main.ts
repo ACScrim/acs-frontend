@@ -3,7 +3,7 @@ import { createPinia } from "pinia";
 import { createHead } from "@vueuse/head";
 import App from "./App.vue";
 import router from "./router";
-import "./assets/theme.css"; // Remplacer le CSS principal
+import "./assets/space-theme.css"; // Remplacer le CSS principal
 import SpaceUI from "./plugins/space-ui"; // Plugin pour les composants UI spatiaux
 
 const app = createApp(App);
@@ -29,11 +29,11 @@ if ("serviceWorker" in navigator) {
       if (registration.active) {
         // Envoyer la configuration
         registration.active.postMessage({
-          type: "CONFIG",
+          type: 'CONFIG',
           config: {
             apiUrl: import.meta.env.VITE_API_URL,
             isDev: import.meta.env.DEV,
-          },
+          }
         });
       }
 
@@ -55,8 +55,8 @@ if ("serviceWorker" in navigator) {
                 config: {
                   apiUrl: import.meta.env.VITE_API_URL,
                   dev: import.meta.env.DEV,
-                },
-              });
+                }
+              })
             }
           });
         }

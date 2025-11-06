@@ -1,39 +1,40 @@
 <template>
-  <Container>
+  <SpaceContainer>
     <!-- En-tête de la page -->
-    <Header
+    <SpaceHeader
       title="PROPOSITIONS DE JEUX"
-      mission="HALLOWEEN-2025"
+      mission="GAMES-DISCOVERY"
       :showMissionInfo="true"
     >
       <template #badge v-if="proposals.length > 0">
-        <Badge variant="accent" size="lg">{{ proposals.length }}</Badge>
+        <SpaceBadge variant="accent" size="lg">{{
+          proposals.length
+        }}</SpaceBadge>
       </template>
-    </Header>
+    </SpaceHeader>
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Description/Introduction -->
-      <Card variant="dark" className="mb-6 text-center">
-        <p class="text-color-text font-body">
+      <SpaceCard variant="dark" className="mb-6 text-center">
+        <p class="text-space-text font-body">
           Seuls les jeux approuvés par les administrateurs seront votables.
         </p>
         <br />
         <p class="font-body text-red-400 font-bold">
-          En proposant des jeux sur serveurs privés, vous vous engagez à gérer
-          les serveurs si votre jeu est choisi
+          En proposant des jeux sur serveurs privés, vous vous engagez à gérer les serveurs si votre jeu est choisi
         </p>
-      </Card>
+      </SpaceCard>
 
       <!-- Filtres et bouton d'ajout -->
-      <Card variant="primary" className="mb-6">
+      <SpaceCard variant="primary" className="mb-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-heading text-color-primary-light"
+            <label class="block mb-2 font-nasa text-space-primary-light"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
-              <Button
+              <SpaceButton
                 v-for="filter in filters"
                 :key="filter.value"
                 @click="
@@ -44,19 +45,19 @@
                 size="sm"
               >
                 {{ filter.label }}
-              </Button>
+              </SpaceButton>
             </div>
           </div>
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-heading text-color-secondary-light"
+            <label class="block mb-2 font-nasa text-space-secondary-light"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
               <select
                 v-model="sortOption"
-                class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="default">Tri par défaut</option>
                 <option value="votesDesc">Votes (+)</option>
@@ -71,9 +72,9 @@
                   type="checkbox"
                   id="positiveVotesOnly"
                   v-model="onlyPositiveVotes"
-                  class="rounded border-color-primary/30 bg-color-bg-light text-color-primary focus:ring-color-primary/30"
+                  class="rounded border-space-primary/30 bg-space-bg-light text-space-primary focus:ring-space-primary/30"
                 />
-                <label for="positiveVotesOnly" class="text-sm text-color-text">
+                <label for="positiveVotesOnly" class="text-sm text-space-text">
                   Compter uniquement les votes positifs
                 </label>
               </div>
@@ -83,10 +84,10 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-heading text-color-accent-light"
+              <label class="block mb-2 font-nasa text-space-accent-light"
                 >Rechercher un jeu</label
               >
-              <Input
+              <SpaceInput
                 v-model="searchTerm"
                 placeholder="Nom du jeu..."
                 @input="handleSearch"
@@ -96,7 +97,7 @@
                 <template #icon>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-color-text-muted"
+                    class="h-4 w-4 text-space-text-muted"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -109,12 +110,12 @@
                     />
                   </svg>
                 </template>
-              </Input>
+              </SpaceInput>
             </div>
-            <Button
+            <SpaceButton
               @click="showProposalForm = true"
               variant="accent"
-              className="w-full hover:scale-105 transition-transform duration-300 "
+              className="w-full hover:scale-105 transition-transform duration-300 shine-effect"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -129,18 +130,18 @@
                 />
               </svg>
               Proposer un jeu
-            </Button>
+            </SpaceButton>
           </div>
         </div>
-      </Card>
+      </SpaceCard>
 
       <!-- État de chargement -->
       <div v-if="loading" class="flex justify-center py-12">
-        <Loader text="Chargement des propositions..." />
+        <SpaceLoader text="Chargement des propositions..." />
       </div>
 
       <!-- Message si aucune proposition -->
-      <Terminal
+      <SpaceTerminal
         v-else-if="proposals.length === 0"
         :command="`list_proposals --filter=${activeFilter} ${
           searchTerm ? '--search=\'' + searchTerm + '\'' : ''
@@ -149,28 +150,28 @@
         showCursor
         className="my-8"
       >
-        <div class="text-color-error font-mono">
+        <div class="text-space-error font-mono">
           Erreur 404: Aucune proposition trouvée.
         </div>
-        <div class="text-color-text-muted mt-2">
+        <div class="text-space-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
-      </Terminal>
+      </SpaceTerminal>
 
-      <Terminal
+      <SpaceTerminal
         v-else-if="filteredProposals.length === 0"
         :command="`search_proposals --query='${searchTerm}' --filter=${activeFilter}`"
         title="Console de recherche"
         showCursor
         className="my-8"
       >
-        <div class="text-color-error font-mono">
+        <div class="text-space-error font-mono">
           Erreur 404: Aucun résultat pour cette recherche.
         </div>
-        <div class="text-color-text-muted mt-2">
+        <div class="text-space-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
-      </Terminal>
+      </SpaceTerminal>
 
       <!-- Liste des propositions avec mise en page améliorée -->
       <div v-else class="proposals-grid space-y-6">
@@ -200,7 +201,7 @@
 
         <!-- Pagination -->
         <div class="mt-8">
-          <Pagination
+          <SpacePagination
             v-if="filteredProposals.length > itemsPerPage"
             :current-page="currentPage"
             :total-pages="totalPages"
@@ -213,55 +214,56 @@
     </div>
 
     <!-- Modal de proposition de jeu -->
-    <Modal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
+    <SpaceModal v-model="showProposalForm" title="PROPOSER UN NOUVEAU JEU">
       <div class="space-y-6">
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Rechercher un jeu
           </label>
           <div class="relative">
-            <Input
+            <SpaceInput
               v-model="searchQuery"
               @input="debounceSearch"
               placeholder="Entrez le nom d'un jeu..."
               variant="primary"
+              :stars="true"
             >
               <template #rightIcon v-if="searching">
                 <div
-                  class="animate-spin h-4 w-4 border-2 border-t-color-primary rounded-full"
+                  class="animate-spin h-4 w-4 border-2 border-t-space-primary rounded-full"
                 ></div>
               </template>
-            </Input>
+            </SpaceInput>
           </div>
 
           <!-- Résultats de recherche -->
           <div
             v-if="searchResults.length > 0"
-            class="mt-2 border border-color-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-color-bg/80 custom-scrollbar"
+            class="mt-2 border border-space-primary/30 rounded-lg overflow-hidden max-h-60 overflow-y-auto bg-space-bg/80 custom-scrollbar"
           >
             <div
               v-for="game in searchResults"
               :key="game.id"
               @click="selectGame(game)"
-              class="game-search-result p-3 flex items-center hover:bg-color-primary/10 cursor-pointer border-b border-color-primary/20 transition-all"
+              class="game-search-result p-3 flex items-center hover:bg-space-primary/10 cursor-pointer border-b border-space-primary/20 transition-all"
             >
               <div class="relative overflow-hidden rounded">
                 <img
                   :src="game.background_image || '/img/game-placeholder.jpg'"
                   :alt="game.name"
-                  class="w-12 h-12 object-cover rounded border border-color-primary/50"
+                  class="w-12 h-12 object-cover rounded border border-space-primary/50"
                   @error="(e) => ((e.target as HTMLImageElement).src = '/img/game-placeholder.jpg')"
                 />
               </div>
               <div class="ml-3">
-                <p class="text-color-text font-medium font-heading">
+                <p class="text-space-text font-medium font-heading">
                   {{ game.name }}
                 </p>
-                <p class="text-color-primary-light text-xs">
+                <p class="text-space-primary-light text-xs">
                   <span v-if="game.released">{{
-                    formatGameReleaseDate(game.released || "")
+                    formatGameReleaseDate(game.released)
                   }}</span>
                 </p>
               </div>
@@ -271,33 +273,33 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Nom du jeu
           </label>
-          <Input v-model="newProposal.name" variant="primary" />
+          <SpaceInput v-model="newProposal.name" variant="primary" />
         </div>
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-heading"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Description (optionnelle)
           </label>
           <textarea
             v-model="newProposal.description"
             rows="3"
-            class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300 custom-scrollbar"
+            class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300 custom-scrollbar"
           ></textarea>
         </div>
       </div>
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <Button @click="showProposalForm = false" variant="outline">
+          <SpaceButton @click="showProposalForm = false" variant="outline">
             Annuler
-          </Button>
-          <Button
+          </SpaceButton>
+          <SpaceButton
             @click="submitProposal"
             :disabled="!isProposalValid || submitting"
             variant="primary"
@@ -308,10 +310,10 @@
               class="animate-spin h-4 w-4 border-2 border-t-transparent rounded-full mr-2"
             ></span>
             {{ submitting ? "Envoi en cours..." : "Proposer ce jeu" }}
-          </Button>
+          </SpaceButton>
         </div>
       </template>
-    </Modal>
+    </SpaceModal>
 
     <!-- Toast via le composant partagé -->
     <Toast
@@ -321,51 +323,53 @@
     />
 
     <!-- Dialog de confirmation de suppression -->
-    <Modal v-model="deleteDialogVisible" title="SUPPRIMER CETTE PROPOSITION">
-      <p class="text-color-text">
+    <SpaceModal
+      v-model="deleteDialogVisible"
+      title="SUPPRIMER CETTE PROPOSITION"
+    >
+      <p class="text-space-text">
         Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
         jeu ? Cette action est irréversible.
       </p>
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <Button @click="deleteDialogVisible = false" variant="outline">
+          <SpaceButton @click="deleteDialogVisible = false" variant="outline">
             Annuler
-          </Button>
-          <Button @click="deleteProposal" variant="error"> Supprimer </Button>
+          </SpaceButton>
+          <SpaceButton @click="deleteProposal" variant="error">
+            Supprimer
+          </SpaceButton>
         </div>
       </template>
-    </Modal>
-  </Container>
-  <Modal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
+    </SpaceModal>
+  </SpaceContainer>
+  <SpaceModal v-model="showVoteInfo" title="DÉTAILS DES VOTES">
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
-        <h4 class="text-color-text text-lg font-heading mb-2">
-          {{ selectedProposal?.name || "Proposition inconnue" }}
+        <h4 class="text-space-text text-lg font-heading mb-2">
+          {{ selectedProposal.name }}
         </h4>
         <div
-          class="flex justify-center items-center text-sm text-color-text-muted space-x-4"
+          class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
         >
           <div>
-            <span class="text-color-secondary">Total:</span>
-            <span
-              v-if="selectedProposal"
-              :class="getVoteCountClass(selectedProposal)"
-            >
+            <span class="text-space-secondary">Total:</span>
+            <span :class="getVoteCountClass(selectedProposal)">
               {{ getDisplayVoteCount(selectedProposal) }}
             </span>
           </div>
           <div>
-            <span class="text-color-gold">+{{ positiveVotes.length }}</span>
-            <span class="mx-1 text-color-text-muted">/</span>
-            <span class="text-color-error">-{{ negativeVotes.length }}</span>
+            <span class="text-space-gold">+{{ positiveVotes.length }}</span>
+            <span class="mx-1 text-space-text-muted">/</span>
+            <span class="text-space-error">-{{ negativeVotes.length }}</span>
           </div>
         </div>
       </div>
       <!-- Onglets Votes Pour/Contre -->
       <div class="flex space-x-2">
-        <Button
+        <SpaceButton
           @click="activeTab = 'positive'"
           :variant="activeTab === 'positive' ? 'gold' : 'outline'"
           size="sm"
@@ -384,8 +388,8 @@
             />
           </svg>
           Pour ({{ positiveVotes.length }})
-        </Button>
-        <Button
+        </SpaceButton>
+        <SpaceButton
           @click="activeTab = 'negative'"
           :variant="activeTab === 'negative' ? 'error' : 'outline'"
           size="sm"
@@ -404,10 +408,13 @@
             />
           </svg>
           Contre ({{ negativeVotes.length }})
-        </Button>
+        </SpaceButton>
       </div>
       <!-- Liste des votants -->
-      <Card variant="dark" className="h-60 overflow-y-auto p-0 border-none">
+      <SpaceCard
+        variant="dark"
+        className="h-60 overflow-y-auto p-0 border-none"
+      >
         <!-- Onglets de votes -->
         <div
           v-if="currentVotesList.length === 0"
@@ -415,7 +422,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12 text-color-text-muted mb-3"
+            class="h-12 w-12 text-space-text-muted mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -427,16 +434,16 @@
               d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="text-sm text-color-text-muted font-mono">
+          <p class="text-sm text-space-text-muted font-mono">
             Aucun vote {{ activeTab === "positive" ? "positif" : "négatif" }}
           </p>
         </div>
 
-        <div v-else class="divide-y divide-color-bg-light/10">
+        <div v-else class="divide-y divide-space-bg-light/10">
           <div
             v-for="(vote, index) in currentVotesList"
             :key="index"
-            class="p-3 hover:bg-color-bg-light/10 transition-all flex items-center"
+            class="p-3 hover:bg-space-bg-light/10 transition-all flex items-center"
             :class="{ 'space-voter-animate': true }"
           >
             <!-- Avatar (initiales) -->
@@ -444,8 +451,8 @@
               class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mr-3"
               :class="[
                 activeTab === 'positive'
-                  ? 'bg-color-gold/20 border border-color-gold/50 text-color-gold'
-                  : 'bg-color-error/10 border border-color-error/30 text-color-error',
+                  ? 'bg-space-gold/20 border border-space-gold/50 text-space-gold'
+                  : 'bg-space-error/10 border border-space-error/30 text-space-error',
               ]"
             >
               {{ getInitials(getVoterName(vote)) }}
@@ -456,31 +463,24 @@
               <p class="font-heading text-sm">
                 {{ getVoterName(vote) }}
               </p>
-              <p class="text-xs text-color-text-muted">
-                {{
-                  formatDate(
-                    vote.createdAt || selectedProposal?.createdAt || ""
-                  )
-                }}
+              <p class="text-xs text-space-text-muted">
+                {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
               </p>
             </div>
           </div>
         </div>
-      </Card>
+      </SpaceCard>
     </div>
 
     <template #footer>
       <div class="flex justify-end">
-        <Button @click="showVoteInfo = false">Fermer</Button>
+        <SpaceButton @click="showVoteInfo = false">Fermer</SpaceButton>
       </div>
     </template>
-  </Modal>
+  </SpaceModal>
 </template>
 
 <script setup lang="ts">
-//-------------------------------------------------------
-// IMPORTS ET TYPES
-//-------------------------------------------------------
 import { ref, computed, onMounted, watch } from "vue";
 import { useUserStore } from "../stores/userStore";
 import gameProposalService from "../services/gameProposalService";
@@ -488,205 +488,74 @@ import rawgService from "../services/rawgService";
 import type { GameProposal, RawgGame } from "../types";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
-import Container from "@/components/ui/layout/Container.vue";
+import SpaceContainer from "@/components/ui/layout/Container.vue";
 
-//-------------------------------------------------------
-// ÉTAT RÉACTIF ET STORES
-//-------------------------------------------------------
+// ===================================
+// ÉTAT ET RÉFÉRENCES
+// ===================================
 
-// Store utilisateur et authentification
+const showVoteInfo = ref(false);
+const activeTab = ref<"positive" | "negative">("positive");
+const selectedProposal = ref<GameProposal | null>(null);
+
+// État utilisateur
 const userStore = useUserStore();
+const isAuthenticated = computed(() => !!userStore.user);
+const isAdmin = computed(() =>
+  ["admin", "superadmin"].includes(userStore.user?.role || "")
+);
 
-// États principaux
+// Propositions de jeux
 const proposals = ref<GameProposal[]>([]);
 const loading = ref(true);
 const activeFilter = ref("approved");
 
-// Modal et interface
-const showProposalForm = ref(false);
-const showVoteInfo = ref(false);
-const deleteDialogVisible = ref(false);
-const activeTab = ref<"positive" | "negative">("positive");
-const selectedProposal = ref<GameProposal | null>(null);
-const proposalToDelete = ref<string>("");
+// Filtres disponibles
+const filters = [
+  { label: "Approuvés", value: "approved" },
+  { label: "En attente", value: "pending" },
+];
+const sortOption = ref("default");
 
-// Formulaire de nouvelle proposition
+const onlyPositiveVotes = ref(false);
+
+// Modal de nouvelle proposition
+const showProposalForm = ref(false);
 const newProposal = ref({
   name: "",
   description: "",
   imageUrl: "",
   rawgId: undefined as number | undefined,
 });
+const isProposalValid = computed(
+  () => newProposal.value.name.trim().length > 0
+);
 const submitting = ref(false);
 
-// Recherche de jeux via RAWG API
+// Recherche de jeux
 const searchQuery = ref("");
 const searchResults = ref<RawgGame[]>([]);
 const searching = ref(false);
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
-// Pagination et filtres
-const itemsPerPage = 10;
-const currentPage = ref(1);
-const searchTerm = ref("");
-const sortOption = ref("default");
-const onlyPositiveVotes = ref(false);
+// Dialog de suppression
+const deleteDialogVisible = ref(false);
+const proposalToDelete = ref<string>("");
 
-// Système de notifications
+// Notification toast
 const toastInfo = ref({
   visible: false,
   message: "",
   type: "success" as "success" | "error",
 });
 
-// Debounce pour la recherche
-const searchDebounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+// ===================================
+// PAGINATION ET RECHERCHE
+// ===================================
 
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - AUTHENTIFICATION
-//-------------------------------------------------------
-
-/**
- * Vérifie si l'utilisateur est authentifié
- * @returns true si l'utilisateur est connecté
- */
-const isAuthenticated = computed(() => !!userStore.user);
-
-/**
- * Vérifie si l'utilisateur a des droits d'administration
- * @returns true si l'utilisateur est admin ou superadmin
- */
-const isAdmin = computed(() =>
-  ["admin", "superadmin"].includes(userStore.user?.role || "")
-);
-
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - VALIDATION
-//-------------------------------------------------------
-
-/**
- * Valide si la proposition en cours de création est valide
- * @returns true si le nom de la proposition n'est pas vide
- */
-const isProposalValid = computed(
-  () => newProposal.value.name.trim().length > 0
-);
-
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - FILTRAGE ET TRI
-//-------------------------------------------------------
-
-/**
- * Filtre les propositions selon les critères de recherche et de tri
- * @returns Liste des propositions filtrées et triées
- */
-const filteredProposals = computed(() => {
-  let result = proposals.value;
-
-  // Correction de l'erreur de description potentiellement undefined
-  if (searchTerm.value.trim()) {
-    const searchTermLower = searchTerm.value.toLowerCase();
-    result = result.filter(
-      (proposal) =>
-        proposal.name.toLowerCase().includes(searchTermLower) ||
-        proposal.description?.toLowerCase().includes(searchTermLower) ||
-        false
-    );
-  }
-
-  // Tri selon l'option sélectionnée
-  if (sortOption.value === "votesDesc" || sortOption.value === "votesAsc") {
-    result = [...result].sort((a, b) => {
-      const aVotes = getDisplayVoteCount(a);
-      const bVotes = getDisplayVoteCount(b);
-      return sortOption.value === "votesDesc"
-        ? bVotes - aVotes
-        : aVotes - bVotes;
-    });
-  }
-
-  return result;
-});
-
-/**
- * Calcule le nombre total de pages pour la pagination
- * @returns Nombre total de pages
- */
-const totalPages = computed(() => {
-  return Math.ceil(filteredProposals.value.length / itemsPerPage);
-});
-
-/**
- * Retourne les propositions à afficher sur la page courante
- * @returns Liste des propositions paginées
- */
-const paginatedProposals = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return filteredProposals.value.slice(startIndex, endIndex);
-});
-
-/**
- * Génère un message contextuel pour l'état vide
- * @returns Message explicatif adapté au contexte
- */
-const emptyStateMessage = computed(() => {
-  if (searchTerm.value) {
-    return `Aucune proposition ne correspond à votre recherche "${searchTerm.value}".`;
-  }
-
-  if (activeFilter.value === "pending") {
-    return "Aucune proposition en attente de modération.";
-  } else if (activeFilter.value === "approved") {
-    return "Aucune proposition approuvée. Soyez le premier à proposer un jeu!";
-  }
-
-  return "Aucune proposition trouvée. Soyez le premier à proposer un jeu!";
-});
-
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - GESTION DES VOTES
-//-------------------------------------------------------
-
-/**
- * Récupère les votes positifs de la proposition sélectionnée
- * @returns Liste des votes positifs
- */
-const positiveVotes = computed(() => {
-  if (!selectedProposal.value?.votes) return [];
-  return selectedProposal.value.votes.filter((vote) => vote.value === 1);
-});
-
-/**
- * Récupère les votes négatifs de la proposition sélectionnée
- * @returns Liste des votes négatifs
- */
-const negativeVotes = computed(() => {
-  if (!selectedProposal.value?.votes) return [];
-  return selectedProposal.value.votes.filter((vote) => vote.value === -1);
-});
-
-/**
- * Retourne la liste des votes actuelle selon l'onglet sélectionné
- * @returns Liste des votes de l'onglet actif
- */
-const currentVotesList = computed(() => {
-  return activeTab.value === "positive"
-    ? positiveVotes.value
-    : negativeVotes.value;
-});
-
-//-------------------------------------------------------
-// CONFIGURATION
-//-------------------------------------------------------
-
-/**
- * Options de filtrage disponibles
- */
-const filters = [
-  { label: "Approuvés", value: "approved" },
-  { label: "En attente", value: "pending" },
-];
+// Pagination
+const itemsPerPage = 10;
+const currentPage = ref(1);
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -706,6 +575,10 @@ const goToPage = (page: number) => {
   }
 };
 
+// Recherche
+const searchTerm = ref("");
+const searchDebounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+
 /**
  * Effectue la recherche avec debounce
  */
@@ -723,110 +596,119 @@ const handleSearch = () => {
   }, 300);
 };
 
-//-------------------------------------------------------
-// FONCTIONS DE CHARGEMENT DES DONNÉES
-//-------------------------------------------------------
+// Propositions filtrées selon la recherche
+const filteredProposals = computed(() => {
+  let result = proposals.value;
 
-/**
- * Charge les propositions selon le filtre actif
- */
-const loadProposals = async () => {
-  try {
-    loading.value = true;
-    const status = activeFilter.value;
-    const result = await gameProposalService.getProposals(status);
-    proposals.value = result;
-  } catch (error) {
-    console.error("Erreur lors du chargement des propositions:", error);
-    showToast("Erreur lors du chargement des propositions", "error");
-  } finally {
-    loading.value = false;
-  }
-};
-
-//-------------------------------------------------------
-// FONCTIONS DE GESTION DES VOTES (AJOUT DES MANQUANTES)
-//-------------------------------------------------------
-
-/**
- * Calcule le nombre de votes à afficher selon le mode sélectionné
- * @param proposal - La proposition dont on veut calculer les votes
- * @returns Nombre de votes à afficher
- */
-const getDisplayVoteCount = (proposal: GameProposal | null) => {
-  if (!proposal) return 0;
-
-  if (onlyPositiveVotes.value) {
-    // Mode votes positifs uniquement
-    return proposal.votes?.filter((v) => v.value > 0).length || 0;
-  } else {
-    // Mode total normal (votes pour - votes contre)
-    return proposal.totalVotes;
-  }
-};
-
-/**
- * Détermine les classes CSS pour l'affichage du nombre de votes
- * @param proposal - La proposition à analyser
- * @returns Classes CSS appropriées selon le nombre de votes
- */
-const getVoteCountClass = (proposal: GameProposal | null) => {
-  if (!proposal) return "text-color-text";
-
-  const count = getDisplayVoteCount(proposal);
-  if (count > 0) return "text-color-gold";
-  if (count < 0) return "text-color-error";
-  return "text-color-text";
-};
-
-/**
- * Gère les votes sur une proposition
- * @param proposalId - ID de la proposition
- * @param value - Valeur du vote (1 pour positif, -1 pour négatif)
- */
-const handleVote = async (proposalId: string, value: number) => {
-  // Vérification de l'authentification
-  if (!isAuthenticated.value) {
-    showToast("Veuillez vous connecter pour voter", "error");
-    return;
+  if (searchTerm.value.trim()) {
+    const searchTermLower = searchTerm.value.toLowerCase();
+    result = result.filter(
+      (proposal) =>
+        proposal.name.toLowerCase().includes(searchTermLower) ||
+        (proposal.description &&
+          proposal.description.toLowerCase().includes(searchTermLower))
+    );
   }
 
-  // Vérification du statut de la proposition
-  const proposal = proposals.value.find((p) => p._id === proposalId);
-  if (proposal?.status === "pending") {
-    showToast("Impossible de voter pour une proposition en attente", "error");
-    return;
+  // Appliquer le tri selon l'option sélectionnée
+  if (sortOption.value === "votesDesc" || sortOption.value === "votesAsc") {
+    result = [...result].sort((a, b) => {
+      // Calculer les scores selon la préférence utilisateur
+      const scoreA = onlyPositiveVotes.value
+        ? a.votes?.filter((v) => v.value > 0).length || 0
+        : a.totalVotes;
+      const scoreB = onlyPositiveVotes.value
+        ? b.votes?.filter((v) => v.value > 0).length || 0
+        : b.totalVotes;
+
+      // Tri ascendant ou descendant selon l'option
+      return sortOption.value === "votesDesc"
+        ? scoreB - scoreA
+        : scoreA - scoreB;
+    });
   }
 
-  try {
-    await gameProposalService.voteProposal(proposalId, value);
-    await loadProposals();
-    showToast("Vote enregistré avec succès!", "success");
-  } catch (error) {
-    console.error("Erreur lors du vote:", error);
-    showToast("Erreur lors du vote", "error");
-  }
-};
+  return result;
+});
 
-/**
- * Ouvre la modale d'information des votes
- * @param proposal - Proposition à afficher dans la modale
- */
+// Propositions paginées
+const paginatedProposals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredProposals.value.slice(startIndex, endIndex);
+});
+
+// Nombre total de pages
+const totalPages = computed(() => {
+  return Math.ceil(filteredProposals.value.length / itemsPerPage);
+});
+
+// Si la page actuelle devient invalide après un changement
+watch(filteredProposals, () => {
+  // Ajuster la page actuelle si elle dépasse le nombre total de pages
+  if (currentPage.value > totalPages.value && totalPages.value > 0) {
+    currentPage.value = totalPages.value;
+  }
+  // Si aucun résultat, revenir à la page 1
+  if (totalPages.value === 0) {
+    currentPage.value = 1;
+  }
+});
+
+watch(sortOption, () => {
+  // Rester à la page 1 quand on change de tri
+  currentPage.value = 1;
+});
+
+watch(onlyPositiveVotes, () => {
+  // Rester à la page 1 quand on change le mode de comptage des votes
+  currentPage.value = 1;
+});
+
+// Ouvrir la modale d'information des votes
 const showVoteInfoModal = (proposal: GameProposal) => {
   selectedProposal.value = proposal;
   activeTab.value = "positive"; // Reset à l'onglet positif par défaut
   showVoteInfo.value = true;
 };
 
-//-------------------------------------------------------
-// FONCTIONS UTILITAIRES POUR LES UTILISATEURS
-//-------------------------------------------------------
+// Listes des votes
+const positiveVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === 1);
+});
 
-/**
- * Récupère le nom d'un votant depuis un objet vote
- * @param vote - Objet vote contenant les informations du votant
- * @returns Nom d'affichage du votant
- */
+const negativeVotes = computed(() => {
+  if (!selectedProposal.value?.votes) return [];
+  return selectedProposal.value.votes.filter((vote) => vote.value === -1);
+});
+
+const currentVotesList = computed(() => {
+  return activeTab.value === "positive"
+    ? positiveVotes.value
+    : negativeVotes.value;
+});
+
+// Récupère le nombre de votes à afficher selon le mode sélectionné
+const getDisplayVoteCount = (proposal: GameProposal) => {
+  if (onlyPositiveVotes.value) {
+    // Si on veut voir uniquement les votes positifs, compter seulement ceux-ci
+    return proposal.votes?.filter((v) => v.value > 0).length || 0;
+  } else {
+    // Sinon afficher le total normal (votes pour - votes contre)
+    return proposal.totalVotes;
+  }
+};
+
+// Détermine les classes CSS pour l'affichage du nombre de votes
+const getVoteCountClass = (proposal: GameProposal) => {
+  const count = getDisplayVoteCount(proposal);
+  if (count > 0) return "text-space-gold";
+  if (count < 0) return "text-space-error";
+  return "text-space-text";
+};
+
+// Récupère le nom d'un votant depuis un objet vote
 const getVoterName = (vote: any): string => {
   if (!vote || !vote.player) return "Utilisateur inconnu";
 
@@ -841,11 +723,7 @@ const getVoterName = (vote: any): string => {
   return "Utilisateur inconnu";
 };
 
-/**
- * Calcule les initiales d'un nom d'utilisateur
- * @param name - Nom d'utilisateur
- * @returns Initiales formatées
- */
+// Calcule les initiales d'un nom d'utilisateur
 const getInitials = (name: string): string => {
   if (!name) return "?";
 
@@ -863,15 +741,79 @@ const getInitials = (name: string): string => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
+// ===================================
+// CHARGEMENT DES DONNÉES
+// ===================================
+
 /**
  * Charge les propositions selon le filtre actif
  */
-//-------------------------------------------------------
-// FONCTIONS DE GESTION DES PROPOSITIONS
-//-------------------------------------------------------
+const loadProposals = async () => {
+  try {
+    loading.value = true;
+    const status = activeFilter.value; // Suppression de la condition pour "all"
+    const result = await gameProposalService.getProposals(status);
+    proposals.value = result;
+  } catch (error) {
+    showToast("Erreur lors du chargement des propositions", "error");
+    console.error("Erreur lors du chargement des propositions:", error);
+  } finally {
+    loading.value = false;
+  }
+};
 
 /**
- * Soumet une nouvelle proposition de jeu
+ * Message à afficher quand aucune proposition n'est trouvée
+ */
+const emptyStateMessage = computed(() => {
+  if (searchTerm.value) {
+    return `Aucune proposition ne correspond à votre recherche "${searchTerm.value}".`;
+  }
+
+  if (activeFilter.value === "pending") {
+    return "Aucune proposition en attente de modération.";
+  } else if (activeFilter.value === "approved") {
+    return "Aucune proposition approuvée. Soyez le premier à proposer un jeu!";
+  }
+
+  return "Aucune proposition trouvée. Soyez le premier à proposer un jeu!";
+});
+
+// ===================================
+// GESTION DES VOTES
+// ===================================
+
+/**
+ * Gestion des votes sur une proposition
+ */
+const handleVote = async (proposalId: string, value: number) => {
+  // Vérification de connexion
+  if (!isAuthenticated.value) {
+    showToast("Veuillez vous connecter pour voter", "error");
+    return;
+  }
+
+  // Vérification du statut
+  const proposal = proposals.value.find((p) => p._id === proposalId);
+  if (proposal?.status === "pending") {
+    showToast("Impossible de voter pour une proposition en attente", "error");
+    return;
+  }
+
+  try {
+    await gameProposalService.voteProposal(proposalId, value);
+    await loadProposals();
+  } catch (error) {
+    showToast("Erreur lors du vote", "error");
+  }
+};
+
+// ===================================
+// GESTION DES PROPOSITIONS
+// ===================================
+
+/**
+ * Soumettre une nouvelle proposition de jeu
  */
 const submitProposal = async () => {
   if (!isProposalValid.value) return;
@@ -893,8 +835,7 @@ const submitProposal = async () => {
     if (error.response?.status === 409) {
       showToast("Ce jeu a déjà été proposé", "error");
     } else {
-      showToast("Erreur lors de la soumission", "error");
-      console.error("Erreur lors de la soumission:", error);
+      showToast("Erreur lors de la soumission de la proposition", "error");
     }
   } finally {
     submitting.value = false;
@@ -902,7 +843,7 @@ const submitProposal = async () => {
 };
 
 /**
- * Réinitialise le formulaire de proposition
+ * Réinitialiser le formulaire de proposition
  */
 const resetProposalForm = () => {
   newProposal.value = {
@@ -913,12 +854,40 @@ const resetProposalForm = () => {
   };
 };
 
-//-------------------------------------------------------
-// FONCTIONS DE RECHERCHE DE JEUX (RAWG API)
-//-------------------------------------------------------
+/**
+ * Formate une date pour l'affichage
+ */
+const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) return "Date inconnue";
+
+  try {
+    const date = new Date(dateString);
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) {
+      return "Date invalide";
+    }
+
+    // Formater la date avec l'API Intl pour le support des locales
+    return new Intl.DateTimeFormat("fr-FR", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  } catch (error) {
+    console.error("Erreur de formatage de date:", error);
+    return "Erreur de date";
+  }
+};
+
+// ===================================
+// RECHERCHE DE JEUX (RAWG API)
+// ===================================
 
 /**
- * Recherche de jeux avec délai d'attente (debounce) pour éviter trop d'appels API
+ * Recherche avec délai d'attente (debounce)
  */
 const debounceSearch = () => {
   if (searchTimeout) clearTimeout(searchTimeout);
@@ -935,7 +904,7 @@ const debounceSearch = () => {
       const results = await rawgService.searchGames(searchQuery.value);
       searchResults.value = results || [];
     } catch (error) {
-      console.error("Erreur lors de la recherche:", error);
+      showToast("Erreur lors de la recherche de jeux", "error");
       searchResults.value = [];
     } finally {
       searching.value = false;
@@ -944,8 +913,7 @@ const debounceSearch = () => {
 };
 
 /**
- * Sélectionne un jeu dans les résultats de recherche et remplit le formulaire
- * @param game - Jeu sélectionné depuis l'API RAWG
+ * Sélectionne un jeu dans les résultats de recherche
  */
 const selectGame = (game: RawgGame) => {
   newProposal.value = {
@@ -958,33 +926,25 @@ const selectGame = (game: RawgGame) => {
   searchQuery.value = "";
 };
 
-//-------------------------------------------------------
-// FONCTIONS DE MODÉRATION (ADMIN)
-//-------------------------------------------------------
+// ===================================
+// MODÉRATION (ADMIN)
+// ===================================
 
 /**
- * Approuve une proposition (fonction admin)
- * @param proposalId - ID de la proposition à approuver
+ * Approuve une proposition (admin)
  */
 const approveProposal = async (proposalId: string) => {
-  if (!isAdmin.value) {
-    showToast("Accès non autorisé", "error");
-    return;
-  }
-
   try {
     await gameProposalService.moderateProposal(proposalId, "approved");
     showToast("Proposition approuvée", "success");
     await loadProposals();
   } catch (error) {
-    console.error("Erreur lors de l'approbation:", error);
     showToast("Erreur lors de l'approbation", "error");
   }
 };
 
 /**
  * Ouvre le modal de confirmation de suppression
- * @param proposalId - ID de la proposition à supprimer
  */
 const confirmDelete = (proposalId: string) => {
   proposalToDelete.value = proposalId;
@@ -992,33 +952,25 @@ const confirmDelete = (proposalId: string) => {
 };
 
 /**
- * Supprime une proposition (fonction admin)
+ * Supprime une proposition (admin)
  */
 const deleteProposal = async () => {
-  if (!isAdmin.value) {
-    showToast("Accès non autorisé", "error");
-    return;
-  }
-
   try {
     await gameProposalService.deleteProposal(proposalToDelete.value);
     deleteDialogVisible.value = false;
     showToast("Proposition supprimée avec succès", "success");
     await loadProposals();
   } catch (error) {
-    console.error("Erreur lors de la suppression:", error);
     showToast("Erreur lors de la suppression", "error");
   }
 };
 
-//-------------------------------------------------------
-// FONCTIONS UTILITAIRES
-//-------------------------------------------------------
+// ===================================
+// UTILITAIRES
+// ===================================
 
 /**
  * Affiche une notification temporaire
- * @param message - Message à afficher
- * @param type - Type de notification (success ou error)
  */
 const showToast = (message: string, type: "success" | "error" = "success") => {
   toastInfo.value = {
@@ -1033,97 +985,29 @@ const showToast = (message: string, type: "success" | "error" = "success") => {
 };
 
 /**
- * Formate une date pour l'affichage français
- * @param dateString - Date au format string
- * @returns Date formatée en français
- */
-const formatDate = (dateString: string | undefined): string => {
-  if (!dateString) return "Date inconnue";
-
-  try {
-    const date = new Date(dateString);
-
-    // Vérifier si la date est valide
-    if (isNaN(date.getTime())) {
-      return "Date invalide";
-    }
-
-    // Formater la date avec l'API Intl pour le support français
-    return new Intl.DateTimeFormat("fr-FR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  } catch (error) {
-    console.error("Erreur de formatage de date:", error);
-    return "Erreur de date";
-  }
-};
-
-/**
- * Formate la date de sortie d'un jeu depuis l'API RAWG
- * @param dateString - Date de sortie du jeu
- * @returns Date formatée
+ * Formatage de la date de sortie d'un jeu
  */
 const formatGameReleaseDate = (dateString: string) => {
   if (!dateString) return "Date inconnue";
 
   const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
+  return date.toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 };
 
-//-------------------------------------------------------
-// WATCHERS ET CYCLE DE VIE
-//-------------------------------------------------------
+// ===================================
+// CYCLE DE VIE
+// ===================================
 
-/**
- * Fonction de debounce pour limiter les appels répétitifs
- * @param fn - Fonction à debouncer
- * @param wait - Délai d'attente en millisecondes
- * @returns Fonction debouncée
- */
-function debounce<T extends (...args: any[]) => any>(fn: T, wait = 300) {
-  let t: any;
-  return (...args: Parameters<T>) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
-  };
-}
-
-// Watchers consolidés avec debouncing
-const debouncedResetPagination = debounce(() => {
-  currentPage.value = 1;
-}, 250);
-
-// Watcher pour ajuster la pagination quand les résultats changent
-watch(filteredProposals, () => {
-  // Ajuster la page actuelle si elle dépasse le nombre total de pages
-  if (currentPage.value > totalPages.value && totalPages.value > 0) {
-    currentPage.value = totalPages.value;
-  }
-  // Si aucun résultat, revenir à la page 1
-  if (totalPages.value === 0) {
-    currentPage.value = 1;
-  }
-});
-
-// Watchers pour réinitialiser la pagination avec debouncing
-watch([searchTerm, sortOption, onlyPositiveVotes], debouncedResetPagination);
-
-// Watcher pour recharger les propositions quand le filtre change
+// Observer les changements de filtre
 watch(activeFilter, () => {
   loadProposals();
 });
 
-/**
- * Initialise le composant au montage
- */
+// Charger les données au montage
 onMounted(() => {
   loadProposals();
 });
@@ -1137,7 +1021,7 @@ onMounted(() => {
   gap: 1.5rem;
 }
 
-/* Stylisation des cartes de proposition avec effets Halloween */
+/* Stylisation des cartes de proposition avec effets spatiaux */
 .proposal-card-wrapper {
   position: relative;
   transition: all 0.3s ease;
@@ -1146,7 +1030,7 @@ onMounted(() => {
 
 .proposal-card-wrapper:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.2);
+  box-shadow: 0 10px 30px rgba(var(--space-primary-rgb), 0.2);
   z-index: 2;
 }
 
@@ -1155,17 +1039,17 @@ onMounted(() => {
   backdrop-filter: blur(5px);
 }
 
-/* Animations Halloween */
-@keyframes mystical-glow {
+/* Animations améliorées */
+@keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
+    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5),
-      0 0 30px rgba(var(--color-primary-rgb), 0.2);
+    box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.5),
+      0 0 30px rgba(var(--space-primary-rgb), 0.2);
   }
   100% {
-    box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.3);
+    box-shadow: 0 0 5px rgba(var(--space-primary-rgb), 0.3);
   }
 }
 
@@ -1184,13 +1068,13 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary),
+    var(--space-primary),
     transparent
   );
-  animation: mystic-line 1s ease-out;
+  animation: scanline 1s ease-out;
 }
 
-@keyframes mystic-line {
+@keyframes scanline {
   0% {
     top: 0;
     opacity: 0;
@@ -1204,33 +1088,33 @@ onMounted(() => {
   }
 }
 
-/* Scrollbar personnalisée Halloween */
+/* Scrollbar personnalisée */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--color-bg-dark);
+  background: rgba(30, 30, 45, 0.2);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
+  background: rgba(109, 40, 217, 0.5);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-light);
+  background: rgba(109, 40, 217, 0.7);
 }
 
-/* Animation pour les votants */
-.voter-animate {
+/* Ajouter les styles pour l'animation des votants */
+.space-voter-animate {
   position: relative;
   overflow: hidden;
 }
 
-.voter-animate::after {
+.space-voter-animate::after {
   content: "";
   position: absolute;
   top: 0;
@@ -1240,7 +1124,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(var(--color-primary-rgb), 0.1),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
   animation: voter-slide 2s ease-in-out infinite;
@@ -1259,59 +1143,51 @@ onMounted(() => {
 
 /* Styles spécifiques pour les propositions de différents statuts */
 .proposal-approved {
-  border-left: 3px solid var(--color-gold);
+  border-left: 3px solid var(--space-gold);
 }
 
 .proposal-pending {
-  border-left: 3px solid var(--color-secondary);
-}
-
-.proposal-rejected {
-  border-left: 3px solid var(--color-error);
+  border-left: 3px solid var(--space-secondary);
 }
 
 /* Amélioration des transitions */
 .proposal-card-wrapper,
 .game-search-result,
-.voter-animate {
+.space-voter-animate {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Styles pour les select Halloween */
-select {
-  background: var(--color-bg-dark);
-  border: 1px solid var(--color-primary-dark);
-  color: var(--color-text);
-  transition: all 0.3s ease;
-  font-family: var(--font-body);
+/* Effet de surbrillance pour les boutons importants */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
 }
 
-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3),
-    0 0 10px rgba(var(--color-primary-rgb), 0.2);
-  outline: none;
+.shine-effect::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shine 4s infinite linear;
+  pointer-events: none;
 }
 
-select:hover {
-  border-color: var(--color-primary-light);
-  background: var(--color-bg-light);
-}
-
-/* Textarea Halloween */
-textarea {
-  background: var(--color-bg-dark);
-  border: 1px solid var(--color-primary-dark);
-  color: var(--color-text);
-  transition: all 0.3s ease;
-  font-family: var(--font-body);
-}
-
-textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3),
-    0 0 10px rgba(var(--color-primary-rgb), 0.2);
-  outline: none;
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(30deg);
+  }
 }
 
 /* Réactivité améliorée */
@@ -1319,11 +1195,5 @@ textarea:focus {
   .proposals-grid {
     gap: 1rem;
   }
-}
-
-/* Styles Halloween spéciaux pour les labels */
-label {
-  font-family: var(--font-heading);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 </style>

@@ -2,12 +2,31 @@
   <div
     class="relative flex items-center justify-center min-h-screen p-4 pb-16 navbar-spacing overflow-hidden"
   >
+    <!-- Grille spatiale en arrière-plan -->
+    <div
+      class="space-grid absolute inset-0 opacity-10 pointer-events-none"
+    ></div>
+
+    <!-- Étoiles en arrière-plan -->
+    <div
+      v-for="n in 25"
+      :key="`star-${n}`"
+      class="absolute h-1 w-1 rounded-full bg-white animate-pulse"
+      :style="{
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 5}s`,
+        animationDuration: `${Math.random() * 3 + 2}s`,
+        opacity: Math.random() * 0.7 + 0.3,
+      }"
+    ></div>
+
     <!-- "Planète" décorative en arrière-plan -->
     <div
-      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-color-primary-dark/10 to-color-primary/5 opacity-30 blur-xl pointer-events-none"
+      class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-space-primary-dark/10 to-space-primary/5 opacity-30 blur-xl pointer-events-none"
     ></div>
     <div
-      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-color-accent-dark/10 to-color-accent/5 opacity-20 blur-xl pointer-events-none"
+      class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-gradient-to-br from-space-accent-dark/10 to-space-accent/5 opacity-20 blur-xl pointer-events-none"
     ></div>
     <div
       class="w-full max-w-6xl z-10 px-4 mt-2 sm:mt-3 animate-fade-in-up"
@@ -22,33 +41,31 @@
         class="flex flex-col items-center justify-center"
         :class="!user ? 'max-w-md' : ''"
       >
-        <!-- Titre principal avec effet terrifiant -->
+        <!-- Titre principal avec effet spatial -->
         <div class="title-container relative mb-3 sm:mb-4 mt-0">
           <div class="title-bg"></div>
           <h1
-            class="title-text horror-title font-nasa text-center leading-tight relative z-10"
+            class="title-text font-nasa text-center leading-tight relative z-10"
           >
             ALORS, <br />ÇA SCRIM ?
           </h1>
-          <!-- Soulignement "gouttes" décoratif -->
-          <div class="horror-drip" aria-hidden="true"></div>
         </div>
         <!-- Logo -->
         <div
           class="relative my-4 sm:my-6 flex items-center justify-center group"
         >
           <div
-            class="absolute inset-0 rounded-full bg-color-primary/10 filter blur-xl group-hover:bg-color-primary/20 transition-all duration-500 opacity-70"
+            class="absolute inset-0 rounded-full bg-space-primary/10 filter blur-xl group-hover:bg-space-primary/20 transition-all duration-500 opacity-70"
           ></div>
           <img
-            src="../assets/logo_halloween.png"
+            src="../assets/sanslueur.png"
             class="h-36 sm:h-40 w-auto transition-all duration-500 filter hover:scale-105 relative z-10"
             alt="Logo"
           />
         </div>
 
         <!-- Bouton de connexion Discord -->
-        <Button
+        <SpaceButton
           v-if="!user"
           @click="loginWithDiscord"
           variant="primary"
@@ -68,11 +85,11 @@
             </svg>
           </template>
           Connexion via Discord
-        </Button>
+        </SpaceButton>
         <!-- Badge de bienvenue stylisé différemment -->
         <div
           v-else
-          class="mt-4 sm:mt-6 max-w-sm p-3 rounded-lg border-2 border-color-secondary/70 bg-gradient-to-br from-color-bg-light/80 to-color-bg/90 backdrop-blur-md shadow-lg shadow-color-secondary/20 animate-float-subtle relative overflow-hidden"
+          class="mt-4 sm:mt-6 max-w-sm p-3 rounded-lg border-2 border-space-secondary/70 bg-gradient-to-br from-space-bg-light/80 to-space-bg/90 backdrop-blur-md shadow-lg shadow-space-secondary/20 animate-float-subtle relative overflow-hidden"
         >
           <!-- Effet de brillance -->
           <div
@@ -81,17 +98,17 @@
 
           <!-- Cercle décoratif -->
           <div
-            class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-color-secondary/10 blur-xl"
+            class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-space-secondary/10 blur-xl"
           ></div>
 
           <!-- Contenu -->
           <div class="flex items-center justify-center p-1 relative z-10">
             <div
-              class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-color-secondary/20 border border-color-secondary/50"
+              class="h-10 w-10 rounded-full flex items-center justify-center mr-3 bg-space-secondary/20 border border-space-secondary/50"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-color-secondary-light"
+                class="h-6 w-6 text-space-secondary-light"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -104,11 +121,11 @@
             </div>
             <div>
               <p
-                class="capitalize font-nasa text-lg text-color-secondary-light"
+                class="capitalize font-nasa text-lg text-space-secondary-light"
               >
                 Bienvenue, {{ user.username }}!
               </p>
-              <p class="text-xs text-color-text-muted mt-1">
+              <p class="text-xs text-space-text-muted mt-1">
                 Prêt à participer au prochain tournoi?
               </p>
             </div>
@@ -116,7 +133,7 @@
 
           <!-- Ligne décorative -->
           <div
-            class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-color-secondary/50 to-transparent"
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-space-secondary/50 to-transparent"
           ></div>
         </div>
       </div>
@@ -126,7 +143,7 @@
         class="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6"
       >
         <!-- Prochain tournoi -->
-        <Card
+        <SpaceCard
           variant="primary"
           :stars="true"
           :decorated="true"
@@ -137,7 +154,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-3 text-color-primary-light"
+                  class="h-6 w-6 mr-3 text-space-primary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -149,73 +166,75 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                <Title size="xl">PROCHAIN TOURNOI</Title>
+                <SpaceTitle size="xl">PROCHAIN TOURNOI</SpaceTitle>
               </div>
-              <Badge
+              <SpaceBadge
                 :variant="isTournamentLive ? 'error' : 'warning'"
                 size="md"
                 className="animate-pulse-slow"
               >
                 {{ isTournamentLive ? "LIVE" : "BIENTÔT" }}
-              </Badge>
+              </SpaceBadge>
             </div>
           </template>
 
           <div v-if="isLoading">
-            <Loader text="Chargement des données..." />
+            <SpaceLoader text="Chargement des données..." />
           </div>
           <div v-else-if="nextTournament" class="space-y-3">
             <TournamentCard :tournament="nextTournament" variant="primary">
-              <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
-                <div
-                  class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              <template #content>
+                <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
+                  <div
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span>{{ formatDate(nextTournament.date) }}</span>
-                </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span>{{ formatDate(nextTournament.date) }}</span>
+                  </div>
 
-                <div
-                  class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <div
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span>{{ formatTime(nextTournament.date) }}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>{{ formatTime(nextTournament.date) }}</span>
+                  </div>
                 </div>
-              </div>
+              </template>
             </TournamentCard>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <div class="text-color-text font-mono">
+                <div class="text-space-text font-mono">
                   <div class="flex items-center mb-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-color-primary-light"
+                      class="h-4 w-4 mr-2 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -239,7 +258,7 @@
                   <div class="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-2 text-color-primary-light"
+                      class="h-4 w-4 mr-2 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -268,7 +287,7 @@
                       : { name: 'TournoisAVenir' }
                   "
                 >
-                  <Button variant="secondary" size="sm">
+                  <SpaceButton variant="secondary" size="sm">
                     <template #icon>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -286,47 +305,50 @@
                       </svg>
                     </template>
                     {{ nextTournament ? "Voir" : "Tous les tournois" }}
-                  </Button>
+                  </SpaceButton>
                 </router-link>
               </div>
             </div>
             <!-- Timer animé -->
-            <Card variant="dark" className="mt-3 py-1 px-2 max-w-xs mx-auto">
+            <SpaceCard
+              variant="dark"
+              className="mt-3 py-1 px-2 max-w-xs mx-auto"
+            >
               <div
-                class="text-2xs text-color-text-muted mb-1 font-nasa text-center"
+                class="text-2xs text-space-text-muted mb-1 font-nasa text-center"
               >
                 Commence dans:
               </div>
               <CountdownTimer :units="countdownUnits" variant="primary" />
-            </Card>
+            </SpaceCard>
           </div>
 
           <div v-else>
-            <Terminal
+            <SpaceTerminal
               command="find_next_tournament"
               title="SYSTÈME DE TOURNOIS"
               :showCursor="true"
               className="mb-4"
             >
-              <div class="text-color-primary-light">
+              <div class="text-space-primary-light">
                 Aucun tournoi à venir n'a été trouvé dans la base de données.
               </div>
-              <div class="text-color-text-muted mt-2">
+              <div class="text-space-text-muted mt-2">
                 Consultez la page des tournois pour plus d'informations.
               </div>
-            </Terminal>
+            </SpaceTerminal>
 
             <div class="flex justify-center mt-4">
               <router-link :to="{ name: 'TournoisAVenir' }">
-                <Button variant="secondary" size="sm">
+                <SpaceButton variant="secondary" size="sm">
                   Voir tous les tournois
-                </Button>
+                </SpaceButton>
               </router-link>
             </div>
           </div>
-        </Card>
+        </SpaceCard>
         <!-- Dernier tournoi terminé -->
-        <Card
+        <SpaceCard
           variant="secondary"
           :stars="true"
           :decorated="true"
@@ -337,7 +359,7 @@
               <div class="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 mr-3 text-color-secondary-light"
+                  class="h-6 w-6 mr-3 text-space-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -349,34 +371,36 @@
                     d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                <Title size="xl">DERNIER TOURNOI</Title>
+                <SpaceTitle size="xl">DERNIER TOURNOI</SpaceTitle>
               </div>
-              <Badge variant="success" size="md"> TERMINÉ </Badge>
+              <SpaceBadge variant="success" size="md"> TERMINÉ </SpaceBadge>
             </div>
           </template>
 
           <div v-if="isLoading">
-            <Loader text="Chargement des résultats..." />
+            <SpaceLoader text="Chargement des résultats..." />
           </div>
           <div v-else-if="lastFinishedTournament" class="space-y-3">
             <TournamentCard
               :tournament="lastFinishedTournament"
               variant="secondary"
             >
-              <div
-                class="text-sm text-color-text-muted flex items-center mt-1"
-              ></div>
+              <template #content>
+                <div
+                  class="text-sm text-space-text-muted flex items-center mt-1"
+                ></div>
+              </template>
             </TournamentCard>
 
             <!-- Podium -->
             <div class="space-y-3">
-              <div class="text-sm text-color-text font-nasa mb-2">Podium:</div>
+              <div class="text-sm text-space-text font-nasa mb-2">Podium:</div>
               <div class="space-y-2">
-                <Card
+                <SpaceCard
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
                   variant="dark"
-                  :className="`border-color-accent/40 hover:border-color-accent/60 transition-all duration-300 ${
+                  :className="`border-space-accent/40 hover:border-space-accent/60 transition-all duration-300 ${
                     index === 0
                       ? 'border-2 border-amber-500/70 bg-gradient-to-r from-amber-900/10 to-amber-700/5'
                       : ''
@@ -387,7 +411,7 @@
                       :class="`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${
                         index === 0
                           ? 'bg-amber-500/30 border border-amber-500/70'
-                          : 'bg-color-accent/20 border border-color-accent/50'
+                          : 'bg-space-accent/20 border border-space-accent/50'
                       }`"
                     >
                       <!-- Afficher une coupe pour la première place -->
@@ -419,9 +443,12 @@
                         </svg>
                       </template>
                       <template v-else>
-                        <Badge :variant="getRankBadgeVariant(index)" size="md">
+                        <SpaceBadge
+                          :variant="getRankBadgeVariant(index)"
+                          size="md"
+                        >
                           {{ index + 1 }}
-                        </Badge>
+                        </SpaceBadge>
                       </template>
                     </div>
                     <div
@@ -429,7 +456,7 @@
                       :class="
                         index === 0
                           ? 'text-amber-400'
-                          : 'text-color-accent-light'
+                          : 'text-space-accent-light'
                       "
                     >
                       <!-- Ajouter "Équipe gagnante" pour la première place -->
@@ -448,11 +475,11 @@
                     v-if="team.players && team.players.length > 0"
                     class="mt-2 pl-12"
                   >
-                    <div class="text-xs text-color-text-muted mb-1">
+                    <div class="text-xs text-space-text-muted mb-1">
                       Membres:
                     </div>
                     <div class="flex flex-wrap gap-1">
-                      <Badge
+                      <SpaceBadge
                         v-for="player in team.players"
                         :key="player._id"
                         :variant="index === 0 ? 'warning' : 'accent'"
@@ -472,19 +499,19 @@
                           />
                         </svg>
                         {{ player.username || "Joueur" }}
-                      </Badge>
+                      </SpaceBadge>
                     </div>
                   </div>
-                </Card>
+                </SpaceCard>
               </div>
             </div>
             <div class="flex justify-between items-center">
               <div
-                class="text-color-text-muted text-3xs xs:text-2xs sm:text-xs flex items-center"
+                class="text-space-text-muted text-3xs xs:text-2xs sm:text-xs flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-secondary-light"
+                  class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-secondary-light"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -509,7 +536,7 @@
                     : { name: 'TournoisAVenir' }
                 "
               >
-                <Button variant="secondary" size="sm">
+                <SpaceButton variant="secondary" size="sm">
                   <template #icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -527,28 +554,28 @@
                     </svg>
                   </template>
                   {{ lastFinishedTournament ? "Détails" : "Tous les tournois" }}
-                </Button>
+                </SpaceButton>
               </router-link>
             </div>
           </div>
 
           <div v-else>
-            <Terminal
+            <SpaceTerminal
               command="find_finished_tournaments"
               title="SYSTÈME DE TOURNOIS"
               :showCursor="true"
               className="mb-4"
             >
-              <div class="text-color-secondary-light">
+              <div class="text-space-secondary-light">
                 Aucun tournoi terminé n'a été trouvé dans la base de données.
               </div>
-              <div class="text-color-text-muted mt-2">
+              <div class="text-space-text-muted mt-2">
                 Les résultats des tournois seront affichés ici lorsqu'ils seront
                 disponibles.
               </div>
-            </Terminal>
+            </SpaceTerminal>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
     </div>
 
@@ -1076,92 +1103,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Effet terrifiant du titre */
-.horror-title {
-  text-shadow: 0 0 12px rgba(239, 68, 68, 0.35),
-    0 0 28px rgba(217, 119, 6, 0.25), 0 0 46px rgba(124, 45, 18, 0.2);
-  letter-spacing: 0.18em;
-  animation: horror-flicker 3.2s infinite;
-}
-
-@keyframes horror-flicker {
-  0%,
-  100% {
-    opacity: 1;
-    filter: saturate(1) brightness(1);
-  }
-  5% {
-    opacity: 0.9;
-  }
-  8% {
-    opacity: 0.6;
-    filter: brightness(1.15);
-  }
-  10% {
-    opacity: 0.95;
-    filter: brightness(1);
-  }
-  13% {
-    opacity: 0.7;
-    filter: saturate(1.1);
-  }
-  20% {
-    opacity: 1;
-  }
-  55% {
-    opacity: 0.97;
-  }
-  58% {
-    opacity: 0.65;
-    filter: brightness(1.12) saturate(1.05);
-  }
-  60% {
-    opacity: 0.98;
-  }
-}
-
-/* Soulignement façon gouttes de sang (subtil) */
-.horror-drip {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: -6px;
-  width: min(360px, 80%);
-  height: 6px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(190, 18, 60, 0.35),
-    transparent
-  );
-  filter: blur(0.3px);
-}
-
-.horror-drip::before,
-.horror-drip::after {
-  content: "";
-  position: absolute;
-  width: 6px;
-  height: 12px;
-  background: rgba(190, 18, 60, 0.5);
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  top: 6px;
-}
-
-.horror-drip::before {
-  left: 25%;
-  height: 14px;
-}
-.horror-drip::after {
-  left: 68%;
-  height: 10px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .horror-title {
-    animation: none;
-  }
+/* Grille spatiale en arrière-plan */
+.space-grid {
+  background-image: linear-gradient(
+      rgba(109, 40, 217, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
 }
 
 /* Animation pulse lente */
@@ -1192,6 +1142,21 @@ onUnmounted(() => {
 
 .animate-float-subtle {
   animation: float-subtle 5s ease-in-out infinite;
+}
+
+/* Animation pour les éléments du compteur */
+.pulse-animation {
+  animation: pulse-bg 2s infinite;
+}
+
+@keyframes pulse-bg {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 /* Animation de fondu vers le haut */
@@ -1297,6 +1262,25 @@ onUnmounted(() => {
   .space-y-6 > *:last-child {
     margin-bottom: 1.5rem;
   }
+}
+
+/* Style spécifique pour les badges de rang */
+.getRankBadgeVariant-0 {
+  background-color: rgba(251, 146, 60, 0.2);
+  color: var(--space-accent-light);
+  border-color: rgba(251, 146, 60, 0.5);
+}
+
+.getRankBadgeVariant-1 {
+  background-color: rgba(2, 132, 199, 0.2);
+  color: var(--space-secondary-light);
+  border-color: rgba(2, 132, 199, 0.5);
+}
+
+.getRankBadgeVariant-2 {
+  background-color: rgba(109, 40, 217, 0.2);
+  color: var(--space-primary-light);
+  border-color: rgba(109, 40, 217, 0.5);
 }
 
 /* Espacement par rapport à la navbar */

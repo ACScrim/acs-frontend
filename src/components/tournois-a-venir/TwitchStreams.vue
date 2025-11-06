@@ -120,7 +120,7 @@
         </div>
 
         <div class="relative z-10 flex flex-col items-center">
-          <Loader text="Chargement des streams..." />
+          <SpaceLoader text="Chargement des streams..." />
           <div class="mt-6 text-center">
             <p class="text-white font-orbitron text-lg font-semibold mb-2">
               Initialisation des streams

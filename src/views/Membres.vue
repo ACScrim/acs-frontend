@@ -1,45 +1,58 @@
 <template>
-  <Container>
-    <!-- En-tête de la page avec notre nouveau composant Header -->
-    <Header
-      title="MEMBRES DE LA GUILDE"
+  <SpaceContainer>
+    <!-- En-tête de la page avec notre nouveau composant SpaceHeader -->
+    <SpaceHeader
+      title="MEMBRES DE L'ÉQUIPAGE"
       :showMissionInfo="true"
-      mission="HALLOWEEN-2025"
-    />
+      mission="CREWMATES-2025"
+    >
+      <template #badge>
+        <div class="flex items-center gap-3">
+          <SpaceBadge variant="secondary" size="lg">
+            {{ memberStore.members.length }} membre{{
+              memberStore.members.length > 1 ? "s" : ""
+            }}
+          </SpaceBadge>
+          <SpaceBadge
+            v-if="searchResults.length !== memberStore.members.length"
+            variant="accent"
+            size="md"
+          >
+            {{ searchResults.length }} trouvé{{
+              searchResults.length > 1 ? "s" : ""
+            }}
+          </SpaceBadge>
+        </div>
+      </template>
+    </SpaceHeader>
 
     <!-- Statistiques rapides -->
-    <Card variant="primary" className="mb-6 mt-6">
+    <SpaceCard variant="primary" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-3xl font-bold text-color-primary-light font-heading">
+          <div class="text-3xl font-bold text-space-primary-light font-nasa">
             {{ memberStore.members.length }}
           </div>
-          <div class="text-color-text-muted">Total membres</div>
+          <div class="text-space-text-muted">Total membres</div>
         </div>
         <div class="text-center">
-          <div
-            class="text-3xl font-bold text-color-secondary-light font-heading"
-          >
+          <div class="text-3xl font-bold text-space-secondary-light font-nasa">
             {{ memberStats.admins }}
           </div>
-          <div class="text-color-text-muted">Administrateurs</div>
+          <div class="text-space-text-muted">Administrateurs</div>
         </div>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- Recherche et filtres -->
-    <Card variant="dark" className="mb-6 mt-6">
+    <SpaceCard variant="dark" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Recherche -->
         <div>
-          <Input
-            id="member-search"
-            v-model="searchTerm"
-            label="Rechercher un membre"
-            placeholder="Nom, rôle..."
-            class="search-filter"
-          >
-            <template #icon>
+          <label for="member-search" class="mb-3 flex items-center gap-2">
+            <div
+              class="font-nasa text-space-primary-light flex items-center gap-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -52,20 +65,22 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </template>
-          </Input>
+              Rechercher un membre
+            </div>
+          </label>
+          <SpaceInput
+            id="member-search"
+            v-model="searchTerm"
+            placeholder="Nom, rôle..."
+            variant="primary"
+            :stars="true"
+          />
         </div>
 
         <!-- Filtre par rôle -->
         <div>
-          <Dropdown
-            id="role-filter"
-            v-model="roleFilter"
-            label="Filtrer par rôle"
-            placeholder="Tous les rôles"
-            class="role-filter"
-          >
-            <template #icon>
+          <label for="role-filter" class="mb-3 flex items-center gap-2">
+            <div class="font-nasa text-space-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -78,24 +93,47 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </template>
-            <option value="">Tous les rôles</option>
-            <option value="user">Membres</option>
-            <option value="admin">Administrateurs</option>
-            <option value="superadmin">Super Admin</option>
-          </Dropdown>
+              Filtrer par rôle
+            </div>
+          </label>
+          <div class="relative">
+            <select
+              id="role-filter"
+              v-model="roleFilter"
+              class="w-full rounded-lg border border-space-accent/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-accent/30 focus:outline-none transition-all duration-300"
+            >
+              <option value="">Tous les rôles</option>
+              <option value="user">Membres</option>
+              <option value="admin">Administrateurs</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-accent"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
 
         <!-- Options de tri -->
         <div>
-          <Dropdown
-            id="sort-select"
-            v-model="currentSort"
-            label="Trier par"
-            placeholder="Nom (A-Z)"
-            class="sort-filter"
-          >
-            <template #icon>
+          <label for="sort-select" class="mb-3 flex items-center gap-2">
+            <div
+              class="font-nasa text-space-secondary-light flex items-center gap-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -106,15 +144,42 @@
                   d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"
                 />
               </svg>
-            </template>
-            <option
-              v-for="option in sortOptions"
-              :key="option.id"
-              :value="option.id"
+              Trier par
+            </div>
+          </label>
+          <div class="relative">
+            <select
+              id="sort-select"
+              v-model="currentSort"
+              class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
             >
-              {{ option.label }}
-            </option>
-          </Dropdown>
+              <option
+                v-for="option in sortOptions"
+                :key="option.id"
+                :value="option.id"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-space-secondary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -123,13 +188,13 @@
         v-if="searchTerm || roleFilter"
         class="mt-4 flex justify-between items-center"
       >
-        <div class="text-sm text-color-text-muted">
+        <div class="text-sm text-space-text-muted">
           {{ searchResults.length }} résultat{{
             searchResults.length > 1 ? "s" : ""
           }}
           trouvé{{ searchResults.length > 1 ? "s" : "" }}
         </div>
-        <Button @click="resetFilters" variant="secondary" size="sm">
+        <SpaceButton @click="resetFilters" variant="secondary" size="sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4 mr-2"
@@ -143,21 +208,21 @@
             />
           </svg>
           Réinitialiser les filtres
-        </Button>
+        </SpaceButton>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- État de chargement -->
     <div v-if="memberStore.loading" class="flex justify-center py-12">
-      <Loader text="Chargement des membres en cours..." />
+      <SpaceLoader text="Scan des données biométriques en cours..." />
     </div>
 
     <!-- État d'erreur -->
-    <Alert v-else-if="memberStore.error" variant="error" className="my-8">
+    <SpaceAlert v-else-if="memberStore.error" variant="error" className="my-8">
       <div class="flex flex-col items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 text-color-error mb-4"
+          class="h-10 w-10 text-space-error mb-4"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -167,19 +232,19 @@
             clip-rule="evenodd"
           />
         </svg>
-        <p class="text-color-text mb-4">{{ memberStore.error }}</p>
-        <Button
+        <p class="text-space-text mb-4">{{ memberStore.error }}</p>
+        <SpaceButton
           @click="memberStore.fetchMembers(true)"
           variant="error"
           size="sm"
         >
           Réessayer
-        </Button>
+        </SpaceButton>
       </div>
-    </Alert>
+    </SpaceAlert>
 
     <!-- Liste vide -->
-    <Terminal
+    <SpaceTerminal
       v-else-if="sortedUsers.length === 0"
       :command="`find_users ${
         searchTerm ? '--search=\'' + searchTerm + '\'' : '--all'
@@ -188,29 +253,29 @@
       showCursor
       className="my-8"
     >
-      <div class="text-color-error font-mono">
+      <div class="text-space-error font-mono">
         Erreur 404: Aucun membre ne correspond à cette recherche.
       </div>
-      <div class="text-color-text-muted mt-2 mb-4">
+      <div class="text-space-text-muted mt-2 mb-4">
         {{ emptyStateMessage }}
       </div>
       <div v-if="searchTerm || roleFilter" class="flex gap-3">
-        <Button @click="resetFilters" variant="primary" size="sm">
+        <SpaceButton @click="resetFilters" variant="primary" size="sm">
           Réinitialiser les filtres
-        </Button>
-        <Button
+        </SpaceButton>
+        <SpaceButton
           @click="memberStore.fetchMembers(true)"
           variant="secondary"
           size="sm"
         >
           Actualiser la liste
-        </Button>
+        </SpaceButton>
       </div>
-    </Terminal>
+    </SpaceTerminal>
     <!-- Liste des membres -->
     <div v-else class="members-grid-container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <MemberCard
+        <SpaceMemberCard
           v-for="user in paginatedUsers"
           :key="user._id"
           :user-id="user._id"
@@ -224,7 +289,7 @@
 
     <!-- Pagination -->
     <div class="mt-6">
-      <Pagination
+      <SpacePagination
         :current-page="currentPage"
         :total-pages="totalPages"
         @prev-page="prevPage"
@@ -232,65 +297,49 @@
         @page-select="currentPage = $event"
       />
     </div>
-  </Container>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { useMemberStore } from "../stores/memberStore";
+import SpaceContainer from "@/components/ui/layout/Container.vue";
 
-//-------------------------------------------------------
-// ÉTAT RÉACTIF ET STORE
-//-------------------------------------------------------
-
-// Utilisation du store pour la gestion des membres
+// Utilisation du store
 const memberStore = useMemberStore();
 
-// États locaux pour les filtres et la pagination
+// États pour la recherche et la pagination
 const searchTerm = ref("");
 const roleFilter = ref("");
 const currentPage = ref(1);
-const itemsPerPage = 9; // Configuration pour une grille 3x3
+const itemsPerPage = 9; // Modifier pour 9 membres par page (3x3 grid)
 
-//-------------------------------------------------------
-// CONFIGURATION DES OPTIONS
-//-------------------------------------------------------
-
-/**
- * Options de tri disponibles pour les membres
- */
+// Options de tri
 const sortOptions = [
   { id: "username-asc", label: "Nom (A-Z)" },
   { id: "username-desc", label: "Nom (Z-A)" },
 ];
 const currentSort = ref("username-asc");
 
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES
-//-------------------------------------------------------
-
-/**
- * Calcule les statistiques des membres (nombre d'admins, etc.)
- * @returns Objet contenant les statistiques des membres
- */
+// Propriétés calculées
 const memberStats = computed(() => {
   const stats = {
+    total: memberStore.members.length,
     admins: 0,
+    users: 0,
   };
 
   memberStore.members.forEach((member) => {
     if (member.role === "admin" || member.role === "superadmin") {
       stats.admins++;
+    } else {
+      stats.users++;
     }
   });
 
   return stats;
 });
 
-/**
- * Filtre les membres selon les critères de recherche et de rôle
- * @returns Liste des membres filtrés
- */
 const searchResults = computed(() => {
   let results = memberStore.members;
 
@@ -325,10 +374,16 @@ const searchResults = computed(() => {
   return results;
 });
 
-/**
- * Trie les membres filtrés selon l'option sélectionnée
- * @returns Liste des membres triés
- */
+const getPlayerIdForUser = (user: any): string | null => {
+  if (!memberStore.members) return null;
+
+  const matchingMember = memberStore.members.find(
+    (member) => member._id === user._id && member.playerId
+  );
+
+  return matchingMember?.playerId || null;
+};
+
 const sortedUsers = computed(() => {
   const usersToSort = [...searchResults.value];
 
@@ -342,28 +397,16 @@ const sortedUsers = computed(() => {
   }
 });
 
-/**
- * Calcule le nombre total de pages pour la pagination
- * @returns Nombre total de pages
- */
 const totalPages = computed(() =>
   Math.ceil(sortedUsers.value.length / itemsPerPage)
 );
 
-/**
- * Retourne les membres à afficher sur la page courante
- * @returns Liste des membres paginés
- */
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return sortedUsers.value.slice(start, end);
 });
 
-/**
- * Génère un message d'état vide contextuel basé sur les filtres actifs
- * @returns Message explicatif pour l'état vide
- */
 const emptyStateMessage = computed(() => {
   const hasFilters = searchTerm.value || roleFilter.value;
 
@@ -383,198 +426,98 @@ const emptyStateMessage = computed(() => {
   return "Aucun membre trouvé dans la base de données.";
 });
 
-//-------------------------------------------------------
-// FONCTIONS UTILITAIRES
-//-------------------------------------------------------
-
-/**
- * Récupère l'ID joueur associé à un utilisateur
- * @param user - L'utilisateur dont on cherche l'ID joueur
- * @returns L'ID joueur ou null si non trouvé
- */
-const getPlayerIdForUser = (user: any): string | null => {
-  if (!memberStore.members) return null;
-
-  const matchingMember = memberStore.members.find(
-    (member) => member._id === user._id && member.playerId
-  );
-
-  return matchingMember?.playerId || null;
-};
-
-/**
- * Réinitialise tous les filtres à leurs valeurs par défaut
- */
+// Fonctions utilitaires
 const resetFilters = () => {
   searchTerm.value = "";
   roleFilter.value = "";
   resetPagination();
 };
 
-/**
- * Remet la pagination à la première page
- */
 const resetPagination = () => {
   currentPage.value = 1;
 };
 
-/**
- * Passe à la page suivante si possible
- */
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
 
-/**
- * Revient à la page précédente si possible
- */
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-//-------------------------------------------------------
-// WATCHERS ET CYCLE DE VIE
-//-------------------------------------------------------
-
-/**
- * Fonction de debounce pour limiter les appels répétitifs
- * @param fn - Fonction à debouncer
- * @param wait - Délai d'attente en millisecondes
- * @returns Fonction debouncée
- */
-function debounce<T extends (...args: any[]) => any>(fn: T, wait = 300) {
-  let t: any;
-  return (...args: Parameters<T>) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
-  };
-}
-
-const debouncedResetPagination = debounce(resetPagination, 250);
-
-// Watcher consolidé pour tous les filtres avec debouncing
-watch([searchTerm, roleFilter, currentSort], debouncedResetPagination);
-
-/**
- * Initialise le composant au montage
- */
+// Cycle de vie
 onMounted(() => {
   memberStore.fetchMembers();
+});
+
+// Watchers
+watch(searchTerm, () => {
+  resetPagination();
+});
+
+watch(roleFilter, () => {
+  resetPagination();
+});
+
+watch(currentSort, () => {
+  resetPagination();
 });
 </script>
 
 <style scoped>
-/* Styles spécifiques pour les dropdowns compacts */
-.search-filter {
-  --filter-color: var(--color-primary-rgb);
+.members-grid-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.role-filter {
-  --filter-color: var(--color-accent-rgb);
+/* Style pour les filtres - optimisé */
+select {
+  background-color: rgba(30, 30, 45, 0.8);
+  border: 1px solid rgba(109, 40, 217, 0.3);
+  color: var(--space-text);
+  transition: border-color 0.15s ease;
 }
 
-.sort-filter {
-  --filter-color: var(--color-secondary-rgb);
+select:focus {
+  border-color: var(--space-secondary);
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
 }
 
-/* Styles communs pour tous les filtres */
-.search-filter :deep(label),
-.role-filter :deep(.dropdown-label),
-.sort-filter :deep(.dropdown-label) {
-  font-size: 0.875rem !important;
-  margin-bottom: 0.5rem !important;
-  font-family: var(--font-body) !important;
-  font-weight: 500 !important;
-  color: rgba(var(--filter-color), 1) !important;
-  text-shadow: 0 0 8px rgba(var(--filter-color), 0.6) !important;
+/* Suppression des animations coûteuses */
+.grid > * {
+  transition: none;
 }
 
-.role-filter :deep(.dropdown-select),
-.sort-filter :deep(.dropdown-select) {
-  padding: 0.5rem 2rem 0.5rem 0.75rem !important;
-  font-size: 0.875rem !important;
-  font-family: var(--font-body) !important;
-  line-height: 1.4 !important;
-  border-color: rgba(var(--filter-color), 0.5) !important;
-  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
+/* Optimisation performance - désactivation des animations */
+.members-grid-container *,
+.members-grid-container *::before,
+.members-grid-container *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
 }
 
-.role-filter :deep(.dropdown-select:hover),
-.sort-filter :deep(.dropdown-select:hover) {
-  border-color: rgba(var(--filter-color), 0.8) !important;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(var(--filter-color), 0.5) !important;
-}
-
-.role-filter :deep(.dropdown-label svg),
-.sort-filter :deep(.dropdown-label svg) {
-  margin-right: 0.5rem !important;
-}
-
-.role-filter :deep(.dropdown-arrow),
-.sort-filter :deep(.dropdown-arrow) {
-  right: 0.5rem !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 10 !important;
-}
-
-.role-filter :deep(.dropdown-arrow svg),
-.sort-filter :deep(.dropdown-arrow svg) {
-  height: 0.75rem !important;
-  width: 0.75rem !important;
-}
-
-/* Input de recherche */
-.search-filter :deep(input) {
-  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
-  font-size: 0.875rem !important;
-  font-family: var(--font-body) !important;
-  line-height: 1.4 !important;
-  border-color: rgba(var(--filter-color), 0.5) !important;
-  box-shadow: 0 0 10px rgba(var(--filter-color), 0.3) !important;
-}
-
-.search-filter :deep(input:hover) {
-  border-color: rgba(var(--filter-color), 0.8) !important;
-  box-shadow: 0 0 15px rgba(var(--filter-color), 0.4) !important;
-}
-
-.search-filter :deep(input:focus) {
-  border-color: rgba(var(--filter-color), 1) !important;
-  box-shadow: 0 0 20px rgba(var(--filter-color), 0.6) !important;
-}
-
-.search-filter :deep(.absolute.inset-y-0.left-0) {
-  padding-left: 0.75rem !important;
-  display: flex !important;
-  align-items: center !important;
-  pointer-events: none !important;
-}
-
-.search-filter :deep(.absolute.inset-y-0.left-0 svg) {
-  height: 1rem !important;
-  width: 1rem !important;
-  color: rgba(var(--color-text-rgb), 0.6) !important;
-}
-
-/* Grid responsive avec animations subtiles */
-.members-grid-container .grid > * {
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.members-grid-container .grid > *:hover {
-  transform: translateY(-2px);
-}
-
-/* Amélioration des performances selon les préférences utilisateur */
-@media (prefers-reduced-motion: reduce) {
-  .members-grid-container .grid > * {
-    transition: none;
+/* Responsive design simplifié */
+@media (max-width: 640px) {
+  .members-grid-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
+}
+
+/* Amélioration de l'accessibilité sans animations */
+select:focus-visible {
+  outline: 2px solid var(--space-primary);
+  outline-offset: 2px;
+}
+
+/* Performance optimisée */
+.grid {
+  contain: layout style;
 }
 </style>

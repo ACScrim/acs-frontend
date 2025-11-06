@@ -1,26 +1,26 @@
 <template>
-  <div class="horror-header mb-8">
-    <div class="horror-header-content">
-      <Title
+  <div class="space-header mb-8">
+    <div class="space-header-content">
+      <SpaceTitle
         :size="titleSize"
         :decorated="decorated"
-        class="horror-header-title"
+        class="space-header-title"
       >
         {{ title }}
-      </Title>
+      </SpaceTitle>
 
-      <div v-if="showMissionInfo" class="horror-header-info">
-        <div class="horror-header-info-item">
-          <span class="horror-header-info-label">INCANTATION:</span>
-          <span class="horror-header-info-value">{{
-            mission || `NIGHTMARE-${new Date().getFullYear()}`
+      <div v-if="showMissionInfo" class="space-header-coordinates">
+        <div class="space-header-coordinates-item">
+          <span class="space-header-coordinates-label">MISSION:</span>
+          <span class="space-header-coordinates-value">{{
+            mission || `EXPLORER-${new Date().getFullYear()}`
           }}</span>
         </div>
-        <span class="horror-header-info-separator">☠</span>
-        <div class="horror-header-info-item">
-          <span class="horror-header-info-label">BLOOD MOON:</span>
-          <span class="horror-header-info-value">{{
-            starDate || formatDoomDate()
+        <span class="space-header-coordinates-separator">|</span>
+        <div class="space-header-coordinates-item">
+          <span class="space-header-coordinates-label">STAR DATE:</span>
+          <span class="space-header-coordinates-value">{{
+            starDate || formatStarDate()
           }}</span>
         </div>
       </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import Title from "../atoms/Title.vue";
+import SpaceTitle from "../atoms/Title.vue";
 
 interface Props {
   title: string;
@@ -49,144 +49,134 @@ withDefaults(defineProps<Props>(), {
 });
 
 /**
- * Génère une "doom date" au format horrifique Halloween
+ * Génère une "star date" au format Star Trek
  */
-const formatDoomDate = () => {
+const formatStarDate = () => {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const hour = now.getHours();
-  const minute = now.getMinutes();
-
-  // Format mystique : YYYY.MM.DD.HH.MM
-  return `${year}.${month.toString().padStart(2, "0")}.${day
-    .toString()
-    .padStart(2, "0")}.${hour.toString().padStart(2, "0")}.${minute
-    .toString()
-    .padStart(2, "0")}`;
+  const year = now.getFullYear().toString().substr(2);
+  const dayOfYear = Math.floor(
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+  );
+  return `${year}${dayOfYear}.${now.getHours()}${now.getMinutes()}`;
 };
 </script>
 
 <style scoped>
-.horror-header {
+.space-header {
   position: relative;
-  padding-top: 24px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid rgba(220, 38, 38, 0.3);
-  background: transparent;
-  box-shadow: none;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.horror-header-content {
+.space-header-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
+  gap: 16px;
 }
 
 /* Responsivité pour desktop */
 @media (min-width: 1024px) {
-  .horror-header-content {
+  .space-header-content {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    flex-wrap: wrap;
   }
 }
 
-.horror-header-title {
-  font-family: var(--font-heading);
+.space-header-title {
+  font-family: var(--font-nasa);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-align: center;
   flex: 1;
-  color: var(--color-primary);
-  text-shadow: 0 0 8px rgba(217, 119, 6, 0.4), 1px 1px 2px rgba(0, 0, 0, 0.8);
-  max-width: 100%;
-  word-wrap: break-word;
 }
 
 /* Sur desktop, titre à gauche */
 @media (min-width: 1024px) {
-  .horror-header-title {
+  .space-header-title {
     text-align: left;
     flex: none;
-    max-width: calc(100% - 300px);
   }
 }
 
-.horror-header-info {
-  display: none; /* Masqué par défaut sur mobile */
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  background: rgba(15, 15, 15, 0.9);
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(217, 119, 6, 0.3);
-  box-shadow: 0 0 8px rgba(217, 119, 6, 0.2);
-  flex-shrink: 0;
-}
-
-/* Afficher seulement sur écrans >= 640px */
-@media (min-width: 640px) {
-  .horror-header-info {
-    display: flex;
-  }
-}
-
-.horror-header-info-item {
+.space-header-coordinates {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--space-text-muted);
 }
 
-.horror-header-info-label {
-  font-family: var(--font-body);
-  color: var(--color-primary-light);
-  font-size: 0.8rem;
+/* Sur tablet et plus, affichage horizontal */
+@media (min-width: 640px) {
+  .space-header-coordinates {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
+
+.space-header-coordinates-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Sur tablet et plus, affichage en ligne */
+@media (min-width: 640px) {
+  .space-header-coordinates-item {
+    flex-direction: row;
+    gap: 4px;
+  }
+}
+
+.space-header-coordinates-label {
+  font-family: var(--font-nasa);
+  color: var(--space-secondary);
+  font-size: 0.6rem;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  text-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
-  font-weight: 600;
+  letter-spacing: 1px;
 }
 
-.horror-header-info-value {
-  font-weight: 600;
-  color: var(--color-text);
-  font-family: var(--font-body);
-  text-shadow: 0 0 3px rgba(217, 119, 6, 0.3);
+/* Sur tablet et plus, taille normale */
+@media (min-width: 640px) {
+  .space-header-coordinates-label {
+    font-size: 0.75rem;
+  }
 }
 
-.horror-header-info-separator {
-  color: var(--color-secondary);
+.space-header-coordinates-value {
+  font-weight: 500;
+  color: var(--space-text);
+}
+
+.space-header-coordinates-separator {
+  color: var(--space-primary);
   font-weight: bold;
-  font-size: 1.2rem;
-  text-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+  display: none;
 }
 
-/* Animations et transitions Halloween simplifiées */
-.horror-header-info-item {
+/* Afficher le séparateur sur tablet et plus */
+@media (min-width: 640px) {
+  .space-header-coordinates-separator {
+    display: inline;
+  }
+}
+
+/* Animations et transitions */
+.space-header-coordinates-item {
   transition: all 0.3s ease;
 }
 
-.horror-header-info-item:hover .horror-header-info-label {
-  color: var(--color-primary);
+.space-header-coordinates-item:hover .space-header-coordinates-label {
+  color: var(--space-primary);
 }
 
-.horror-header-info-item:hover .horror-header-info-value {
-  color: var(--color-primary-light);
+.space-header-coordinates-item:hover .space-header-coordinates-value {
+  color: var(--space-primary-light);
 }
 </style>

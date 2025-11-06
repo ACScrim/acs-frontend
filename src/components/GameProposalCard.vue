@@ -1,7 +1,8 @@
 <template>
-  <Card
+  <SpaceCard
     variant="primary"
     :interactive="true"
+    :stars="true"
     :decorated="true"
     :className="
       [
@@ -26,7 +27,7 @@
             @error="(e) => ((e.target as HTMLImageElement).src = '/img/game-placeholder.jpg')"
           />
           <div
-            class="absolute inset-0 bg-color-bg/50 group-hover:bg-color-bg/30 transition-all duration-300"
+            class="absolute inset-0 bg-space-bg/50 group-hover:bg-space-bg/30 transition-all duration-300"
           ></div>
 
           <!-- Élément décoratif -->
@@ -35,16 +36,16 @@
               class="absolute top-0 right-0 w-5 h-5 border-t border-r transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-color-gold'
-                  : 'border-color-silver',
+                  ? 'border-space-gold'
+                  : 'border-space-silver',
               ]"
             ></div>
             <div
               class="absolute bottom-0 left-0 w-5 h-5 border-b border-l transition-all duration-300"
               :class="[
                 proposal.status === 'approved'
-                  ? 'border-color-gold'
-                  : 'border-color-silver',
+                  ? 'border-space-gold'
+                  : 'border-space-silver',
               ]"
             ></div>
           </div>
@@ -55,22 +56,24 @@
       <div class="sm:w-3/4 flex flex-col">
         <!-- En-tête avec titre et badge de statut -->
         <div class="flex justify-between items-start mb-3">
-          <h3 class="text-xl font-heading text-color-text font-medium">
+          <h3 class="text-xl font-heading text-space-text font-medium">
             {{ proposal.name }}
           </h3>
           <!-- Badge statut -->
-          <Badge
+          <SpaceBadge
             v-if="proposal.status === 'approved'"
             variant="success"
             size="sm"
           >
             Approuvé
-          </Badge>
-          <Badge v-else variant="warning" size="sm"> En attente </Badge>
+          </SpaceBadge>
+          <SpaceBadge v-else variant="warning" size="sm">
+            En attente
+          </SpaceBadge>
         </div>
 
         <!-- Description -->
-        <p class="text-color-text-muted text-sm mb-4 flex-grow">
+        <p class="text-space-text-muted text-sm mb-4 flex-grow">
           {{ proposal.description || "Aucune description fournie." }}
         </p>
         <!-- Footer avec informations proposant et système de vote -->
@@ -81,9 +84,9 @@
           <div
             class="text-sm space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-4"
           >
-            <div class="flex items-center text-color-primary-light">
+            <div class="flex items-center text-space-primary-light">
               <div
-                class="w-2 h-2 rounded-full bg-color-primary animate-pulse mr-2"
+                class="w-2 h-2 rounded-full bg-space-primary animate-pulse mr-2"
               ></div>
               <span
                 >Proposé par
@@ -92,14 +95,14 @@
                 }}</span></span
               >
             </div>
-            <div class="flex items-center text-color-secondary-light sm:mt-0">
-              <div class="w-2 h-2 rounded-full bg-color-secondary mr-2"></div>
+            <div class="flex items-center text-space-secondary-light sm:mt-0">
+              <div class="w-2 h-2 rounded-full bg-space-secondary mr-2"></div>
               <span>{{ formatDate(proposal.createdAt) }}</span>
             </div>
           </div>
           <!-- Système de vote -->
           <div class="flex items-center space-x-4" @click.stop>
-            <Button
+            <SpaceButton
               @click="handleVote(1)"
               size="sm"
               :variant="getVoteButtonVariant(1)"
@@ -120,7 +123,7 @@
                   d="M5 15l7-7 7 7"
                 />
               </svg>
-            </Button>
+            </SpaceButton>
 
             <span
               class="text-lg font-mono font-bold"
@@ -129,7 +132,7 @@
               {{ displayVoteCount }}
             </span>
 
-            <Button
+            <SpaceButton
               @click="handleVote(-1)"
               size="sm"
               :variant="getVoteButtonVariant(-1)"
@@ -150,18 +153,18 @@
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
-            </Button>
+            </SpaceButton>
           </div>
         </div>
         <!-- Actions admin -->
         <div
           v-if="isAdmin"
-          class="mt-4 flex justify-end space-x-3 border-t border-color-bg-light/20 pt-3"
+          class="mt-4 flex justify-end space-x-3 border-t border-space-bg-light/20 pt-3"
           @click.stop
         >
           <!-- Actions sur les propositions en attente -->
           <template v-if="proposal.status === 'pending'">
-            <Button
+            <SpaceButton
               @click="$emit('approve', proposal._id)"
               variant="success"
               size="sm"
@@ -181,11 +184,11 @@
                 />
               </svg>
               Approuver
-            </Button>
+            </SpaceButton>
           </template>
 
           <!-- Bouton de suppression (pour toutes les propositions) -->
-          <Button
+          <SpaceButton
             @click="$emit('delete', proposal._id)"
             variant="ghost"
             size="sm"
@@ -205,11 +208,11 @@
               />
             </svg>
             Supprimer
-          </Button>
+          </SpaceButton>
         </div>
       </div>
     </div>
-  </Card>
+  </SpaceCard>
 </template>
 
 <script setup lang="ts">
@@ -340,9 +343,9 @@ const getVoteButtonVariant = (voteType: number) => {
  * @returns {string} Les classes CSS à appliquer
  */
 const getVoteCountClass = () => {
-  if (displayVoteCount.value > 0) return "text-color-gold";
-  if (displayVoteCount.value < 0) return "text-color-error";
-  return "text-color-text";
+  if (displayVoteCount.value > 0) return "text-space-gold";
+  if (displayVoteCount.value < 0) return "text-space-error";
+  return "text-space-text";
 };
 
 // ================================================
@@ -369,13 +372,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Animation Halloween pour les votants */
-.voter-animate {
+/* Animation pour les votants */
+.space-voter-animate {
   position: relative;
   overflow: hidden;
 }
 
-.voter-animate::after {
+.space-voter-animate::after {
   content: "";
   position: absolute;
   top: 0;
@@ -385,7 +388,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(var(--color-primary-rgb), 0.1),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
   animation: voter-slide 2s ease-in-out infinite;
@@ -400,36 +403,5 @@ onBeforeUnmount(() => {
   100% {
     left: 100%;
   }
-}
-
-/* Effet de lueur Halloween pour les cartes approuvées */
-.proposal-approved {
-  border-left: 3px solid var(--color-gold);
-  box-shadow: 0 0 15px rgba(var(--color-gold-rgb), 0.2);
-}
-
-.proposal-pending {
-  border-left: 3px solid var(--color-secondary);
-  box-shadow: 0 0 15px rgba(var(--color-secondary-rgb), 0.1);
-}
-
-.proposal-rejected {
-  border-left: 3px solid var(--color-error);
-  box-shadow: 0 0 15px rgba(var(--color-error-rgb), 0.1);
-}
-
-/* Animation de pulsation pour les éléments actifs */
-@keyframes halloween-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse {
-  animation: halloween-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 </style>

@@ -3,19 +3,19 @@
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
     <!-- En-tête -->
-    <Header
+    <SpaceHeader
       title="GESTION DES ÉQUIPES"
       :decorated="true"
       mission="EQUIPE-CREATION-2025"
     />
 
     <!-- Information du tournoi sélectionné -->
-    <Card variant="primary" :stars="true" className="mb-6">
+    <SpaceCard variant="primary" :stars="true" className="mb-6">
       <template #header>
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-primary-light"
+            class="h-6 w-6 text-space-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -25,7 +25,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="lg">Tournoi sélectionné</Title>
+          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
         </div>
       </template>
 
@@ -33,14 +33,14 @@
       <div v-if="selectedTournamentDetails">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div class="flex flex-col">
-            <span class="text-color-text-muted text-sm">Nom</span>
-            <span class="text-color-text font-mono text-lg">
+            <span class="text-space-text-muted text-sm">Nom</span>
+            <span class="text-space-text font-mono text-lg">
               {{ selectedTournamentDetails.name }}
             </span>
           </div>
           <div v-if="selectedTournamentDetails.date" class="flex flex-col">
-            <span class="text-color-text-muted text-sm">Date</span>
-            <span class="text-color-text font-mono text-lg">
+            <span class="text-space-text-muted text-sm">Date</span>
+            <span class="text-space-text font-mono text-lg">
               {{
                 new Date(selectedTournamentDetails.date).toLocaleDateString(
                   "fr-FR"
@@ -49,23 +49,23 @@
             </span>
           </div>
         </div>
-        <Badge
+        <SpaceBadge
           v-if="selectedTournamentDetails.finished"
           variant="danger"
           size="md"
         >
           Tournoi terminé
-        </Badge>
+        </SpaceBadge>
       </div>
       <div v-else>
-        <Alert variant="warning" className="text-center">
+        <SpaceAlert variant="warning" className="text-center">
           Veuillez sélectionner un tournoi dans le menu en haut de la page
-        </Alert>
+        </SpaceAlert>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- Alerte si tournoi terminé -->
-    <Alert
+    <SpaceAlert
       v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
       variant="danger"
       className="mb-6"
@@ -87,15 +87,17 @@
         </svg>
       </template>
       <div>
-        <Title size="md" className="text-red-300 mb-1"> Tournoi terminé </Title>
+        <SpaceTitle size="md" className="text-red-300 mb-1">
+          Tournoi terminé
+        </SpaceTitle>
         <p class="text-sm text-white/80">
           Ce tournoi est déjà terminé. Vous pouvez consulter les équipes mais
           vous ne pouvez plus les modifier.
         </p>
       </div>
-    </Alert>
+    </SpaceAlert>
     <!-- Section de génération des équipes -->
-    <Card
+    <SpaceCard
       v-if="selectedTournamentDetails"
       variant="accent"
       :stars="true"
@@ -105,7 +107,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-accent-light"
+            class="h-6 w-6 text-space-accent-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -113,13 +115,13 @@
               d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
             />
           </svg>
-          <Title size="xl">Génération des équipes</Title>
+          <SpaceTitle size="xl">Génération des équipes</SpaceTitle>
         </div>
       </template>
 
       <div class="flex flex-col md:flex-row items-start gap-6">
         <div class="w-full md:w-1/2">
-          <Title size="md" className="text-color-text-muted mb-3">
+          <SpaceTitle size="md" className="text-space-text-muted mb-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2 inline"
@@ -133,8 +135,8 @@
               />
             </svg>
             Nombre d'équipes
-          </Title>
-          <Input
+          </SpaceTitle>
+          <SpaceInput
             v-model="numTeams"
             type="number"
             min="2"
@@ -144,7 +146,7 @@
         </div>
 
         <div class="flex flex-wrap gap-3 mt-6 md:mt-8">
-          <Button
+          <SpaceButton
             @click="generateTeams"
             :disabled="selectedTournamentDetails?.finished"
             variant="accent"
@@ -165,10 +167,10 @@
               </svg>
             </template>
             Générer les équipes
-          </Button>
+          </SpaceButton>
 
           <!-- Supprimer les équipes -->
-          <Button
+          <SpaceButton
             v-if="teams.length > 0"
             @click="confirmDeleteAllTeams"
             :disabled="selectedTournamentDetails?.finished"
@@ -190,12 +192,12 @@
               </svg>
             </template>
             Supprimer les équipes
-          </Button>
+          </SpaceButton>
         </div>
       </div>
-    </Card>
+    </SpaceCard>
     <!-- Affichage des équipes avec drag and drop -->
-    <Card
+    <SpaceCard
       v-if="teams.length > 0"
       variant="secondary"
       :stars="true"
@@ -205,7 +207,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-secondary-light"
+            class="h-6 w-6 text-space-secondary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -216,12 +218,12 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="xl">Composition des équipes</Title>
+          <SpaceTitle size="xl">Composition des équipes</SpaceTitle>
         </div>
       </template>
       <!-- Barre de recherche -->
       <div class="relative mb-6">
-        <Input
+        <SpaceInput
           v-model="searchQuery"
           type="text"
           placeholder="Rechercher un joueur par nom..."
@@ -232,7 +234,7 @@
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-color-text-muted"
+              class="h-5 w-5 text-space-text-muted"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -243,14 +245,14 @@
               />
             </svg>
           </template>
-        </Input>
+        </SpaceInput>
 
         <!-- Message aucun résultat -->
         <div
           v-if="searchQuery && searchResults.length === 0 && searchFocused"
           class="absolute top-full left-0 right-0 mt-2 z-10"
         >
-          <Alert variant="warning">
+          <SpaceAlert variant="warning">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -268,11 +270,11 @@
               </svg>
             </template>
             Aucun joueur trouvé
-          </Alert>
+          </SpaceAlert>
         </div>
 
         <!-- Résultats de recherche avec Space UI -->
-        <Card
+        <SpaceCard
           v-else-if="searchResults.length > 0 && searchFocused"
           variant="dark"
           className="absolute top-full left-0 right-0 mt-2 max-h-[300px] overflow-y-auto z-10"
@@ -281,23 +283,23 @@
             v-for="result in searchResults"
             :key="result.player._id"
             @click="navigateToPlayerTeam(result)"
-            class="flex justify-between items-center p-3 border-b border-space-border/20 transition-all duration-200 hover:bg-color-primary/10 hover:translate-x-1 cursor-pointer last:border-b-0"
+            class="flex justify-between items-center p-3 border-b border-space-border/20 transition-all duration-200 hover:bg-space-primary/10 hover:translate-x-1 cursor-pointer last:border-b-0"
           >
-            <span class="font-medium text-color-text">{{
+            <span class="font-medium text-space-text">{{
               result.player.username
             }}</span>
-            <Badge variant="primary" size="sm">
+            <SpaceBadge variant="primary" size="sm">
               {{ result.teamName }}
-            </Badge>
+            </SpaceBadge>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
 
       <!-- Onglets d'équipe avec Space UI -->
       <div
         class="flex flex-wrap gap-2 border-b border-space-border/30 pb-2 mb-4 overflow-x-auto"
       >
-        <Button
+        <SpaceButton
           @click="viewMode = 'overview'"
           :variant="viewMode === 'overview' ? 'primary' : 'secondary'"
           size="md"
@@ -316,9 +318,9 @@
             </svg>
           </template>
           Vue d'ensemble
-        </Button>
+        </SpaceButton>
 
-        <Button
+        <SpaceButton
           v-for="(team, index) in teams"
           :key="index"
           @click="selectTeam(index)"
@@ -331,16 +333,16 @@
           className="whitespace-nowrap"
         >
           {{ team.name || `Équipe ${index + 1}` }}
-        </Button>
+        </SpaceButton>
       </div>
 
       <transition name="fade" mode="out-in">
-        <!-- Vue d'ensemble avec Card -->
+        <!-- Vue d'ensemble avec SpaceCard -->
         <div
           v-if="viewMode === 'overview'"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
         >
-          <Card
+          <SpaceCard
             v-for="(team, index) in teams"
             :key="index"
             variant="secondary"
@@ -350,17 +352,17 @@
             <template #header>
               <div class="flex justify-between items-center">
                 <div class="flex flex-col gap-1">
-                  <Title size="lg" className="text-color-secondary-light">
+                  <SpaceTitle size="lg" className="text-space-secondary-light">
                     {{ team.name || `Équipe ${index + 1}` }}
-                  </Title>
-                  <Badge :variant="getTeamBalanceVariant(team)" size="sm">
+                  </SpaceTitle>
+                  <SpaceBadge :variant="getTeamBalanceVariant(team)" size="sm">
                     {{ team.players.length }} joueur{{
                       team.players.length > 1 ? "s" : ""
                     }}
-                  </Badge>
+                  </SpaceBadge>
                 </div>
                 <div class="flex items-center gap-2">
-                  <Button
+                  <SpaceButton
                     @click="unassignAllPlayers(index)"
                     variant="danger"
                     size="sm"
@@ -383,8 +385,8 @@
                       </svg>
                     </template>
                     Vider
-                  </Button>
-                  <Button
+                  </SpaceButton>
+                  <SpaceButton
                     @click="selectTeam(index)"
                     variant="primary"
                     size="sm"
@@ -403,7 +405,7 @@
                       </svg>
                     </template>
                     Éditer
-                  </Button>
+                  </SpaceButton>
                 </div>
               </div>
             </template>
@@ -418,7 +420,7 @@
                 isDragging = false;
               "
               :disabled="selectedTournamentDetails?.finished"
-              class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-color-bg-secondary/50 border-2 border-dashed border-space-border/30 rounded-lg transition-all duration-300"
+              class="flex flex-col gap-2 min-h-[150px] max-h-[250px] overflow-y-auto p-3 bg-space-bg-secondary/50 border-2 border-dashed border-space-border/30 rounded-lg transition-all duration-300"
               :class="{
                 'opacity-70 cursor-not-allowed':
                   selectedTournamentDetails?.finished,
@@ -428,15 +430,15 @@
                 v-for="player in team.players"
                 :key="player._id"
                 :data-player-id="player._id"
-                class="flex justify-between items-center p-3 bg-color-bg-primary/80 text-color-text border border-color-secondary/50 rounded-lg shadow-sm shadow-color-secondary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-color-secondary/50 hover:-translate-y-0.5"
+                class="flex justify-between items-center p-3 bg-space-bg-primary/80 text-space-text border border-space-secondary/50 rounded-lg shadow-sm shadow-space-secondary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-space-secondary/50 hover:-translate-y-0.5"
               >
-                <span class="text-color-text">{{ player.username }}</span>
+                <span class="text-space-text">{{ player.username }}</span>
                 <div
-                  class="flex items-center justify-center w-6 h-6 bg-color-bg-secondary/70 rounded"
+                  class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-color-text-muted"
+                    class="h-4 w-4 text-space-text-muted"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -452,7 +454,7 @@
               <!-- Placeholder when empty -->
               <div
                 v-if="team.players.length === 0"
-                class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-color-text-muted transition-all duration-300 bg-color-secondary/5 border-2 border-dashed border-color-secondary/30 rounded-lg"
+                class="flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-space-text-muted transition-all duration-300 bg-space-secondary/5 border-2 border-dashed border-space-secondary/30 rounded-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -474,11 +476,11 @@
                 </p>
               </div>
             </vue-draggable-next>
-          </Card>
+          </SpaceCard>
         </div>
 
         <!-- Vue équipe spécifique avec Space UI -->
-        <Card
+        <SpaceCard
           v-else-if="viewMode === 'team'"
           variant="primary"
           :stars="true"
@@ -492,7 +494,7 @@
                 <div class="flex items-center gap-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6 text-color-primary-light"
+                    class="h-6 w-6 text-space-primary-light"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -504,14 +506,14 @@
                       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <Title size="xl" className="text-color-primary-light">
+                  <SpaceTitle size="xl" className="text-space-primary-light">
                     Équipe {{ activeTeamTab + 1 }}
-                  </Title>
+                  </SpaceTitle>
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <span class="text-color-text text-sm">Nom de l'équipe:</span>
-                  <Input
+                  <span class="text-space-text text-sm">Nom de l'équipe:</span>
+                  <SpaceInput
                     v-model="teams[activeTeamTab].name"
                     type="text"
                     placeholder="Entrez un nom pour cette équipe"
@@ -520,7 +522,7 @@
                 </div>
               </div>
 
-              <Button
+              <SpaceButton
                 @click="viewMode = 'overview'"
                 variant="secondary"
                 size="md"
@@ -540,17 +542,17 @@
                   </svg>
                 </template>
                 Retour
-              </Button>
+              </SpaceButton>
             </div>
           </template>
 
           <div class="space-y-4">
             <div class="flex justify-between items-center">
-              <Title size="lg" className="text-color-primary-light">
+              <SpaceTitle size="lg" className="text-space-primary-light">
                 Joueurs de l'équipe
-              </Title>
+              </SpaceTitle>
 
-              <Button
+              <SpaceButton
                 @click="unassignAllPlayers(activeTeamTab)"
                 variant="danger"
                 size="md"
@@ -570,7 +572,7 @@
                   </svg>
                 </template>
                 Désassigner tous
-              </Button>
+              </SpaceButton>
             </div>
 
             <vue-draggable-next
@@ -582,22 +584,22 @@
                 isDragging = false;
               "
               :disabled="selectedTournamentDetails?.finished"
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px] p-4 bg-color-bg-secondary/30 border-2 border-dashed border-space-border/30 rounded-lg"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-h-[150px] p-4 bg-space-bg-secondary/30 border-2 border-dashed border-space-border/30 rounded-lg"
               :class="{ 'opacity-70': selectedTournamentDetails?.finished }"
             >
               <div
                 v-for="player in teams[activeTeamTab].players"
                 :key="player._id"
                 :data-player-id="player._id"
-                class="flex justify-between items-center p-3 bg-color-bg-primary/80 text-color-text border border-color-primary/50 rounded-lg shadow-sm shadow-color-primary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-color-primary/50 hover:-translate-y-0.5"
+                class="flex justify-between items-center p-3 bg-space-bg-primary/80 text-space-text border border-space-primary/50 rounded-lg shadow-sm shadow-space-primary/30 transition-all duration-300 cursor-move hover:shadow-md hover:shadow-space-primary/50 hover:-translate-y-0.5"
               >
-                <span class="text-color-text">{{ player.username }}</span>
+                <span class="text-space-text">{{ player.username }}</span>
                 <div
-                  class="flex items-center justify-center w-6 h-6 bg-color-bg-secondary/70 rounded"
+                  class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-color-text-muted"
+                    class="h-4 w-4 text-space-text-muted"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -613,7 +615,7 @@
               <!-- Placeholder when empty -->
               <div
                 v-if="teams[activeTeamTab].players.length === 0"
-                class="col-span-full flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-color-text-muted bg-color-primary/5 border-2 border-dashed border-color-primary/30 rounded-lg"
+                class="col-span-full flex flex-col items-center justify-center w-full h-full min-h-[120px] p-6 text-space-text-muted bg-space-primary/5 border-2 border-dashed border-space-primary/30 rounded-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -636,11 +638,11 @@
               </div>
             </vue-draggable-next>
           </div>
-        </Card>
+        </SpaceCard>
       </transition>
 
       <!-- Liste des joueurs non assignés avec Space UI -->
-      <Card variant="danger" :stars="true" className="mb-8">
+      <SpaceCard variant="danger" :stars="true" className="mb-8">
         <template #header>
           <div class="flex items-center gap-3">
             <svg
@@ -653,12 +655,12 @@
                 d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
               />
             </svg>
-            <Title size="xl" className="text-space-danger-light">
+            <SpaceTitle size="xl" className="text-space-danger-light">
               Joueurs non assignés
-            </Title>
-            <Badge variant="danger" size="md">
+            </SpaceTitle>
+            <SpaceBadge variant="danger" size="md">
               {{ unassignedPlayers.length }}
-            </Badge>
+            </SpaceBadge>
           </div>
         </template>
 
@@ -677,16 +679,16 @@
             v-for="(player, index) in unassignedPlayers"
             :key="player._id"
             :data-player-id="player._id"
-            class="flex flex-col p-3 bg-color-bg-primary/80 border border-space-danger/50 rounded-lg shadow-sm shadow-space-danger/30 transition-all duration-300 hover:shadow-md hover:shadow-space-danger/50 hover:-translate-y-0.5"
+            class="flex flex-col p-3 bg-space-bg-primary/80 border border-space-danger/50 rounded-lg shadow-sm shadow-space-danger/30 transition-all duration-300 hover:shadow-md hover:shadow-space-danger/50 hover:-translate-y-0.5"
           >
             <div class="flex justify-between items-center mb-2">
-              <span class="text-color-text">{{ player.username }}</span>
+              <span class="text-space-text">{{ player.username }}</span>
               <div
-                class="flex items-center justify-center w-6 h-6 bg-color-bg-secondary/70 rounded cursor-move"
+                class="flex items-center justify-center w-6 h-6 bg-space-bg-secondary/70 rounded cursor-move"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-color-text-muted"
+                  class="h-4 w-4 text-space-text-muted"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -702,7 +704,7 @@
             <!-- Sélecteur d'équipe -->
             <select
               :id="`assign-player-${player._id}`"
-              class="w-full py-1.5 px-2 text-xs bg-color-bg-secondary/70 text-color-text border border-space-danger/40 rounded-md appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:border-space-danger/70 focus:shadow-sm focus:shadow-space-danger/30"
+              class="w-full py-1.5 px-2 text-xs bg-space-bg-secondary/70 text-space-text border border-space-danger/40 rounded-md appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:border-space-danger/70 focus:shadow-sm focus:shadow-space-danger/30"
               @change="
                 assignPlayerToTeam(
                   index,
@@ -725,11 +727,11 @@
           <!-- Message lorsqu'il n'y a aucun joueur non assigné -->
           <div
             v-if="unassignedPlayers.length === 0"
-            class="col-span-full flex flex-col items-center justify-center p-6 text-color-text-muted bg-color-success/5 border-2 border-dashed border-color-success/30 rounded-lg min-h-[150px]"
+            class="col-span-full flex flex-col items-center justify-center p-6 text-space-text-muted bg-space-success/5 border-2 border-dashed border-space-success/30 rounded-lg min-h-[150px]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 text-color-success mb-4"
+              class="h-10 w-10 text-space-success mb-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -746,11 +748,11 @@
             </p>
           </div>
         </vue-draggable-next>
-      </Card>
+      </SpaceCard>
 
       <!-- Boutons d'action avec Space UI -->
       <div class="flex flex-wrap gap-4">
-        <Button
+        <SpaceButton
           @click="saveTeams"
           :disabled="selectedTournamentDetails?.finished"
           variant="success"
@@ -776,9 +778,9 @@
             </svg>
           </template>
           Valider les équipes
-        </Button>
+        </SpaceButton>
 
-        <Button
+        <SpaceButton
           v-if="teams.length > 0"
           @click="togglePublication"
           :disabled="selectedTournamentDetails?.finished"
@@ -820,9 +822,9 @@
               ? "Dépublier les équipes"
               : "Publier les équipes"
           }}
-        </Button>
+        </SpaceButton>
 
-        <Button
+        <SpaceButton
           @click="saveTeamDefinitive"
           :disabled="selectedTournamentDetails?.finished"
           variant="accent"
@@ -848,9 +850,9 @@
             </svg>
           </template>
           Valider les équipes définitives
-        </Button>
+        </SpaceButton>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- Dialogues de confirmation -->
     <ConfirmationDialog

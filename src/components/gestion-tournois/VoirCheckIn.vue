@@ -2,26 +2,26 @@
   <div
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
-    <Header
+    <SpaceHeader
       title="STATUT DES CHECK-INS"
       :decorated="true"
       mission="CHECKIN-STATUS-2025"
     >
       <template #badge v-if="selectedTournamentDetails">
-        <Badge variant="secondary" size="lg">
+        <SpaceBadge variant="secondary" size="lg">
           {{ getCheckedInCount() }}/{{
             selectedTournamentDetails.players.length
           }}
-        </Badge>
+        </SpaceBadge>
       </template>
-    </Header>
+    </SpaceHeader>
     <!-- Information du tournoi sélectionné -->
-    <Card variant="primary" :stars="true" className="mb-6">
+    <SpaceCard variant="primary" :stars="true" className="mb-6">
       <template #header>
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-primary-light"
+            class="h-6 w-6 text-space-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -31,7 +31,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="lg">Tournoi sélectionné</Title>
+          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
         </div>
       </template>
 
@@ -39,8 +39,8 @@
       <div v-if="selectedTournamentDetails">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div class="flex items-center space-x-3">
-            <span class="text-color-text-muted text-sm">Nom:</span>
-            <span class="text-color-text font-mono">{{
+            <span class="text-space-text-muted text-sm">Nom:</span>
+            <span class="text-space-text font-mono">{{
               selectedTournamentDetails.name
             }}</span>
           </div>
@@ -48,8 +48,8 @@
             v-if="selectedTournamentDetails.date"
             class="flex items-center space-x-3"
           >
-            <span class="text-color-text-muted text-sm">Date:</span>
-            <span class="text-color-text font-mono">
+            <span class="text-space-text-muted text-sm">Date:</span>
+            <span class="text-space-text font-mono">
               {{
                 new Date(selectedTournamentDetails.date).toLocaleDateString(
                   "fr-FR"
@@ -58,22 +58,22 @@
             </span>
           </div>
         </div>
-        <Badge
+        <SpaceBadge
           v-if="selectedTournamentDetails.finished"
           variant="error"
           size="md"
         >
           Tournoi terminé
-        </Badge>
+        </SpaceBadge>
       </div>
       <div v-else>
-        <Alert variant="warning" className="text-center">
+        <SpaceAlert variant="warning" className="text-center">
           Veuillez sélectionner un tournoi dans le menu en haut de la page
-        </Alert>
+        </SpaceAlert>
       </div>
-    </Card>
+    </SpaceCard>
     <!-- Détails du tournoi et statuts des check-ins -->
-    <Card
+    <SpaceCard
       v-if="selectedTournamentDetails"
       variant="secondary"
       :stars="true"
@@ -81,25 +81,25 @@
     >
       <template #header>
         <div class="flex flex-col gap-4">
-          <Title size="xl" :decorated="true">
+          <SpaceTitle size="xl" :decorated="true">
             {{ selectedTournamentDetails.name }}
-          </Title>
+          </SpaceTitle>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="flex flex-col">
-              <span class="text-color-text-muted text-sm">Date</span>
-              <span class="text-color-text font-mono text-lg">
+              <span class="text-space-text-muted text-sm">Date</span>
+              <span class="text-space-text font-mono text-lg">
                 {{ new Date(selectedTournamentDetails.date).toLocaleString() }}
               </span>
             </div>
             <div class="flex flex-col">
-              <span class="text-color-text-muted text-sm">Joueurs</span>
-              <span class="text-color-text font-mono text-lg">
+              <span class="text-space-text-muted text-sm">Joueurs</span>
+              <span class="text-space-text font-mono text-lg">
                 {{ selectedTournamentDetails.players.length }}
               </span>
             </div>
             <div class="flex flex-col">
-              <span class="text-color-text-muted text-sm">Check-ins</span>
-              <span class="text-color-text font-mono text-lg">
+              <span class="text-space-text-muted text-sm">Check-ins</span>
+              <span class="text-space-text font-mono text-lg">
                 {{ getCheckedInCount() }} /
                 {{ selectedTournamentDetails.players.length }}
               </span>
@@ -111,15 +111,15 @@
       <!-- Barre de progression -->
       <div class="mb-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-color-text-muted text-sm"
+          <span class="text-space-text-muted text-sm"
             >Progression des check-ins</span
           >
-          <span class="text-color-primary-light font-mono text-sm">
+          <span class="text-space-primary-light font-mono text-sm">
             {{ getCheckedInPercentage() }}%
           </span>
         </div>
         <div
-          class="w-full bg-color-bg-light rounded-full h-3 relative overflow-hidden"
+          class="w-full bg-space-bg-light rounded-full h-3 relative overflow-hidden"
         >
           <div
             class="h-full bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 rounded-full transition-all duration-500 ease-out relative shadow-lg"
@@ -131,14 +131,14 @@
             ></div>
           </div>
         </div>
-        <div class="text-center text-color-accent-light text-sm mt-2 font-mono">
+        <div class="text-center text-space-accent-light text-sm mt-2 font-mono">
           {{ getCheckedInPercentage() }}% des joueurs ont confirmé leur présence
         </div>
       </div>
 
       <!-- Grille des joueurs -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card
+        <SpaceCard
           v-for="player in selectedTournamentDetails.players"
           :key="player._id"
           variant="dark"
@@ -151,7 +151,7 @@
         >
           <!-- Badge de statut -->
           <div class="absolute top-3 right-3">
-            <Badge
+            <SpaceBadge
               :variant="
                 player._id && selectedTournamentDetails?.checkIns?.[player._id]
                   ? 'success'
@@ -186,18 +186,18 @@
                   ? "Présent"
                   : "Absent"
               }}
-            </Badge>
+            </SpaceBadge>
           </div>
 
           <!-- Avatar et informations -->
           <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
               <div
-                class="w-12 h-12 bg-color-bg rounded-full flex items-center justify-center border border-color-primary/30"
+                class="w-12 h-12 bg-space-bg rounded-full flex items-center justify-center border border-space-primary/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-color-primary-light"
+                  class="h-6 w-6 text-space-primary-light"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -211,7 +211,7 @@
             </div>
 
             <div class="flex-1 min-w-0">
-              <h3 class="text-color-text font-mono font-semibold truncate mb-2">
+              <h3 class="text-space-text font-mono font-semibold truncate mb-2">
                 {{ player.username }}
               </h3>
 
@@ -221,7 +221,7 @@
                   player._id &&
                   selectedTournamentDetails?.registrationDates?.[player._id]
                 "
-                class="flex items-center gap-2 mb-3 text-xs text-color-text-muted"
+                class="flex items-center gap-2 mb-3 text-xs text-space-text-muted"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -239,7 +239,7 @@
               </div>
 
               <!-- Bouton de check-in -->
-              <Button
+              <SpaceButton
                 @click="player._id ? togglePlayerCheckIn(player._id) : null"
                 :variant="
                   player._id &&
@@ -256,15 +256,15 @@
                     ? "Annuler le check-in"
                     : "Marquer présent"
                 }}
-              </Button>
+              </SpaceButton>
             </div>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
 
       <template #footer>
         <div class="flex justify-center">
-          <Button
+          <SpaceButton
             @click="() => fetchTournamentDetails()"
             variant="primary"
             size="lg"
@@ -284,21 +284,21 @@
               </svg>
             </template>
             Rafraîchir les statuts
-          </Button>
+          </SpaceButton>
         </div>
       </template>
-    </Card>
+    </SpaceCard>
     <!-- États vides ou chargement -->
-    <Card
+    <SpaceCard
       v-else-if="selectedTournament && !selectedTournamentDetails"
       variant="dark"
       :stars="true"
       className="text-center py-12"
     >
-      <Loader text="Chargement des informations du tournoi..." />
-    </Card>
+      <SpaceLoader text="Chargement des informations du tournoi..." />
+    </SpaceCard>
 
-    <Card
+    <SpaceCard
       v-else-if="tournaments.length > 0 && !selectedTournament"
       variant="dark"
       :stars="true"
@@ -307,7 +307,7 @@
       <div class="flex flex-col items-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-color-primary-light"
+          class="h-16 w-16 text-space-primary-light"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -318,13 +318,13 @@
             clip-rule="evenodd"
           />
         </svg>
-        <Title size="lg" className="text-color-text-muted">
+        <SpaceTitle size="lg" className="text-space-text-muted">
           Veuillez sélectionner un tournoi pour voir les statuts des check-ins
-        </Title>
+        </SpaceTitle>
       </div>
-    </Card>
+    </SpaceCard>
 
-    <Card
+    <SpaceCard
       v-else-if="selectedGame && tournaments.length === 0"
       variant="dark"
       :stars="true"
@@ -333,7 +333,7 @@
       <div class="flex flex-col items-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-16 w-16 text-color-accent-light"
+          class="h-16 w-16 text-space-accent-light"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -343,11 +343,11 @@
             clip-rule="evenodd"
           />
         </svg>
-        <Title size="lg" className="text-color-text-muted">
+        <SpaceTitle size="lg" className="text-space-text-muted">
           Aucun tournoi actif pour ce jeu
-        </Title>
+        </SpaceTitle>
       </div>
-    </Card>
+    </SpaceCard>
     <!-- Toast spatial pour les notifications -->
     <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>

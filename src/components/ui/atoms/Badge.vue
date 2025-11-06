@@ -49,17 +49,17 @@ const variantClasses = computed(() => {
   if (props.filled) {
     switch (props.variant) {
       case "primary":
-        return "bg-color-primary text-white border-color-primary";
+        return "bg-space-primary text-white border-space-primary";
       case "secondary":
-        return "bg-color-secondary text-white border-color-secondary";
+        return "bg-space-secondary text-white border-space-secondary";
       case "accent":
-        return "bg-color-accent text-white border-color-accent";
+        return "bg-space-accent text-white border-space-accent";
       case "gold":
-        return "bg-color-gold text-black border-color-gold";
+        return "bg-space-gold text-black border-space-gold";
       case "silver":
-        return "bg-color-silver text-black border-color-silver";
+        return "bg-space-silver text-black border-space-silver";
       case "bronze":
-        return "bg-color-bronze text-black border-color-bronze";
+        return "bg-space-bronze text-black border-space-bronze";
       case "success":
         return "bg-success text-white border-success";
       case "warning":
@@ -69,22 +69,22 @@ const variantClasses = computed(() => {
       case "info":
         return "bg-info text-white border-info";
       default:
-        return "bg-color-primary text-white border-color-primary";
+        return "bg-space-primary text-white border-space-primary";
     }
   } else {
     switch (props.variant) {
       case "primary":
-        return "bg-color-primary/20 text-color-primary-light border-color-primary-light/30";
+        return "bg-space-primary/20 text-space-primary-light border-space-primary-light/30";
       case "secondary":
-        return "bg-color-secondary/20 text-color-secondary-light border-color-secondary-light/30";
+        return "bg-space-secondary/20 text-space-secondary-light border-space-secondary-light/30";
       case "accent":
-        return "bg-color-accent/20 text-color-accent-light border-color-accent-light/30";
+        return "bg-space-accent/20 text-space-accent-light border-space-accent-light/30";
       case "gold":
-        return "bg-color-gold/20 text-color-gold border-color-gold/30";
+        return "bg-space-gold/20 text-space-gold border-space-gold/30";
       case "silver":
-        return "bg-color-silver/20 text-color-silver border-color-silver/30";
+        return "bg-space-silver/20 text-space-silver border-space-silver/30";
       case "bronze":
-        return "bg-color-bronze/20 text-color-bronze border-color-bronze/30";
+        return "bg-space-bronze/20 text-space-bronze border-space-bronze/30";
       case "success":
         return "bg-success/20 text-success border-success/30";
       case "warning":
@@ -94,7 +94,7 @@ const variantClasses = computed(() => {
       case "info":
         return "bg-info/20 text-info border-info/30";
       default:
-        return "bg-color-primary/20 text-color-primary-light border-color-primary-light/30";
+        return "bg-space-primary/20 text-space-primary-light border-space-primary-light/30";
     }
   }
 });
@@ -116,7 +116,7 @@ const variantClasses = computed(() => {
   background-color: rgba(74, 222, 128, 0.2);
 }
 .text-success {
-  color: var(--color-success);
+  color: var(--space-success);
 }
 .border-success\/30 {
   border-color: rgba(74, 222, 128, 0.3);
@@ -126,7 +126,7 @@ const variantClasses = computed(() => {
   background-color: rgba(250, 204, 21, 0.2);
 }
 .text-warning {
-  color: var(--color-warning);
+  color: var(--space-warning);
 }
 .border-warning\/30 {
   border-color: rgba(250, 204, 21, 0.3);
@@ -136,7 +136,7 @@ const variantClasses = computed(() => {
   background-color: rgba(248, 113, 113, 0.2);
 }
 .text-error {
-  color: var(--color-error);
+  color: var(--space-error);
 }
 .border-error\/30 {
   border-color: rgba(248, 113, 113, 0.3);
@@ -146,81 +146,81 @@ const variantClasses = computed(() => {
   background-color: rgba(96, 165, 250, 0.2);
 }
 .text-info {
-  color: var(--color-info);
+  color: var(--space-info);
 }
 .border-info\/30 {
   border-color: rgba(96, 165, 250, 0.3);
 }
 
 /* Styles pour les badges pleins */
-.bg-color-primary {
-  background-color: var(--color-primary);
-  --r: var(--color-primary-rgb);
+.bg-space-primary {
+  background-color: var(--space-primary);
+  --r: var(--space-primary-rgb);
 }
-.bg-color-secondary {
-  background-color: var(--color-secondary);
-  --r: var(--color-secondary-rgb);
+.bg-space-secondary {
+  background-color: var(--space-secondary);
+  --r: var(--space-secondary-rgb);
 }
-.bg-color-accent {
-  background-color: var(--color-accent);
-  --r: var(--color-accent-rgb);
+.bg-space-accent {
+  background-color: var(--space-accent);
+  --r: var(--space-accent-rgb);
 }
 .bg-success {
-  background-color: var(--color-success);
-  --r: var(--color-success-rgb);
+  background-color: var(--space-success);
+  --r: var(--space-success-rgb);
 }
 .bg-warning {
-  background-color: var(--color-warning);
-  --r: var(--color-warning-rgb);
+  background-color: var(--space-warning);
+  --r: var(--space-warning-rgb);
 }
 .bg-error {
-  background-color: var(--color-error);
-  --r: var(--color-error-rgb);
+  background-color: var(--space-error);
+  --r: var(--space-error-rgb);
 }
 .bg-info {
-  background-color: var(--color-info);
-  --r: var(--color-info-rgb);
+  background-color: var(--space-info);
+  --r: var(--space-info-rgb);
 }
-.bg-color-gold {
-  background-color: var(--color-gold);
-  --r: var(--color-gold-rgb);
+.bg-space-gold {
+  background-color: var(--space-gold);
+  --r: var(--space-gold-rgb);
 }
-.bg-color-silver {
-  background-color: var(--color-silver);
-  --r: var(--color-silver-rgb);
+.bg-space-silver {
+  background-color: var(--space-silver);
+  --r: var(--space-silver-rgb);
 }
-.bg-color-bronze {
-  background-color: var(--color-bronze);
-  --r: var(--color-bronze-rgb);
-}
-
-.bg-color-gold\/20 {
-  background-color: rgba(var(--color-gold-rgb), 0.2);
-}
-.text-color-gold {
-  color: var(--color-gold);
-}
-.border-color-gold\/30 {
-  border-color: rgba(var(--color-gold-rgb), 0.3);
+.bg-space-bronze {
+  background-color: var(--space-bronze);
+  --r: var(--space-bronze-rgb);
 }
 
-.bg-color-silver\/20 {
-  background-color: rgba(var(--color-silver-rgb), 0.2);
+.bg-space-gold\/20 {
+  background-color: rgba(var(--space-gold-rgb), 0.2);
 }
-.text-color-silver {
-  color: var(--color-silver);
+.text-space-gold {
+  color: var(--space-gold);
 }
-.border-color-silver\/30 {
-  border-color: rgba(var(--color-silver-rgb), 0.3);
+.border-space-gold\/30 {
+  border-color: rgba(var(--space-gold-rgb), 0.3);
 }
 
-.bg-color-bronze\/20 {
-  background-color: rgba(var(--color-bronze-rgb), 0.2);
+.bg-space-silver\/20 {
+  background-color: rgba(var(--space-silver-rgb), 0.2);
 }
-.text-color-bronze {
-  color: var(--color-bronze);
+.text-space-silver {
+  color: var(--space-silver);
 }
-.border-color-bronze\/30 {
-  border-color: rgba(var(--color-bronze-rgb), 0.3);
+.border-space-silver\/30 {
+  border-color: rgba(var(--space-silver-rgb), 0.3);
+}
+
+.bg-space-bronze\/20 {
+  background-color: rgba(var(--space-bronze-rgb), 0.2);
+}
+.text-space-bronze {
+  color: var(--space-bronze);
+}
+.border-space-bronze\/30 {
+  border-color: rgba(var(--space-bronze-rgb), 0.3);
 }
 </style>

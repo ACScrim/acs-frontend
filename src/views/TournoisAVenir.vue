@@ -1,27 +1,27 @@
 <template>
-  <Container>
-    <!-- En-tête de la page avec thème Halloween -->
-    <Header
+  <SpaceContainer>
+    <!-- En-tête de la page avec style NASA -->
+    <SpaceHeader
       title="TOURNOIS À VENIR"
       mission="TOURNAMENTS-EXPLORER"
       :showMissionInfo="true"
     >
       <template #badge v-if="filteredTournaments.length > 0">
-        <Badge variant="accent" size="lg">
+        <SpaceBadge variant="accent" size="lg">
           {{ filteredTournaments.length }}
-        </Badge>
+        </SpaceBadge>
       </template>
-    </Header>
+    </SpaceHeader>
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Filtres -->
-      <Card variant="dark" className="mb-6">
+      <SpaceCard variant="dark" className="mb-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <!-- Sélecteur de jeux -->
           <div class="space-y-4">
             <label
               for="game"
-              class="mb-2 font-body text-color-primary-light flex items-center gap-2"
+              class="mb-2 font-nasa text-space-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none mystical-transition"
+                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -51,7 +51,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-primary"
+                  class="h-5 w-5 text-space-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -69,30 +69,30 @@
 
           <!-- Options de filtrage -->
           <div class="space-y-4">
-            <label class="block mb-2 font-body text-color-secondary-light"
+            <label class="block mb-2 font-nasa text-space-secondary-light"
               >OPTIONS DE FILTRAGE</label
             >
             <div class="space-y-3">
               <!-- Option 1: Afficher les tournois passés -->
               <div class="flex items-center gap-3">
-                <Toggle
+                <SpaceToggle
                   v-model="showFinished"
-                  className="bg-color-secondary/20"
+                  className="bg-space-secondary/20"
                 />
-                <span class="text-color-text text-sm">
+                <span class="text-space-text text-sm">
                   Afficher uniquement les tournois terminés
                 </span>
               </div>
 
               <!-- Option 2: Ordre chronologique -->
               <div class="flex items-center gap-3">
-                <Toggle
+                <SpaceToggle
                   v-model="sortAscending"
-                  className="bg-color-secondary/20"
+                  className="bg-space-secondary/20"
                 />
-                <span class="text-color-text text-sm">
+                <span class="text-space-text text-sm">
                   Ordre chronologique
-                  <span class="text-xs text-color-text-muted ml-1">
+                  <span class="text-xs text-space-text-muted ml-1">
                     ({{
                       sortAscending ? "ancien → nouveau" : "nouveau → ancien"
                     }})
@@ -102,10 +102,10 @@
             </div>
           </div>
         </div>
-      </Card>
+      </SpaceCard>
 
       <!-- Notification pour les utilisateurs non connectés - placée en dehors de la carte des filtres -->
-      <Alert v-if="!user" variant="info" className="mb-6">
+      <SpaceAlert v-if="!user" variant="info" className="mb-6">
         <template #icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -122,10 +122,10 @@
         </template>
         <div class="flex flex-col">
           <span class="font-heading text-sm">Authentification requise</span>
-          <span class="text-xs text-color-text-muted mt-1"
+          <span class="text-xs text-space-text-muted mt-1"
             >Connectez-vous pour vous inscrire aux tournois</span
           >
-          <Button
+          <SpaceButton
             @click="loginWithDiscord"
             variant="primary"
             size="sm"
@@ -142,9 +142,9 @@
               />
             </svg>
             Connexion
-          </Button>
+          </SpaceButton>
         </div>
-      </Alert>
+      </SpaceAlert>
 
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
@@ -152,7 +152,7 @@
 
       <!-- Affichage du loader pendant le chargement -->
       <div v-if="isLoading" class="flex justify-center py-12">
-        <Loader text="Transmission des données en cours..." />
+        <SpaceLoader text="Transmission des données en cours..." />
       </div>
 
       <!-- Liste des tournois -->
@@ -178,7 +178,7 @@
 
         <!-- Pagination -->
         <div class="mt-6">
-          <Pagination
+          <SpacePagination
             v-if="filteredTournaments.length > itemsPerPage"
             :current-page="currentPage"
             :total-pages="totalPages"
@@ -190,65 +190,65 @@
       </div>
 
       <!-- Message pas de tournois -->
-      <Terminal
+      <SpaceTerminal
         v-else
         command="list_tournaments --all"
         title="SYSTÈME DE RECHERCHE"
         showCursor
         className="my-8"
       >
-        <div class="text-color-error font-mono">
+        <div class="text-space-error font-mono">
           Erreur 404: Aucun tournoi n'a été trouvé.
         </div>
-        <div class="text-color-text-muted mt-2">
+        <div class="text-space-text-muted mt-2">
           Essayez de modifier vos critères de recherche ou revenez plus tard
           lorsque de nouveaux tournois seront programmés.
         </div>
-      </Terminal>
+      </SpaceTerminal>
     </div>
 
     <!-- Modal de niveau requis -->
-    <Modal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
+    <SpaceModal v-model="showLevelPrompt" title="NIVEAU DE JEU REQUIS">
       <div class="space-y-4">
-        <p class="text-color-text">
+        <p class="text-space-text">
           Vous n'avez pas encore défini votre niveau pour
-          <span class="text-color-primary-light font-bold">{{
+          <span class="text-space-primary-light font-bold">{{
             levelPromptGameName
           }}</span
           >.
         </p>
-        <p class="text-color-text-muted">
+        <p class="text-space-text-muted">
           Définir votre niveau aide à l'organisation des tournois et au
           matchmaking. Vous pouvez:
         </p>
         <div class="space-y-3 mt-4">
-          <Button
+          <SpaceButton
             @click="goToLevelDefinition"
             variant="primary"
             className="w-full"
           >
             Définir mon niveau maintenant
-          </Button>
-          <Button
+          </SpaceButton>
+          <SpaceButton
             @click="registerWithoutLevel"
             variant="outline"
             className="w-full"
           >
             S'inscrire sans définir de niveau
-          </Button>
+          </SpaceButton>
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <Button @click="closeLevelPrompt" variant="ghost" size="sm">
+          <SpaceButton @click="closeLevelPrompt" variant="ghost" size="sm">
             Annuler
-          </Button>
+          </SpaceButton>
         </div>
       </template>
-    </Modal>
+    </SpaceModal>
 
     <!-- Modal de confirmation d'inscription/désinscription -->
-    <Modal
+    <SpaceModal
       v-model="showPopup"
       :title="`CONFIRMATION D'${
         actionType === 'register' || actionType === 'waitlist'
@@ -257,9 +257,9 @@
       }`"
     >
       <div class="space-y-4">
-        <p class="text-color-text">
+        <p class="text-space-text">
           Voulez-vous
-          <span class="text-color-primary-light font-bold">
+          <span class="text-space-primary-light font-bold">
             {{
               actionType === "register"
                 ? "vous inscrire"
@@ -271,16 +271,16 @@
             }}
           </span>
           au tournoi
-          <span class="text-color-secondary-light font-bold">
+          <span class="text-space-secondary-light font-bold">
             {{ selectedTournament?.name }} </span
           >?
         </p>
 
         <div
           v-if="actionType === 'register' || actionType === 'waitlist'"
-          class="bg-color-bg-light/20 p-3 rounded-lg border border-color-bg-light/30"
+          class="bg-space-bg-light/20 p-3 rounded-lg border border-space-bg-light/30"
         >
-          <p class="text-color-text-muted text-sm">
+          <p class="text-space-text-muted text-sm">
             <span v-if="actionType === 'register'">
               N'oubliez pas de venir vous check-in 24h avant le début du tournoi
               pour confirmer votre participation.
@@ -295,9 +295,9 @@
           v-if="
             actionType === 'unregister' || actionType === 'unregister-waitlist'
           "
-          class="bg-color-error/10 p-3 rounded-lg border border-color-error/20"
+          class="bg-space-error/10 p-3 rounded-lg border border-space-error/20"
         >
-          <p class="text-color-text-muted text-sm">
+          <p class="text-space-text-muted text-sm">
             <span v-if="actionType === 'unregister'">
               Attention: Si vous vous désinscrivez, votre place sera attribuée à
               une personne en liste d'attente.
@@ -311,10 +311,10 @@
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <Button @click="closePopup" variant="outline" size="sm">
+          <SpaceButton @click="closePopup" variant="outline" size="sm">
             Annuler
-          </Button>
-          <Button
+          </SpaceButton>
+          <SpaceButton
             @click="confirmAction"
             :variant="
               actionType === 'unregister' ||
@@ -324,163 +324,104 @@
             "
           >
             Confirmer
-          </Button>
+          </SpaceButton>
         </div>
       </template>
-    </Modal>
-  </Container>
+    </SpaceModal>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">
-//-------------------------------------------------------
-// IMPORTS ET TYPES
-//-------------------------------------------------------
 import { ref, computed, onMounted, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useUserStore } from "../stores/userStore";
 import gameService from "../services/gameService";
-import tournamentService from "../services/tournamentService";
-import playerService from "../services/playerService";
+import { useUserStore } from "../stores/userStore";
 import Toast from "@/shared/Toast.vue";
-import TournamentGridCard from "@/components/tournois-a-venir/TournamentGridCard.vue";
 import type { Game, Tournament } from "../types";
+import TournamentGridCard from "@/components/tournois-a-venir/TournamentGridCard.vue";
+import playerService from "../services/playerService";
+import { useRouter, useRoute } from "vue-router";
 
+// Regroupement et organisation des états du composant
+// SECTION: État du composant
 //-------------------------------------------------------
-// ÉTAT RÉACTIF ET STORES
-//-------------------------------------------------------
-
-// Store utilisateur et navigation
-const userStore = useUserStore();
-const router = useRouter();
-const route = useRoute();
-
-// États principaux
-const tournaments = ref<Tournament[]>([]);
-const games = ref<Game[]>([]);
-const isLoading = ref(false);
-
-// États de filtrage et tri
-const selectedGame = ref("");
-const showFinished = ref(false);
-const sortAscending = ref(true);
-
-// États d'interface et modales
-const showPopup = ref(false);
-const showLevelPrompt = ref(false);
-const selectedTournament = ref<Tournament | null>(null);
-const actionType = ref("register");
-
 // États pour la modale de niveau de jeu
+const showLevelPrompt = ref(false);
 const levelPromptGameId = ref("");
 const levelPromptGameName = ref("");
 const levelPromptTournamentId = ref("");
+const router = useRouter();
+const route = useRoute();
 
-// États d'interaction
-const checkedInPlayers = ref<{ [key: string]: boolean }>({});
-
-// Pagination
-const currentPage = ref(1);
-const itemsPerPage = ref(6);
-
-// Système de notifications
+// États globaux
+const games = ref<Game[]>([]);
 const success = ref<string | null>(null);
 const error = ref<string | null>(null);
+const isLoading = ref<boolean>(false); // Nouvel état pour le chargement
+const currentPlayerId = computed(() => userStore.playerId);
+
+// États de filtrage et d'affichage
+const selectedGame = ref<string>("");
+const showFinished = ref<boolean>(false);
+const sortAscending = ref<boolean>(true);
+
+// États d'interface et d'interaction
+const checkedInPlayers = ref<{ [key: string]: boolean }>({});
+
+// États du modal de confirmation
+const showPopup = ref<boolean>(false);
+const selectedTournament = ref<Tournament | null>(null);
+const actionType = ref<string>("register"); // "register" ou "unregister"
+
+// États de pagination
+const currentPage = ref<number>(1);
+const itemsPerPage = ref<number>(6); // Nombre de tournois par page
+
+import tournamentService from "../services/tournamentService";
+const tournaments = ref<Tournament[]>([]);
 
 //-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - AUTHENTIFICATION
+// SECTION: Store et propriétés calculées
 //-------------------------------------------------------
 
-/**
- * Référence à l'utilisateur connecté
- * @returns L'utilisateur connecté ou null
- */
+// Accès au store utilisateur
+const userStore = useUserStore();
 const user = computed(() => userStore.user);
 
 /**
- * ID du joueur actuellement connecté
- * @returns ID du joueur ou null
- */
-const currentPlayerId = computed(() => userStore.playerId);
-
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - FILTRAGE ET TRI
-//-------------------------------------------------------
-
-/**
- * Filtre et trie les tournois selon les critères sélectionnés
- * @returns Liste des tournois filtrés et triés
+ * Récupère tous les tournois et applique les filtres
  */
 const filteredTournaments = computed(() => {
+  // Utiliser les tournois stockés localement au lieu du store
   let filtered = tournaments.value;
 
-  // Filtre par jeu sélectionné
+  // Filtre par jeu si un jeu est sélectionné
   if (selectedGame.value) {
-    filtered = filtered.filter(
-      (tournament) => tournament.game?._id === selectedGame.value
-    );
+    filtered = filtered.filter((t) => t.game._id === selectedGame.value);
   }
 
   // Filtre par statut (terminé/à venir)
   if (showFinished.value) {
-    // Afficher uniquement les tournois terminés
-    filtered = filtered.filter((tournament) => tournament.finished === true);
+    // Si la case est cochée, afficher UNIQUEMENT les tournois terminés
+    filtered = filtered.filter((t) => t.finished === true);
   } else {
-    // Afficher uniquement les tournois à venir (non terminés)
-    filtered = filtered.filter((tournament) => tournament.finished !== true);
+    // Sinon, afficher UNIQUEMENT les tournois à venir (non terminés)
+    filtered = filtered.filter((t) => t.finished !== true);
   }
 
-  // Tri chronologique optimisé
+  // Tri chronologique configurable
   const sortMultiplier = sortAscending.value ? 1 : -1;
 
   return filtered.sort((a, b) => {
-    // Validation des dates avec fallback
-    const dateA = a.date ? new Date(a.date).getTime() : 0;
-    const dateB = b.date ? new Date(b.date).getTime() : 0;
-
-    // Gestion des dates invalides
-    if (isNaN(dateA) && isNaN(dateB)) return 0;
-    if (isNaN(dateA)) return 1;
-    if (isNaN(dateB)) return -1;
-
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
     return (dateA - dateB) * sortMultiplier;
   });
 });
 
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - PAGINATION
-//-------------------------------------------------------
-
 /**
- * Calcule le nombre total de pages pour la pagination
- * @returns Nombre total de pages
+ * Vérifie si un tournoi est plein (cap atteint)
  */
-const totalPages = computed(() => {
-  return Math.ceil(filteredTournaments.value.length / itemsPerPage.value);
-});
-
-/**
- * Retourne les tournois à afficher sur la page courante
- * @returns Liste des tournois paginés
- */
-const paginatedTournaments = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredTournaments.value.slice(start, end);
-});
-
-//-------------------------------------------------------
-// PROPRIÉTÉS CALCULÉES - UTILITAIRES TOURNOIS
-//-------------------------------------------------------
-
-/**
- * Vérifie si un tournoi est plein (capacité atteinte)
- * @param tournament - Le tournoi à vérifier
- * @returns true si le tournoi est plein
- */
-const isTournamentFull = (tournament: Tournament): boolean => {
-  if (!tournament || !tournament.playerCap || !tournament.players) {
-    return false;
-  }
+const isTournamentFull = (tournament: Tournament) => {
   return (
     tournament.playerCap > 0 &&
     tournament.players.length >= tournament.playerCap
@@ -488,74 +429,30 @@ const isTournamentFull = (tournament: Tournament): boolean => {
 };
 
 /**
- * Vérifie si l'utilisateur est en liste d'attente pour un tournoi
- * @param tournament - Le tournoi à vérifier
- * @returns true si l'utilisateur est en liste d'attente
+ * Vérifie si l'utilisateur est en liste d'attente pour un tournoi donné
  */
-const isUserInWaitlist = (tournament: Tournament): boolean => {
-  const playerId = userStore.playerId;
-
-  if (!playerId || !tournament?.waitlistPlayers) {
-    return false;
-  }
+const isUserInWaitlist = (tournament: Tournament) => {
+  if (!userStore.playerId || !tournament.waitlistPlayers) return false;
 
   return tournament.waitlistPlayers.some((waitlistId) => {
-    // Gestion des objets Player avec _id
-    if (typeof waitlistId === "object" && waitlistId && "_id" in waitlistId) {
-      return waitlistId._id === playerId;
+    if (typeof waitlistId === "object") {
+      return waitlistId._id === userStore.playerId;
+    } else {
+      return waitlistId === userStore.playerId;
     }
-    // Gestion des IDs directs (string)
-    if (typeof waitlistId === "string") {
-      return waitlistId === playerId;
-    }
-    return false;
   });
 };
-
 //-------------------------------------------------------
-// FONCTIONS DE PAGINATION
-//-------------------------------------------------------
-
-/**
- * Passe à la page précédente si possible
- */
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-
-/**
- * Passe à la page suivante si possible
- */
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-
-/**
- * Va à une page spécifique
- * @param page - Numéro de la page cible
- */
-const goToPage = (page: number) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-//-------------------------------------------------------
-// FONCTIONS DE CHARGEMENT DES DONNÉES
+// SECTION: Récupération des données
 //-------------------------------------------------------
 
 /**
- * Charge les tournois depuis le service
+ * Récupère les tournois directement depuis le service sans mise en cache
  */
 const fetchTournaments = async () => {
   isLoading.value = true;
   try {
+    // Appel direct au service sans passer par le store
     tournaments.value = await tournamentService.getTournaments();
 
     // Vérifier les check-ins si un utilisateur est connecté
@@ -564,39 +461,38 @@ const fetchTournaments = async () => {
     }
   } catch (error) {
     console.error("Erreur lors du chargement des tournois:", error);
-    showMessage("error", "Erreur lors du chargement des tournois");
   } finally {
     isLoading.value = false;
   }
 };
 
 /**
- * Vérifie les statuts de check-in d'un utilisateur
- * @param userId - ID de l'utilisateur
+ * Vérifie les check-ins d'un utilisateur
  */
-const checkUserCheckIns = async (userId: string): Promise<void> => {
-  if (!userId) return;
-
+const checkUserCheckIns = async (userId: string) => {
   try {
+    // Ici, nous pouvons utiliser directement userStore.playerId
+    // si nous sommes sûrs qu'il est déjà chargé
     const playerId = userStore.playerId;
 
     if (playerId) {
-      // Utilisation de l'ID du joueur depuis le store
       tournaments.value.forEach((tournament) => {
-        if (tournament._id && tournament.checkIns) {
+        if (tournament._id) {
           checkedInPlayers.value[tournament._id] =
-            tournament.checkIns[playerId] || false;
+            (tournament.checkIns && tournament.checkIns[playerId]) || false;
         }
       });
     } else {
-      // Fallback : récupération de l'ID joueur via le service
+      // Fallback au cas où le playerId n'est pas encore disponible dans le store
       const player = await playerService.getPlayerByIdUser(userId);
-
-      if (player?._id) {
+      if (player && player._id) {
         tournaments.value.forEach((tournament) => {
-          if (tournament._id && tournament.checkIns && player._id) {
+          if (tournament._id) {
             checkedInPlayers.value[tournament._id] =
-              tournament.checkIns[player._id] || false;
+              (tournament.checkIns &&
+                player._id &&
+                tournament.checkIns[player._id]) ||
+              false;
           }
         });
       }
@@ -607,27 +503,27 @@ const checkUserCheckIns = async (userId: string): Promise<void> => {
 };
 
 //-------------------------------------------------------
-// FONCTIONS DE GESTION DES INSCRIPTIONS
+// SECTION: Gestion des inscriptions aux tournois
 //-------------------------------------------------------
 
 /**
  * Ouvre le popup de confirmation pour l'inscription ou désinscription
  * @param tournament - Objet tournoi
- * @param type - Type d'action ("register", "unregister", "waitlist", etc.)
+ * @param type - Type d'action ("register" ou "unregister")
  */
 const openRegistrationPopup = (tournament: Tournament, type: string) => {
   selectedTournament.value = tournament;
 
   // Déterminer le type d'action en fonction de l'état du joueur
   if (type === "register") {
-    // Si le tournoi est plein et l'utilisateur n'est pas déjà en liste d'attente
+    // Si le tournoi est plein et l'utilisateur n'est pas déjà en liste d'attente, proposer la liste d'attente
     if (isTournamentFull(tournament) && !isUserInWaitlist(tournament)) {
       actionType.value = "waitlist";
     } else {
       actionType.value = "register";
     }
   } else if (type === "unregister") {
-    // Si l'utilisateur est en liste d'attente
+    // Si l'utilisateur est en liste d'attente, c'est une désinscription de la liste d'attente
     if (isUserInWaitlist(tournament)) {
       actionType.value = "unregister-waitlist";
     } else {
@@ -642,48 +538,51 @@ const openRegistrationPopup = (tournament: Tournament, type: string) => {
 };
 
 /**
- * Désinscrit un caster d'un tournoi
- * @param tournamentId - ID du tournoi
- * @param userId - ID de l'utilisateur
+ * Désinscrit un caster
+ * @param tournamentId 
+ * @param userId 
  */
 const unregisterCaster = async (tournamentId: string, userId: string) => {
   try {
     await tournamentService.unregisterPlayerAsCaster(tournamentId, userId);
+
     await fetchTournaments();
-    showMessage("success", "Caster désinscrit avec succès");
   } catch (error) {
-    console.error("Erreur lors de la désinscription du caster:", error);
-    showMessage("error", "Erreur lors de la désinscription du caster");
+    console.error("Erreur lors de l'action:", error);
+    showMessage("error", `Erreur lors de l'action.`);
     closePopup();
   }
-};
+}
 
 /**
- * Démarre le processus d'authentification Discord OAuth2
+ * Déclenche le processus d'authentification Discord
+ * Redirige l'utilisateur vers l'autorisation OAuth2 de Discord
  */
 const loginWithDiscord = () => {
   try {
+    // Récupération des variables d'environnement pour OAuth2
     const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
     const redirectUri = import.meta.env.VITE_DISCORD_REDIRECT_URI;
 
+    // Vérification de la configuration
     if (!clientId || !redirectUri) {
-      showMessage("error", "Configuration Discord manquante");
+      error.value = "Configuration Discord manquante";
       return;
     }
 
+    // Redirection vers la page d'autorisation Discord
     window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=identify+guilds+email`;
   } catch (err) {
+    // Gestion des erreurs d'authentification
+    error.value = "Impossible de se connecter à Discord. Veuillez réessayer.";
     console.error("Erreur d'authentification Discord:", err);
-    showMessage("error", "Impossible de se connecter à Discord");
   }
 };
 
 /**
  * Affiche la modale pour définir le niveau de jeu
- * @param game - Objet jeu
- * @param tournamentId - ID du tournoi
  */
 const showLevelPromptModal = (game: Game, tournamentId: string) => {
   levelPromptGameId.value = game._id || "";
@@ -691,7 +590,6 @@ const showLevelPromptModal = (game: Game, tournamentId: string) => {
   levelPromptTournamentId.value = tournamentId;
   showLevelPrompt.value = true;
 };
-
 /**
  * Redirige vers la page de définition de niveau avec inscription automatique
  */
@@ -702,106 +600,117 @@ const goToLevelDefinition = () => {
       gameId: levelPromptGameId.value,
       redirect: route.fullPath,
       tournamentId: levelPromptTournamentId.value,
-      autoRegister: "true",
+      autoRegister: "true", // Important: ceci doit être une chaîne, pas un boolean
     },
   });
 };
 
 /**
- * Ferme la modale de définition de niveau et réinitialise les données
+ * Ferme la popup de définition de niveau
  */
 const closeLevelPrompt = () => {
   showLevelPrompt.value = false;
   levelPromptGameId.value = "";
   levelPromptGameName.value = "";
-  levelPromptTournamentId.value = "";
 };
 
 /**
- * Ferme la modale de confirmation avec animation
+ * Ferme le popup de confirmation
  */
 const closePopup = () => {
   showPopup.value = false;
-  // Réinitialisation différée pour éviter les changements visuels pendant la transition
+  // Réinitialisation différée pour éviter les changements visuels pendant la transition de sortie
   setTimeout(() => {
     selectedTournament.value = null;
     actionType.value = "register";
-  }, 300);
+  }, 300); // Correspondant à la durée de l'animation fadeOut
 };
 
 /**
- * Confirme et exécute l'action d'inscription/désinscription sélectionnée
+ * Exécute l'action d'inscription ou de désinscription après confirmation
  */
 const confirmAction = async () => {
-  if (!selectedTournament.value || !user.value) return;
+  if (selectedTournament.value && user.value) {
+    try {
+      let success = false;
 
-  try {
-    let success = false;
+      if (
+        (actionType.value === "register" || actionType.value === "waitlist") &&
+        selectedTournament.value._id
+      ) {
+        // Même endpoint pour l'inscription normale et la liste d'attente
+        await tournamentService.registerPlayer(
+          selectedTournament.value._id,
+          user.value._id
+        );
+        success = true;
 
-    if (
-      (actionType.value === "register" || actionType.value === "waitlist") &&
-      selectedTournament.value._id
-    ) {
-      await tournamentService.registerPlayer(
-        selectedTournament.value._id,
-        user.value._id
-      );
-      success = true;
+        if (success) {
+          showMessage(
+            "success",
+            actionType.value === "register"
+              ? "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
+              : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent."
+          );
+        }
+      } else if (
+        (actionType.value === "unregister" ||
+          actionType.value === "unregister-waitlist") &&
+        selectedTournament.value._id
+      ) {
+        // Même endpoint pour la désinscription normale et de la liste d'attente
+        await tournamentService.unregisterPlayer(
+          selectedTournament.value._id,
+          user.value._id
+        );
+        success = true;
 
-      const message =
-        actionType.value === "register"
-          ? "Inscription réussie ! N'oublie pas de venir te check-in 24h avant le tournoi."
-          : "Vous avez été ajouté à la liste d'attente. Vous serez automatiquement inscrit si des places se libèrent.";
+        if (success) {
+          showMessage(
+            "success",
+            actionType.value === "unregister"
+              ? "Désinscription réussie ! Triste de te voir partir :("
+              : "Vous avez été retiré de la liste d'attente."
+          );
+        }
+      }
 
-      showMessage("success", message);
-    } else if (
-      (actionType.value === "unregister" ||
-        actionType.value === "unregister-waitlist") &&
-      selectedTournament.value._id
-    ) {
-      await tournamentService.unregisterPlayer(
-        selectedTournament.value._id,
-        user.value._id
-      );
-      success = true;
+      // Recharger les données pour voir les changements
+      if (success) {
+        await fetchTournaments();
+      }
 
-      const message =
-        actionType.value === "unregister"
-          ? "Désinscription réussie ! Triste de te voir partir :("
-          : "Vous avez été retiré de la liste d'attente.";
-
-      showMessage("success", message);
+      closePopup();
+    } catch (error) {
+      console.error("Erreur lors de l'action:", error);
+      showMessage("error", `Erreur lors de l'action.`);
     }
-
-    if (success) {
-      await fetchTournaments();
-    }
-    closePopup();
-  } catch (error) {
-    console.error("Erreur lors de l'action:", error);
-    showMessage("error", "Erreur lors de l'action");
   }
 };
 
 /**
- * Inscrit l'utilisateur au tournoi sans définir son niveau de jeu
+ * Inscrit l'utilisateur au tournoi sans définir son niveau
  */
 const registerWithoutLevel = async () => {
   if (!user.value || !levelPromptTournamentId.value) return;
 
   try {
+    // Fermer la modale
     closeLevelPrompt();
 
+    // Appel au service pour inscrire le joueur
     await tournamentService.registerPlayer(
       levelPromptTournamentId.value,
       user.value._id
     );
 
+    // Afficher un message de succès
     showMessage(
       "success",
       "Inscription réussie ! N'oubliez pas de venir vous check-in 24h avant le tournoi."
     );
 
+    // Recharger les données des tournois
     await fetchTournaments();
   } catch (error) {
     console.error("Erreur lors de l'inscription sans niveau:", error);
@@ -813,68 +722,111 @@ const registerWithoutLevel = async () => {
 };
 
 /**
- * Gère le check-in/check-out d'un joueur pour un tournoi
- * @param tournamentId - ID du tournoi
- * @param checkedIn - Nouvel état du check-in (true = check-in, false = check-out)
+ * Change l'état de check-in d'un joueur pour un tournoi avec retour visuel immédiat
  */
 const checkIn = async (tournamentId: string, checkedIn: boolean) => {
-  if (!user.value) return;
-
-  // Mise à jour optimiste de l'interface
-  if (tournamentId in checkedInPlayers.value) {
-    checkedInPlayers.value[tournamentId] = checkedIn;
-  }
-
-  try {
-    await tournamentService.checkInPlayer(
-      tournamentId,
-      user.value._id,
-      checkedIn
-    );
-
-    // Gestion du localStorage pour les rappels
-    if (!checkedIn) {
-      localStorage.removeItem(`checkin-reminded-${tournamentId}`);
-    }
-
-    showMessage(
-      "success",
-      checkedIn ? "Check-in confirmé !" : "Check-in annulé."
-    );
-
-    await fetchTournaments();
-  } catch (err) {
-    // En cas d'erreur, rétablir l'état précédent
+  if (user.value) {
+    // Update optimiste de l'interface
     if (tournamentId in checkedInPlayers.value) {
-      checkedInPlayers.value[tournamentId] = !checkedIn;
+      checkedInPlayers.value[tournamentId] = checkedIn;
     }
 
-    console.error("Erreur lors du check-in:", err);
-    showMessage(
-      "error",
-      `Erreur: Impossible de ${
-        checkedIn ? "confirmer" : "annuler"
-      } le check-in.`
-    );
+    try {
+      // Appel direct au service
+      await tournamentService.checkInPlayer(
+        tournamentId,
+        user.value._id,
+        checkedIn
+      );
+
+      // Si le check-in est annulé, supprimer l'entrée du localStorage
+      if (!checkedIn) {
+        localStorage.removeItem(`checkin-reminded-${tournamentId}`);
+      }
+      showMessage(
+        "success",
+        checkedIn ? "Check-in confirmé !" : "Check-in annulé."
+      );
+
+      // Recharger les données pour refléter le changement
+      await fetchTournaments();
+    } catch (err) {
+      // En cas d'erreur, remettre l'état précédent
+      if (tournamentId in checkedInPlayers.value) {
+        checkedInPlayers.value[tournamentId] = !checkedIn;
+      }
+
+      console.error("Erreur lors du check-in:", err);
+      showMessage(
+        "error",
+        `Erreur: Impossible de ${
+          checkedIn ? "confirmer" : "annuler"
+        } le check-in.`
+      );
+    }
   }
 };
 
 //-------------------------------------------------------
-// FONCTIONS UTILITAIRES
+// SECTION: Pagination
+//-------------------------------------------------------
+
+/**
+ * Calcule le nombre total de pages pour la pagination
+ */
+const totalPages = computed(() => {
+  return Math.ceil(filteredTournaments.value.length / itemsPerPage.value);
+});
+
+/**
+ * Retourne les tournois pour la page courante
+ */
+const paginatedTournaments = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredTournaments.value.slice(start, end);
+});
+
+/**
+ * Fonctions de navigation pour la pagination
+ */
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+//-------------------------------------------------------
+// SECTION: Utilitaires et formatage
 //-------------------------------------------------------
 
 /**
  * Affiche un message de notification temporaire
  * @param type - Type de message ("success" ou "error")
- * @param message - Contenu du message à afficher
- * @param duration - Durée d'affichage en millisecondes (défaut: 3000ms)
+ * @param message - Contenu du message
+ * @param duration - Durée d'affichage en ms (défaut: 3000ms)
  */
 const showMessage = (
   type: "success" | "error",
   message: string,
   duration: number = 3000
 ) => {
-  // Réinitialiser les messages précédents
+  // Réinitialiser tout message précédent
   success.value = null;
   error.value = null;
 
@@ -896,187 +848,78 @@ const showMessage = (
 };
 
 //-------------------------------------------------------
-// WATCHERS ET CYCLE DE VIE
+// SECTION: Cycle de vie du composant
 //-------------------------------------------------------
 
 /**
- * Fonction de debounce pour limiter les appels répétitifs
- * @param fn - Fonction à debouncer
- * @param wait - Délai d'attente en millisecondes
- * @returns Fonction debouncée
+ * Réinitialise la pagination quand les filtres changent
  */
-function debounce<T extends (...args: any[]) => any>(fn: T, wait = 300) {
-  let t: any;
-  return (...args: Parameters<T>) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
-  };
-}
-
-const debouncedResetPagination = debounce(() => {
-  currentPage.value = 1;
-}, 250);
-
-// Watcher pour les changements de jeu sélectionné - recharge les données
 watch([selectedGame], async () => {
   currentPage.value = 1;
+
+  // Recharger les tournois uniquement lorsque le jeu sélectionné change
   await fetchTournaments();
 
+  // Si l'utilisateur est connecté, vérifier les états de check-in
   if (user.value) {
     await checkUserCheckIns(user.value._id);
   }
 });
 
-// Watcher pour les filtres locaux - pas besoin de recharger les données
-watch([showFinished, sortAscending], debouncedResetPagination);
-
-/**
- * Initialise le composant au montage
- */
+// Ajouter un watch spécifique pour les filtres locaux qui ne nécessitent pas de rechargement
+watch([showFinished, sortAscending], () => {
+  currentPage.value = 1;
+});
 onMounted(async () => {
   try {
-    // Chargement parallèle des jeux et tournois pour optimiser les performances
+    // Chargement parallèle des jeux et tournois pour plus de rapidité
     const [gamesResult] = await Promise.all([
       gameService.getGames(),
-      fetchTournaments(),
+      fetchTournaments(), // Utilise le store avec cache
     ]);
 
     games.value = gamesResult;
   } catch (error) {
     console.error("Erreur lors de l'initialisation:", error);
-    showMessage("error", "Erreur lors de l'initialisation de la page");
+    // Gérer l'erreur...
   }
 });
 </script>
 
 <style scoped>
-/* ========================================================= */
-/* TRANSITIONS ET ANIMATIONS HALLOWEEN                       */
-/* ========================================================= */
-
-/* Transitions mystiques de base */
-.mystical-transition {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Animations subtiles pour les éléments interactifs */
+.space-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mystical-transition:hover {
-  box-shadow: var(--shadow-glow-primary);
-  transform: translateY(-1px);
+/* Effets de survol spécifiques à cette vue */
+.space-hover-glow:hover {
+  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.4);
 }
 
-/* Animations d'apparition mystique pour les cartes */
-.tournament-card-enter {
-  animation: mystical-appear 0.6s ease-out;
-}
-
-@keyframes mystical-appear {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.9);
-    filter: blur(3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-/* Effets de transition pour les modales */
+/* Gestion améliorée des transitions */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.3s;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
 }
 
-/* ========================================================= */
-/* ÉLÉMENTS INTERACTIFS                                     */
-/* ========================================================= */
-
-/* Sélecteurs avec effets mystiques */
-select {
-  transition: all 0.3s ease;
-}
-
+/* Gestion des sélecteurs custom */
 select:focus {
   outline: none;
-  box-shadow: var(--shadow-glow-primary);
-  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--space-primary-rgb), 0.3);
 }
 
-select:hover {
-  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
-  border-color: var(--color-primary-light);
-}
-
-/* Toggles Halloween */
+/* Style pour les toggles */
 .toggle-track {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.toggle-track:hover {
-  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.3);
+  transition: background-color 0.3s;
 }
 
 .toggle-thumb {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.toggle-thumb:hover {
-  box-shadow: var(--shadow-toggle-thumb);
-}
-
-/* ========================================================= */
-/* EFFETS DE SURVOL SPÉCIALISÉS                            */
-/* ========================================================= */
-
-/* Effets de lueur Halloween pour les composants */
-.tournament-hover-glow:hover {
-  box-shadow: var(--shadow-glow-primary);
-}
-
-.filter-hover-glow:hover {
-  box-shadow: var(--shadow-glow-accent);
-}
-
-/* Boutons mystiques */
-.mystical-button:hover {
-  box-shadow: var(--shadow-glow-secondary);
-  transform: translateY(-2px);
-}
-
-/* ========================================================= */
-/* RESPONSIVE DESIGN                                        */
-/* ========================================================= */
-
-/* Adaptations mobiles Halloween */
-@media (max-width: 768px) {
-  .mystical-transition {
-    transition: all 0.3s ease;
-  }
-
-  .tournament-hover-glow:hover {
-    transform: none;
-  }
-
-  .mystical-button:hover {
-    transform: translateY(-1px);
-  }
-}
-
-/* Optimisation pour les préférences d'accessibilité */
-@media (prefers-reduced-motion: reduce) {
-  .mystical-transition,
-  .tournament-card-enter,
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: none;
-    animation: none;
-  }
+  transition: transform 0.3s;
 }
 </style>

@@ -1,43 +1,32 @@
-<!--
-  🎃 HORROR LOADER COMPONENT - Documentation d'utilisation
-  
-  Composant de chargement avec thème Halloween terrifiant.
-  
-  📋 PROPS :
-  • size : "sm" | "md" | "lg" - Taille du loader (défaut: "md")
-  • text : string - Texte affiché sous le loader (défaut: "Chargement...")
-  • showText : boolean - Affiche/cache le texte (défaut: true)
-  
-  💡 EXEMPLES :
-  <Loader size="lg" text="Invocation en cours..." />
-  <Loader :showText="false" />
-  <Loader size="sm" text="Rituel mystique..." />
--->
 <template>
-  <div :class="['loader-container', sizeClass]">
-    <div class="loader">
-      <!-- Cercle principal tournant -->
-      <div class="loader-ring"></div>
-
-      <!-- Cercle intérieur avec pulsation -->
-      <div class="loader-inner">
-        <div class="loader-core"></div>
+  <div :class="['space-loader-container', sizeClass]">
+    <div class="space-loader">
+      <!-- Cercle orbital principal -->
+      <div class="space-loader-orbit">
+        <div class="space-loader-planet"></div>
       </div>
 
-      <!-- Particules mystiques -->
+      <!-- Cercle orbital secondaire -->
+      <div class="space-loader-orbit secondary">
+        <div class="space-loader-moon"></div>
+      </div>
+
+      <!-- Étoiles en arrière-plan -->
       <div
-        v-for="n in 6"
-        :key="`particle-${n}`"
-        class="loader-particle"
+        v-for="n in 8"
+        :key="`star-${n}`"
+        class="space-loader-star"
         :style="{
-          top: `${25 + Math.random() * 50}%`,
-          left: `${25 + Math.random() * 50}%`,
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
           animationDelay: `${Math.random() * 2}s`,
+          width: `${Math.random() * 2 + 1}px`,
+          height: `${Math.random() * 2 + 1}px`,
         }"
       ></div>
 
       <!-- Texte de chargement -->
-      <div v-if="showText" class="loader-text">
+      <div v-if="showText" class="space-loader-text">
         {{ text }}
       </div>
     </div>
@@ -62,9 +51,9 @@ const props = withDefaults(defineProps<Props>(), {
 const sizeClass = computed(() => {
   switch (props.size) {
     case "sm":
-      return "loader--small";
+      return "space-loader--small";
     case "lg":
-      return "loader--large";
+      return "space-loader--large";
     default:
       return "";
   }
@@ -72,7 +61,7 @@ const sizeClass = computed(() => {
 </script>
 
 <style scoped>
-.loader-container {
+.space-loader-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,92 +69,92 @@ const sizeClass = computed(() => {
   width: 100%;
 }
 
-.loader {
+.space-loader {
   position: relative;
   width: 80px;
   height: 80px;
 }
 
-.loader--small .loader {
+.space-loader--small .space-loader {
   width: 50px;
   height: 50px;
 }
 
-.loader--large .loader {
+.space-loader--large .space-loader {
   width: 120px;
   height: 120px;
 }
 
-/* Anneau principal tournant avec couleurs Halloween */
-.loader-ring {
+.space-loader-orbit {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border: 3px solid transparent;
-  border-top: 3px solid var(--color-primary);
-  border-right: 3px solid var(--color-secondary);
+  border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 50%;
-  animation: rotate 2s linear infinite;
-  box-shadow: var(--shadow-glow-primary);
+  animation: spin 6s linear infinite;
 }
 
-/* Cercle intérieur */
-.loader-inner {
-  position: absolute;
-  top: 20%;
-  left: 20%;
+.space-loader-orbit.secondary {
   width: 60%;
   height: 60%;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--color-accent);
-  border-left: 2px solid var(--color-secondary-light);
-  border-radius: 50%;
-  animation: rotate 1.5s linear infinite reverse;
+  top: 20%;
+  left: 20%;
+  border-color: rgba(56, 189, 248, 0.3);
+  animation: spin 4s linear infinite reverse;
 }
 
-/* Cœur central pulsant */
-.loader-core {
+.space-loader-planet {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: -6px;
+  left: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--space-primary),
+    var(--space-primary-light)
+  );
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
+}
+
+.space-loader-moon {
+  position: absolute;
+  top: -4px;
+  left: calc(50% - 4px);
   width: 8px;
   height: 8px;
-  background: var(--color-primary);
+  background: linear-gradient(
+    135deg,
+    var(--space-secondary),
+    var(--space-secondary-light)
+  );
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
-  animation: pulse 1s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.7);
 }
 
-/* Particules mystiques */
-.loader-particle {
+.space-loader-star {
   position: absolute;
-  width: 3px;
-  height: 3px;
-  background-color: var(--color-accent-light);
+  background-color: white;
   border-radius: 50%;
-  opacity: 0.8;
-  animation: float 3s ease-in-out infinite;
-  box-shadow: 0 0 6px var(--color-accent-light);
+  opacity: 0.7;
+  animation: twinkle 3s ease-in-out infinite;
 }
 
-/* Texte de chargement */
-.loader-text {
+.space-loader-text {
   position: absolute;
   width: 100%;
   text-align: center;
   bottom: -30px;
-  font-family: var(--font-body);
+  font-family: "Space Mono", monospace;
   font-size: 0.875rem;
-  color: var(--color-text);
-  animation: fade 2s infinite;
-  text-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+  color: var(--space-text);
+  animation: pulse 2s infinite;
 }
 
-/* Animations Halloween */
-@keyframes rotate {
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
@@ -174,35 +163,19 @@ const sizeClass = computed(() => {
   }
 }
 
-@keyframes pulse {
+@keyframes twinkle {
   0%,
   100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+    opacity: 0.7;
+    transform: scale(1);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0.7;
+    opacity: 0.3;
+    transform: scale(0.8);
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  33% {
-    transform: translateY(-10px) scale(1.2);
-    opacity: 0.6;
-  }
-  66% {
-    transform: translateY(5px) scale(0.8);
-    opacity: 0.9;
-  }
-}
-
-@keyframes fade {
+@keyframes pulse {
   0%,
   100% {
     opacity: 0.7;
@@ -214,11 +187,11 @@ const sizeClass = computed(() => {
 
 /* Responsive */
 @media (max-width: 640px) {
-  .loader-container {
+  .space-loader-container {
     padding: 1rem;
   }
 
-  .loader--large .loader {
+  .space-loader--large .space-loader {
     width: 100px;
     height: 100px;
   }

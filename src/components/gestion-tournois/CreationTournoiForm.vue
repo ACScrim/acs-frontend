@@ -1,11 +1,11 @@
 <template>
   <div class="container mx-auto">
     <!-- Sélecteur d'onglets -->
-    <Card variant="dark" :decorated="true" className="mb-8">
+    <SpaceCard variant="dark" :decorated="true" className="mb-8">
       <div class="flex flex-col">
         <!-- Boutons d'onglets -->
         <div class="flex flex-wrap md:flex-nowrap justify-center gap-4">
-          <Button
+          <SpaceButton
             @click="activeTab = 'create'"
             :variant="activeTab === 'create' ? 'primary' : 'outline'"
             size="md"
@@ -27,9 +27,9 @@
               </svg>
             </template>
             Créer un Tournoi
-          </Button>
+          </SpaceButton>
 
-          <Button
+          <SpaceButton
             @click="activeTab = 'edit'"
             :variant="activeTab === 'edit' ? 'secondary' : 'outline'"
             size="md"
@@ -49,30 +49,30 @@
               </svg>
             </template>
             Modifier un Tournoi
-          </Button>
+          </SpaceButton>
         </div>
 
         <!-- Indicateur d'onglet actif -->
         <div
-          class="relative h-1 mt-4 bg-color-bg-light/30 rounded-full overflow-hidden"
+          class="relative h-1 mt-4 bg-space-bg-light/30 rounded-full overflow-hidden"
         >
           <div
             class="absolute top-0 left-0 h-full transition-all duration-300 ease-in-out rounded-full"
             :class="[
               activeTab === 'create'
-                ? 'bg-color-primary w-1/2 transform translate-x-0'
-                : 'bg-color-secondary w-1/2 transform translate-x-full',
+                ? 'bg-space-primary w-1/2 transform translate-x-0'
+                : 'bg-space-secondary w-1/2 transform translate-x-full',
             ]"
             :style="{
               boxShadow:
                 activeTab === 'create'
-                  ? '0 0 10px rgba(var(--color-primary-rgb), 0.7)'
-                  : '0 0 10px rgba(var(--color-secondary-rgb), 0.7)',
+                  ? '0 0 10px rgba(var(--space-primary-rgb), 0.7)'
+                  : '0 0 10px rgba(var(--space-secondary-rgb), 0.7)',
             }"
           ></div>
         </div>
       </div>
-    </Card>
+    </SpaceCard>
 
     <!-- Contenu de l'onglet actif avec animation de transition -->
     <div class="tab-content-wrapper">
