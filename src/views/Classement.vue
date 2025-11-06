@@ -36,10 +36,14 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Sélecteur de jeux -->
           <div>
-            <label for="game" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-heading text-space-primary-light flex items-center gap-2"
-              >
+            <Dropdown
+              id="game"
+              v-model="selectedGame"
+              label="Filtrer par jeu"
+              placeholder="Tous les jeux"
+              class="compact-dropdown game-dropdown"
+            >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
@@ -89,10 +93,51 @@
 
           <!-- Sélecteur de saisons -->
           <div>
-            <label for="season" class="mb-3 flex items-center gap-2">
-              <div
-                class="font-heading text-space-secondary-light flex items-center gap-2"
+            <Dropdown
+              id="season"
+              v-model="selectedSeason"
+              label="Filtrer par saison"
+              placeholder="Classement général"
+              class="compact-dropdown season-dropdown"
+            >
+              <template #icon>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"
+                  />
+                </svg>
+              </template>
+              <option value="">Classement général</option>
+              <option
+                v-for="season in seasons"
+                :key="season._id"
+                :value="season._id"
               >
+                {{
+                  season.numero === 0
+                    ? "Alors ça chill"
+                    : `Saison ${season.numero}`
+                }}
+              </option>
+            </Dropdown>
+          </div>
+
+          <!-- Recherche par nom de joueur -->
+          <div>
+            <Input
+              id="search"
+              v-model="searchQuery"
+              label="Rechercher un joueur"
+              type="text"
+              placeholder="Ex: Heekoz, Tekninon, ..."
+              class="compact-input search-input"
+            >
+              <template #icon>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
@@ -173,14 +218,43 @@
         </div>
       </SpaceTerminal>
 
-      <!-- Tableau de classement -->
-      <SpaceCard
-        v-else
-        variant="dark"
-        :stars="true"
-        className="overflow-hidden transform hover:scale-[1.01] transition-transform duration-300"
-      >
-        <!-- Version desktop du tableau (caché sur mobile) -->
+      <!-- Tableau de classement principal -->
+      <Card v-else variant="dark" :stars="false" className="overflow-hidden ">
+        <!-- Barre d'options et contrôles -->
+        <div
+          class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-color-bg-light/10 border-b border-color-bg-light/30"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="font-heading text-xs uppercase tracking-wider text-color-text-muted"
+              >Éléments/page</span
+            >
+            <Dropdown
+              id="itemsPerPage"
+              v-model="itemsPerPage"
+              placeholder="10"
+              size="sm"
+              class="compact-dropdown"
+            >
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+            </Dropdown>
+          </div>
+
+          <div class="flex items-center gap-2 ml-auto">
+            <Button
+              variant="ghost"
+              size="sm"
+              @click="resetFilters"
+              title="Réinitialiser les filtres"
+            >
+              Réinitialiser
+            </Button>
+          </div>
+        </div>
+
+        <!-- Version desktop du tableau -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
             <thead class="bg-space-bg-light/30">
@@ -851,8 +925,120 @@ tbody tr {
   50% {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
   }
-  100% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  }
+}
+
+/* Styles spécifiques pour les dropdowns compacts */
+.compact-dropdown :deep(.dropdown-label) {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  font-family: var(--font-body) !important;
+  color: rgba(var(--color-text-rgb), 0.8) !important;
+}
+
+.compact-dropdown :deep(.dropdown-select) {
+  padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  min-height: auto !important;
+  line-height: 1.4 !important;
+}
+
+.compact-dropdown :deep(.dropdown-label svg) {
+  margin-right: 0.5rem !important;
+}
+
+.compact-dropdown :deep(.dropdown-arrow) {
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+.compact-dropdown :deep(.dropdown-arrow svg) {
+  height: 0.75rem !important;
+  width: 0.75rem !important;
+}
+
+/* Couleurs spécifiques pour différents types de dropdowns */
+.game-dropdown :deep(.dropdown-label) {
+  color: rgba(var(--color-secondary-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-secondary-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.game-dropdown :deep(.dropdown-select) {
+  border-color: rgba(var(--color-secondary-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-secondary-rgb), 0.3) !important;
+}
+
+.game-dropdown :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--color-secondary-rgb), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-secondary-rgb), 0.5) !important;
+}
+
+.season-dropdown :deep(.dropdown-label) {
+  color: rgba(var(--color-accent-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.season-dropdown :deep(.dropdown-select) {
+  border-color: rgba(var(--color-accent-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.3) !important;
+}
+
+.season-dropdown :deep(.dropdown-select:hover) {
+  border-color: rgba(var(--color-accent-rgb), 0.8) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-accent-rgb), 0.5) !important;
+}
+
+/* Harmonisation de la taille de l'input avec les dropdowns */
+.compact-input :deep(input) {
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+  font-family: var(--font-body) !important;
+}
+
+.compact-input :deep(label) {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  font-family: var(--font-body) !important;
+  color: rgba(var(--color-text-rgb), 0.8) !important;
+}
+
+.compact-input :deep(.absolute.inset-y-0.left-0) {
+  padding-left: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  pointer-events: none !important;
+}
+
+.compact-input :deep(.absolute.inset-y-0.left-0 svg) {
+  height: 1rem !important;
+  width: 1rem !important;
+  color: rgba(var(--color-text-rgb), 0.6) !important;
+}
+
+.search-input :deep(label) {
+  color: rgba(var(--color-primary-rgb), 1) !important;
+  text-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.6) !important;
+  font-weight: 500 !important;
+}
+
+.search-input :deep(input) {
+  border-color: rgba(var(--color-primary-rgb), 0.5) !important;
+  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3) !important;
+}
+
+.search-input :deep(input:hover) {
+  border-color: rgba(var(--color-primary-rgb), 0.8) !important;
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4) !important;
+}
+
+.search-input :deep(input:focus) {
+  border-color: rgba(var(--color-primary-rgb), 1) !important;
+  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.6) !important;
 }
 </style>

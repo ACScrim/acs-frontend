@@ -44,7 +44,7 @@
         <div>
           <label for="gameFilter" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-primary-light flex items-center gap-2"
+              class="font-heading text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@
             <select
               id="gameFilter"
               v-model="selectedGameFilter"
-              class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-3 appearance-none focus:ring-2 focus:ring-space-primary/50 focus:outline-none transition-all duration-300 hover:border-space-primary/50"
+              class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-3 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:outline-none transition-all duration-300 hover:border-color-primary/50"
               @change="handleFilterChange"
             >
               <option value="all">Tous les jeux</option>
@@ -77,7 +77,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-primary"
+                class="h-5 w-5 text-color-primary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -146,7 +146,7 @@
                           ></div>
                         </div>
                         <div class="flex-1">
-                          <h3 class="text-space-text text-lg font-heading">
+                          <h3 class="text-color-text text-lg font-body">
                             {{ badge.title }}
                           </h3>
                           <SpaceBadge
@@ -1096,12 +1096,14 @@ onMounted(() => {
 
 .special-badge-legendary:hover::before {
   opacity: 0.2;
-  background: radial-gradient(circle, 
-    var(--space-primary) 0%, 
-    var(--space-gold) 25%, 
-    var(--space-secondary) 50%, 
-    var(--space-bronze) 75%, 
-    transparent 100%);
+  background: radial-gradient(
+    circle,
+    var(--color-primary) 0%,
+    var(--color-gold) 25%,
+    var(--color-secondary) 50%,
+    var(--color-bronze) 75%,
+    transparent 100%
+  );
   animation: legendary-glow 2s ease-in-out infinite alternate;
 }
 
@@ -1134,5 +1136,45 @@ onMounted(() => {
     transform: scale(1) rotate(360deg);
     filter: hue-rotate(360deg);
   }
+}
+
+/* Animations Halloween */
+@keyframes mystical-glow {
+  0% {
+    box-shadow: 0 0 20px var(--halloween-orange),
+      0 0 30px var(--halloween-orange), 0 0 40px var(--halloween-orange);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--halloween-rouge), 0 0 25px var(--halloween-rouge),
+      0 0 35px var(--halloween-rouge);
+  }
+  100% {
+    box-shadow: 0 0 20px var(--halloween-violet),
+      0 0 30px var(--halloween-violet), 0 0 40px var(--halloween-violet);
+  }
+}
+
+@keyframes pumpkin-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.02) rotate(180deg);
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+.badge-card:hover {
+  animation: pumpkin-pulse 2s ease-in-out infinite;
+}
+
+.special-badge-legendary {
+  animation: mystical-glow 3s ease-in-out infinite;
 }
 </style>

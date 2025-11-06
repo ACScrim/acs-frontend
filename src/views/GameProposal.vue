@@ -348,14 +348,14 @@
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
-        <h4 class="text-space-text text-lg font-heading mb-2">
+        <h4 class="text-color-text text-lg font-heading mb-2">
           {{ selectedProposal.name }}
         </h4>
         <div
           class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
         >
           <div>
-            <span class="text-space-secondary">Total:</span>
+            <span class="text-color-secondary">Total:</span>
             <span :class="getVoteCountClass(selectedProposal)">
               {{ getDisplayVoteCount(selectedProposal) }}
             </span>
@@ -463,7 +463,7 @@
               <p class="font-heading text-sm">
                 {{ getVoterName(vote) }}
               </p>
-              <p class="text-xs text-space-text-muted">
+              <p class="text-xs text-color-text-muted">
                 {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
               </p>
             </div>
@@ -703,9 +703,9 @@ const getDisplayVoteCount = (proposal: GameProposal) => {
 // Détermine les classes CSS pour l'affichage du nombre de votes
 const getVoteCountClass = (proposal: GameProposal) => {
   const count = getDisplayVoteCount(proposal);
-  if (count > 0) return "text-space-gold";
-  if (count < 0) return "text-space-error";
-  return "text-space-text";
+  if (count > 0) return "text-color-gold";
+  if (count < 0) return "text-color-error";
+  return "text-color-text";
 };
 
 // Récupère le nom d'un votant depuis un objet vote

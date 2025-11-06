@@ -51,7 +51,7 @@
         <div>
           <label for="member-search" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-primary-light flex items-center gap-2"
+              class="font-body text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,19 +68,18 @@
               Rechercher un membre
             </div>
           </label>
-          <SpaceInput
+          <Input
             id="member-search"
             v-model="searchTerm"
             placeholder="Nom, rôle..."
             variant="primary"
-            :stars="true"
           />
         </div>
 
         <!-- Filtre par rôle -->
         <div>
           <label for="role-filter" class="mb-3 flex items-center gap-2">
-            <div class="font-nasa text-space-accent flex items-center gap-2">
+            <div class="font-body text-color-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -100,7 +99,7 @@
             <select
               id="role-filter"
               v-model="roleFilter"
-              class="w-full rounded-lg border border-space-accent/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-accent/30 focus:outline-none transition-all duration-300"
+              class="w-full rounded-lg border border-color-accent/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-accent/30 focus:outline-none transition-all duration-300"
             >
               <option value="">Tous les rôles</option>
               <option value="user">Membres</option>
@@ -112,7 +111,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-accent"
+                class="h-5 w-5 text-color-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -132,7 +131,7 @@
         <div>
           <label for="sort-select" class="mb-3 flex items-center gap-2">
             <div
-              class="font-nasa text-space-secondary-light flex items-center gap-2"
+              class="font-body text-color-secondary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +150,7 @@
             <select
               id="sort-select"
               v-model="currentSort"
-              class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
+              class="w-full rounded-lg border border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/30 focus:outline-none transition-all duration-300"
             >
               <option
                 v-for="option in sortOptions"
@@ -166,7 +165,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-space-secondary"
+                class="h-5 w-5 text-color-secondary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -474,35 +473,43 @@ watch(currentSort, () => {
   margin-bottom: 1.5rem;
 }
 
-/* Style pour les filtres - optimisé */
+/* Styles pour les filtres Halloween */
 select {
-  background-color: rgba(30, 30, 45, 0.8);
-  border: 1px solid rgba(109, 40, 217, 0.3);
-  color: var(--space-text);
-  transition: border-color 0.15s ease;
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-primary-dark);
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
 }
 
 select:focus {
-  border-color: var(--space-secondary);
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 0 0 10px rgba(217, 119, 6, 0.2);
+  outline: none;
 }
 
-/* Suppression des animations coûteuses */
-.grid > * {
-  transition: none;
+select:hover {
+  border-color: var(--color-primary-light);
+  background: var(--color-bg-light);
 }
 
-/* Optimisation performance - désactivation des animations */
-.members-grid-container *,
-.members-grid-container *::before,
-.members-grid-container *::after {
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
+/* Grid responsive avec animations subtiles */
+.members-grid-container .grid > * {
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* Responsive design simplifié */
+.members-grid-container .grid > *:hover {
+  transform: translateY(-2px);
+}
+
+/* Options styling */
+option {
+  background: var(--color-bg-dark);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* Responsive design */
 @media (max-width: 640px) {
   .members-grid-container {
     margin-top: 1rem;
@@ -510,14 +517,23 @@ select:focus {
   }
 }
 
-/* Amélioration de l'accessibilité sans animations */
+/* Accessibilité améliorée */
 select:focus-visible {
-  outline: 2px solid var(--space-primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Performance optimisée */
-.grid {
-  contain: layout style;
+/* Amélioration des performances selon les préférences utilisateur */
+@media (prefers-reduced-motion: reduce) {
+  .members-grid-container .grid > *,
+  select {
+    transition: none;
+  }
+}
+
+/* Styles Halloween spéciaux pour les labels */
+label {
+  font-family: var(--font-heading);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 </style>
