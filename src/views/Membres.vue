@@ -45,7 +45,7 @@
     </Card>
 
     <!-- Recherche et filtres -->
-    <SpaceCard variant="dark" className="mb-6 mt-6">
+    <Card variant="dark" className="mb-6 mt-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Recherche -->
         <div>
@@ -194,7 +194,7 @@
           }}
           trouvé{{ searchResults.length > 1 ? "s" : "" }}
         </div>
-        <SpaceButton @click="resetFilters" variant="secondary" size="sm">
+        <Button @click="resetFilters" variant="secondary" size="sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4 mr-2"
@@ -208,9 +208,9 @@
             />
           </svg>
           Réinitialiser les filtres
-        </SpaceButton>
+        </Button>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- État de chargement -->
     <div v-if="memberStore.loading" class="flex justify-center py-12">
@@ -233,18 +233,18 @@
           />
         </svg>
         <p class="text-space-text mb-4">{{ memberStore.error }}</p>
-        <SpaceButton
+        <Button
           @click="memberStore.fetchMembers(true)"
           variant="error"
           size="sm"
         >
           Réessayer
-        </SpaceButton>
+        </Button>
       </div>
     </SpaceAlert>
 
     <!-- Liste vide -->
-    <SpaceTerminal
+    <Terminal
       v-else-if="sortedUsers.length === 0"
       :command="`find_users ${
         searchTerm ? '--search=\'' + searchTerm + '\'' : '--all'
@@ -260,18 +260,18 @@
         {{ emptyStateMessage }}
       </div>
       <div v-if="searchTerm || roleFilter" class="flex gap-3">
-        <SpaceButton @click="resetFilters" variant="primary" size="sm">
+        <Button @click="resetFilters" variant="primary" size="sm">
           Réinitialiser les filtres
-        </SpaceButton>
-        <SpaceButton
+        </Button>
+        <Button
           @click="memberStore.fetchMembers(true)"
           variant="secondary"
           size="sm"
         >
           Actualiser la liste
-        </SpaceButton>
+        </Button>
       </div>
-    </SpaceTerminal>
+    </Terminal>
     <!-- Liste des membres -->
     <div v-else class="members-grid-container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

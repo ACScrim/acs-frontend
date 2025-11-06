@@ -1,6 +1,6 @@
 <template>
   <div v-if="showInstallPrompt" class="fixed bottom-4 right-4 z-50">
-    <SpaceCard
+    <Card
       variant="primary"
       :stars="true"
       className="p-4 max-w-sm shadow-2xl"
@@ -32,17 +32,17 @@
           </p>
 
           <div class="flex space-x-2">
-            <SpaceButton
+            <Button
               @click="installApp"
               size="sm"
               variant="primary"
               :loading="installing"
             >
               Installer
-            </SpaceButton>
-            <SpaceButton @click="dismissPrompt" size="sm" variant="secondary">
+            </Button>
+            <Button @click="dismissPrompt" size="sm" variant="secondary">
               Plus tard
-            </SpaceButton>
+            </Button>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
           </svg>
         </button>
       </div>
-    </SpaceCard>
+    </Card>
   </div>
 </template>
 

@@ -1,13 +1,13 @@
 <template>
   <div class="space-header mb-8">
     <div class="space-header-content">
-      <SpaceTitle
+      <Title
         :size="titleSize"
         :decorated="decorated"
         class="space-header-title"
       >
         {{ title }}
-      </SpaceTitle>
+      </Title>
 
       <div v-if="showMissionInfo" class="space-header-coordinates">
         <div class="space-header-coordinates-item">
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import SpaceTitle from "../atoms/Title.vue";
+import Title from "../atoms/Title.vue";
 
 interface Props {
   title: string;

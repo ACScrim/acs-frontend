@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="GESTION DES NIVEAUX"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -31,9 +31,9 @@
           </div>
         </div>
       </template>
-    </SpaceHeader>
+    </Header>
     <!-- Panel de recherche et filtres -->
-    <SpaceCard
+    <Card
       variant="primary"
       :stars="true"
       :decorated="true"
@@ -53,7 +53,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg">Recherche et Filtres</SpaceTitle>
+          <Title size="lg">Recherche et Filtres</Title>
         </div>
       </template>
 
@@ -249,7 +249,7 @@
       <!-- Boutons d'action rapide et options d'affichage -->
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-2">
-          <SpaceButton @click="clearAllFilters" variant="outline" size="sm">
+          <Button @click="clearAllFilters" variant="outline" size="sm">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -265,7 +265,7 @@
               </svg>
             </template>
             Effacer les filtres
-          </SpaceButton>
+          </Button>
 
           <!-- Options de tri -->
           <SpaceDropdown v-model="sortBy" size="sm" placeholder="Trier par...">
@@ -350,10 +350,10 @@
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Résultats -->
-    <SpaceCard
+    <Card
       variant="secondary"
       :stars="true"
       :decorated="true"
@@ -372,7 +372,7 @@
                 d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"
               />
             </svg>
-            <SpaceTitle size="lg">
+            <Title size="lg">
               <span v-if="selectedTournamentId">
                 Joueurs du tournoi inscrits à
                 <span class="text-space-accent">{{ selectedGameName }}</span>
@@ -384,11 +384,11 @@
               <span v-else>
                 Tous les niveaux de jeux ({{ filteredPlayerLevels.length }})
               </span>
-            </SpaceTitle>
+            </Title>
           </div>
 
           <div v-if="filteredPlayerLevels.length > 0" class="flex items-center">
-            <SpaceButton
+            <Button
               @click="exportToCSV"
               variant="secondary"
               size="sm"
@@ -410,17 +410,17 @@
                 </svg>
               </template>
               Exporter
-            </SpaceButton>
+            </Button>
           </div>
         </div>
       </template>
 
       <!-- Loader -->
       <div v-if="loading" class="flex justify-center py-12">
-        <SpaceLoader size="lg" text="Analyse des niveaux de jeu en cours..." />
+        <Loader size="lg" text="Analyse des niveaux de jeu en cours..." />
       </div>
       <!-- Message quand aucun jeu n'est sélectionné -->
-      <SpaceTerminal
+      <Terminal
         v-else-if="
           !selectedGameId && filteredPlayerLevels.length === 0 && !searchTerm
         "
@@ -435,10 +435,10 @@
         <div class="text-space-text-muted mt-2">
           → Sélectionnez un jeu pour voir les niveaux des joueurs
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Aucun résultat pour la recherche -->
-      <SpaceTerminal
+      <Terminal
         v-else-if="filteredPlayerLevels.length === 0 && searchTerm"
         command="search --levels --query='${searchTerm}'"
         title="Recherche de joueurs"
@@ -454,10 +454,10 @@
         <div class="text-space-text-muted">
           → Recherche possible: nom d'utilisateur, pseudo Discord, pseudo de jeu
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Aucun résultat pour les filtres -->
-      <SpaceTerminal
+      <Terminal
         v-else-if="filteredPlayerLevels.length === 0"
         :command="`search --levels ${
           selectedGameId ? '--game=' + selectedGameId : ''
@@ -479,7 +479,7 @@
         <div class="text-space-text-muted">
           → Ou cliquez sur "Effacer les filtres" pour tout voir
         </div>
-      </SpaceTerminal>
+      </Terminal>
       <!-- Tableau des joueurs - Version desktop -->
       <div v-if="viewMode === 'table'" class="hidden md:block relative">
         <div
@@ -1192,7 +1192,7 @@
           @page-select="currentPage = $event"
         />
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Messages d'état -->
     <SpaceAlert

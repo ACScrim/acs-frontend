@@ -1,11 +1,11 @@
 <template>
   <div class="container mx-auto">
     <!-- Sélecteur d'onglets -->
-    <SpaceCard variant="dark" :decorated="true" className="mb-8">
+    <Card variant="dark" :decorated="true" className="mb-8">
       <div class="flex flex-col">
         <!-- Boutons d'onglets -->
         <div class="flex flex-wrap md:flex-nowrap justify-center gap-4">
-          <SpaceButton
+          <Button
             @click="activeTab = 'create'"
             :variant="activeTab === 'create' ? 'primary' : 'outline'"
             size="md"
@@ -27,9 +27,9 @@
               </svg>
             </template>
             Créer un Tournoi
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="activeTab = 'edit'"
             :variant="activeTab === 'edit' ? 'secondary' : 'outline'"
             size="md"
@@ -49,7 +49,7 @@
               </svg>
             </template>
             Modifier un Tournoi
-          </SpaceButton>
+          </Button>
         </div>
 
         <!-- Indicateur d'onglet actif -->
@@ -72,7 +72,7 @@
           ></div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Contenu de l'onglet actif avec animation de transition -->
     <div class="tab-content-wrapper">

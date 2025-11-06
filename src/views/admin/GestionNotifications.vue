@@ -1,20 +1,20 @@
 <template>
   <div class="container mx-auto p-4 pt-20">
-    <SpaceCard class="mb-4" :decorated="false" :stars="true">
+    <Card class="mb-4" :decorated="false" :stars="true">
       <template #header>
         <div class="flex items-center gap-4">
-          <SpaceCard variant="secondary" @click="tab = 'create'" :stars="tab === 'create'" :decorated="tab === 'create'"
+          <Card variant="secondary" @click="tab = 'create'" :stars="tab === 'create'" :decorated="tab === 'create'"
             class="flex-1 font-heading cursor-pointer">
             Créer une notification
-          </SpaceCard>
-          <SpaceCard variant="secondary" @click="tab = 'stats'" :stars="tab === 'stats'" :decorated="tab === 'stats'"
+          </Card>
+          <Card variant="secondary" @click="tab = 'stats'" :stars="tab === 'stats'" :decorated="tab === 'stats'"
             class="flex-1 font-heading cursor-pointer">
             Stats des notifications
-          </SpaceCard>
+          </Card>
         </div>
       </template>
-    </SpaceCard>
-    <SpaceCard v-if="tab === 'create'" variant="primary" :stars="true" :decorated="true">
+    </Card>
+    <Card v-if="tab === 'create'" variant="primary" :stars="true" :decorated="true">
       <template #header>
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
@@ -22,7 +22,7 @@
             <path
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
-          <SpaceTitle size="xl">Envoyer une notification</SpaceTitle>
+          <Title size="xl">Envoyer une notification</Title>
         </div>
       </template>
 
@@ -54,8 +54,8 @@
           {{ formMessage.message }}
         </p>
       </form>
-    </SpaceCard>
-    <SpaceCard v-else-if="tab === 'stats'" variant="primary" :stars="true" :decorated="true">
+    </Card>
+    <Card v-else-if="tab === 'stats'" variant="primary" :stars="true" :decorated="true">
       <template #header>
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
@@ -63,14 +63,14 @@
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v4z" />
           </svg>
-          <SpaceTitle size="xl">Statistiques des notifications</SpaceTitle>
+          <Title size="xl">Statistiques des notifications</Title>
         </div>
       </template>
 
       <!-- Métriques globales -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" v-if="stats">
         <!-- Total des notifications envoyées -->
-        <SpaceCard variant="dark" className="text-center">
+        <Card variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-3xl font-bold text-space-primary mb-2">{{ stats.total || 0 }}</div>
             <div class="text-space-text-muted text-sm">Total envoyée{{ stats.total > 1 ? "s" : "" }}</div>
@@ -78,10 +78,10 @@
               <span class="text-space-success">+{{ stats.totalThisWeek || 0 }} cette semaine</span>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
         <!-- Utilisateurs abonnés -->
-        <SpaceCard variant="dark" className="text-center">
+        <Card variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-3xl font-bold text-space-secondary mb-2">{{ stats.subscribedUsers || 0 }}</div>
             <div class="text-space-text-muted text-sm">Utilisateur{{ stats.subscribedUsers > 1 ? "s" : "" }} abonné{{ stats.subscribedUsers > 1 ? "s" : "" }}</div>
@@ -89,10 +89,10 @@
               <span class="text-space-warning">+{{ stats.newSubscribersThisWeek || 0 }} cette semaine</span>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
         <!-- Taux de délivrance -->
-        <SpaceCard variant="dark" className="text-center">
+        <Card variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-3xl font-bold text-space-accent mb-2">{{ stats.deliveryRate || 0 }}%</div>
             <div class="text-space-text-muted text-sm">Taux de délivrance</div>
@@ -103,10 +103,10 @@
               ></div>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
         <!-- Type le plus populaire -->
-        <SpaceCard variant="dark" className="text-center">
+        <Card variant="dark" className="text-center">
           <div class="p-4">
             <div class="text-2xl font-bold text-space-primary mb-2">{{ stats.topType || 'N/A' }}</div>
             <div class="text-space-text-muted text-sm">Type le plus populaire</div>
@@ -114,7 +114,7 @@
               {{ stats.topTypeCount || 0 }} notification{{ (stats.topTypeCount || 0) > 1 ? 's' : '' }}
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
 
       <!-- Notifications par type -->
@@ -127,7 +127,7 @@
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Tournois -->
-          <SpaceCard variant="dark" className="transform transition-all hover:scale-105 duration-200">
+          <Card variant="dark" className="transform transition-all hover:scale-105 duration-200">
             <div class="p-4">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center">
@@ -154,10 +154,10 @@
                 {{ getTypePercentage('tournaments') }}% du total
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Badges -->
-          <SpaceCard variant="dark" className="transform transition-all hover:scale-105 duration-200">
+          <Card variant="dark" className="transform transition-all hover:scale-105 duration-200">
             <div class="p-4">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center">
@@ -184,10 +184,10 @@
                 {{ getTypePercentage('badges') }}% du total
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Rappels -->
-          <SpaceCard variant="dark" className="transform transition-all hover:scale-105 duration-200">
+          <Card variant="dark" className="transform transition-all hover:scale-105 duration-200">
             <div class="p-4">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center">
@@ -214,10 +214,10 @@
                 {{ getTypePercentage('reminders') }}% du total
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Système -->
-          <SpaceCard variant="dark" className="transform transition-all hover:scale-105 duration-200">
+          <Card variant="dark" className="transform transition-all hover:scale-105 duration-200">
             <div class="p-4">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center">
@@ -244,7 +244,7 @@
                 {{ getTypePercentage('system') }}% du total
               </div>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
       </div>
 
@@ -351,14 +351,14 @@
           {{ loadingStats ? 'Actualisation...' : 'Actualiser' }}
         </button>
       </div>
-    </SpaceCard>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import SpaceCard from '../../components/ui/molecules/Card.vue';
+import Card from '../../components/ui/molecules/Card.vue';
 import { notificationService, type NotificationType } from '../../services/notificationService';
 
 const router = useRouter();

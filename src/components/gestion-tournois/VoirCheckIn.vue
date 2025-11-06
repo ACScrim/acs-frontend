@@ -2,7 +2,7 @@
   <div
     class="p-8 bg-gray-900/70 border border-purple-500/30 rounded-xl shadow-lg shadow-purple-500/20 backdrop-blur-md relative overflow-hidden"
   >
-    <SpaceHeader
+    <Header
       title="STATUT DES CHECK-INS"
       :decorated="true"
       mission="CHECKIN-STATUS-2025"
@@ -14,9 +14,9 @@
           }}
         </SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
     <!-- Information du tournoi sélectionné -->
-    <SpaceCard variant="primary" :stars="true" className="mb-6">
+    <Card variant="primary" :stars="true" className="mb-6">
       <template #header>
         <div class="flex items-center gap-3">
           <svg
@@ -31,7 +31,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+          <Title size="lg">Tournoi sélectionné</Title>
         </div>
       </template>
 
@@ -71,9 +71,9 @@
           Veuillez sélectionner un tournoi dans le menu en haut de la page
         </SpaceAlert>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Détails du tournoi et statuts des check-ins -->
-    <SpaceCard
+    <Card
       v-if="selectedTournamentDetails"
       variant="secondary"
       :stars="true"
@@ -81,9 +81,9 @@
     >
       <template #header>
         <div class="flex flex-col gap-4">
-          <SpaceTitle size="xl" :decorated="true">
+          <Title size="xl" :decorated="true">
             {{ selectedTournamentDetails.name }}
-          </SpaceTitle>
+          </Title>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="flex flex-col">
               <span class="text-space-text-muted text-sm">Date</span>
@@ -138,7 +138,7 @@
 
       <!-- Grille des joueurs -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <SpaceCard
+        <Card
           v-for="player in selectedTournamentDetails.players"
           :key="player._id"
           variant="dark"
@@ -239,7 +239,7 @@
               </div>
 
               <!-- Bouton de check-in -->
-              <SpaceButton
+              <Button
                 @click="player._id ? togglePlayerCheckIn(player._id) : null"
                 :variant="
                   player._id &&
@@ -256,15 +256,15 @@
                     ? "Annuler le check-in"
                     : "Marquer présent"
                 }}
-              </SpaceButton>
+              </Button>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
 
       <template #footer>
         <div class="flex justify-center">
-          <SpaceButton
+          <Button
             @click="() => fetchTournamentDetails()"
             variant="primary"
             size="lg"
@@ -284,21 +284,21 @@
               </svg>
             </template>
             Rafraîchir les statuts
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceCard>
+    </Card>
     <!-- États vides ou chargement -->
-    <SpaceCard
+    <Card
       v-else-if="selectedTournament && !selectedTournamentDetails"
       variant="dark"
       :stars="true"
       className="text-center py-12"
     >
-      <SpaceLoader text="Chargement des informations du tournoi..." />
-    </SpaceCard>
+      <Loader text="Chargement des informations du tournoi..." />
+    </Card>
 
-    <SpaceCard
+    <Card
       v-else-if="tournaments.length > 0 && !selectedTournament"
       variant="dark"
       :stars="true"
@@ -318,13 +318,13 @@
             clip-rule="evenodd"
           />
         </svg>
-        <SpaceTitle size="lg" className="text-space-text-muted">
+        <Title size="lg" className="text-space-text-muted">
           Veuillez sélectionner un tournoi pour voir les statuts des check-ins
-        </SpaceTitle>
+        </Title>
       </div>
-    </SpaceCard>
+    </Card>
 
-    <SpaceCard
+    <Card
       v-else-if="selectedGame && tournaments.length === 0"
       variant="dark"
       :stars="true"
@@ -343,11 +343,11 @@
             clip-rule="evenodd"
           />
         </svg>
-        <SpaceTitle size="lg" className="text-space-text-muted">
+        <Title size="lg" className="text-space-text-muted">
           Aucun tournoi actif pour ce jeu
-        </SpaceTitle>
+        </Title>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Toast spatial pour les notifications -->
     <Toast v-if="toast.show" :type="toast.type" :message="toast.message" />
   </div>

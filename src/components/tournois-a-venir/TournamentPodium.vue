@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <SpaceCard variant="primary" :stars="true" :decorated="true" className="relative overflow-hidden">
+    <Card variant="primary" :stars="true" :decorated="true" className="relative overflow-hidden">
       <!-- En-tête avec titre -->
       <div class="flex items-center mb-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-space-accent" viewBox="0 0 20 20"
@@ -8,7 +8,7 @@
           <path
             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
-        <SpaceTitle size="xl" decorated>Classement final</SpaceTitle>
+        <Title size="xl" decorated>Classement final</Title>
       </div>
 
       <!-- Podium -->
@@ -61,7 +61,7 @@
               {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(2)" :key="team._id" variant="secondary"
+              <Card v-for="team in getTeamsByRank(2)" :key="team._id" variant="secondary"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -77,7 +77,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
               {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(1)" :key="team._id" variant="accent"
+              <Card v-for="team in getTeamsByRank(1)" :key="team._id" variant="accent"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -104,7 +104,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -115,7 +115,7 @@
               {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
             </h4>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(3)" :key="team._id" variant="primary"
+              <Card v-for="team in getTeamsByRank(3)" :key="team._id" variant="primary"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -131,7 +131,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(1)" :key="team._id" variant="accent"
+              <Card v-for="team in getTeamsByRank(1)" :key="team._id" variant="accent"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -170,7 +170,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -185,7 +185,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(2)" :key="team._id" variant="secondary"
+              <Card v-for="team in getTeamsByRank(2)" :key="team._id" variant="secondary"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -202,7 +202,7 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
 
@@ -217,7 +217,7 @@
               }}
             </h5>
             <div class="space-y-2">
-              <SpaceCard v-for="team in getTeamsByRank(3)" :key="team._id" variant="primary"
+              <Card v-for="team in getTeamsByRank(3)" :key="team._id" variant="primary"
                 className="transform transition hover:scale-105">
                 <h5 class="font-heading text-base truncate text-center">
                   {{ team.name }}
@@ -233,15 +233,15 @@
                     <span class="truncate">{{ player.username }}</span>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
           </div>
         </div>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Autres classements -->
-    <SpaceCard variant="dark" :stars="true" className="relative overflow-hidden">
+    <Card variant="dark" :stars="true" className="relative overflow-hidden">
       <!-- En-tête dépliable -->
       <button @click="handleToggleOtherRankings"
         class="w-full text-left p-4 rounded-lg border border-space-bg-light/50 flex justify-between items-center hover:bg-space-bg-light/10 transition-colors">
@@ -358,30 +358,30 @@
         </div>
 
         <!-- Message s'il n'y a pas d'équipes classées au-delà du podium -->
-        <SpaceTerminal v-if="
+        <Terminal v-if="
           !(tournament.teams ?? []).some((t) => t.ranking > 3) &&
           !(tournament.teams ?? []).some((t) => !t.ranking || t.ranking === 0)
         " command="search --teams beyond-podium" title="Recherche d'équipes" :showCursor="true">
           <div class="text-space-text-muted">
             Pas d'autres équipes classées au-delà du podium.
           </div>
-        </SpaceTerminal>
+        </Terminal>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Votes MVPS -->
-    <SpaceCard v-if="tournament.mvpVoteOpen">
+    <Card v-if="tournament.mvpVoteOpen">
       <template #header>
         <div class="flex flex-row justify-between items-center">
-          <SpaceTitle size="xl" class="uppercase">Vote pour le mvp</SpaceTitle>
-          <SpaceButton v-if="user?.role === 'admin' || user?.role === 'superadmin'" class="bg-red-500!"
+          <Title size="xl" class="uppercase">Vote pour le mvp</Title>
+          <Button v-if="user?.role === 'admin' || user?.role === 'superadmin'" class="bg-red-500!"
             @click="handleCloseVote()">
             Fermer le vote
-          </SpaceButton>
+          </Button>
         </div>
       </template>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
-        <SpaceCard v-for="player in tournament.players">
+        <Card v-for="player in tournament.players">
           <div class="flex flex-row justify-between items-center">
             <p class="w-auto">
               {{ player.username }}
@@ -395,16 +395,16 @@
             </Button>
           </div>
 
-        </SpaceCard>
+        </Card>
       </div>
-    </SpaceCard>
-    <SpaceCard v-else-if="tournament.mvps && tournament.mvps.length > 0">
+    </Card>
+    <Card v-else-if="tournament.mvps && tournament.mvps.length > 0">
       <template #header>
         <Title size="xl" class="uppercase">MVP du tournoi</Title>
       </template>
 
       <div v-for="mvp in tournament.mvps?.filter(mvp => mvp.isMvp)" class="py-4">
-        <SpaceCard variant="primary" :stars="true" :decorated="true" className="overflow-hidden">
+        <Card variant="primary" :stars="true" :decorated="true" className="overflow-hidden">
           <!-- Structure simplifiée : tout centré -->
           <div class="text-center">
             <!-- Avatar centré -->
@@ -421,7 +421,7 @@
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
+            <Title size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
               mvp.player.username.length > 15
                 ? 'text-2xl sm:text-4xl'
                 : mvp.player.username.length > 10
@@ -429,16 +429,16 @@
                   : 'text-4xl sm:text-5xl',
             ]">
               {{ mvp.player.username }}
-            </SpaceTitle>
+            </Title>
 
             <!-- Barre parfaitement centrée sous le nom -->
             <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
             <p class="text-center text-space-primary-light text-lg">Gagnant avec <b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
       <div class="hidden sm:flex flex-row gap-x-10">
-        <SpaceCard
+        <Card
           v-for="mvp in tournament.mvps?.filter(mvp => !mvp.isMvp).sort((a,b) => b.votes.length - a.votes.length).slice(0, 3)"
           variant="primary" :stars="true" :decorated="true" className="overflow-hidden basis-1/3">
           <div class="text-center">
@@ -470,9 +470,9 @@
             <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
             <p class="text-center text-space-primary-light text-lg"><b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
-    </SpaceCard>
+    </Card>
     <TournamentClip
       :tournament="tournament"
       :player="tournament.players.find(p => p.userId === user?._id) || null"

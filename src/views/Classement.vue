@@ -158,7 +158,7 @@
 
       <!-- État de chargement -->
       <div v-if="isLoading" class="flex justify-center py-12">
-        <SpaceLoader text="Chargement du classement..." />
+        <Loader text="Chargement du classement..." />
       </div>
 
       <!-- Message si aucun résultat -->
@@ -345,7 +345,7 @@
                 >Trier par:</span
               >
               <!-- Boutons de tri -->
-              <SpaceButton
+              <Button
                 @click="sortBy('username')"
                 variant="ghost"
                 size="xs"
@@ -361,8 +361,8 @@
                       : "▼"
                     : ""
                 }}
-              </SpaceButton>
-              <SpaceButton
+              </Button>
+              <Button
                 @click="sortBy('totalVictories')"
                 variant="ghost"
                 size="xs"
@@ -380,7 +380,7 @@
                       : "▼"
                     : ""
                 }}
-              </SpaceButton>
+              </Button>
             </div>
           </div>
 

@@ -2,11 +2,11 @@
   <div class="container mx-auto p-4 pt-20">
     <!-- Form -->
     <form action="" @submit.prevent="handleSubmit">
-      <SpaceCard variant="dark" :stars="true" class="mb-6">
+      <Card variant="dark" :stars="true" class="mb-6">
         <div class="space-y-4">
-          <SpaceTitle size="lg" class="text-space-primary-light">
+          <Title size="lg" class="text-space-primary-light">
             Quel type de message ?
-          </SpaceTitle>
+          </Title>
 
           <!-- Boutons radio avec design spatial -->
           <div class="flex flex-col sm:flex-row gap-4">
@@ -109,12 +109,12 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
-      <SpaceCard variant="dark" :stars="true" class="mb-6" v-if="selectedMessageType === 'channel'">
+      </Card>
+      <Card variant="dark" :stars="true" class="mb-6" v-if="selectedMessageType === 'channel'">
         <div class="space-y-4">
-          <SpaceTitle size="lg" class="text-space-primary-light">
+          <Title size="lg" class="text-space-primary-light">
             Dans quel salon ?
-          </SpaceTitle>
+          </Title>
 
           <select name="channel" id="channel" class="w-full" v-model="selectedChannel" required>
             <option value="null">Choisir un salon</option>
@@ -123,13 +123,13 @@
 
           <p v-if="errors['channel']" class="text-red-400">{{ errors['channel'] }}</p>
         </div>
-      </SpaceCard>
-      <SpaceCard variant="dark" :stars="true" class="mb-6 relative overflow-visible"
+      </Card>
+      <Card variant="dark" :stars="true" class="mb-6 relative overflow-visible"
         v-if="selectedMessageType === 'private'">
         <div class="space-y-4">
-          <SpaceTitle size="lg" class="text-space-primary-light">
+          <Title size="lg" class="text-space-primary-light">
             À qui ?
-          </SpaceTitle>
+          </Title>
 
           <div class="relative" id="list-users">
             <!-- Container principal avec apparence de select -->
@@ -212,17 +212,17 @@
           </div>
           <p v-if="errors['members']" class="text-red-400">{{ errors['members'] }}</p>
         </div>
-      </SpaceCard>
-      <SpaceCard 
+      </Card>
+      <Card 
         variant="dark" 
         :stars="true" 
         class="mb-6"
         :class="isDropdownOpen ? '-z-10' : 'z-0'"
       >
         <div class="space-y-4">
-          <SpaceTitle size="lg" class="text-space-primary-light">
+          <Title size="lg" class="text-space-primary-light">
             Ton message ?
-          </SpaceTitle>
+          </Title>
           <label for="discordContent" class="sr-only" id="area-title">Message à envoyer</label>
           <textarea 
             aria-labelledby="area-title" 
@@ -236,11 +236,11 @@
           </textarea>
           <p v-if="errors['message']" class="text-red-400">{{ errors['message'] }}</p>
         </div>
-      </SpaceCard>
+      </Card>
       <div class="w-full flex items-center justify-center">
-        <SpaceButton>
+        <Button>
           Envoyer le message
-        </SpaceButton>
+        </Button>
       </div>
     </form>
   </div>

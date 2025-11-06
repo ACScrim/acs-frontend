@@ -20,7 +20,7 @@
  * Usage :
  * ```vue
  * <SpaceContainer>
- *   <SpaceHeader title="TITRE DE LA PAGE" />
+ *   <Header title="TITRE DE LA PAGE" />
  *   <!-- Contenu de la page -->
  * </SpaceContainer>
  * ```

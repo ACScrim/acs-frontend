@@ -1,5 +1,5 @@
 <template>
-  <SpaceCard
+  <Card
     variant="primary"
     :interactive="true"
     :stars="true"
@@ -102,7 +102,7 @@
           </div>
           <!-- Système de vote -->
           <div class="flex items-center space-x-4" @click.stop>
-            <SpaceButton
+            <Button
               @click="handleVote(1)"
               size="sm"
               :variant="getVoteButtonVariant(1)"
@@ -123,7 +123,7 @@
                   d="M5 15l7-7 7 7"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
 
             <span
               class="text-lg font-mono font-bold"
@@ -132,7 +132,7 @@
               {{ displayVoteCount }}
             </span>
 
-            <SpaceButton
+            <Button
               @click="handleVote(-1)"
               size="sm"
               :variant="getVoteButtonVariant(-1)"
@@ -153,7 +153,7 @@
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
-            </SpaceButton>
+            </Button>
           </div>
         </div>
         <!-- Actions admin -->
@@ -164,7 +164,7 @@
         >
           <!-- Actions sur les propositions en attente -->
           <template v-if="proposal.status === 'pending'">
-            <SpaceButton
+            <Button
               @click="$emit('approve', proposal._id)"
               variant="success"
               size="sm"
@@ -184,11 +184,11 @@
                 />
               </svg>
               Approuver
-            </SpaceButton>
+            </Button>
           </template>
 
           <!-- Bouton de suppression (pour toutes les propositions) -->
-          <SpaceButton
+          <Button
             @click="$emit('delete', proposal._id)"
             variant="ghost"
             size="sm"
@@ -208,11 +208,11 @@
               />
             </svg>
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </div>
     </div>
-  </SpaceCard>
+  </Card>
 </template>
 
 <script setup lang="ts">

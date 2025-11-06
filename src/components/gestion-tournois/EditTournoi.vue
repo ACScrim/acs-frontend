@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-8">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="MODIFICATION DE TOURNOI"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -9,7 +9,7 @@
     />
 
     <!-- Formulaire principal -->
-    <SpaceCard
+    <Card
       variant="primary"
       :stars="true"
       :decorated="true"
@@ -371,7 +371,7 @@
 
         <!-- Liste d'attente des joueurs (si présente) -->
         <div v-if="waitlistPlayers.length > 0" class="mt-6">
-          <SpaceCard variant="accent" :stars="true" className="mb-4">
+          <Card variant="accent" :stars="true" className="mb-4">
             <template #header>
               <div class="flex items-center gap-2">
                 <svg
@@ -384,9 +384,9 @@
                     d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                   />
                 </svg>
-                <SpaceTitle size="md">
+                <Title size="md">
                   Liste d'attente ({{ waitlistPlayers.length }} joueurs)
-                </SpaceTitle>
+                </Title>
               </div>
             </template>
 
@@ -403,7 +403,7 @@
                   <span class="text-xs text-space-text-muted font-mono">
                     {{ formatWaitingTime(player._id || "") }}
                   </span>
-                  <SpaceButton
+                  <Button
                     @click="promotePlayer(player)"
                     variant="success"
                     size="sm"
@@ -424,11 +424,11 @@
                         />
                       </svg>
                     </template>
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
         </div>
         <!-- Sélection des joueurs -->
 
@@ -518,7 +518,7 @@
         </div>
         <!-- Boutons d'action -->
         <div class="flex flex-wrap gap-4 mt-8 justify-center">
-          <SpaceButton type="submit" variant="primary" size="lg" icon>
+          <Button type="submit" variant="primary" size="lg" icon>
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -532,9 +532,9 @@
               </svg>
             </template>
             Modifier le Tournoi
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             v-if="selectedTournament"
             type="button"
             @click="confirmDeleteTournament"
@@ -557,10 +557,10 @@
               </svg>
             </template>
             Supprimer le Tournoi
-          </SpaceButton>
+          </Button>
         </div>
       </form>
-    </SpaceCard>
+    </Card>
 
     <!-- Notifications -->
     <Toast v-if="error" type="error" :message="error" />
@@ -600,21 +600,21 @@
 
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton
+          <Button
             @click="showConfirmationDialog = false"
             variant="outline"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteTournament"
             variant="error"
             size="md"
             :loading="false"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

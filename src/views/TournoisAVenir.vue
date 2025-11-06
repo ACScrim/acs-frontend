@@ -1,7 +1,7 @@
 <template>
-  <Container>
+  <SpaceContainer>
     <!-- En-tête de la page avec style NASA -->
-    <SpaceHeader
+    <Header
       title="TOURNOIS À VENIR"
       mission="TOURNAMENTS-EXPLORER"
       :showMissionInfo="true"
@@ -11,11 +11,11 @@
           {{ filteredTournaments.length }}
         </SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Filtres -->
-      <SpaceCard variant="dark" className="mb-6">
+      <Card variant="dark" className="mb-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <!-- Sélecteur de jeux -->
           <div class="space-y-4">
@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Notification pour les utilisateurs non connectés - placée en dehors de la carte des filtres -->
       <SpaceAlert v-if="!user" variant="info" className="mb-6">
@@ -125,7 +125,7 @@
           <span class="text-xs text-space-text-muted mt-1"
             >Connectez-vous pour vous inscrire aux tournois</span
           >
-          <SpaceButton
+          <Button
             @click="loginWithDiscord"
             variant="primary"
             size="sm"
@@ -142,7 +142,7 @@
               />
             </svg>
             Connexion
-          </SpaceButton>
+          </Button>
         </div>
       </SpaceAlert>
 
@@ -152,7 +152,7 @@
 
       <!-- Affichage du loader pendant le chargement -->
       <div v-if="isLoading" class="flex justify-center py-12">
-        <SpaceLoader text="Transmission des données en cours..." />
+        <Loader text="Transmission des données en cours..." />
       </div>
 
       <!-- Liste des tournois -->
@@ -190,7 +190,7 @@
       </div>
 
       <!-- Message pas de tournois -->
-      <SpaceTerminal
+      <Terminal
         v-else
         command="list_tournaments --all"
         title="SYSTÈME DE RECHERCHE"
@@ -204,7 +204,7 @@
           Essayez de modifier vos critères de recherche ou revenez plus tard
           lorsque de nouveaux tournois seront programmés.
         </div>
-      </SpaceTerminal>
+      </Terminal>
     </div>
 
     <!-- Modal de niveau requis -->
@@ -222,27 +222,27 @@
           matchmaking. Vous pouvez:
         </p>
         <div class="space-y-3 mt-4">
-          <SpaceButton
+          <Button
             @click="goToLevelDefinition"
             variant="primary"
             className="w-full"
           >
             Définir mon niveau maintenant
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="registerWithoutLevel"
             variant="outline"
             className="w-full"
           >
             S'inscrire sans définir de niveau
-          </SpaceButton>
+          </Button>
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton @click="closeLevelPrompt" variant="ghost" size="sm">
+          <Button @click="closeLevelPrompt" variant="ghost" size="sm">
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -311,10 +311,10 @@
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <SpaceButton @click="closePopup" variant="outline" size="sm">
+          <Button @click="closePopup" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="confirmAction"
             :variant="
               actionType === 'unregister' ||
@@ -324,11 +324,11 @@
             "
           >
             Confirmer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
-  </Container>
+  </SpaceContainer>
 </template>
 
 <script setup lang="ts">

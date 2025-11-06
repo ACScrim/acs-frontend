@@ -65,7 +65,7 @@
         </div>
 
         <!-- Bouton de connexion Discord -->
-        <SpaceButton
+        <Button
           v-if="!user"
           @click="loginWithDiscord"
           variant="primary"
@@ -85,7 +85,7 @@
             </svg>
           </template>
           Connexion via Discord
-        </SpaceButton>
+        </Button>
         <!-- Badge de bienvenue stylisé différemment -->
         <div
           v-else
@@ -143,7 +143,7 @@
         class="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6"
       >
         <!-- Prochain tournoi -->
-        <SpaceCard
+        <Card
           variant="primary"
           :stars="true"
           :decorated="true"
@@ -166,7 +166,7 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                <SpaceTitle size="xl">PROCHAIN TOURNOI</SpaceTitle>
+                <Title size="xl">PROCHAIN TOURNOI</Title>
               </div>
               <SpaceBadge
                 :variant="isTournamentLive ? 'error' : 'warning'"
@@ -179,7 +179,7 @@
           </template>
 
           <div v-if="isLoading">
-            <SpaceLoader text="Chargement des données..." />
+            <Loader text="Chargement des données..." />
           </div>
           <div v-else-if="nextTournament" class="space-y-3">
             <TournamentCard :tournament="nextTournament" variant="primary">
@@ -287,7 +287,7 @@
                       : { name: 'TournoisAVenir' }
                   "
                 >
-                  <SpaceButton variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm">
                     <template #icon>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -305,12 +305,12 @@
                       </svg>
                     </template>
                     {{ nextTournament ? "Voir" : "Tous les tournois" }}
-                  </SpaceButton>
+                  </Button>
                 </router-link>
               </div>
             </div>
             <!-- Timer animé -->
-            <SpaceCard
+            <Card
               variant="dark"
               className="mt-3 py-1 px-2 max-w-xs mx-auto"
             >
@@ -320,11 +320,11 @@
                 Commence dans:
               </div>
               <CountdownTimer :units="countdownUnits" variant="primary" />
-            </SpaceCard>
+            </Card>
           </div>
 
           <div v-else>
-            <SpaceTerminal
+            <Terminal
               command="find_next_tournament"
               title="SYSTÈME DE TOURNOIS"
               :showCursor="true"
@@ -336,19 +336,19 @@
               <div class="text-space-text-muted mt-2">
                 Consultez la page des tournois pour plus d'informations.
               </div>
-            </SpaceTerminal>
+            </Terminal>
 
             <div class="flex justify-center mt-4">
               <router-link :to="{ name: 'TournoisAVenir' }">
-                <SpaceButton variant="secondary" size="sm">
+                <Button variant="secondary" size="sm">
                   Voir tous les tournois
-                </SpaceButton>
+                </Button>
               </router-link>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
         <!-- Dernier tournoi terminé -->
-        <SpaceCard
+        <Card
           variant="secondary"
           :stars="true"
           :decorated="true"
@@ -371,14 +371,14 @@
                     d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                <SpaceTitle size="xl">DERNIER TOURNOI</SpaceTitle>
+                <Title size="xl">DERNIER TOURNOI</Title>
               </div>
               <SpaceBadge variant="success" size="md"> TERMINÉ </SpaceBadge>
             </div>
           </template>
 
           <div v-if="isLoading">
-            <SpaceLoader text="Chargement des résultats..." />
+            <Loader text="Chargement des résultats..." />
           </div>
           <div v-else-if="lastFinishedTournament" class="space-y-3">
             <TournamentCard
@@ -396,7 +396,7 @@
             <div class="space-y-3">
               <div class="text-sm text-space-text font-nasa mb-2">Podium:</div>
               <div class="space-y-2">
-                <SpaceCard
+                <Card
                   v-for="(team, index) in podiumTeams"
                   :key="team._id"
                   variant="dark"
@@ -502,7 +502,7 @@
                       </SpaceBadge>
                     </div>
                   </div>
-                </SpaceCard>
+                </Card>
               </div>
             </div>
             <div class="flex justify-between items-center">
@@ -536,7 +536,7 @@
                     : { name: 'TournoisAVenir' }
                 "
               >
-                <SpaceButton variant="secondary" size="sm">
+                <Button variant="secondary" size="sm">
                   <template #icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -554,13 +554,13 @@
                     </svg>
                   </template>
                   {{ lastFinishedTournament ? "Détails" : "Tous les tournois" }}
-                </SpaceButton>
+                </Button>
               </router-link>
             </div>
           </div>
 
           <div v-else>
-            <SpaceTerminal
+            <Terminal
               command="find_finished_tournaments"
               title="SYSTÈME DE TOURNOIS"
               :showCursor="true"
@@ -573,9 +573,9 @@
                 Les résultats des tournois seront affichés ici lorsqu'ils seront
                 disponibles.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </div>
 

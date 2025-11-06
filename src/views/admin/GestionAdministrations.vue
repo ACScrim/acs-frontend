@@ -2,7 +2,7 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-6xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         title="Gestion des Administrateurs"
         titleSize="3xl"
         :showMissionInfo="true"
@@ -13,10 +13,10 @@
             users.length
           }}</SpaceBadge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Barre de recherche -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -46,10 +46,10 @@
             className="pl-10"
           />
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Tableau des utilisateurs -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -68,7 +68,7 @@
                   d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
                 />
               </svg>
-              <SpaceTitle size="xl">Liste des administrateurs</SpaceTitle>
+              <Title size="xl">Liste des administrateurs</Title>
             </div>
           </div>
         </template>
@@ -183,7 +183,7 @@
               </div>
 
               <!-- Bouton de suppression -->
-              <SpaceButton
+              <Button
                 @click="confirmDeleteUser(user)"
                 variant="error"
                 size="sm"
@@ -207,13 +207,13 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-              </SpaceButton>
+              </Button>
             </div>
           </div>
 
           <!-- Message si aucun utilisateur trouvé -->
           <div v-if="filteredUsers.length === 0" class="py-10">
-            <SpaceTerminal
+            <Terminal
               command="search --users"
               title="Recherche d'utilisateurs"
               :showCursor="true"
@@ -221,14 +221,14 @@
               <div class="text-space-text-muted">
                 Aucun utilisateur ne correspond à votre recherche
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Statistiques -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
             <div class="text-3xl text-space-text font-nasa mb-2">
               {{ users.length }}
@@ -237,9 +237,9 @@
               Utilisateurs total
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
             <div class="text-3xl text-space-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "admin").length }}
@@ -248,9 +248,9 @@
               Administrateurs
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
-        <SpaceCard variant="primary" :noPadding="false" className="p-5">
+        <Card variant="primary" :noPadding="false" className="p-5">
           <div class="text-center">
             <div class="text-3xl text-space-text font-nasa mb-2">
               {{ users.filter((u) => u.role === "superadmin").length }}
@@ -259,7 +259,7 @@
               Superadmins
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
       <!-- Notifications -->
       <Toast v-if="error" type="error" :message="error" />
@@ -277,17 +277,17 @@
       </div>
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton @click="cancelDelete" variant="outline" size="sm">
+          <Button @click="cancelDelete" variant="outline" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteUser"
             variant="error"
             size="sm"
             :loading="isDeleting"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

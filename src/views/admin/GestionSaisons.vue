@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-8 pt-20">
     <!-- En-tête -->
-    <SpaceHeader
+    <Header
       title="GESTION DES SAISONS"
       titleSize="3xl"
       :showMissionInfo="true"
@@ -16,14 +16,14 @@
           {{ seasons.length }}
         </SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Layout principal avec deux colonnes -->
     <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
       <!-- Colonne de gauche : Gestion des saisons -->
       <div class="xl:col-span-5">
         <!-- Formulaire de création de saison -->
-        <SpaceCard
+        <Card
           variant="primary"
           :stars="true"
           :decorated="true"
@@ -43,11 +43,11 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <SpaceTitle size="md">
+              <Title size="md">
                 {{
                   isEditing ? "Modifier la saison" : "Créer une nouvelle saison"
                 }}
-              </SpaceTitle>
+              </Title>
             </div>
           </template>
 
@@ -81,15 +81,15 @@
             </div>
 
             <div class="flex justify-end space-x-3">
-              <SpaceButton
+              <Button
                 v-if="isEditing"
                 @click="cancelEdit"
                 variant="outline"
                 size="sm"
               >
                 Annuler
-              </SpaceButton>
-              <SpaceButton
+              </Button>
+              <Button
                 type="submit"
                 variant="primary"
                 size="md"
@@ -110,13 +110,13 @@
                   </svg>
                 </template>
                 {{ isEditing ? "Enregistrer" : "Créer" }}
-              </SpaceButton>
+              </Button>
             </div>
           </form>
-        </SpaceCard>
+        </Card>
 
         <!-- Liste des saisons -->
-        <SpaceCard variant="secondary" :stars="true" :decorated="true">
+        <Card variant="secondary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center justify-between">
               <div class="flex items-center">
@@ -130,16 +130,16 @@
                     d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                   />
                 </svg>
-                <SpaceTitle size="md">Saisons</SpaceTitle>
+                <Title size="md">Saisons</Title>
               </div>
             </div>
           </template>
 
           <div v-if="loading" class="flex justify-center py-8">
-            <SpaceLoader size="md" text="Chargement..." />
+            <Loader size="md" text="Chargement..." />
           </div>
 
-          <SpaceTerminal
+          <Terminal
             v-else-if="!seasons || seasons.length === 0"
             command="list --seasons"
             title="Liste des saisons"
@@ -149,7 +149,7 @@
             <div class="text-space-text-muted text-sm">
               Aucune saison créée.
             </div>
-          </SpaceTerminal>
+          </Terminal>
 
           <div v-else class="space-y-3">
             <div
@@ -179,7 +179,7 @@
                   </span>
                 </div>
                 <div class="flex space-x-2">
-                  <SpaceButton
+                  <Button
                     @click="editSeason(season)"
                     variant="secondary"
                     size="xs"
@@ -196,9 +196,9 @@
                         d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
                       />
                     </svg>
-                  </SpaceButton>
+                  </Button>
 
-                  <SpaceButton
+                  <Button
                     @click="confirmDeleteSeason(season)"
                     variant="error"
                     size="xs"
@@ -217,7 +217,7 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
 
@@ -233,7 +233,7 @@
               </div>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
 
       <!-- Colonne de droite : Gestion des tournois -->
@@ -242,7 +242,7 @@
           v-if="!selectedSeason"
           class="h-full flex items-center justify-center"
         >
-          <SpaceTerminal
+          <Terminal
             command="select --season"
             title="Gestion des tournois"
             :showCursor="true"
@@ -252,12 +252,12 @@
               Cliquez sur "Modifier" à côté d'une saison pour gérer ses
               tournois.
             </div>
-          </SpaceTerminal>
+          </Terminal>
         </div>
 
         <div v-else class="space-y-6">
           <!-- En-tête de la section tournois -->
-          <SpaceCard variant="accent" :stars="true" :decorated="true">
+          <Card variant="accent" :stars="true" :decorated="true">
             <template #header>
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
@@ -271,16 +271,16 @@
                       d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"
                     />
                   </svg>
-                  <SpaceTitle size="md">
+                  <Title size="md">
                     <span v-if="selectedSeason.numero === 0"
                       >Modifier "Alors ça chill"</span
                     >
                     <span v-else
                       >Modifier Saison {{ selectedSeason.numero }}</span
                     >
-                  </SpaceTitle>
+                  </Title>
                 </div>
-                <SpaceButton @click="cancelEdit" variant="outline" size="sm">
+                <Button @click="cancelEdit" variant="outline" size="sm">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-4 w-4 mr-1"
@@ -294,7 +294,7 @@
                     />
                   </svg>
                   Terminer
-                </SpaceButton>
+                </Button>
               </div>
             </template>
 
@@ -331,10 +331,10 @@
                 </button>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Tournois dans la saison -->
-          <SpaceCard variant="primary" className="min-h-[200px]">
+          <Card variant="primary" className="min-h-[200px]">
             <template #header>
               <div class="flex items-center">
                 <svg
@@ -349,7 +349,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <SpaceTitle size="sm">Tournois inclus</SpaceTitle>
+                <Title size="sm">Tournois inclus</Title>
               </div>
             </template>
 
@@ -357,7 +357,7 @@
               v-if="loadingSeasonTournaments"
               class="flex justify-center py-8"
             >
-              <SpaceLoader size="md" text="Chargement..." />
+              <Loader size="md" text="Chargement..." />
             </div>
 
             <div
@@ -381,7 +381,7 @@
                       {{ tournament.game.name }}
                     </p>
                   </div>
-                  <SpaceButton
+                  <Button
                     @click="removeTournamentFromSeason(tournament._id!)"
                     variant="error"
                     size="xs"
@@ -399,12 +399,12 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-else
               command="list --tournaments --included"
               title="Tournois inclus"
@@ -414,11 +414,11 @@
               <div class="text-space-text-muted text-sm">
                 Aucun tournoi dans cette saison.
               </div>
-            </SpaceTerminal>
-          </SpaceCard>
+            </Terminal>
+          </Card>
 
           <!-- Tournois disponibles -->
-          <SpaceCard variant="secondary" className="min-h-[200px]">
+          <Card variant="secondary" className="min-h-[200px]">
             <template #header>
               <div class="flex items-center">
                 <svg
@@ -433,7 +433,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <SpaceTitle size="sm">Tournois disponibles</SpaceTitle>
+                <Title size="sm">Tournois disponibles</Title>
               </div>
             </template>
 
@@ -441,7 +441,7 @@
               v-if="loadingAvailableTournaments"
               class="flex justify-center py-8"
             >
-              <SpaceLoader size="md" text="Chargement..." />
+              <Loader size="md" text="Chargement..." />
             </div>
 
             <div
@@ -467,7 +467,7 @@
                       {{ tournament.game.name }}
                     </p>
                   </div>
-                  <SpaceButton
+                  <Button
                     @click="addTournamentToSeason(tournament._id!)"
                     variant="secondary"
                     size="xs"
@@ -485,12 +485,12 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </SpaceButton>
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <SpaceTerminal
+            <Terminal
               v-else-if="!loadingAvailableTournaments"
               command="list --tournaments --available"
               title="Tournois disponibles"
@@ -500,8 +500,8 @@
               <div class="text-space-text-muted text-sm">
                 Aucun tournoi disponible.
               </div>
-            </SpaceTerminal>
-          </SpaceCard>
+            </Terminal>
+          </Card>
         </div>
       </div>
     </div>
@@ -553,21 +553,21 @@
 
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <SpaceButton
+          <Button
             @click="showDeleteModal = false"
             variant="outline"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="deleteSeason"
             variant="error"
             size="md"
             :loading="isDeleting"
           >
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </Modal>

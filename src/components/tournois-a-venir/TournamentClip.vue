@@ -117,23 +117,23 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-  <SpaceCard>
+  <Card>
     <template #header>
       <div class="flex flex-row justify-between items-center">
-        <SpaceTitle size="xl" class="uppercase">Clips du tournoi</SpaceTitle>
-        <SpaceButton @click="showAddClipModal = true">
+        <Title size="xl" class="uppercase">Clips du tournoi</Title>
+        <Button @click="showAddClipModal = true">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
               clip-rule="evenodd" />
           </svg>
           Ajouter un clip
-        </SpaceButton>
+        </Button>
       </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 gap-y-8 pt-8">
-      <SpaceCard v-for="(clip, idx) in tournament.clips" class="flex-1/2">
+      <Card v-for="(clip, idx) in tournament.clips" class="flex-1/2">
         <iframe class="w-full h-80" :src="clip.url" :title="`Clip ${idx+1} ajouté par ${clip.addedBy.username} pour le tournoi ${tournament.name}`"
           frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture"
           allowfullscreen></iframe>
@@ -142,9 +142,9 @@ const formatDate = (dateString: string): string => {
           <button @click="clipToDelete = clip" v-if="user?.role === 'admin' || user?.role === 'superadmin'" class="text-red-400 hover:underline">Supprimer le clip</button>
           <p>{{ formatDate(clip.addedAt) }}</p>
         </div>
-      </SpaceCard>
+      </Card>
     </div>
-  </SpaceCard>
+  </Card>
 
   <Teleport
     to="body"
@@ -198,7 +198,7 @@ const formatDate = (dateString: string): string => {
             v-model="clipUrl"
             :errorMessage="errMessage"
           />
-          <SpaceButton
+          <Button
             type="submit"
             :loading="isLoading"
             icon
@@ -218,14 +218,14 @@ const formatDate = (dateString: string): string => {
               </svg>
             </template>
             Ajouter le clip
-          </SpaceButton>
+          </Button>
         </form>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <SpaceButton @click="closeAddClipPrompt" variant="ghost" size="sm" className="text-sm">
+          <Button @click="closeAddClipPrompt" variant="ghost" size="sm" className="text-sm">
             Annuler
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -241,12 +241,12 @@ const formatDate = (dateString: string): string => {
           Êtes-vous sûr de vouloir supprimer ce clip&nbsp;? Cette action est <span class="text-red-500 font-bold">irréversible</span>.
         </p>
         <div class="flex justify-end gap-2">
-          <SpaceButton @click="closeDeleteClipModal" variant="ghost" size="sm">
+          <Button @click="closeDeleteClipModal" variant="ghost" size="sm">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deleteclip" variant="danger" size="sm">
+          </Button>
+          <Button @click="deleteclip" variant="danger" size="sm">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </div>
     </SpaceModal>

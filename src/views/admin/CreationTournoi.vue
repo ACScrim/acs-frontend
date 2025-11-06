@@ -2,7 +2,7 @@
   <div class="container mx-auto p-8 pt-20">
     <div class="max-w-8xl mx-auto">
       <!-- En-tête -->
-      <SpaceHeader
+      <Header
         title="Gestion des Tournois"
         titleSize="3xl"
         :showMissionInfo="true"
@@ -13,10 +13,10 @@
             activeTournaments.length
           }}</SpaceBadge>
         </template>
-      </SpaceHeader>
+      </Header>
 
       <!-- Sélection commune du jeu et du tournoi -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -34,7 +34,7 @@
                 d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
               />
             </svg>
-            <SpaceTitle size="lg">Sélection du tournoi</SpaceTitle>
+            <Title size="lg">Sélection du tournoi</Title>
           </div>
         </template>
 
@@ -221,10 +221,10 @@
             </SpaceAlert>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Onglets -->
-      <SpaceCard
+      <Card
         variant="secondary"
         :stars="true"
         :decorated="true"
@@ -233,7 +233,7 @@
         <div
           class="flex flex-col md:flex-row justify-around gap-4 z-10 relative"
         >
-          <SpaceButton
+          <Button
             @click="handleTabChange('creation')"
             :variant="activeTab === 'creation' ? 'accent' : 'outline'"
             size="md"
@@ -254,9 +254,9 @@
               </svg>
             </template>
             Gestion des tournois
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('teams')"
             :variant="activeTab === 'teams' ? 'accent' : 'outline'"
             size="md"
@@ -275,9 +275,9 @@
               </svg>
             </template>
             Gestion des Équipes
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('checkin')"
             :variant="activeTab === 'checkin' ? 'accent' : 'outline'"
             size="md"
@@ -298,9 +298,9 @@
               </svg>
             </template>
             Voir les Check-in
-          </SpaceButton>
+          </Button>
 
-          <SpaceButton
+          <Button
             @click="handleTabChange('end')"
             :variant="activeTab === 'end' ? 'accent' : 'outline'"
             size="md"
@@ -321,7 +321,7 @@
               </svg>
             </template>
             Terminer un tournoi
-          </SpaceButton>
+          </Button>
         </div>
 
         <!-- Indicateur d'onglet actif -->
@@ -333,10 +333,10 @@
             :style="tabIndicatorStyle"
           ></div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Contenu des onglets -->
-      <SpaceCard
+      <Card
         variant="primary"
         :stars="true"
         :decorated="true"
@@ -363,7 +363,7 @@
             :selectedTournament="selectedTournament"
           />
         </div>
-      </SpaceCard>
+      </Card>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <SpaceContainer>
     <!-- En-tête de la page -->
-    <SpaceHeader
+    <Header
       title="PROPOSITIONS DE JEUX"
       mission="GAMES-DISCOVERY"
       :showMissionInfo="true"
@@ -11,11 +11,11 @@
           proposals.length
         }}</SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <div class="flex flex-col gap-6 mt-6">
       <!-- Description/Introduction -->
-      <SpaceCard variant="dark" className="mb-6 text-center">
+      <Card variant="dark" className="mb-6 text-center">
         <p class="text-space-text font-body">
           Seuls les jeux approuvés par les administrateurs seront votables.
         </p>
@@ -23,10 +23,10 @@
         <p class="font-body text-red-400 font-bold">
           En proposant des jeux sur serveurs privés, vous vous engagez à gérer les serveurs si votre jeu est choisi
         </p>
-      </SpaceCard>
+      </Card>
 
       <!-- Filtres et bouton d'ajout -->
-      <SpaceCard variant="primary" className="mb-6">
+      <Card variant="primary" className="mb-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
@@ -34,7 +34,7 @@
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
-              <SpaceButton
+              <Button
                 v-for="filter in filters"
                 :key="filter.value"
                 @click="
@@ -45,7 +45,7 @@
                 size="sm"
               >
                 {{ filter.label }}
-              </SpaceButton>
+              </Button>
             </div>
           </div>
 
@@ -112,7 +112,7 @@
                 </template>
               </SpaceInput>
             </div>
-            <SpaceButton
+            <Button
               @click="showProposalForm = true"
               variant="accent"
               className="w-full hover:scale-105 transition-transform duration-300 shine-effect"
@@ -130,18 +130,18 @@
                 />
               </svg>
               Proposer un jeu
-            </SpaceButton>
+            </Button>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- État de chargement -->
       <div v-if="loading" class="flex justify-center py-12">
-        <SpaceLoader text="Chargement des propositions..." />
+        <Loader text="Chargement des propositions..." />
       </div>
 
       <!-- Message si aucune proposition -->
-      <SpaceTerminal
+      <Terminal
         v-else-if="proposals.length === 0"
         :command="`list_proposals --filter=${activeFilter} ${
           searchTerm ? '--search=\'' + searchTerm + '\'' : ''
@@ -156,9 +156,9 @@
         <div class="text-space-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
-      <SpaceTerminal
+      <Terminal
         v-else-if="filteredProposals.length === 0"
         :command="`search_proposals --query='${searchTerm}' --filter=${activeFilter}`"
         title="Console de recherche"
@@ -171,7 +171,7 @@
         <div class="text-space-text-muted mt-2">
           {{ emptyStateMessage }}
         </div>
-      </SpaceTerminal>
+      </Terminal>
 
       <!-- Liste des propositions avec mise en page améliorée -->
       <div v-else class="proposals-grid space-y-6">
@@ -296,10 +296,10 @@
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <SpaceButton @click="showProposalForm = false" variant="outline">
+          <Button @click="showProposalForm = false" variant="outline">
             Annuler
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="submitProposal"
             :disabled="!isProposalValid || submitting"
             variant="primary"
@@ -310,7 +310,7 @@
               class="animate-spin h-4 w-4 border-2 border-t-transparent rounded-full mr-2"
             ></span>
             {{ submitting ? "Envoi en cours..." : "Proposer ce jeu" }}
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -334,12 +334,12 @@
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <SpaceButton @click="deleteDialogVisible = false" variant="outline">
+          <Button @click="deleteDialogVisible = false" variant="outline">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="deleteProposal" variant="error">
+          </Button>
+          <Button @click="deleteProposal" variant="error">
             Supprimer
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -369,9 +369,9 @@
       </div>
       <!-- Onglets Votes Pour/Contre -->
       <div class="flex space-x-2">
-        <SpaceButton
+        <Button
           @click="activeTab = 'positive'"
-          :variant="activeTab === 'positive' ? 'gold' : 'outline'"
+          :variant="activeTab === 'positive' ? 'ghost' : 'outline'"
           size="sm"
           className="flex-1"
         >
@@ -388,8 +388,8 @@
             />
           </svg>
           Pour ({{ positiveVotes.length }})
-        </SpaceButton>
-        <SpaceButton
+        </Button>
+        <Button
           @click="activeTab = 'negative'"
           :variant="activeTab === 'negative' ? 'error' : 'outline'"
           size="sm"
@@ -408,10 +408,10 @@
             />
           </svg>
           Contre ({{ negativeVotes.length }})
-        </SpaceButton>
+        </Button>
       </div>
       <!-- Liste des votants -->
-      <SpaceCard
+      <Card
         variant="dark"
         className="h-60 overflow-y-auto p-0 border-none"
       >
@@ -469,12 +469,12 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
     </div>
 
     <template #footer>
       <div class="flex justify-end">
-        <SpaceButton @click="showVoteInfo = false">Fermer</SpaceButton>
+        <Button @click="showVoteInfo = false">Fermer</Button>
       </div>
     </template>
   </SpaceModal>
@@ -489,6 +489,7 @@ import type { GameProposal, RawgGame } from "../types";
 import GameProposalCard from "../components/GameProposalCard.vue";
 import Toast from "../shared/Toast.vue";
 import SpaceContainer from "@/components/ui/layout/Container.vue";
+import Button from "../components/ui/atoms/Button.vue";
 
 // ===================================
 // ÉTAT ET RÉFÉRENCES

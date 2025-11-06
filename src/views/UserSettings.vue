@@ -2,19 +2,19 @@
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
       <!-- En-tête de la page -->
-      <SpaceHeader title="PARAMÈTRES UTILISATEUR" mission="SETTINGS-CONFIG-25" :decorated="true" className="mb-8" />
+      <Header title="PARAMÈTRES UTILISATEUR" mission="SETTINGS-CONFIG-25" :decorated="true" className="mb-8" />
 
       <!-- États d'affichage -->
       <div v-if="loading" class="flex justify-center py-12">
-        <SpaceLoader text="Chargement des paramètres utilisateur..." />
+        <Loader text="Chargement des paramètres utilisateur..." />
       </div>
 
-      <SpaceTerminal v-else-if="error" title="SYSTÈME · PARAMÈTRES" command="load_user_settings" :message="error"
+      <Terminal v-else-if="error" title="SYSTÈME · PARAMÈTRES" command="load_user_settings" :message="error"
         className="my-8" />
 
       <div v-else-if="user" class="space-y-8">
         <!-- Section: Profil Twitch -->
-        <SpaceCard variant="primary" :stars="true" :decorated="true">
+        <Card variant="primary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-primary-light" fill="currentColor"
@@ -22,7 +22,7 @@
                 <path
                   d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
               </svg>
-              <SpaceTitle size="xl">Profil Twitch</SpaceTitle>
+              <Title size="xl">Profil Twitch</Title>
             </div>
           </template>
 
@@ -48,7 +48,7 @@
             </div>
 
             <!-- Aperçu du profil Twitch -->
-            <SpaceCard v-if="formData.twitchUsername" variant="dark" className="p-3">
+            <Card v-if="formData.twitchUsername" variant="dark" className="p-3">
               <div class="flex items-center justify-between">
                 <div class="text-space-text font-mono text-sm">
                   twitch.tv/{{ formData.twitchUsername }}
@@ -62,12 +62,12 @@
                   </svg>
                 </a>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
-        </SpaceCard>
+        </Card>
 
         <!-- Section: Préférences notifications -->
-        <SpaceCard variant="secondary" :stars="true" :decorated="true">
+        <Card variant="secondary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-space-secondary-light" fill="none"
@@ -75,12 +75,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M15 17h5l-5 5v-5zM11 17H6l5 5v-5zM7 7h10l-5-5L7 7z" />
               </svg>
-              <SpaceTitle size="xl">Préférences de notifications</SpaceTitle>
+              <Title size="xl">Préférences de notifications</Title>
             </div>
           </template>
 
           <!-- Message d'information -->
-          <SpaceCard variant="dark" className="mb-6">
+          <Card variant="dark" className="mb-6">
             <div class="flex items-start space-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-space-secondary-light mt-0.5 flex-shrink-0"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,12 +99,12 @@
                 </ul>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Liste des préférences de notifications -->
           <div class="space-y-4" v-if="notificationActivated">
             <!-- Notifications de tournois -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <Card variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
@@ -177,10 +177,10 @@
                     className="bg-yellow-500/20" :disabled="notificationStatus.tournaments === 'saving'" />
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
 
             <!-- Notifications de badges -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <Card variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
@@ -254,10 +254,10 @@
                     className="bg-purple-500/20" :disabled="notificationStatus.badges === 'saving'" />
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
 
             <!-- Notifications de rappels -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <Card variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
@@ -331,10 +331,10 @@
                     className="bg-blue-500/20" :disabled="notificationStatus.reminders === 'saving'" />
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
 
             <!-- Notifications système -->
-            <SpaceCard variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
+            <Card variant="dark" className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <!-- Icône -->
@@ -408,7 +408,7 @@
                     className="bg-green-500/20" :disabled="notificationStatus.system === 'saving'" />
                 </div>
               </div>
-            </SpaceCard>
+            </Card>
           </div>
           <div v-else>
             <div class="text-space-text-muted text-sm">
@@ -459,10 +459,10 @@
               </div>
             </div>
           </div>
-        </SpaceCard>
+        </Card>
 
         <!-- Section: Rôles Discord par jeu -->
-        <SpaceCard variant="secondary" :stars="true" :decorated="true">
+        <Card variant="secondary" :stars="true" :decorated="true">
           <template #header>
             <div class="flex items-center justify-between">
               <div class="flex items-center">
@@ -471,7 +471,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V9a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1V1a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1z" />
                 </svg>
-                <SpaceTitle size="xl">Rôles Discord par jeu</SpaceTitle>
+                <Title size="xl">Rôles Discord par jeu</Title>
               </div>
 
               <div v-if="filteredGames.length > 0">
@@ -485,7 +485,7 @@
           </template>
 
           <!-- Message d'aide pour les rôles Discord -->
-          <SpaceCard variant="dark" className="mb-6">
+          <Card variant="dark" className="mb-6">
             <div class="flex items-start space-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-space-secondary-light mt-0.5 flex-shrink-0"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -515,11 +515,11 @@
                 </ul>
               </div>
             </div>
-          </SpaceCard>
+          </Card>
 
           <!-- Liste des jeux filtrés -->
           <div v-if="filteredGames.length > 0" class="space-y-3">
-            <SpaceCard v-for="game in filteredGames" :key="game._id" variant="dark"
+            <Card v-for="game in filteredGames" :key="game._id" variant="dark"
               className="transform transition-all hover:scale-[1.01] duration-200">
               <div class="flex items-center justify-between">
                 <!-- Informations du jeu -->
@@ -592,11 +592,11 @@
                   @update:model-value="toggleGameRole(game._id || '', $event)" size="sm"
                   className="bg-space-secondary/20" :disabled="gameRoleStatus[game._id || ''] === 'syncing'" />
               </div>
-            </SpaceCard>
+            </Card>
           </div>
 
           <!-- État vide pour jeux filtrés -->
-          <SpaceTerminal v-else title="BASE DE DONNÉES · JEUX PRINCIPAUX" command="query_main_games" :showCursor="true">
+          <Terminal v-else title="BASE DE DONNÉES · JEUX PRINCIPAUX" command="query_main_games" :showCursor="true">
             <div class="text-space-error">
               Aucun des jeux principaux n'est disponible dans la base de
               données.
@@ -605,12 +605,12 @@
               Les jeux supportés sont : League of Legends, Rocket League,
               Valorant, The Finals, Counter Strike et Overwatch.
             </div>
-          </SpaceTerminal>
-        </SpaceCard>
+          </Terminal>
+        </Card>
 
         <!-- Actions de sauvegarde -->
         <div class="text-center pt-4">
-          <SpaceButton @click="saveSettings" :disabled="isSaving || !hasChanges" variant="primary" size="lg">
+          <Button @click="saveSettings" :disabled="isSaving || !hasChanges" variant="primary" size="lg">
             <template v-if="isSaving">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">
@@ -623,7 +623,7 @@
             </template>
             <template v-else-if="!hasChanges">Aucune modification</template>
             <template v-else>Enregistrer les paramètres</template>
-          </SpaceButton>
+          </Button>
         </div>
       </div>
     </div>
@@ -648,12 +648,12 @@
 
       <template #footer>
         <div class="flex justify-center space-x-4">
-          <SpaceButton @click="cancelLeave" variant="ghost">
+          <Button @click="cancelLeave" variant="ghost">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="confirmLeave" variant="warning">
+          </Button>
+          <Button @click="confirmLeave" variant="warning">
             Quitter sans sauvegarder
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>
@@ -675,12 +675,12 @@
 
       <template #footer>
         <div class="flex justify-center space-x-4">
-          <SpaceButton @click="cancelReset" variant="ghost">
+          <Button @click="cancelReset" variant="ghost">
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="confirmReset" variant="primary">
+          </Button>
+          <Button @click="confirmReset" variant="primary">
             Réinitialiser
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </SpaceModal>

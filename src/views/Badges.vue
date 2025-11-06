@@ -1,7 +1,7 @@
 <template>
   <SpaceContainer>
     <!-- En-tête de la page avec style spatial -->
-    <SpaceHeader
+    <Header
       title="COLLECTION DE BADGES"
       mission="BADGES-EXPLORER"
       :showMissionInfo="true"
@@ -11,7 +11,7 @@
           badges.length
         }}</SpaceBadge>
       </template>
-    </SpaceHeader>
+    </Header>
 
     <!-- Loader spatial -->
     <div v-if="loading" class="flex justify-center my-12">
@@ -20,27 +20,27 @@
 
     <div v-else class="flex flex-col gap-6 mt-6">
       <!-- Onglets de navigation -->
-      <SpaceCard variant="dark" className="p-4">
+      <Card variant="dark" className="p-4">
         <div class="space-tabs flex flex-wrap sm:flex-nowrap gap-2">
-          <SpaceButton
+          <Button
             @click="switchTab('assigned')"
             :variant="activeTab === 'assigned' ? 'primary' : 'outline'"
             className="flex-1"
           >
             <span class="font-nasa">BADGES ATTRIBUÉS</span>
-          </SpaceButton>
-          <SpaceButton
+          </Button>
+          <Button
             @click="switchTab('available')"
             :variant="activeTab === 'available' ? 'primary' : 'outline'"
             className="flex-1"
           >
             <span class="font-nasa">BADGES À OBTENIR</span>
-          </SpaceButton>
+          </Button>
         </div>
-      </SpaceCard>
+      </Card>
 
       <!-- Filtre par jeu -->
-      <SpaceCard variant="primary" className="overflow-hidden">
+      <Card variant="primary" className="overflow-hidden">
         <div>
           <label for="gameFilter" class="mb-3 flex items-center gap-2">
             <div
@@ -92,7 +92,7 @@
             </div>
           </div>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Liste des badges attribués -->
       <transition name="fade" mode="out-in">
         <div v-if="activeTab === 'assigned'" key="assigned">
@@ -106,7 +106,7 @@
               "
               class="mb-6"
             >
-              <SpaceCard variant="secondary" className="overflow-hidden">
+              <Card variant="secondary" className="overflow-hidden">
                 <div class="p-4 border-b border-space-bg-light/30">
                   <h2 class="text-xl font-heading text-space-text">
                     Badges ACS
@@ -122,7 +122,7 @@
                     class="space-badge-card"
                     :class="getBadgeRarityClass(badge)"
                   >
-                    <SpaceCard
+                    <Card
                       variant="dark"
                       elevation="low"
                       :stars="true"
@@ -159,7 +159,7 @@
                       </div>
 
                       <!-- Bouton pour voir les joueurs -->
-                      <SpaceButton
+                      <Button
                         variant="secondary"
                         size="sm"
                         className="w-full mt-auto"
@@ -178,11 +178,11 @@
                         Voir les joueurs ({{
                           badge._id ? getBadgePlayers(badge._id).length : 0
                         }})
-                      </SpaceButton>
-                    </SpaceCard>
+                      </Button>
+                    </Card>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
 
             <!-- Section Badges par jeu -->
@@ -194,7 +194,7 @@
                 "
                 class="mb-6"
               >
-                <SpaceCard variant="primary" className="overflow-hidden">
+                <Card variant="primary" className="overflow-hidden">
                   <div class="p-4 border-b border-space-bg-light/30">
                     <h2 class="text-xl font-heading text-space-text">
                       {{ game.name }}
@@ -210,7 +210,7 @@
                       class="space-badge-card"
                       :class="getBadgeRarityClass(badge)"
                     >
-                      <SpaceCard
+                      <Card
                         variant="dark"
                         elevation="low"
                         :stars="true"
@@ -248,7 +248,7 @@
                         </div>
 
                         <!-- Bouton pour voir les joueurs -->
-                        <SpaceButton
+                        <Button
                           variant="primary"
                           size="sm"
                           className="w-full mt-auto"
@@ -267,16 +267,16 @@
                           Voir les joueurs ({{
                             badge._id ? getBadgePlayers(badge._id).length : 0
                           }})
-                        </SpaceButton>
-                      </SpaceCard>
+                        </Button>
+                      </Card>
                     </div>
                   </div>
-                </SpaceCard>
+                </Card>
               </div>
             </template>
 
             <!-- Message si aucun badge ne correspond au filtre sélectionné -->
-            <SpaceTerminal
+            <Terminal
               v-if="filteredAssignedBadges.length === 0"
               :command="`find_badges --type=assigned ${
                 selectedGameFilter !== 'all'
@@ -293,11 +293,11 @@
               <div class="text-space-text-muted mt-2">
                 Il n'y a pas de badges attribués pour le jeu sélectionné.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
 
           <!-- Message si aucun badge n'est attribué -->
-          <SpaceTerminal
+          <Terminal
             v-else-if="assignedBadges.length === 0"
             command="search_assigned_badges --status=not_found"
             title="Console de recherche"
@@ -312,7 +312,7 @@
               lors d'évènements spéciaux ou pour récompenser des
               accomplissements.
             </div>
-          </SpaceTerminal>
+          </Terminal>
         </div>
       </transition>
 
@@ -329,7 +329,7 @@
               "
               class="mb-6"
             >
-              <SpaceCard
+              <Card
                 variant="secondary"
                 className="overflow-hidden opacity-70"
               >
@@ -347,7 +347,7 @@
                     :key="badge._id"
                     class="space-badge-card"
                   >
-                    <SpaceCard
+                    <Card
                       variant="dark"
                       elevation="low"
                       className="h-full grayscale hover:grayscale-0 transition-all duration-300"
@@ -379,18 +379,18 @@
                       </div>
 
                       <!-- Bouton pour voir les joueurs -->
-                      <SpaceButton
+                      <Button
                         variant="ghost"
                         size="sm"
                         className="w-full mt-auto opacity-75 cursor-not-allowed"
                         disabled
                       >
                         Ce badge n'a pas encore été attribué
-                      </SpaceButton>
-                    </SpaceCard>
+                      </Button>
+                    </Card>
                   </div>
                 </div>
-              </SpaceCard>
+              </Card>
             </div>
 
             <!-- Section Badges de Jeux disponibles (par jeu) -->
@@ -402,7 +402,7 @@
                 "
                 class="mb-6"
               >
-                <SpaceCard
+                <Card
                   variant="primary"
                   className="overflow-hidden opacity-70"
                 >
@@ -420,7 +420,7 @@
                       :key="badge._id"
                       class="space-badge-card"
                     >
-                      <SpaceCard
+                      <Card
                         variant="dark"
                         elevation="low"
                         className="h-full grayscale hover:grayscale-0 transition-all duration-300"
@@ -453,23 +453,23 @@
                         </div>
 
                         <!-- Bouton pour voir les joueurs -->
-                        <SpaceButton
+                        <Button
                           variant="ghost"
                           size="sm"
                           className="w-full mt-auto opacity-75 cursor-not-allowed"
                           disabled
                         >
                           Ce badge n'a pas encore été attribué
-                        </SpaceButton>
-                      </SpaceCard>
+                        </Button>
+                      </Card>
                     </div>
                   </div>
-                </SpaceCard>
+                </Card>
               </div>
             </template>
 
             <!-- Message si aucun badge disponible ne correspond au filtre -->
-            <SpaceTerminal
+            <Terminal
               v-if="filteredAvailableBadges.length === 0"
               :command="`find_badges --type=available ${
                 selectedGameFilter !== 'all'
@@ -487,11 +487,11 @@
                 Pour le jeu sélectionné, tous les badges ont déjà été attribués
                 à au moins un joueur.
               </div>
-            </SpaceTerminal>
+            </Terminal>
           </div>
 
           <!-- Message si tous les badges ont été attribués -->
-          <SpaceTerminal
+          <Terminal
             v-else
             command="search_available_badges --status=none"
             title="Console de recherche"
@@ -503,13 +503,13 @@
               Tous les badges disponibles ont déjà été attribués à au moins un
               joueur.
             </div>
-          </SpaceTerminal>
+          </Terminal>
         </div>
       </transition>
 
       <!-- Message si aucun badge -->
       <transition name="fade">
-        <SpaceTerminal
+        <Terminal
           v-if="!loading && badges.length === 0"
           command="initialize_badge_system --status=pending"
           title="Console de système"
@@ -523,7 +523,7 @@
             Le système de badges est en cours de développement. De nouveaux
             badges seront ajoutés prochainement pour récompenser les joueurs.
           </div>
-        </SpaceTerminal>
+        </Terminal>
       </transition>
     </div>
   </SpaceContainer>
@@ -668,9 +668,9 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <SpaceButton @click="showModal = false" variant="primary">
+        <Button @click="showModal = false" variant="primary">
           Fermer
-        </SpaceButton>
+        </Button>
       </div>
     </template>
   </SpaceModal>
