@@ -401,7 +401,7 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="warning">
-          <div class="text-space-text">
+          <div class="text-color-text">
             <strong>Attention :</strong> Cette action est irréversible !
           </div>
         </SpaceAlert>
@@ -508,7 +508,7 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="info">
-          <div class="text-space-text">
+          <div class="text-color-text">
             Cette action permettra de modifier à nouveau les résultats du
             tournoi.
           </div>

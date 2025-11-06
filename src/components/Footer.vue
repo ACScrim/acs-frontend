@@ -21,12 +21,12 @@
 
     <!-- Planète décorative -->
     <div
-      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-space-accent/5 to-space-accent-dark/10 opacity-30 blur-xl"
+      class="absolute -top-48 -right-48 w-96 h-96 rounded-full bg-gradient-to-br from-color-accent/5 to-color-accent-dark/10 opacity-30 blur-xl"
     ></div>
 
     <!-- Nébuleuse décorative -->
     <div
-      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-space-primary/10 to-space-primary-dark/5 opacity-20 blur-xl"
+      class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-gradient-to-tr from-color-primary/10 to-color-primary-dark/5 opacity-20 blur-xl"
     ></div>
 
     <!-- Vaisseau spatial qui traverse -->
@@ -43,7 +43,7 @@
 
     <!-- Contenu principal du footer avec effet glassmorphism -->
     <div
-      class="relative z-10 bg-space-bg/60 backdrop-blur-md border-t border-space-primary/30"
+      class="relative z-10 bg-color-bg/60 backdrop-blur-md border-t border-color-primary/30"
     >
       <div class="container mx-auto px-6 py-8">
         <!-- Contenu supérieur -->
@@ -54,7 +54,7 @@
             <div class="space-logo-container">
               <div class="space-logo-glow"></div>
               <div
-                class="text-space-primary-light font-nasa text-2xl tracking-wider"
+                class="text-color-primary-light font-nasa text-2xl tracking-wider"
               >
                 ACS GAMING
               </div>
@@ -79,7 +79,7 @@
           <div class="flex flex-col items-center justify-center">
             <div class="space-links-container mb-2">
               <div
-                class="space-links-title font-nasa text-xs text-space-text-muted mb-4"
+                class="space-links-title font-nasa text-xs text-color-text-muted mb-4"
               >
                 COMMUNICATIONS
               </div>
@@ -194,7 +194,7 @@
         <div class="mt-6 text-center">
           <div class="text-space-text-muted text-xs font-mono">
             MADE WITH
-            <span class="text-space-error animate-pulse">♥</span> IN THE DEEP
+            <span class="text-color-error animate-pulse">♥</span> IN THE DEEP
             SPACE
           </div>
         </div>
@@ -250,7 +250,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   z-index: 20;
@@ -273,7 +273,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary),
+    var(--color-primary),
     transparent
   );
   animation: pulse-move 5s linear infinite;
@@ -340,7 +340,7 @@ const appVersion = ref(pkg.version || "1.0.0");
 }
 
 .year-label {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 .year-value {
@@ -358,7 +358,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
 }
@@ -525,7 +525,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   width: 80%;
@@ -535,9 +535,9 @@ const appVersion = ref(pkg.version || "1.0.0");
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--space-primary-light);
+  background: var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-primary);
+  box-shadow: 0 0 10px var(--color-primary);
 }
 
 /* Animation pour pulse lent */
@@ -573,8 +573,8 @@ const appVersion = ref(pkg.version || "1.0.0");
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--space-bg-light),
-    var(--space-primary-dark)
+    var(--color-bg-light),
+    var(--color-primary-dark)
   );
   clip-path: polygon(0% 50%, 20% 0%, 100% 40%, 100% 60%, 20% 100%);
 }
@@ -585,9 +585,9 @@ const appVersion = ref(pkg.version || "1.0.0");
   top: 3px;
   width: 6px;
   height: 4px;
-  background-color: var(--space-accent);
+  background-color: var(--color-accent);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--space-accent-light);
+  box-shadow: 0 0 10px var(--color-accent-light);
   animation: engine-glow 0.5s ease-in-out infinite alternate;
 }
 
@@ -597,7 +597,7 @@ const appVersion = ref(pkg.version || "1.0.0");
   right: -20px;
   width: 20px;
   height: 4px;
-  background: linear-gradient(90deg, var(--space-accent), transparent);
+  background: linear-gradient(90deg, var(--color-accent), transparent);
   opacity: 0.7;
 }
 
@@ -627,11 +627,11 @@ const appVersion = ref(pkg.version || "1.0.0");
 @keyframes engine-glow {
   0% {
     opacity: 0.7;
-    box-shadow: 0 0 5px var(--space-accent-light);
+    box-shadow: 0 0 5px var(--color-accent-light);
   }
   100% {
     opacity: 1;
-    box-shadow: 0 0 15px var(--space-accent-light);
+    box-shadow: 0 0 15px var(--color-accent-light);
   }
 }
 </style>

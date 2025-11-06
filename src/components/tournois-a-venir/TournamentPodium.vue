@@ -14,7 +14,9 @@
       <!-- Podium -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
         <!-- Le podium physique pour desktop -->
-        <div class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative space-podium">
+        <div
+          class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative space-podium"
+        >
           <!-- 2ème place -->
           <div class="w-1/5 relative">
             <div class="h-32 rounded-t-lg podium-silver">
@@ -241,7 +243,7 @@
     </SpaceCard>
 
     <!-- Autres classements -->
-    <Card variant="dark" :stars="true" className="relative overflow-hidden">
+    <SpaceCard variant="dark" :stars="true" className="relative overflow-hidden">
       <!-- En-tête dépliable -->
       <button @click="handleToggleOtherRankings"
         class="w-full text-left p-4 rounded-lg border border-space-bg-light/50 flex justify-between items-center hover:bg-space-bg-light/10 transition-colors">
@@ -367,9 +369,9 @@
           </div>
         </SpaceTerminal>
       </div>
-    </Card>
+    </SpaceCard>
     <!-- Votes MVPS -->
-    <Card v-if="tournament.mvpVoteOpen">
+    <SpaceCard v-if="tournament.mvpVoteOpen">
       <template #header>
         <div class="flex flex-row justify-between items-center">
           <SpaceTitle size="xl" class="uppercase">Vote pour le mvp</SpaceTitle>
@@ -381,7 +383,7 @@
       </template>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
-        <Card v-for="player in tournament.players">
+        <SpaceCard v-for="player in tournament.players">
           <div class="flex flex-row justify-between items-center">
             <p class="w-auto">
               {{ player.username }}
@@ -394,10 +396,10 @@
               Votez
             </Button>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
-    </Card>
-    <Card v-else-if="tournament.mvps && tournament.mvps.length > 0">
+    </SpaceCard>
+    <SpaceCard v-else-if="tournament.mvps && tournament.mvps.length > 0">
       <template #header>
         <Title size="xl" class="uppercase">MVP du tournoi</Title>
       </template>
@@ -406,7 +408,7 @@
         v-for="mvp in tournament.mvps?.filter((mvp) => mvp.isMvp)"
         class="py-4"
       >
-        <Card
+        <SpaceCard
           variant="primary"
           :stars="true"
           :decorated="true"
@@ -435,7 +437,7 @@
             </div>
 
             <!-- Nom centré -->
-            <Title
+            <SpaceTitle
               size="4xl"
               :glitch="true"
               :decorated="true"
@@ -464,10 +466,10 @@
               >
             </p>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
       <div class="hidden sm:flex flex-row gap-x-10">
-        <Card
+        <SpaceCard
           v-for="mvp in tournament.mvps
             ?.filter((mvp) => !mvp.isMvp)
             .sort((a, b) => b.votes.length - a.votes.length)
@@ -527,7 +529,7 @@
               >
             </p>
           </div>
-        </Card>
+        </SpaceCard>
       </div>
     </SpaceCard>
     <TournamentClip

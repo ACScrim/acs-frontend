@@ -631,12 +631,16 @@
             </h3>
 
             <!-- Vue des équipes si toutes ont au moins un joueur -->
-            <SpaceAlert v-if="
-              tournament.teams &&
-              tournament.teams.length > 0 &&
-              !tournament.teamsPublished &&
-              !tournament.finished
-            " variant="warning" className="mb-4 sm:mb-6">
+            <SpaceAlert
+              v-if="
+                tournament.teams &&
+                tournament.teams.length > 0 &&
+                !tournament.teamsPublished &&
+                !tournament.finished
+              "
+              variant="warning"
+              className="mb-4 sm:mb-6"
+            >
               <template #icon>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20"
                   fill="currentColor">
@@ -771,8 +775,12 @@
             </div>
 
             <!-- Message si aucun participant -->
-            <SpaceAlert v-else variant="info" className="bg-space-bg-light/10 text-center py-4 sm:py-6">
-              <p class="text-space-text-muted italic text-sm sm:text-base">
+            <SpaceAlert
+              v-else
+              variant="info"
+              className="bg-color-bg-light/10 text-center py-4 sm:py-6"
+            >
+              <p class="text-color-text-muted italic text-sm sm:text-base">
                 Aucun participant inscrit pour ce tournoi.
               </p>
             </SpaceAlert>
@@ -1061,7 +1069,11 @@
           ?
         </p>
 
-        <SpaceAlert v-if="actionType === 'register' || actionType === 'waitlist'" variant="info" className="mb-4">
+        <SpaceAlert
+          v-if="actionType === 'register' || actionType === 'waitlist'"
+          variant="info"
+          className="mb-4"
+        >
           <p class="text-sm sm:text-base lg:text-xl">
             <span v-if="actionType === 'register'">
               N'oubliez pas de venir vous check-in 24h avant le début du tournoi
@@ -1073,9 +1085,13 @@
           </p>
         </SpaceAlert>
 
-        <SpaceAlert v-if="
-          actionType === 'unregister' || actionType === 'unregister-waitlist'
-        " variant="warning" className="mb-4">
+        <SpaceAlert
+          v-if="
+            actionType === 'unregister' || actionType === 'unregister-waitlist'
+          "
+          variant="warning"
+          className="mb-4"
+        >
           <p class="text-sm sm:text-base lg:text-xl">
             <span v-if="actionType === 'unregister'">
               Attention: Si vous vous désinscrivez, votre place sera attribuée à

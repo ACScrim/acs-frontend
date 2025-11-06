@@ -52,10 +52,10 @@
               class="absolute inset-0 bg-space-primary/20 rounded-full blur-sm animate-pulse-slow"
             ></div>
           </div>
-          <div class="tooltip-text font-heading">Menu Admin</div>
+          <div class="tooltip-text font-nasa">Menu Admin</div>
         </button>
 
-        <router-link to="/" class="logo-container mystical-transition">
+        <router-link to="/" class="logo-container">
           <div class="logo-glow"></div>
           <img
             src="../assets/sanslueur.png"
@@ -69,14 +69,14 @@
       <div class="hidden md:flex flex-grow justify-center space-x-12">
         <router-link
           to="/classement"
-          class="nav-link font-heading"
+          class="nav-link font-nasa"
           :class="{ 'nav-link-active': isActive('/classement') }"
         >
           Classement
         </router-link>
         <router-link
           to="/tournois-a-venir"
-          class="nav-link font-heading"
+          class="nav-link font-nasa"
           :class="{ 'nav-link-active': isActive('/tournois-a-venir') }"
         >
           Tournois
@@ -84,7 +84,7 @@
         <router-link
           v-if="user"
           to="/membres"
-          class="nav-link font-heading"
+          class="nav-link font-nasa"
           :class="{ 'nav-link-active': isActive('/membres') }"
         >
           Membres
@@ -92,7 +92,7 @@
         <router-link
           v-if="user"
           to="/propositions-jeux"
-          class="nav-link font-heading"
+          class="nav-link font-nasa"
           :class="{ 'nav-link-active': isActive('/propositions-jeux') }"
         >
           Propositions
@@ -100,7 +100,7 @@
         <router-link
           v-if="user"
           to="/badges"
-          class="nav-link font-heading"
+          class="nav-link font-nasa"
           :class="{ 'nav-link-active': isActive('/badges') }"
         >
           Badges
@@ -138,7 +138,7 @@
             />
             <div class="avatar-glow"></div>
           </div>
-          <span class="user-name ml-2 hidden sm:inline font-heading capitalize">
+          <span class="user-name ml-2 hidden sm:inline font-nasa capitalize">
             {{ user.username }}
           </span>
           <svg
@@ -162,7 +162,7 @@
         <button
           v-else
           @click="loginWithDiscord"
-          class="discord-login-btn font-heading"
+          class="discord-login-btn font-nasa"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +183,7 @@
             v-if="menuOpen"
             class="user-dropdown absolute top-full right-0 mt-2 w-56 z-50"
           >
-            <div class="dropdown-header font-heading">
+            <div class="dropdown-header font-nasa">
               <div class="dropdown-title">PANNEAU DE CONTRÔLE</div>
               <div class="dropdown-subtitle">STATION UTILISATEUR</div>
             </div>
@@ -321,7 +321,7 @@
             v-if="mobileMenuOpen"
             class="mobile-dropdown absolute top-full right-0 left-0 mt-2 z-50 mx-4"
           >
-            <div class="dropdown-header font-heading">
+            <div class="dropdown-header font-nasa">
               <div class="dropdown-title">NAVIGATION</div>
               <div class="dropdown-subtitle">SYSTÈME PRINCIPAL</div>
             </div>
@@ -346,7 +346,7 @@
                   </div>
                   <div class="flex-1">
                     <div
-                      class="text-color-primary-light font-heading capitalize text-sm"
+                      class="text-color-primary-light font-nasa capitalize text-sm"
                     >
                       {{ user.username }}
                     </div>
@@ -605,7 +605,7 @@
         v-if="adminMenuOpen"
         class="admin-dropdown absolute left-0 top-full z-40"
       >
-        <div class="dropdown-header font-heading">
+        <div class="dropdown-header font-nasa">
           <div class="dropdown-title">PANNEAU ADMIN</div>
           <div class="dropdown-subtitle">ACCÈS RESTREINT</div>
         </div>
@@ -947,14 +947,69 @@ onBeforeUnmount(() => {
 <style scoped>
 /* Fond et grille */
 .navbar-bg {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Lignes de circuit */
+.space-circuit-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
   background: linear-gradient(
-    135deg,
-    rgba(var(--color-primary-rgb), 0.15),
-    rgba(var(--color-secondary-rgb), 0.15)
+    90deg,
+    transparent,
+    var(--color-primary-light),
+    transparent
   );
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--color-accent);
-  box-shadow: 0 4px 20px rgba(var(--color-primary-rgb), 0.1);
+  z-index: 20;
+}
+
+.space-circuit-line.top {
+  top: 0;
+}
+
+.space-circuit-line.bottom {
+  bottom: 0;
+}
+
+.space-circuit-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+  animation: pulse-move 8s linear infinite;
+}
+
+.space-circuit-pulse.reverse {
+  animation: pulse-move-reverse 8s linear infinite;
+}
+
+@keyframes pulse-move {
+  0% {
+    left: -50px;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes pulse-move-reverse {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -50px;
+  }
 }
 
 /* Animation de pulsation lente */
@@ -972,7 +1027,7 @@ onBeforeUnmount(() => {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Logo Halloween */
+/* Logo */
 .logo-container {
   position: relative;
   display: inline-flex;
@@ -986,33 +1041,31 @@ onBeforeUnmount(() => {
   background: var(--color-primary);
   border-radius: 50%;
   filter: blur(10px);
-  opacity: 0.2;
+  opacity: 0.15;
   z-index: -1;
   transition: all 0.3s ease;
 }
 
 .logo-container:hover .logo-glow {
-  opacity: 0.4;
+  opacity: 0.25;
   filter: blur(15px);
-  box-shadow: var(--shadow-glow-orange);
 }
 
 .navbar-logo {
   height: 40px;
-  filter: drop-shadow(var(--shadow-glow-orange));
+  filter: drop-shadow(0 0 5px var(--color-primary-light));
   transition: all 0.3s ease;
 }
 
 .logo-container:hover .navbar-logo {
-  filter: drop-shadow(var(--shadow-glow-orange))
-    drop-shadow(0 0 10px var(--color-primary));
+  filter: drop-shadow(0 0 8px var(--color-primary-light));
   transform: scale(1.05);
 }
 
-/* Navigation links Halloween */
+/* Navigation links */
 .nav-link {
   position: relative;
-  color: var(--space-text);
+  color: var(--color-text);
   font-weight: 500;
   letter-spacing: 1px;
   padding: 0.25rem 0.5rem;
@@ -1032,7 +1085,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   transform: translateX(-100%);
@@ -1040,8 +1093,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link:hover {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary-light);
+  text-shadow: 0 0 5px var(--color-primary-light);
 }
 
 .nav-link:hover::before {
@@ -1049,8 +1102,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link-active {
-  color: var(--space-primary-light);
-  text-shadow: 0 0 5px var(--space-primary-light);
+  color: var(--color-primary-light);
+  text-shadow: 0 0 5px var(--color-primary-light);
 }
 
 .nav-link-active::before {
@@ -1063,7 +1116,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--space-primary-light),
+    var(--color-primary-light),
     transparent
   );
   transform: translateX(0);
@@ -1097,29 +1150,29 @@ onBeforeUnmount(() => {
 }
 
 .user-profile-button:hover .user-name {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
 }
 
 /* Dropdowns */
 .user-dropdown,
 .admin-dropdown,
 .mobile-dropdown {
-  background: rgba(var(--space-bg-rgb), 0.95);
+  background: rgba(var(--color-bg-rgb), 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(var(--space-primary-rgb), 0.2);
+  box-shadow: 0 10px 25px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .dropdown-header {
   padding: 10px 15px;
-  background: rgba(var(--space-primary-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.2);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.2);
 }
 
 .dropdown-title {
-  color: var(--space-primary-light);
+  color: var(--color-primary-light);
   font-size: 0.8rem;
   letter-spacing: 1px;
 }

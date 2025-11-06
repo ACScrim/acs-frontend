@@ -21,7 +21,7 @@
           <div class="space-y-4">
             <label
               for="game"
-              class="mb-2 font-nasa text-space-primary-light flex items-center gap-2"
+              class="mb-2 font-nasa text-color-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -69,7 +69,7 @@
 
           <!-- Options de filtrage -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-space-secondary-light"
+            <label class="block mb-2 font-nasa text-color-secondary-light"
               >OPTIONS DE FILTRAGE</label
             >
             <div class="space-y-3">
@@ -887,26 +887,17 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Animations mystiques pour les éléments interactifs Halloween */
-.mystical-transition {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Animations subtiles pour les éléments interactifs */
+.space-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Effets de survol spécifiques à cette vue */
 .space-hover-glow:hover {
-  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4);
 }
 
-/* Effets de lueur Halloween pour les éléments interactifs */
-.tournament-hover-glow:hover {
-  box-shadow: var(--shadow-glow-primary);
-}
-
-.filter-hover-glow:hover {
-  box-shadow: var(--shadow-glow-accent);
-}
-
-/* Gestion améliorée des transitions Halloween */
+/* Gestion améliorée des transitions */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -915,66 +906,20 @@ onMounted(async () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
 }
 
-/* Gestion des sélecteurs avec effet mystique */
+/* Gestion des sélecteurs custom */
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--space-primary-rgb), 0.3);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3);
 }
 
-select:hover {
-  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
-  border-color: var(--color-primary-light);
-}
-
-/* Style pour les toggles Halloween */
+/* Style pour les toggles */
 .toggle-track {
   transition: background-color 0.3s;
 }
 
 .toggle-thumb {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.toggle-thumb:hover {
-  box-shadow: var(--shadow-toggle-thumb);
-}
-
-/* Animations d'apparition mystique pour les éléments */
-.tournament-card-enter {
-  animation: mystical-appear 0.6s ease-out;
-}
-
-@keyframes mystical-appear {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.9);
-    filter: blur(3px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-/* Effets Halloween pour les boutons et liens */
-.mystical-button:hover {
-  box-shadow: var(--shadow-glow-secondary);
-  transform: translateY(-2px);
-}
-
-/* Responsive Halloween */
-@media (max-width: 768px) {
-  .mystical-transition {
-    transition: all 0.3s ease;
-  }
-
-  .tournament-hover-glow:hover {
-    transform: none;
-  }
+  transition: transform 0.3s;
 }
 </style>
