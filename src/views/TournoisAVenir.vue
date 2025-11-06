@@ -539,8 +539,8 @@ const openRegistrationPopup = (tournament: Tournament, type: string) => {
 
 /**
  * Désinscrit un caster
- * @param tournamentId 
- * @param userId 
+ * @param tournamentId
+ * @param userId
  */
 const unregisterCaster = async (tournamentId: string, userId: string) => {
   try {
@@ -887,9 +887,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Animations subtiles pour les éléments interactifs */
-.space-transition {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Animations mystiques pour les éléments interactifs Halloween */
+.mystical-transition {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Effets de survol spécifiques à cette vue */
@@ -897,7 +897,16 @@ onMounted(async () => {
   box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.4);
 }
 
-/* Gestion améliorée des transitions */
+/* Effets de lueur Halloween pour les éléments interactifs */
+.tournament-hover-glow:hover {
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.filter-hover-glow:hover {
+  box-shadow: var(--shadow-glow-accent);
+}
+
+/* Gestion améliorée des transitions Halloween */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -906,20 +915,66 @@ onMounted(async () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(10px) scale(0.98);
 }
 
-/* Gestion des sélecteurs custom */
+/* Gestion des sélecteurs avec effet mystique */
 select:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(var(--space-primary-rgb), 0.3);
 }
 
-/* Style pour les toggles */
+select:hover {
+  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
+  border-color: var(--color-primary-light);
+}
+
+/* Style pour les toggles Halloween */
 .toggle-track {
   transition: background-color 0.3s;
 }
 
 .toggle-thumb {
-  transition: transform 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.toggle-thumb:hover {
+  box-shadow: var(--shadow-toggle-thumb);
+}
+
+/* Animations d'apparition mystique pour les éléments */
+.tournament-card-enter {
+  animation: mystical-appear 0.6s ease-out;
+}
+
+@keyframes mystical-appear {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Effets Halloween pour les boutons et liens */
+.mystical-button:hover {
+  box-shadow: var(--shadow-glow-secondary);
+  transform: translateY(-2px);
+}
+
+/* Responsive Halloween */
+@media (max-width: 768px) {
+  .mystical-transition {
+    transition: all 0.3s ease;
+  }
+
+  .tournament-hover-glow:hover {
+    transform: none;
+  }
 }
 </style>

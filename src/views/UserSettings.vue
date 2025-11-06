@@ -1115,7 +1115,6 @@ onMounted(async () => {
   }
 });
 
-
 // ========================================
 // SECTION: GESTION DES NOTIFICATIONS
 // ========================================
@@ -1130,7 +1129,9 @@ const notificationPreferences = ref({
   system: true,
 });
 
-const notificationStatus = ref<Record<string, "pending" | "saving" | "saved" | "error" | null>>({
+const notificationStatus = ref<
+  Record<string, "pending" | "saving" | "saved" | "error" | null>
+>({
   tournaments: null,
   badges: null,
   reminders: null,
@@ -1147,15 +1148,15 @@ const notificationTimers = ref<Record<string, number | null>>({
 
 // Computed pour les statuts globaux
 const hasPendingChanges = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'pending')
+  Object.values(notificationStatus.value).some((status) => status === "pending")
 );
 
 const isAnySaving = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'saving')
+  Object.values(notificationStatus.value).some((status) => status === "saving")
 );
 
 const allSaved = computed(() =>
-  Object.values(notificationStatus.value).some(status => status === 'saved')
+  Object.values(notificationStatus.value).some((status) => status === "saved")
 );
 
 // Fonction pour charger les préférences de notifications
@@ -1189,14 +1190,14 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
   }
 
   // Marquer comme en attente
-  notificationStatus.value[type] = 'pending';
+  notificationStatus.value[type] = "pending";
 
   // Programmer la sauvegarde après 1.5 secondes
   notificationTimers.value[type] = setTimeout(async () => {
     if (!user.value) return;
 
     // Marquer comme en cours de sauvegarde
-    notificationStatus.value[type] = 'saving';
+    notificationStatus.value[type] = "saving";
 
     try {
       // Appel API pour sauvegarder la préférence
@@ -1207,7 +1208,7 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       });
 
       // Marquer comme sauvegardé
-      notificationStatus.value[type] = 'saved';
+      notificationStatus.value[type] = "saved";
 
       // Auto-clear après 2 secondes
       setTimeout(() => {
@@ -1221,8 +1222,11 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       (notificationPreferences.value as any)[type] = !enabled;
 
       // Marquer comme erreur
-      notificationStatus.value[type] = 'error';
-      showMessage(`Erreur lors de la sauvegarde des préférences ${type}`, "error");
+      notificationStatus.value[type] = "error";
+      showMessage(
+        `Erreur lors de la sauvegarde des préférences ${type}`,
+        "error"
+      );
 
       // Auto-clear après 3 secondes
       setTimeout(() => {
@@ -1250,13 +1254,16 @@ const subscribeToPush = async () => {
 
 const enableNotifications = () => {
   if (window.Notification && Notification.permission !== "granted") {
-    Notification.requestPermission().then(permission => {
+    Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         subscribeToPush();
         showMessage("Notifications activées avec succès !", "success");
       } else {
         notificationActivated.value = false;
-        showMessage("Notifications refusées. Vous pouvez les activer plus tard.", "error");
+        showMessage(
+          "Notifications refusées. Vous pouvez les activer plus tard.",
+          "error"
+        );
       }
     });
   } else {
@@ -1302,7 +1309,7 @@ onMounted(async () => {
 
 // Nettoyer les timers à la destruction du composant
 onUnmounted(() => {
-  Object.values(notificationTimers.value).forEach(timer => {
+  Object.values(notificationTimers.value).forEach((timer) => {
     if (timer) clearTimeout(timer);
   });
 });
