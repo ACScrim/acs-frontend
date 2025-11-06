@@ -355,7 +355,7 @@
             <div class="text-xs text-space-text-muted">3e places</div>
           </SpaceCard>
         </div>
-      </SpaceCard>
+      </Card>
       <!-- Section Activité et engagement -->
       <SpaceCard
         id="activite"

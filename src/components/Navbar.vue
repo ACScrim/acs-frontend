@@ -1027,7 +1027,7 @@ onBeforeUnmount(() => {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Logo */
+/* Logo Halloween */
 .logo-container {
   position: relative;
   display: inline-flex;
@@ -1047,18 +1047,23 @@ onBeforeUnmount(() => {
 }
 
 .logo-container:hover .logo-glow {
-  opacity: 0.25;
-  filter: blur(15px);
+  /* Ne pas accentuer le glow au hover pour éviter l'effet de cadre */
+  opacity: 0.15;
+  filter: blur(10px);
 }
 
 .navbar-logo {
   height: 40px;
-  filter: drop-shadow(0 0 5px var(--space-primary-light));
+  /* Désactiver le drop-shadow par défaut pour éviter l'effet de bord */
+  filter: none;
   transition: all 0.3s ease;
+  outline: none;
+  border: none;
 }
 
 .logo-container:hover .navbar-logo {
-  filter: drop-shadow(0 0 8px var(--space-primary-light));
+  /* Pas de drop-shadow supplémentaire au hover */
+  filter: none;
   transform: scale(1.05);
 }
 

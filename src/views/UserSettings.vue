@@ -2,7 +2,12 @@
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
       <!-- En-tête de la page -->
-      <SpaceHeader title="PARAMÈTRES UTILISATEUR" mission="SETTINGS-CONFIG-25" :decorated="true" className="mb-8" />
+      <Header
+        title="PARAMÈTRES UTILISATEUR"
+        mission="SETTINGS-CONFIG-25"
+        :decorated="true"
+        className="mb-8"
+      />
 
       <!-- États d'affichage -->
       <div v-if="loading" class="flex justify-center py-12">

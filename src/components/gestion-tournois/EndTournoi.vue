@@ -20,12 +20,12 @@
     </SpaceHeader>
 
     <!-- Information du tournoi sélectionné -->
-    <SpaceCard variant="primary" :stars="true" className="mb-6">
+    <Card variant="primary" :stars="true" className="mb-6">
       <template #header>
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-primary-light"
+            class="h-6 w-6 text-color-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -35,7 +35,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg">Tournoi sélectionné</SpaceTitle>
+          <Title size="lg">Tournoi sélectionné</Title>
         </div>
       </template>
 
@@ -103,11 +103,11 @@
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <SpaceTitle size="lg" className="text-green-400">
+            <Title size="lg" className="text-green-400">
               Ce tournoi est déjà terminé
-            </SpaceTitle>
+            </Title>
           </div>
-          <SpaceButton
+          <Button
             @click="confirmUnfinishTournament()"
             variant="warning"
             size="md"
@@ -127,10 +127,10 @@
               </svg>
             </template>
             Annuler la finalisation
-          </SpaceButton>
+          </Button>
         </div>
       </template>
-    </SpaceCard>
+    </Card>
     <!-- Affichage des équipes avec possibilité de mettre à jour les classements -->
     <div v-if="teams.length > 0">
       <!-- Bouton pour terminer le tournoi -->
@@ -148,7 +148,7 @@
           <div class="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-space-accent-light"
+              class="h-6 w-6 text-color-accent-light"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -160,7 +160,7 @@
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <SpaceTitle size="lg">Finaliser le tournoi</SpaceTitle>
+            <Title size="lg">Finaliser le tournoi</Title>
           </div>
         </template>
 
@@ -383,7 +383,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-error"
+            class="h-6 w-6 text-color-error"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -393,9 +393,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-space-error">
+          <Title size="lg" className="text-color-error">
             CONFIRMATION REQUISE
-          </SpaceTitle>
+          </Title>
         </div>
       </template>
 
@@ -452,14 +452,14 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <SpaceButton
+          <Button
             @click="showConfirmationDialog = false"
             variant="ghost"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="finishTournament" variant="error" size="md">
+          </Button>
+          <Button @click="finishTournament" variant="error" size="md">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -475,7 +475,7 @@
               </svg>
             </template>
             Terminer le tournoi
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </Modal>
@@ -490,7 +490,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-space-warning"
+            class="h-6 w-6 text-color-warning"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -500,9 +500,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <SpaceTitle size="lg" className="text-space-warning">
+          <Title size="lg" className="text-color-warning">
             ANNULATION FINALISATION
-          </SpaceTitle>
+          </Title>
         </div>
       </template>
 
@@ -544,14 +544,14 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <SpaceButton
+          <Button
             @click="showUnfinishConfirmationDialog = false"
             variant="ghost"
             size="md"
           >
             Annuler
-          </SpaceButton>
-          <SpaceButton @click="unfinishTournament" variant="warning" size="md">
+          </Button>
+          <Button @click="unfinishTournament" variant="warning" size="md">
             <template #icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -567,7 +567,7 @@
               </svg>
             </template>
             Annuler la finalisation
-          </SpaceButton>
+          </Button>
         </div>
       </template>
     </Modal>
