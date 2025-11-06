@@ -241,7 +241,7 @@
     </SpaceCard>
 
     <!-- Autres classements -->
-    <SpaceCard variant="dark" :stars="true" className="relative overflow-hidden">
+    <Card variant="dark" :stars="true" className="relative overflow-hidden">
       <!-- En-tête dépliable -->
       <button @click="handleToggleOtherRankings"
         class="w-full text-left p-4 rounded-lg border border-space-bg-light/50 flex justify-between items-center hover:bg-space-bg-light/10 transition-colors">
@@ -367,9 +367,9 @@
           </div>
         </SpaceTerminal>
       </div>
-    </SpaceCard>
+    </Card>
     <!-- Votes MVPS -->
-    <SpaceCard v-if="tournament.mvpVoteOpen">
+    <Card v-if="tournament.mvpVoteOpen">
       <template #header>
         <div class="flex flex-row justify-between items-center">
           <SpaceTitle size="xl" class="uppercase">Vote pour le mvp</SpaceTitle>
@@ -381,96 +381,153 @@
       </template>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
-        <SpaceCard v-for="player in tournament.players">
+        <Card v-for="player in tournament.players">
           <div class="flex flex-row justify-between items-center">
             <p class="w-auto">
               {{ player.username }}
               <span
                 v-if="tournament.teams?.find(t => t.ranking === 1)?.players.filter(p => p.userId === player.userId).length">🏆</span>
             </p>
-            <SpaceButton
+            <Button
               :disabled="user?._id && tournament.mvps?.find(mvp => mvp.player._id === player._id)?.votes.includes(user?._id)"
               class="p-1! px-2! disabled:opacity-5" @click="handleVoteForMvp(player._id)">
               Votez
-            </SpaceButton>
+            </Button>
           </div>
-
-        </SpaceCard>
+        </Card>
       </div>
-    </SpaceCard>
-    <SpaceCard v-else-if="tournament.mvps && tournament.mvps.length > 0">
+    </Card>
+    <Card v-else-if="tournament.mvps && tournament.mvps.length > 0">
       <template #header>
-        <SpaceTitle size="xl" class="uppercase">MVP du tournoi</SpaceTitle>
+        <Title size="xl" class="uppercase">MVP du tournoi</Title>
       </template>
 
-      <div v-for="mvp in tournament.mvps?.filter(mvp => mvp.isMvp)" class="py-4">
-        <SpaceCard variant="primary" :stars="true" :decorated="true" className="overflow-hidden">
+      <div
+        v-for="mvp in tournament.mvps?.filter((mvp) => mvp.isMvp)"
+        class="py-4"
+      >
+        <Card
+          variant="primary"
+          :stars="true"
+          :decorated="true"
+          className="overflow-hidden"
+        >
           <!-- Structure simplifiée : tout centré -->
           <div class="text-center">
             <!-- Avatar centré -->
             <div class="avatar-container inline-block mb-4">
-              <img v-if="mvp.player && mvp.player.avatarUrl" :src="mvp.player.avatarUrl" alt="Avatar"
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
-                loading="lazy" @error="handleImageError($event, mvp.player)" />
-              <div v-else
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto">
-                <span class="text-space-primary text-2xl sm:text-3xl font-bold">
+              <img
+                v-if="mvp.player && mvp.player.avatarUrl"
+                :src="mvp.player.avatarUrl"
+                alt="Avatar"
+                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
+                loading="lazy"
+                @error="handleImageError($event, mvp.player)"
+              />
+              <div
+                v-else
+                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
+              >
+                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
                   {{ getInitials(mvp.player.username) }}
                 </span>
               </div>
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
-              mvp.player.username.length > 15
-                ? 'text-2xl sm:text-4xl'
-                : mvp.player.username.length > 10
+            <Title
+              size="4xl"
+              :glitch="true"
+              :decorated="true"
+              className="capitalize break-words mb-4"
+              :class="[
+                mvp.player.username.length > 15
+                  ? 'text-2xl sm:text-4xl'
+                  : mvp.player.username.length > 10
                   ? 'text-3xl sm:text-5xl'
                   : 'text-4xl sm:text-5xl',
-            ]">
+              ]"
+            >
               {{ mvp.player.username }}
             </SpaceTitle>
 
             <!-- Barre parfaitement centrée sous le nom -->
-            <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
-            <p class="text-center text-space-primary-light text-lg">Gagnant avec <b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
+            <div
+              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
+            ></div>
+            <p class="text-center text-color-primary-light text-lg">
+              Gagnant avec
+              <b
+                >{{ mvp.votes.length }} vote{{
+                  mvp.votes.length > 1 ? "s" : ""
+                }}</b
+              >
+            </p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
       <div class="hidden sm:flex flex-row gap-x-10">
-        <SpaceCard
-          v-for="mvp in tournament.mvps?.filter(mvp => !mvp.isMvp).sort((a,b) => b.votes.length - a.votes.length).slice(0, 3)"
-          variant="primary" :stars="true" :decorated="true" className="overflow-hidden basis-1/3">
+        <Card
+          v-for="mvp in tournament.mvps
+            ?.filter((mvp) => !mvp.isMvp)
+            .sort((a, b) => b.votes.length - a.votes.length)
+            .slice(0, 3)"
+          variant="primary"
+          :stars="true"
+          :decorated="true"
+          className="overflow-hidden basis-1/3"
+        >
           <div class="text-center">
             <!-- Avatar centré -->
             <div class="avatar-container inline-block mb-4">
-              <img v-if="mvp.player && mvp.player.avatarUrl" :src="mvp.player.avatarUrl" alt="Avatar"
-                class="size-10 sm:size-14 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
-                loading="lazy" @error="handleImageError($event, mvp.player)" />
-              <div v-else
-                class="size-10 sm:size-14 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto">
-                <span class="text-space-primary text-2xl sm:text-3xl font-bold">
+              <img
+                v-if="mvp.player && mvp.player.avatarUrl"
+                :src="mvp.player.avatarUrl"
+                alt="Avatar"
+                class="size-10 sm:size-14 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
+                loading="lazy"
+                @error="handleImageError($event, mvp.player)"
+              />
+              <div
+                v-else
+                class="size-10 sm:size-14 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
+              >
+                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
                   {{ getInitials(mvp.player.username) }}
                 </span>
               </div>
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
-              mvp.player.username.length > 15
-                ? 'text-lg sm:text-2xl'
-                : mvp.player.username.length > 10
+            <Title
+              size="4xl"
+              :glitch="true"
+              :decorated="true"
+              className="capitalize break-words mb-4"
+              :class="[
+                mvp.player.username.length > 15
+                  ? 'text-lg sm:text-2xl'
+                  : mvp.player.username.length > 10
                   ? 'text-lg sm:text-2xl'
                   : 'text-lg sm:text-2xl',
-            ]">
+              ]"
+            >
               {{ mvp.player.username }}
-            </SpaceTitle>
+            </Title>
 
             <!-- Barre parfaitement centrée sous le nom -->
-            <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
-            <p class="text-center text-space-primary-light text-lg"><b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
+            <div
+              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
+            ></div>
+            <p class="text-center text-color-primary-light text-lg">
+              <b
+                >{{ mvp.votes.length }} vote{{
+                  mvp.votes.length > 1 ? "s" : ""
+                }}</b
+              >
+            </p>
           </div>
-        </SpaceCard>
+        </Card>
       </div>
     </SpaceCard>
     <TournamentClip
@@ -731,7 +788,7 @@ const handleImageError = (e: Event, player: Player) => {
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(var(--space-bronze-rgb), 0.6);
+    box-shadow: 0 0 20px rgba(var(--color-bronze-rgb), 0.6);
   }
 }
 </style>

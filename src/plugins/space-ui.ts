@@ -24,12 +24,12 @@ import Container from "@/components/ui/layout/Container.vue";
 // Liste des composants à enregistrer avec les bons noms pour Vue
 const components = {
   // Atoms
-  SpaceButton: Button,
-  SpaceInput: Input,
-  SpaceBadge: Badge,
-  SpaceTitle: Title,
-  SpaceLoader: Loader,
-  SpaceToggle: Toggle,
+  Button: Button,
+  Input: Input,
+  Badge: Badge,
+  Title: Title,
+  Loader: Loader,
+  Toggle: Toggle,
   SpaceDropdown: Dropdown, // Ajout du composant Toggle
 
   // Molecules
