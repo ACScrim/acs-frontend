@@ -32,8 +32,8 @@
       </div>
 
       <!-- Filtres -->
-      <Card variant="primary" :stars="false" className="overflow-hidden">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <Card variant="primary" :stars="true" className="overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Sélecteur de jeux -->
           <div>
             <label for="game" class="mb-3 flex items-center gap-2">
@@ -155,38 +155,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Recherche par joueur -->
-          <div>
-            <label for="search" class="mb-3 flex items-center gap-2">
-              <div class="font-body text-color-text flex items-center gap-2">
-                <!-- Icône loupe fantomatique -->
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-text-muted"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"
-                  />
-                </svg>
-                Rechercher un joueur
-              </div>
-            </label>
-            <div class="relative">
-              <input
-                id="search"
-                v-model.trim="searchQuery"
-                type="text"
-                inputmode="search"
-                placeholder="Ex: Ragnar, MiDo, ..."
-                class="w-full rounded-lg border-2 border-color-bg-light/40 bg-color-bg-light text-color-text px-4 py-2 focus:ring-2 focus:ring-color-primary/40 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary placeholder:text-color-text-muted"
-                style="box-shadow: 0 0 10px rgba(148, 163, 184, 0.15)"
-                aria-label="Rechercher un joueur par nom"
-              />
-            </div>
-          </div>
         </div>
       </SpaceCard>
 
@@ -214,52 +182,21 @@
       </SpaceTerminal>
 
       <!-- Tableau de classement -->
-      <Card v-else variant="dark" :stars="false" className="overflow-hidden ">
-        <!-- Barre d'options au-dessus du tableau -->
-        <div
-          class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-color-bg-light/10 border-b border-color-bg-light/30"
-        >
-          <div class="flex items-center gap-2">
-            <span
-              class="font-heading text-xs uppercase tracking-wider text-color-text-muted"
-              >Éléments/page</span
-            >
-            <select
-              v-model.number="itemsPerPage"
-              class="rounded-md border-2 border-color-bg-light/40 bg-color-bg-light text-color-text px-2 py-1 text-sm focus:ring-2 focus:ring-color-primary/40 focus:border-color-primary"
-              aria-label="Nombre d'éléments par page"
-            >
-              <option :value="10">10</option>
-              <option :value="25">25</option>
-              <option :value="50">50</option>
-            </select>
-          </div>
-
-          <div class="flex items-center gap-2 ml-auto">
-            <Button
-              variant="ghost"
-              size="sm"
-              @click="resetFilters"
-              title="Réinitialiser les filtres"
-            >
-              Réinitialiser
-            </Button>
-          </div>
-        </div>
+      <Card v-else variant="dark" :stars="true" className="overflow-hidden ">
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
-            <thead class="bg-space-bg-light/30">
+            <thead class="bg-color-bg-light/30">
               <tr>
                 <th
                   scope="col"
-                  class="px-6 py-4 text-center text-sm font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-4 text-center text-sm font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   Rang
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Joueur</span>
@@ -286,7 +223,7 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Tournois</span>
@@ -316,7 +253,7 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Victoires</span>
@@ -520,7 +457,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 // Types pour le typage fort
 import type { PlayerRanking, Season, Game } from "../types";
@@ -529,10 +465,6 @@ import type { PlayerRanking, Season, Game } from "../types";
 import seasonService from "../services/seasonService";
 import gameService from "../services/gameService";
 import playerService from "../services/playerService";
-
-// Router
-const route = useRoute();
-const router = useRouter();
 
 // État du composant
 const isLoading = ref(true);
@@ -544,12 +476,9 @@ const rankings = ref<PlayerRanking[]>([]);
 const sortKey = ref<keyof PlayerRanking>("totalVictories");
 const sortOrder = ref<"asc" | "desc">("desc");
 
-// Recherche
-const searchQuery = ref("");
-
 // État de la pagination
 const currentPage = ref(1);
-const itemsPerPage = ref(10); // Nombre d'éléments par page
+const itemsPerPage = 10; // Nombre d'éléments par page
 
 // Filtres
 const selectedGame = ref<string>("");
@@ -614,34 +543,6 @@ const fetchRankingsByFilter = async () => {
   }
 };
 
-//--- URL <-> State synchronisation helpers ----------------------------------
-const syncFromRoute = () => {
-  const q = route.query;
-  if (typeof q.g === "string") selectedGame.value = q.g;
-  if (typeof q.s === "string") selectedSeason.value = q.s;
-  if (typeof q.q === "string") searchQuery.value = q.q;
-  if (typeof q.p === "string" && !Number.isNaN(parseInt(q.p)))
-    currentPage.value = Math.max(1, parseInt(q.p));
-  if (typeof q.pp === "string" && !Number.isNaN(parseInt(q.pp))) {
-    const pp = parseInt(q.pp);
-    itemsPerPage.value = [10, 25, 50].includes(pp) ? pp : 10;
-  }
-};
-
-const updateRouteQuery = () => {
-  const next: Record<string, any> = { ...route.query };
-  // Minimal keys
-  if (selectedGame.value) next.g = selectedGame.value;
-  else delete next.g;
-  if (selectedSeason.value) next.s = selectedSeason.value;
-  else delete next.s;
-  if (searchQuery.value) next.q = searchQuery.value;
-  else delete next.q;
-  next.p = currentPage.value;
-  next.pp = itemsPerPage.value;
-  router.replace({ query: next });
-};
-
 /**
  * Exporte les données en CSV
  */
@@ -700,21 +601,6 @@ const exportCSV = () => {
   document.body.removeChild(link);
 };
 
-/**
- * Réinitialise les filtres et la recherche
- */
-const resetFilters = () => {
-  selectedGame.value = "";
-  // Saison par défaut: la plus récente si disponible, sinon classement général
-  selectedSeason.value = seasons.value.length > 0 ? seasons.value[0]._id : "";
-  searchQuery.value = "";
-  sortKey.value = "totalVictories";
-  sortOrder.value = "desc";
-  itemsPerPage.value = 10;
-  currentPage.value = 1;
-  fetchRankingsByFilter();
-};
-
 //-------------------------------------------------------
 // SECTION: Gestion du tri
 //-------------------------------------------------------
@@ -761,15 +647,6 @@ const getRankBadgeVariant = (index: number) => {
 //-------------------------------------------------------
 
 /**
- * Filtre par recherche (nom de joueur)
- */
-const filteredRankings = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase();
-  if (!q) return rankings.value;
-  return rankings.value.filter((r) => r.username.toLowerCase().includes(q));
-});
-
-/**
  * Propriété calculée qui retourne le classement trié selon les critères actuels
  */
 const sortedRankings = computed(() => {
@@ -810,8 +687,8 @@ const totalPages = computed(() =>
  * Extrait les classements à afficher sur la page courante
  */
 const paginatedRankings = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = Math.min(start + itemsPerPage.value, sortedRankings.value.length);
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = Math.min(start + itemsPerPage, sortedRankings.value.length);
   return sortedRankings.value.slice(start, end);
 });
 
@@ -848,35 +725,9 @@ const calculateGlobalRank = (index: number): number => {
 // SECTION: Cycle de vie et watchers
 //-------------------------------------------------------
 
-// Petite fonction de debounce pour éviter les appels répétitifs
-function debounce<T extends (...args: any[]) => any>(fn: T, wait = 250) {
-  let t: any;
-  return (...args: Parameters<T>) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
-  };
-}
-
-const debouncedFetch = debounce(fetchRankingsByFilter, 250);
-const debouncedUpdateRoute = debounce(updateRouteQuery, 200);
-
 // Observer les changements de selectedGame et selectedSeason
 watch([() => selectedGame.value, () => selectedSeason.value], () => {
-  debouncedFetch();
-  debouncedUpdateRoute();
-});
-
-// Revenir à la première page quand on recherche ou change le nombre d'éléments par page
-watch(searchQuery, () => {
-  currentPage.value = 1;
-  debouncedUpdateRoute();
-});
-watch(itemsPerPage, () => {
-  currentPage.value = 1;
-  debouncedUpdateRoute();
-});
-watch(currentPage, () => {
-  debouncedUpdateRoute();
+  fetchRankingsByFilter();
 });
 
 /**
@@ -888,12 +739,9 @@ onMounted(async () => {
     // Charger les saisons et les jeux
     await Promise.all([fetchSeasons(), fetchGames()]);
 
-    // Synchroniser depuis l'URL si disponible
-    syncFromRoute();
-
-    // Définir la saison actuelle comme valeur par défaut si aucune dans l'URL
-    if (!route.query.s && seasons.value.length > 0) {
-      // Les saisons sont triées par numéro décroissant, donc la première est la plus récente
+    // Définir la saison actuelle comme valeur par défaut si elle existe
+    if (seasons.value.length > 0) {
+      // Les saisons sont déjà triées par numéro décroissant, donc la première est la plus récente
       selectedSeason.value = seasons.value[0]._id;
     }
 
