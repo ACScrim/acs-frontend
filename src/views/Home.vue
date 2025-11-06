@@ -1103,17 +1103,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Grille spatiale en arrière-plan */
-.space-grid {
-  background-image: linear-gradient(
-      rgba(109, 40, 217, 0.1) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center center;
-}
-
 /* Animation pulse lente */
 @keyframes pulse-slow {
   0%,
