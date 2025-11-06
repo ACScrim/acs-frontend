@@ -22,17 +22,17 @@
         />
         <!-- Overlay pour améliorer la visibilité du texte -->
         <div
-          class="absolute inset-0 bg-gradient-to-t from-color-bg via-transparent to-transparent opacity-80"
+          class="absolute inset-0 bg-gradient-to-t from-space-bg via-transparent to-transparent opacity-80"
         ></div>
       </div>
       <div
         v-else
-        class="w-full h-full bg-color-bg-light/30 flex items-center justify-center"
+        class="w-full h-full bg-space-bg-light/30 flex items-center justify-center"
       >
         <!-- Icône de jeu comme placeholder -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-20 w-20 text-color-primary/70"
+          class="h-20 w-20 text-space-primary/70"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -747,7 +747,7 @@ onMounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary-light),
+    var(--space-primary-light),
     transparent
   );
   animation: scan-line 2s ease-out;
@@ -792,8 +792,8 @@ onMounted(() => {
 }
 
 .finished-tournament {
-  border: 2px solid var(--color-success) !important;
-  box-shadow: 0 0 10px rgba(var(--color-success-rgb), 0.3) !important;
+  border: 2px solid var(--space-success) !important;
+  box-shadow: 0 0 10px rgba(var(--space-success-rgb), 0.3) !important;
 }
 
 /* Styles pour les différents niveaux de remplissage */
@@ -808,7 +808,7 @@ onMounted(() => {
 }
 
 .tournament-full:hover {
-  box-shadow: 0 0 20px rgba(var(--color-error-rgb), 0.6) !important;
+  box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.6) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -823,13 +823,13 @@ onMounted(() => {
 }
 
 .tournament-almost-full:hover {
-  box-shadow: 0 0 18px rgba(var(--color-warning-rgb), 0.5) !important;
+  box-shadow: 0 0 18px rgba(var(--space-warning-rgb), 0.5) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-filling {
-  border: 2px solid var(--color-accent) !important;
-  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.3) !important;
+  border: 2px solid var(--space-accent) !important;
+  box-shadow: 0 0 10px rgba(var(--space-accent-rgb), 0.3) !important;
   background: linear-gradient(
     135deg,
     rgba(var(--space-accent-rgb), 0.06) 0%,
@@ -838,13 +838,13 @@ onMounted(() => {
 }
 
 .tournament-filling:hover {
-  box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.45) !important;
+  box-shadow: 0 0 15px rgba(var(--space-accent-rgb), 0.45) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-some-places {
-  border: 2px solid var(--color-secondary) !important;
-  box-shadow: 0 0 8px rgba(var(--color-secondary-rgb), 0.25) !important;
+  border: 2px solid var(--space-secondary) !important;
+  box-shadow: 0 0 8px rgba(var(--space-secondary-rgb), 0.25) !important;
   background: linear-gradient(
     135deg,
     rgba(var(--space-secondary-rgb), 0.04) 0%,
@@ -853,13 +853,13 @@ onMounted(() => {
 }
 
 .tournament-some-places:hover {
-  box-shadow: 0 0 12px rgba(var(--color-secondary-rgb), 0.4) !important;
+  box-shadow: 0 0 12px rgba(var(--space-secondary-rgb), 0.4) !important;
   transform: translateY(-2px) !important;
 }
 
 .tournament-open {
-  border: 2px solid var(--color-primary) !important;
-  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.2) !important;
+  border: 2px solid var(--space-primary) !important;
+  box-shadow: 0 0 6px rgba(var(--space-primary-rgb), 0.2) !important;
   background: linear-gradient(
     135deg,
     rgba(var(--space-primary-rgb), 0.02) 0%,
@@ -868,7 +868,7 @@ onMounted(() => {
 }
 
 .tournament-open:hover {
-  box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.35) !important;
+  box-shadow: 0 0 10px rgba(var(--space-primary-rgb), 0.35) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -884,7 +884,7 @@ onMounted(() => {
     box-shadow: 0 0 15px rgba(var(--space-warning-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 20px rgba(var(--color-error-rgb), 0.5);
+    box-shadow: 0 0 20px rgba(var(--space-error-rgb), 0.5);
   }
 }
 

@@ -14,10 +14,10 @@
         :class="[
           'relative overflow-hidden rounded-lg backdrop-blur-md border',
           type === 'error'
-            ? 'bg-gradient-to-br from-color-bg-primary/90 via-red-500/10 to-color-bg-primary/95 border-red-500/40'
-            : 'bg-gradient-to-br from-color-bg-primary/95 via-color-bg-secondary/90 to-color-bg-primary/95 border-space-border/40',
+            ? 'bg-gradient-to-br from-space-bg-primary/90 via-red-500/10 to-space-bg-primary/95 border-red-500/40'
+            : 'bg-gradient-to-br from-space-bg-primary/95 via-space-bg-secondary/90 to-space-bg-primary/95 border-space-border/40',
           'shadow-2xl',
-          type === 'error' ? 'shadow-red-500/30' : 'shadow-color-success/30',
+          type === 'error' ? 'shadow-red-500/30' : 'shadow-space-success/30',
         ]"
       >
         <!-- Animated background particles -->
@@ -34,7 +34,7 @@
         <div
           :class="[
             'absolute inset-0 rounded-lg border-2 opacity-60 animate-pulse',
-            type === 'error' ? 'border-red-500/50' : 'border-color-success/50',
+            type === 'error' ? 'border-red-500/50' : 'border-space-success/50',
           ]"
         ></div>
 
@@ -64,11 +64,11 @@
             <!-- Success Icon - Mission Complete -->
             <div
               v-else
-              class="flex-shrink-0 w-8 h-8 mr-3 flex items-center justify-center rounded-full bg-color-success/20 border border-color-success/40"
+              class="flex-shrink-0 w-8 h-8 mr-3 flex items-center justify-center rounded-full bg-space-success/20 border border-space-success/40"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-color-success-light animate-pulse"
+                class="h-5 w-5 text-space-success-light animate-pulse"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -84,12 +84,12 @@
               <div
                 :class="[
                   'text-sm font-medium tracking-wide',
-                  type === 'error' ? 'text-red-500' : 'text-color-success',
+                  type === 'error' ? 'text-red-500' : 'text-space-success',
                 ]"
               >
                 {{ type === "error" ? "MISSION ÉCHOUÉE" : "MISSION RÉUSSIE" }}
               </div>
-              <div class="text-color-text text-xs mt-1 opacity-90">
+              <div class="text-space-text text-xs mt-1 opacity-90">
                 {{ message }}
               </div>
             </div>
@@ -99,7 +99,7 @@
               <div
                 :class="[
                   'w-2 h-2 rounded-full animate-pulse',
-                  type === 'error' ? 'bg-red-500' : 'bg-color-success',
+                  type === 'error' ? 'bg-red-500' : 'bg-space-success',
                 ]"
               ></div>
             </div>
@@ -108,14 +108,14 @@
           <!-- Progress bar container -->
           <div class="mt-3 relative">
             <div
-              class="w-full h-1 bg-color-bg-tertiary/50 rounded-full overflow-hidden"
+              class="w-full h-1 bg-space-bg-tertiary/50 rounded-full overflow-hidden"
             >
               <div
                 :class="[
                   'h-full animate-shrink rounded-full relative',
                   type === 'error'
                     ? 'bg-gradient-to-r from-red-500/70 to-red-500'
-                    : 'bg-gradient-to-r from-color-success/70 to-color-success',
+                    : 'bg-gradient-to-r from-space-success/70 to-space-success',
                 ]"
               >
                 <!-- Glowing effect on progress bar -->
@@ -124,7 +124,7 @@
                     'absolute inset-0 rounded-full animate-pulse',
                     type === 'error'
                       ? 'shadow-md shadow-red-500/50'
-                      : 'shadow-md shadow-color-success/50',
+                      : 'shadow-md shadow-space-success/50',
                   ]"
                 ></div>
               </div>
@@ -134,16 +134,16 @@
 
         <!-- Corner decorations -->
         <div
-          class="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-color-primary/40 rounded-tl"
+          class="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-space-primary/40 rounded-tl"
         ></div>
         <div
-          class="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-color-primary/40 rounded-tr"
+          class="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-space-primary/40 rounded-tr"
         ></div>
         <div
-          class="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-color-primary/40 rounded-bl"
+          class="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-space-primary/40 rounded-bl"
         ></div>
         <div
-          class="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-color-primary/40 rounded-br"
+          class="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-space-primary/40 rounded-br"
         ></div>
 
         <!-- Scanning line effect -->
@@ -152,7 +152,7 @@
             'absolute top-0 left-0 w-full h-0.5 animate-scan opacity-50',
             type === 'error'
               ? 'bg-gradient-to-r from-transparent via-red-500 to-transparent'
-              : 'bg-gradient-to-r from-transparent via-color-success to-transparent',
+              : 'bg-gradient-to-r from-transparent via-space-success to-transparent',
           ]"
         ></div>
       </div>

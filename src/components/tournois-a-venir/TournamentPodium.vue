@@ -14,9 +14,7 @@
       <!-- Podium -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
         <!-- Le podium physique pour desktop -->
-        <div
-          class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative space-podium"
-        >
+        <div class="hidden md:flex justify-center items-end mt-28 mb-10 col-span-3 h-52 relative space-podium">
           <!-- 2ème place -->
           <div class="w-1/5 relative">
             <div class="h-32 rounded-t-lg podium-silver">
@@ -58,13 +56,8 @@
         <div class="hidden md:grid grid-cols-3 gap-4 col-span-3">
           <!-- 2ème place équipes -->
           <div>
-            <h4
-              v-if="getTeamsByRank(2).length > 0"
-              class="text-base font-heading text-color-silver mb-2 text-center"
-            >
-              <SpaceBadge variant="silver" size="md" className="mr-2"
-                >🥈</SpaceBadge
-              >
+            <h4 v-if="getTeamsByRank(2).length > 0" class="text-base font-heading text-space-silver mb-2 text-center">
+              <SpaceBadge variant="silver" size="md" className="mr-2">🥈</SpaceBadge>
               {{ getTeamsByRank(2).length > 1 ? "Ex aequo" : "Argent" }}
             </h4>
             <div class="space-y-2">
@@ -90,13 +83,8 @@
 
           <!-- 1ère place équipes -->
           <div>
-            <h4
-              v-if="getTeamsByRank(1).length > 0"
-              class="text-lg font-heading text-color-gold mb-2 text-center"
-            >
-              <SpaceBadge variant="gold" size="md" className="mr-2"
-                >🏆</SpaceBadge
-              >
+            <h4 v-if="getTeamsByRank(1).length > 0" class="text-lg font-heading text-space-gold mb-2 text-center">
+              <SpaceBadge variant="gold" size="md" className="mr-2">🏆</SpaceBadge>
               {{ getTeamsByRank(1).length > 1 ? "Ex aequo" : "Champion" }}
             </h4>
             <div class="space-y-2">
@@ -122,13 +110,8 @@
 
           <!-- 3ème place équipes -->
           <div>
-            <h4
-              v-if="getTeamsByRank(3).length > 0"
-              class="text-base font-heading text-color-bronze mb-2 text-center"
-            >
-              <SpaceBadge variant="bronze" size="md" className="mr-2"
-                >🥉</SpaceBadge
-              >
+            <h4 v-if="getTeamsByRank(3).length > 0" class="text-base font-heading text-space-bronze mb-2 text-center">
+              <SpaceBadge variant="bronze" size="md" className="mr-2">🥉</SpaceBadge>
               {{ getTeamsByRank(3).length > 1 ? "Ex aequo" : "Bronze" }}
             </h4>
             <div class="space-y-2">
@@ -155,10 +138,8 @@
 
         <!-- Version mobile du podium (cartes en liste) -->
         <div class="block md:hidden col-span-3 mt-4">
-          <h4 class="text-center text-lg font-heading text-color-gold mb-4">
-            <SpaceBadge variant="gold" size="md" className="mr-2"
-              >🏆</SpaceBadge
-            >
+          <h4 class="text-center text-lg font-heading text-space-gold mb-4">
+            <SpaceBadge variant="gold" size="md" className="mr-2">🏆</SpaceBadge>
             Podium
           </h4>
 
@@ -319,11 +300,7 @@
                 'hover:bg-space-bg-light/20': true,
               }" class="transition-colors border-b border-space-bg-light/10">
                 <td class="py-3 px-4 text-center font-mono">
-                  <SpaceBadge
-                    variant="primary"
-                    size="sm"
-                    :className="team.ranking > 0 ? '' : 'opacity-50'"
-                  >
+                  <SpaceBadge variant="primary" size="sm" :className="team.ranking > 0 ? '' : 'opacity-50'">
                     {{ team.ranking > 0 ? `${team.ranking}e` : "NC" }}
                   </SpaceBadge>
                 </td>
@@ -353,11 +330,7 @@
                 'hover:bg-space-bg-light/15': true,
               }" class="transition-colors border-b border-space-bg-light/10 text-space-text-muted">
                 <td class="py-3 px-4 text-center font-mono">
-                  <SpaceBadge
-                    variant="secondary"
-                    size="sm"
-                    className="opacity-50"
-                  >
+                  <SpaceBadge variant="secondary" size="sm" className="opacity-50">
                     NC
                   </SpaceBadge>
                 </td>
@@ -421,6 +394,7 @@
               Votez
             </Button>
           </div>
+
         </SpaceCard>
       </div>
     </SpaceCard>
@@ -429,130 +403,72 @@
         <Title size="xl" class="uppercase">MVP du tournoi</Title>
       </template>
 
-      <div
-        v-for="mvp in tournament.mvps?.filter((mvp) => mvp.isMvp)"
-        class="py-4"
-      >
-        <SpaceCard
-          variant="primary"
-          :stars="true"
-          :decorated="true"
-          className="overflow-hidden"
-        >
+      <div v-for="mvp in tournament.mvps?.filter(mvp => mvp.isMvp)" class="py-4">
+        <SpaceCard variant="primary" :stars="true" :decorated="true" className="overflow-hidden">
           <!-- Structure simplifiée : tout centré -->
           <div class="text-center">
             <!-- Avatar centré -->
             <div class="avatar-container inline-block mb-4">
-              <img
-                v-if="mvp.player && mvp.player.avatarUrl"
-                :src="mvp.player.avatarUrl"
-                alt="Avatar"
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
-                loading="lazy"
-                @error="handleImageError($event, mvp.player)"
-              />
-              <div
-                v-else
-                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
-              >
-                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
+              <img v-if="mvp.player && mvp.player.avatarUrl" :src="mvp.player.avatarUrl" alt="Avatar"
+                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                loading="lazy" @error="handleImageError($event, mvp.player)" />
+              <div v-else
+                class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto">
+                <span class="text-space-primary text-2xl sm:text-3xl font-bold">
                   {{ getInitials(mvp.player.username) }}
                 </span>
               </div>
             </div>
 
             <!-- Nom centré -->
-            <SpaceTitle
-              size="4xl"
-              :glitch="true"
-              :decorated="true"
-              className="capitalize break-words mb-4"
-              :class="[
-                mvp.player.username.length > 15
-                  ? 'text-2xl sm:text-4xl'
-                  : mvp.player.username.length > 10
+            <SpaceTitle size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
+              mvp.player.username.length > 15
+                ? 'text-2xl sm:text-4xl'
+                : mvp.player.username.length > 10
                   ? 'text-3xl sm:text-5xl'
                   : 'text-4xl sm:text-5xl',
-              ]"
-            >
+            ]">
               {{ mvp.player.username }}
             </SpaceTitle>
 
             <!-- Barre parfaitement centrée sous le nom -->
-            <div
-              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
-            ></div>
-            <p class="text-center text-color-primary-light text-lg">
-              Gagnant avec
-              <b
-                >{{ mvp.votes.length }} vote{{
-                  mvp.votes.length > 1 ? "s" : ""
-                }}</b
-              >
-            </p>
+            <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
+            <p class="text-center text-space-primary-light text-lg">Gagnant avec <b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
           </div>
         </SpaceCard>
       </div>
       <div class="hidden sm:flex flex-row gap-x-10">
         <SpaceCard
-          v-for="mvp in tournament.mvps
-            ?.filter((mvp) => !mvp.isMvp)
-            .sort((a, b) => b.votes.length - a.votes.length)
-            .slice(0, 3)"
-          variant="primary"
-          :stars="true"
-          :decorated="true"
-          className="overflow-hidden basis-1/3"
-        >
+          v-for="mvp in tournament.mvps?.filter(mvp => !mvp.isMvp).sort((a,b) => b.votes.length - a.votes.length).slice(0, 3)"
+          variant="primary" :stars="true" :decorated="true" className="overflow-hidden basis-1/3">
           <div class="text-center">
             <!-- Avatar centré -->
             <div class="avatar-container inline-block mb-4">
-              <img
-                v-if="mvp.player && mvp.player.avatarUrl"
-                :src="mvp.player.avatarUrl"
-                alt="Avatar"
-                class="size-10 sm:size-14 rounded-full object-cover border-2 border-color-primary shadow-glow-primary"
-                loading="lazy"
-                @error="handleImageError($event, mvp.player)"
-              />
-              <div
-                v-else
-                class="size-10 sm:size-14 rounded-full bg-color-bg-light flex items-center justify-center border-2 border-color-primary mx-auto"
-              >
-                <span class="text-color-primary text-2xl sm:text-3xl font-bold">
+              <img v-if="mvp.player && mvp.player.avatarUrl" :src="mvp.player.avatarUrl" alt="Avatar"
+                class="size-10 sm:size-14 rounded-full object-cover border-2 border-space-primary shadow-glow-primary"
+                loading="lazy" @error="handleImageError($event, mvp.player)" />
+              <div v-else
+                class="size-10 sm:size-14 rounded-full bg-space-bg-light flex items-center justify-center border-2 border-space-primary mx-auto">
+                <span class="text-space-primary text-2xl sm:text-3xl font-bold">
                   {{ getInitials(mvp.player.username) }}
                 </span>
               </div>
             </div>
 
             <!-- Nom centré -->
-            <Title
-              size="4xl"
-              :glitch="true"
-              :decorated="true"
-              className="capitalize break-words mb-4"
-              :class="[
-                mvp.player.username.length > 15
-                  ? 'text-lg sm:text-2xl'
-                  : mvp.player.username.length > 10
+            <Title size="4xl" :glitch="true" :decorated="true" className="capitalize break-words mb-4" :class="[
+              mvp.player.username.length > 15
+                ? 'text-lg sm:text-2xl'
+                : mvp.player.username.length > 10
                   ? 'text-lg sm:text-2xl'
                   : 'text-lg sm:text-2xl',
-              ]"
-            >
+            ]">
               {{ mvp.player.username }}
             </Title>
 
             <!-- Barre parfaitement centrée sous le nom -->
-            <div
-              class="w-32 h-1 bg-gradient-to-r from-color-primary to-color-secondary rounded-full mx-auto"
-            ></div>
-            <p class="text-center text-color-primary-light text-lg">
-              <b
-                >{{ mvp.votes.length }} vote{{
-                  mvp.votes.length > 1 ? "s" : ""
-                }}</b
-              >
-            </p>
+            <div class="w-32 h-1 bg-gradient-to-r from-space-primary to-space-secondary rounded-full mx-auto"></div>
+            <p class="text-center text-space-primary-light text-lg"><b>{{ mvp.votes.length }} vote{{ mvp.votes.length > 1 ? "s" : "" }}</b></p>
           </div>
         </SpaceCard>
       </div>
@@ -815,7 +731,7 @@ const handleImageError = (e: Event, player: Player) => {
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(var(--color-bronze-rgb), 0.6);
+    box-shadow: 0 0 20px rgba(var(--space-bronze-rgb), 0.6);
   }
 }
 </style>

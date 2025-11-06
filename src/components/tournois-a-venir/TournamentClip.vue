@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import tournamentService from "../../services/tournamentService";
-import type { Clip, Tournament } from "../../types";
-import SpaceInput from "../ui/atoms/Input.vue";
-import { useUserStore } from "../../stores/userStore";
-import Toast from "../../shared/Toast.vue";
+import { computed, ref, watch } from 'vue';
+import tournamentService from '../../services/tournamentService';
+import type { Clip, Tournament } from '../../types';
+import SpaceInput from '../ui/atoms/Input.vue';
+import { useUserStore } from '../../stores/userStore';
+import Toast from '../../shared/Toast.vue';
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
@@ -146,12 +146,11 @@ const formatDate = (dateString: string): string => {
     </div>
   </SpaceCard>
 
-  <Teleport to="body" :disabled="!showAddClipModal">
-    <SpaceModal
-      v-model="showAddClipModal"
-      title="AJOUTER UN CLIP"
-      className="max-w-3xl!"
-    >
+  <Teleport
+    to="body"
+    :disabled="!showAddClipModal"
+  >
+    <SpaceModal v-model="showAddClipModal" title="AJOUTER UN CLIP" className="max-w-3xl!">
       <div class="space-y-3 sm:space-y-4">
         <p class="text-space-text text-sm sm:text-base">
           Ici vous pouvez ajouter un clip pour
@@ -232,7 +231,10 @@ const formatDate = (dateString: string): string => {
     </SpaceModal>
   </Teleport>
 
-  <Teleport to="body" :disabled="!showDeleteClipModal">
+  <Teleport
+    to="body"
+    :disabled="!showDeleteClipModal"
+  >
     <SpaceModal v-model="showDeleteClipModal" title="SUPPRIMER UN CLIP">
       <div class="space-y-4">
         <p class="text-space-text text-base">

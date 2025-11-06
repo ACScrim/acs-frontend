@@ -2,12 +2,7 @@
   <div class="container mx-auto p-4 pt-20 min-h-screen">
     <div class="max-w-4xl mx-auto">
       <!-- En-tête de la page -->
-      <Header
-        title="PARAMÈTRES UTILISATEUR"
-        mission="SETTINGS-CONFIG-25"
-        :decorated="true"
-        className="mb-8"
-      />
+      <SpaceHeader title="PARAMÈTRES UTILISATEUR" mission="SETTINGS-CONFIG-25" :decorated="true" className="mb-8" />
 
       <!-- États d'affichage -->
       <div v-if="loading" class="flex justify-center py-12">
@@ -39,11 +34,7 @@
               </label>
               <div class="flex gap-3">
                 <div class="flex-1 relative">
-                  <SpaceInput
-                    v-model="formData.twitchUsername"
-                    placeholder="votre_nom_twitch"
-                    :disabled="isSaving"
-                  >
+                  <SpaceInput v-model="formData.twitchUsername" placeholder="votre_nom_twitch" :disabled="isSaving">
                     <template #prepend>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-space-primary-light"
                         fill="currentColor" viewBox="0 0 24 24">
@@ -181,15 +172,9 @@
                   </div>
 
                   <!-- Toggle -->
-                  <SpaceToggle
-                    :model-value="notificationPreferences.tournaments"
-                    @update:model-value="
-                      updateNotificationPreference('tournaments', $event)
-                    "
-                    size="sm"
-                    className="bg-yellow-500/20"
-                    :disabled="notificationStatus.tournaments === 'saving'"
-                  />
+                  <SpaceToggle :model-value="notificationPreferences.tournaments"
+                    @update:model-value="updateNotificationPreference('tournaments', $event)" size="sm"
+                    className="bg-yellow-500/20" :disabled="notificationStatus.tournaments === 'saving'" />
                 </div>
               </div>
             </SpaceCard>
@@ -264,15 +249,9 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
-                    :model-value="notificationPreferences.badges"
-                    @update:model-value="
-                      updateNotificationPreference('badges', $event)
-                    "
-                    size="sm"
-                    className="bg-purple-500/20"
-                    :disabled="notificationStatus.badges === 'saving'"
-                  />
+                  <SpaceToggle :model-value="notificationPreferences.badges"
+                    @update:model-value="updateNotificationPreference('badges', $event)" size="sm"
+                    className="bg-purple-500/20" :disabled="notificationStatus.badges === 'saving'" />
                 </div>
               </div>
             </SpaceCard>
@@ -347,15 +326,9 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
-                    :model-value="notificationPreferences.reminders"
-                    @update:model-value="
-                      updateNotificationPreference('reminders', $event)
-                    "
-                    size="sm"
-                    className="bg-blue-500/20"
-                    :disabled="notificationStatus.reminders === 'saving'"
-                  />
+                  <SpaceToggle :model-value="notificationPreferences.reminders"
+                    @update:model-value="updateNotificationPreference('reminders', $event)" size="sm"
+                    className="bg-blue-500/20" :disabled="notificationStatus.reminders === 'saving'" />
                 </div>
               </div>
             </SpaceCard>
@@ -430,15 +403,9 @@
                     </div>
                   </div>
 
-                  <SpaceToggle
-                    :model-value="notificationPreferences.system"
-                    @update:model-value="
-                      updateNotificationPreference('system', $event)
-                    "
-                    size="sm"
-                    className="bg-green-500/20"
-                    :disabled="notificationStatus.system === 'saving'"
-                  />
+                  <SpaceToggle :model-value="notificationPreferences.system"
+                    @update:model-value="updateNotificationPreference('system', $event)" size="sm"
+                    className="bg-green-500/20" :disabled="notificationStatus.system === 'saving'" />
                 </div>
               </div>
             </SpaceCard>
@@ -621,13 +588,9 @@
                 </div>
 
                 <!-- Toggle switch pour activer/désactiver le rôle -->
-                <SpaceToggle
-                  :model-value="isGameRoleEnabled(game._id || '')"
-                  @update:model-value="toggleGameRole(game._id || '', $event)"
-                  size="sm"
-                  className="bg-color-secondary/20"
-                  :disabled="gameRoleStatus[game._id || ''] === 'syncing'"
-                />
+                <SpaceToggle :model-value="isGameRoleEnabled(game._id || '')"
+                  @update:model-value="toggleGameRole(game._id || '', $event)" size="sm"
+                  className="bg-space-secondary/20" :disabled="gameRoleStatus[game._id || ''] === 'syncing'" />
               </div>
             </SpaceCard>
           </div>
@@ -668,11 +631,8 @@
     <Toast v-if="message" :type="messageType" :message="message" />
 
     <!-- Modal de confirmation pour modifications non sauvegardées -->
-    <SpaceModal
-      v-if="showUnsavedChangesDialog"
-      v-model="showUnsavedChangesDialog"
-      title="MODIFICATIONS NON SAUVEGARDÉES"
-    >
+    <SpaceModal v-if="showUnsavedChangesDialog" v-model="showUnsavedChangesDialog"
+      title="MODIFICATIONS NON SAUVEGARDÉES">
       <div class="text-center mb-6 space-y-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-warning mx-auto" fill="none"
           viewBox="0 0 24 24" stroke="currentColor">
@@ -699,11 +659,7 @@
     </SpaceModal>
 
     <!-- Modal de confirmation pour réinitialisation -->
-    <SpaceModal
-      v-if="showResetDialog"
-      v-model="showResetDialog"
-      title="RÉINITIALISER LES MODIFICATIONS"
-    >
+    <SpaceModal v-if="showResetDialog" v-model="showResetDialog" title="RÉINITIALISER LES MODIFICATIONS">
       <div class="text-center mb-6 space-y-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-space-secondary mx-auto" fill="none"
           viewBox="0 0 24 24" stroke="currentColor">
@@ -1159,6 +1115,7 @@ onMounted(async () => {
   }
 });
 
+
 // ========================================
 // SECTION: GESTION DES NOTIFICATIONS
 // ========================================
@@ -1173,9 +1130,7 @@ const notificationPreferences = ref({
   system: true,
 });
 
-const notificationStatus = ref<
-  Record<string, "pending" | "saving" | "saved" | "error" | null>
->({
+const notificationStatus = ref<Record<string, "pending" | "saving" | "saved" | "error" | null>>({
   tournaments: null,
   badges: null,
   reminders: null,
@@ -1192,15 +1147,15 @@ const notificationTimers = ref<Record<string, number | null>>({
 
 // Computed pour les statuts globaux
 const hasPendingChanges = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "pending")
+  Object.values(notificationStatus.value).some(status => status === 'pending')
 );
 
 const isAnySaving = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "saving")
+  Object.values(notificationStatus.value).some(status => status === 'saving')
 );
 
 const allSaved = computed(() =>
-  Object.values(notificationStatus.value).some((status) => status === "saved")
+  Object.values(notificationStatus.value).some(status => status === 'saved')
 );
 
 // Fonction pour charger les préférences de notifications
@@ -1234,14 +1189,14 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
   }
 
   // Marquer comme en attente
-  notificationStatus.value[type] = "pending";
+  notificationStatus.value[type] = 'pending';
 
   // Programmer la sauvegarde après 1.5 secondes
   notificationTimers.value[type] = setTimeout(async () => {
     if (!user.value) return;
 
     // Marquer comme en cours de sauvegarde
-    notificationStatus.value[type] = "saving";
+    notificationStatus.value[type] = 'saving';
 
     try {
       // Appel API pour sauvegarder la préférence
@@ -1252,7 +1207,7 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       });
 
       // Marquer comme sauvegardé
-      notificationStatus.value[type] = "saved";
+      notificationStatus.value[type] = 'saved';
 
       // Auto-clear après 2 secondes
       setTimeout(() => {
@@ -1266,11 +1221,8 @@ const updateNotificationPreference = (type: string, enabled: boolean) => {
       (notificationPreferences.value as any)[type] = !enabled;
 
       // Marquer comme erreur
-      notificationStatus.value[type] = "error";
-      showMessage(
-        `Erreur lors de la sauvegarde des préférences ${type}`,
-        "error"
-      );
+      notificationStatus.value[type] = 'error';
+      showMessage(`Erreur lors de la sauvegarde des préférences ${type}`, "error");
 
       // Auto-clear après 3 secondes
       setTimeout(() => {
@@ -1298,16 +1250,13 @@ const subscribeToPush = async () => {
 
 const enableNotifications = () => {
   if (window.Notification && Notification.permission !== "granted") {
-    Notification.requestPermission().then((permission) => {
+    Notification.requestPermission().then(permission => {
       if (permission === "granted") {
         subscribeToPush();
         showMessage("Notifications activées avec succès !", "success");
       } else {
         notificationActivated.value = false;
-        showMessage(
-          "Notifications refusées. Vous pouvez les activer plus tard.",
-          "error"
-        );
+        showMessage("Notifications refusées. Vous pouvez les activer plus tard.", "error");
       }
     });
   } else {
@@ -1353,7 +1302,7 @@ onMounted(async () => {
 
 // Nettoyer les timers à la destruction du composant
 onUnmounted(() => {
-  Object.values(notificationTimers.value).forEach((timer) => {
+  Object.values(notificationTimers.value).forEach(timer => {
     if (timer) clearTimeout(timer);
   });
 });

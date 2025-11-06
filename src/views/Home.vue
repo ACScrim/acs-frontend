@@ -186,11 +186,11 @@
               <template #content>
                 <div class="flex flex-wrap gap-y-1 gap-x-2 xs:gap-x-3">
                   <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -206,11 +206,11 @@
                   </div>
 
                   <div
-                    class="text-3xs xs:text-2xs sm:text-xs text-color-text flex items-center"
+                    class="text-3xs xs:text-2xs sm:text-xs text-space-text flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-color-primary-light"
+                      class="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-4 sm:w-4 mr-0.5 xs:mr-1 text-space-primary-light"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -387,7 +387,7 @@
             >
               <template #content>
                 <div
-                  class="text-sm text-color-text-muted flex items-center mt-1"
+                  class="text-sm text-space-text-muted flex items-center mt-1"
                 ></div>
               </template>
             </TournamentCard>
@@ -1267,19 +1267,19 @@ onUnmounted(() => {
 /* Style spécifique pour les badges de rang */
 .getRankBadgeVariant-0 {
   background-color: rgba(251, 146, 60, 0.2);
-  color: var(--color-accent-light);
+  color: var(--space-accent-light);
   border-color: rgba(251, 146, 60, 0.5);
 }
 
 .getRankBadgeVariant-1 {
   background-color: rgba(2, 132, 199, 0.2);
-  color: var(--color-secondary-light);
+  color: var(--space-secondary-light);
   border-color: rgba(2, 132, 199, 0.5);
 }
 
 .getRankBadgeVariant-2 {
   background-color: rgba(109, 40, 217, 0.2);
-  color: var(--color-primary-light);
+  color: var(--space-primary-light);
   border-color: rgba(109, 40, 217, 0.5);
 }
 

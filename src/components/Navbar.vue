@@ -346,7 +346,7 @@
                   </div>
                   <div class="flex-1">
                     <div
-                      class="text-color-primary-light font-nasa capitalize text-sm"
+                      class="text-space-primary-light font-nasa capitalize text-sm"
                     >
                       {{ user.username }}
                     </div>
@@ -949,7 +949,7 @@ onBeforeUnmount(() => {
 .navbar-bg {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.1);
 }
 
 /* Lignes de circuit */
@@ -961,7 +961,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary-light),
+    var(--space-primary-light),
     transparent
   );
   z-index: 20;
@@ -984,7 +984,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary),
+    var(--space-primary),
     transparent
   );
   animation: pulse-move 8s linear infinite;
@@ -1038,7 +1038,7 @@ onBeforeUnmount(() => {
 .logo-glow {
   position: absolute;
   inset: -5px;
-  background: var(--color-primary);
+  background: var(--space-primary);
   border-radius: 50%;
   filter: blur(10px);
   opacity: 0.15;
@@ -1053,19 +1053,19 @@ onBeforeUnmount(() => {
 
 .navbar-logo {
   height: 40px;
-  filter: drop-shadow(0 0 5px var(--color-primary-light));
+  filter: drop-shadow(0 0 5px var(--space-primary-light));
   transition: all 0.3s ease;
 }
 
 .logo-container:hover .navbar-logo {
-  filter: drop-shadow(0 0 8px var(--color-primary-light));
+  filter: drop-shadow(0 0 8px var(--space-primary-light));
   transform: scale(1.05);
 }
 
 /* Navigation links */
 .nav-link {
   position: relative;
-  color: var(--color-text);
+  color: var(--space-text);
   font-weight: 500;
   letter-spacing: 1px;
   padding: 0.25rem 0.5rem;
@@ -1085,7 +1085,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary-light),
+    var(--space-primary-light),
     transparent
   );
   transform: translateX(-100%);
@@ -1093,8 +1093,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link:hover {
-  color: var(--color-primary-light);
-  text-shadow: 0 0 5px var(--color-primary-light);
+  color: var(--space-primary-light);
+  text-shadow: 0 0 5px var(--space-primary-light);
 }
 
 .nav-link:hover::before {
@@ -1102,8 +1102,8 @@ onBeforeUnmount(() => {
 }
 
 .nav-link-active {
-  color: var(--color-primary-light);
-  text-shadow: 0 0 5px var(--color-primary-light);
+  color: var(--space-primary-light);
+  text-shadow: 0 0 5px var(--space-primary-light);
 }
 
 .nav-link-active::before {
@@ -1116,7 +1116,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-primary-light),
+    var(--space-primary-light),
     transparent
   );
   transform: translateX(0);
@@ -1150,29 +1150,29 @@ onBeforeUnmount(() => {
 }
 
 .user-profile-button:hover .user-name {
-  color: var(--color-primary-light);
+  color: var(--space-primary-light);
 }
 
 /* Dropdowns */
 .user-dropdown,
 .admin-dropdown,
 .mobile-dropdown {
-  background: rgba(var(--color-bg-rgb), 0.95);
+  background: rgba(var(--space-bg-rgb), 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(var(--color-primary-rgb), 0.2);
+  box-shadow: 0 10px 25px rgba(var(--space-primary-rgb), 0.2);
 }
 
 .dropdown-header {
   padding: 10px 15px;
-  background: rgba(var(--color-primary-rgb), 0.1);
-  border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.2);
+  background: rgba(var(--space-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--space-primary-rgb), 0.2);
 }
 
 .dropdown-title {
-  color: var(--color-primary-light);
+  color: var(--space-primary-light);
   font-size: 0.8rem;
   letter-spacing: 1px;
 }

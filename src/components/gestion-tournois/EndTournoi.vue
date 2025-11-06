@@ -25,7 +25,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-primary-light"
+            class="h-6 w-6 text-space-primary-light"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -77,10 +77,10 @@
           Veuillez sélectionner un tournoi dans le menu en haut de la page
         </SpaceAlert>
       </div>
-    </SpaceCard>
+    </Card>
 
     <!-- Statut du tournoi -->
-    <SpaceCard
+    <Card
       v-if="selectedTournamentDetails && selectedTournamentDetails.finished"
       variant="accent"
       :stars="true"
@@ -148,7 +148,7 @@
           <div class="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-color-accent-light"
+              class="h-6 w-6 text-space-accent-light"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -383,7 +383,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-error"
+            class="h-6 w-6 text-space-error"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -393,7 +393,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="lg" className="text-color-error">
+          <Title size="lg" className="text-space-error">
             CONFIRMATION REQUISE
           </Title>
         </div>
@@ -401,7 +401,7 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="warning">
-          <div class="text-color-text">
+          <div class="text-space-text">
             <strong>Attention :</strong> Cette action est irréversible !
           </div>
         </SpaceAlert>
@@ -490,7 +490,7 @@
         <div class="flex items-center gap-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-color-warning"
+            class="h-6 w-6 text-space-warning"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -500,7 +500,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <Title size="lg" className="text-color-warning">
+          <Title size="lg" className="text-space-warning">
             ANNULATION FINALISATION
           </Title>
         </div>
@@ -508,7 +508,7 @@
 
       <div class="space-y-4">
         <SpaceAlert variant="info">
-          <div class="text-color-text">
+          <div class="text-space-text">
             Cette action permettra de modifier à nouveau les résultats du
             tournoi.
           </div>

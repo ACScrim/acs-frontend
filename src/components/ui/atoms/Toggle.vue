@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <span v-if="label" class="ml-2 text-xs text-color-text-muted font-nasa">{{
+      <span v-if="label" class="ml-2 text-xs text-space-text-muted font-nasa">{{
         label
       }}</span>
       <slot></slot>
@@ -93,8 +93,8 @@ defineEmits(["update:modelValue"]);
 .toggle-track {
   width: 42px;
   height: 22px;
-  background: rgba(var(--color-bg-light-rgb), 0.3);
-  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  background: rgba(var(--space-bg-light-rgb), 0.3);
+  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -107,9 +107,9 @@ defineEmits(["update:modelValue"]);
 .toggle-thumb {
   width: 16px;
   height: 16px;
-  background: var(--color-primary-light);
+  background: var(--space-primary-light);
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--color-primary);
+  box-shadow: 0 0 5px var(--space-primary);
   transition: transform 0.3s ease, background 0.3s;
   position: relative;
   z-index: 2;
@@ -139,24 +139,24 @@ defineEmits(["update:modelValue"]);
 }
 
 input:checked + .toggle-track {
-  background: rgba(var(--color-accent-rgb), 0.3);
-  border-color: rgba(var(--color-accent-rgb), 0.5);
+  background: rgba(var(--space-accent-rgb), 0.3);
+  border-color: rgba(var(--space-accent-rgb), 0.5);
 }
 
 input:checked + .toggle-track .toggle-thumb {
   transform: translateX(20px);
-  background: var(--color-accent-light);
-  box-shadow: 0 0 5px var(--color-accent);
+  background: var(--space-accent-light);
+  box-shadow: 0 0 5px var(--space-accent);
 }
 
 .toggle-track:hover {
-  border-color: rgba(var(--color-primary-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.2);
+  border-color: rgba(var(--space-primary-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--space-primary-rgb), 0.2);
 }
 
 input:checked + .toggle-track:hover {
-  border-color: rgba(var(--color-accent-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.2);
+  border-color: rgba(var(--space-accent-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--space-accent-rgb), 0.2);
 }
 
 /* Style pour la version mobile/small */
@@ -181,12 +181,12 @@ input:checked + .toggle-track-mobile .toggle-thumb {
   bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(var(--color-bg-rgb), 0.8);
-  color: var(--color-primary-light);
+  background: rgba(var(--space-bg-rgb), 0.8);
+  color: var(--space-primary-light);
   font-size: 0.7rem;
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+  border: 1px solid rgba(var(--space-primary-rgb), 0.3);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;

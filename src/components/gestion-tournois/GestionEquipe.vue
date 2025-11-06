@@ -512,7 +512,7 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <span class="text-color-text text-sm">Nom de l'équipe:</span>
+                  <span class="text-space-text text-sm">Nom de l'équipe:</span>
                   <SpaceInput
                     v-model="teams[activeTeamTab].name"
                     type="text"

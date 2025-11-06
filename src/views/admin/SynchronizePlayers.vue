@@ -160,7 +160,7 @@
 
           <!-- Tri -->
           <div class="flex items-center gap-2">
-            <span class="text-color-text-muted font-nasa text-sm">Tri:</span>
+            <span class="text-space-text-muted font-nasa text-sm">Tri:</span>
             <SpaceDropdown v-model="sortBy" className="w-48">
               <option value="username-asc">Nom A→Z</option>
               <option value="username-desc">Nom Z→A</option>

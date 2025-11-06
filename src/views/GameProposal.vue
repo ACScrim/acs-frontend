@@ -30,7 +30,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <!-- Filtres -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-primary-light"
+            <label class="block mb-2 font-nasa text-space-primary-light"
               >Filtrer par statut</label
             >
             <div class="flex flex-wrap gap-2">
@@ -51,7 +51,7 @@
 
           <!-- Tri -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-secondary-light"
+            <label class="block mb-2 font-nasa text-space-secondary-light"
               >Options de tri</label
             >
             <div class="flex flex-col gap-2">
@@ -84,7 +84,7 @@
           <!-- Recherche et Ajout -->
           <div class="space-y-4">
             <div class="relative">
-              <label class="block mb-2 font-nasa text-color-accent-light"
+              <label class="block mb-2 font-nasa text-space-accent-light"
                 >Rechercher un jeu</label
               >
               <SpaceInput
@@ -218,7 +218,7 @@
       <div class="space-y-6">
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Rechercher un jeu
           </label>
@@ -273,7 +273,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Nom du jeu
           </label>
@@ -282,7 +282,7 @@
 
         <div>
           <label
-            class="block text-sm font-medium text-color-primary-light mb-1 font-nasa"
+            class="block text-sm font-medium text-space-primary-light mb-1 font-nasa"
           >
             Description (optionnelle)
           </label>
@@ -327,7 +327,7 @@
       v-model="deleteDialogVisible"
       title="SUPPRIMER CETTE PROPOSITION"
     >
-      <p class="text-color-text">
+      <p class="text-space-text">
         Êtes-vous sûr de vouloir supprimer définitivement cette proposition de
         jeu ? Cette action est irréversible.
       </p>
@@ -348,14 +348,14 @@
     <div class="space-y-6" v-if="selectedProposal">
       <!-- Détails de la proposition -->
       <div class="mb-4 text-center">
-        <h4 class="text-color-text text-lg font-heading mb-2">
+        <h4 class="text-space-text text-lg font-heading mb-2">
           {{ selectedProposal.name }}
         </h4>
         <div
           class="flex justify-center items-center text-sm text-space-text-muted space-x-4"
         >
           <div>
-            <span class="text-color-secondary">Total:</span>
+            <span class="text-space-secondary">Total:</span>
             <span :class="getVoteCountClass(selectedProposal)">
               {{ getDisplayVoteCount(selectedProposal) }}
             </span>
@@ -463,7 +463,7 @@
               <p class="font-heading text-sm">
                 {{ getVoterName(vote) }}
               </p>
-              <p class="text-xs text-color-text-muted">
+              <p class="text-xs text-space-text-muted">
                 {{ formatDate(vote.createdAt || selectedProposal.createdAt) }}
               </p>
             </div>
@@ -703,9 +703,9 @@ const getDisplayVoteCount = (proposal: GameProposal) => {
 // Détermine les classes CSS pour l'affichage du nombre de votes
 const getVoteCountClass = (proposal: GameProposal) => {
   const count = getDisplayVoteCount(proposal);
-  if (count > 0) return "text-color-gold";
-  if (count < 0) return "text-color-error";
-  return "text-color-text";
+  if (count > 0) return "text-space-gold";
+  if (count < 0) return "text-space-error";
+  return "text-space-text";
 };
 
 // Récupère le nom d'un votant depuis un objet vote
@@ -1147,7 +1147,7 @@ onMounted(() => {
 }
 
 .proposal-pending {
-  border-left: 3px solid var(--color-secondary);
+  border-left: 3px solid var(--space-secondary);
 }
 
 /* Amélioration des transitions */

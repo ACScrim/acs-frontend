@@ -38,7 +38,7 @@
           <div>
             <label for="game" class="mb-3 flex items-center gap-2">
               <div
-                class="font-body text-color-primary-light flex items-center gap-2"
+                class="font-heading text-space-primary-light flex items-center gap-2"
               >
                 <!-- Icône de citrouille pour les jeux -->
                 <svg
@@ -58,8 +58,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border-2 border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/50 focus:border-color-primary focus:outline-none transition-all duration-300 hover:border-color-primary/50 hover:shadow-glow-primary"
-                style="box-shadow: 0 0 10px rgba(217, 119, 6, 0.2)"
+                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -72,7 +71,7 @@
                 <!-- Icône de flèche vers le bas avec style Halloween -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-primary"
+                  class="h-5 w-5 text-space-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -93,7 +92,7 @@
           <div>
             <label for="season" class="mb-3 flex items-center gap-2">
               <div
-                class="font-body text-color-secondary-light flex items-center gap-2"
+                class="font-heading text-space-secondary-light flex items-center gap-2"
               >
                 <!-- Icône de lune sanglante pour les saisons -->
                 <svg
@@ -117,8 +116,7 @@
               <select
                 id="season"
                 v-model="selectedSeason"
-                class="w-full rounded-lg border-2 border-color-secondary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-secondary/50 focus:border-color-secondary focus:outline-none transition-all duration-300 hover:border-color-secondary/50 hover:shadow-glow-secondary"
-                style="box-shadow: 0 0 10px rgba(220, 38, 38, 0.2)"
+                class="w-full rounded-lg border border-space-secondary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-secondary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Classement général</option>
                 <option
@@ -139,7 +137,7 @@
                 <!-- Icône de flèche vers le bas avec style Halloween sang -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-color-secondary"
+                  class="h-5 w-5 text-space-secondary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -186,17 +184,17 @@
         <!-- Version desktop du tableau (caché sur mobile) -->
         <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full shadow-lg">
-            <thead class="bg-color-bg-light/30">
+            <thead class="bg-space-bg-light/30">
               <tr>
                 <th
                   scope="col"
-                  class="px-6 py-4 text-center text-sm font-heading text-color-text-muted uppercase tracking-wider"
+                  class="px-6 py-4 text-center text-sm font-heading text-space-text-muted uppercase tracking-wider"
                 >
                   Rang
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Joueur</span>
@@ -223,7 +221,7 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Tournois</span>
@@ -253,7 +251,7 @@
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-center text-xs font-heading text-color-text-muted uppercase tracking-wider"
+                  class="px-6 py-3 text-center text-xs font-heading text-space-text-muted uppercase tracking-wider"
                 >
                   <div class="flex items-center justify-center">
                     <span>Victoires</span>
@@ -301,7 +299,7 @@
                     >
                       {{ calculateGlobalRank(index) }}
                     </SpaceBadge>
-                    <span v-else class="text-color-text-muted">{{
+                    <span v-else class="text-space-text-muted">{{
                       calculateGlobalRank(index)
                     }}</span>
                   </div>
@@ -405,7 +403,7 @@
                   >
                     {{ calculateGlobalRank(index) }}
                   </SpaceBadge>
-                  <span v-else class="text-color-text-muted">{{
+                  <span v-else class="text-space-text-muted">{{
                     calculateGlobalRank(index)
                   }}</span>
                 </div>
@@ -779,7 +777,7 @@ onMounted(async () => {
   }
 
   /* Assure que les cartes ne débordent pas sur mobile */
-  .color-card {
+  .space-card {
     overflow: hidden;
   }
 }

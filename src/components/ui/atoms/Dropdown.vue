@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="text-lg text-color-primary-light mb-2 font-nasa flex items-center"
+      class="text-lg text-space-primary-light mb-2 font-nasa flex items-center"
     >
       <slot name="icon"></slot>
       {{ label }}
@@ -21,7 +21,7 @@
           );
           $emit('change', ($event.target as HTMLSelectElement).value);
         "
-        class="w-full rounded-md bg-color-bg-light/40 border border-color-primary/30 p-3 text-color-text font-nasa focus:border-color-primary focus:ring-1 focus:ring-color-primary outline-none appearance-none"
+        class="w-full rounded-md bg-space-bg-light/40 border border-space-primary/30 p-3 text-space-text font-nasa focus:border-space-primary focus:ring-1 focus:ring-space-primary outline-none appearance-none"
         :disabled="disabled"
         :required="required"
         :aria-label="label || placeholder"
@@ -33,7 +33,7 @@
       </select>
 
       <div
-        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-color-primary"
+        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-space-primary"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div v-if="error" class="text-color-error text-sm mt-1">{{ error }}</div>
+    <div v-if="error" class="text-space-error text-sm mt-1">{{ error }}</div>
   </div>
 </template>
 
@@ -95,11 +95,11 @@ defineEmits(["update:modelValue", "change"]);
 }
 
 .space-dropdown select:focus {
-  box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary-light);
+  box-shadow: 0 0 0 2px var(--space-bg), 0 0 0 4px var(--space-primary-light);
 }
 
 .space-dropdown select:disabled {
-  background-color: var(--color-bg-light/20);
+  background-color: var(--space-bg-light/20);
   opacity: 0.7;
   cursor: not-allowed;
 }

@@ -45,7 +45,7 @@
           <div class="p-3 sm:p-4 border-b border-space-primary/20">
             <div class="flex items-center justify-between">
               <h3
-                class="text-color-text font-nasa text-base sm:text-lg font-bold truncate mr-2"
+                class="text-space-text font-nasa text-base sm:text-lg font-bold truncate mr-2"
               >
                 Notifications
               </h3>
@@ -58,7 +58,7 @@
                   v-if="!isSubscribed && permission !== 'denied'"
                   @click="handleSubscribe"
                   :disabled="loading"
-                  class="px-2 sm:px-3 py-1 bg-color-primary/20 hover:bg-color-primary/30 text-color-primary text-xs rounded-md transition-colors font-nasa whitespace-nowrap"
+                  class="px-2 sm:px-3 py-1 bg-space-primary/20 hover:bg-space-primary/30 text-space-primary text-xs rounded-md transition-colors font-nasa whitespace-nowrap"
                 >
                   {{ loading ? "..." : "Activer" }}
                 </button>
@@ -192,8 +192,8 @@
                   <!-- Contenu -->
                   <div class="flex-1 min-w-0">
                     <h4
-                      class="text-sm font-semibold text-color-text font-nasa leading-tight"
-                      :class="{ 'text-color-primary': !notification.read }"
+                      class="text-sm font-semibold text-space-text font-nasa leading-tight"
+                      :class="{ 'text-space-primary': !notification.read }"
                     >
                       {{ notification.title }}
                     </h4>

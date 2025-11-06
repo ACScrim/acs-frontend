@@ -21,7 +21,7 @@
           <div class="space-y-4">
             <label
               for="game"
-              class="mb-2 font-nasa text-color-primary-light flex items-center gap-2"
+              class="mb-2 font-nasa text-space-primary-light flex items-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
               <select
                 id="game"
                 v-model="selectedGame"
-                class="w-full rounded-lg border border-color-primary/30 bg-color-bg-light text-color-text px-4 py-2 appearance-none focus:ring-2 focus:ring-color-primary/30 focus:outline-none transition-all duration-300"
+                class="w-full rounded-lg border border-space-primary/30 bg-space-bg-light text-space-text px-4 py-2 appearance-none focus:ring-2 focus:ring-space-primary/30 focus:outline-none transition-all duration-300"
               >
                 <option value="">Tous les jeux</option>
                 <option v-for="game in games" :key="game._id" :value="game._id">
@@ -69,7 +69,7 @@
 
           <!-- Options de filtrage -->
           <div class="space-y-4">
-            <label class="block mb-2 font-nasa text-color-secondary-light"
+            <label class="block mb-2 font-nasa text-space-secondary-light"
               >OPTIONS DE FILTRAGE</label
             >
             <div class="space-y-3">
@@ -539,8 +539,8 @@ const openRegistrationPopup = (tournament: Tournament, type: string) => {
 
 /**
  * Désinscrit un caster
- * @param tournamentId
- * @param userId
+ * @param tournamentId 
+ * @param userId 
  */
 const unregisterCaster = async (tournamentId: string, userId: string) => {
   try {
@@ -894,7 +894,7 @@ onMounted(async () => {
 
 /* Effets de survol spécifiques à cette vue */
 .space-hover-glow:hover {
-  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4);
+  box-shadow: 0 0 15px rgba(var(--space-primary-rgb), 0.4);
 }
 
 /* Gestion améliorée des transitions */
@@ -911,7 +911,7 @@ onMounted(async () => {
 /* Gestion des sélecteurs custom */
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3);
+  box-shadow: 0 0 0 2px rgba(var(--space-primary-rgb), 0.3);
 }
 
 /* Style pour les toggles */
