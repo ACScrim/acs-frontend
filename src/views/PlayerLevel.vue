@@ -696,7 +696,7 @@
             id="comment"
             v-model="comment"
             rows="3"
-            placeholder="Ex: Main ADC depuis 3 ans, nombre d'heures estimé, spécialisé Jinx/Caitlyn, excellent positioning teamfight et bon farming..."
+            placeholder="Ex: Main ADC depuis 3 ans, nombre d'heures estimées jouées, main role, spécialités, rang estimé ..."
             maxlength="150"
             :class="[
               'w-full p-3 bg-space-bg-light border rounded-md text-space-text focus:outline-none focus:ring-1 font-mono resize-none transition-colors',
