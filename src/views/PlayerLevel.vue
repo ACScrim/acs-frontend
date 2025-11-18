@@ -15,11 +15,7 @@
       <template v-else>
         <!-- Section des jeux avec niveau défini -->
         <div v-if="playerLevels.length > 0" class="mb-10">
-          <Title
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 mr-2 text-space-primary-light"
@@ -285,11 +281,7 @@
 
         <!-- Section pour ajouter un nouveau niveau -->
         <div>
-          <Title
-            size="xl"
-            :decorated="true"
-            className="mb-6 flex items-center"
-          >
+          <Title size="xl" :decorated="true" className="mb-6 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 mr-2 text-space-accent-light"
@@ -697,18 +689,67 @@
             for="comment"
             class="block text-space-primary-light text-sm font-nasa mb-2"
           >
-            Commentaire (optionnel)
+            Commentaire sur votre niveau
+            <span class="text-space-error ml-1">*</span>
           </label>
           <textarea
             id="comment"
             v-model="comment"
             rows="3"
-            placeholder="Informations complémentaires, rôle préféré, etc."
+            placeholder="Ex: Main ADC depuis 3 ans, nombre d'heures estimé, spécialisé Jinx/Caitlyn, excellent positioning teamfight et bon farming..."
             maxlength="150"
-            class="w-full p-3 bg-space-bg-light border border-space-bg-light rounded-md text-space-text focus:border-space-primary focus:outline-none focus:ring-1 focus:ring-space-primary/30 font-mono resize-none"
+            :class="[
+              'w-full p-3 bg-space-bg-light border rounded-md text-space-text focus:outline-none focus:ring-1 font-mono resize-none transition-colors',
+              commentError
+                ? 'border-space-error focus:border-space-error focus:ring-space-error/30'
+                : 'border-space-bg-light focus:border-space-primary focus:ring-space-primary/30',
+            ]"
           ></textarea>
-          <div class="flex justify-end mt-1">
-            <p class="text-xs text-space-text-muted">
+          <div class="flex justify-between mt-1">
+            <div class="flex-1">
+              <p v-if="commentError" class="text-xs text-space-error">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 inline mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                {{ commentError }}
+              </p>
+              <div v-else class="text-xs text-space-accent-light">
+                <p class="mb-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3 inline mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Décrivez votre expérience, spécialités, points forts...
+                </p>
+                <p class="text-space-text-muted">
+                  <strong>Requis :</strong> Minimum 10 caractères, au moins 3
+                  mots significatifs, pas de caractères répétitifs (ex: .....,
+                  ?????)
+                </p>
+              </div>
+            </div>
+            <p class="text-xs text-space-text-muted ml-2">
               {{ comment.length }}/150
             </p>
           </div>
@@ -724,7 +765,9 @@
           <Button
             type="submit"
             variant="primary"
-            :disabled="!selectedLevel || isSaving"
+            :disabled="
+              !selectedLevel || !comment.trim() || commentError || isSaving
+            "
           >
             <template v-if="isSaving">
               <svg
@@ -793,14 +836,8 @@
 
       <template #footer>
         <div class="flex justify-center space-x-4">
-          <Button @click="cancelDelete" variant="ghost">
-            Annuler
-          </Button>
-          <Button
-            @click="deleteLevel"
-            variant="error"
-            :loading="isDeleting"
-          >
+          <Button @click="cancelDelete" variant="ghost"> Annuler </Button>
+          <Button @click="deleteLevel" variant="error" :loading="isDeleting">
             Supprimer
           </Button>
         </div>
@@ -833,6 +870,7 @@ const route = useRoute();
 const router = useRouter();
 
 const rankError = ref(false);
+const commentError = ref("");
 
 // États des modales
 const showGameSelector = ref(false);
@@ -927,6 +965,39 @@ const getLevelColorClass = (level: string): string => {
     default:
       return "bg-gray-500";
   }
+};
+
+// Valider le commentaire
+const validateComment = (text: string): string => {
+  const trimmed = text.trim();
+
+  if (!trimmed) {
+    return "Le commentaire est obligatoire pour décrire votre niveau";
+  }
+
+  if (trimmed.length < 10) {
+    return `Minimum 10 caractères requis (actuellement ${trimmed.length})`;
+  }
+
+  // Vérifier qu'il n'y a pas trop de caractères répétitifs (regex: /(.)\1{4,}/)
+  const repetitivePattern = /(.)\1{4,}/; // Détecte 5+ caractères identiques consécutifs
+  if (repetitivePattern.test(trimmed)) {
+    return "Évitez les caractères répétitifs (ex: ....., ?????, aaaaa)";
+  }
+
+  // Vérifier que ce n'est pas que de la ponctuation
+  const meaningfulChars = trimmed.replace(/[.,;:!?()[\]{}"'-\s]/g, "");
+  if (meaningfulChars.length < 5) {
+    return "Utilisez des mots descriptifs, pas seulement de la ponctuation";
+  }
+
+  // Vérifier qu'il contient au moins 3 mots significatifs
+  const words = trimmed.split(/\s+/).filter((word) => word.length > 1);
+  if (words.length < 3) {
+    return `Au moins 3 mots significatifs requis (actuellement ${words.length})`;
+  }
+
+  return "";
 };
 
 // Gérer l'erreur de chargement d'image
@@ -1068,10 +1139,19 @@ const saveLevel = async (e?: Event) => {
   // Réinitialiser les états d'erreur
   rankError.value = false;
   roleError.value = false;
+  commentError.value = "";
 
   // Vérification des données requises
   if (!selectedGameId.value || !selectedLevel.value || !currentPlayerId.value) {
     showToast("Données incomplètes pour l'enregistrement", "error");
+    return;
+  }
+
+  // Vérifier le commentaire (obligatoire)
+  const commentValidation = validateComment(comment.value);
+  if (commentValidation) {
+    commentError.value = commentValidation;
+    showToast("Veuillez corriger le commentaire", "error");
     return;
   }
 
@@ -1234,6 +1314,7 @@ const resetForm = () => {
   selectedRoles.value = [];
   editingLevelId.value = null;
   roleError.value = false;
+  commentError.value = "";
 };
 
 // #endregion
@@ -1381,6 +1462,17 @@ const unwatchUser = watch(
 watch(showGameSelector, (newVal) => {
   if (newVal) {
     gameSearch.value = "";
+  }
+});
+
+// Valider le commentaire en temps réel
+watch(comment, (newComment) => {
+  // Réinitialiser l'erreur si le commentaire est en cours de saisie
+  if (commentError.value && newComment.trim().length > 0) {
+    const validation = validateComment(newComment);
+    if (!validation) {
+      commentError.value = "";
+    }
   }
 });
 
